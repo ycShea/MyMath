@@ -1,75 +1,58 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>DSE 2020 Q38 Visualizer (with Labels)</title>
+    <meta charset="UTF-8">
+    <title>DSE 2020 Q38 - 3D Geometry</title>
     <style>
-        body { margin: 0; background-color: #f8f9fa; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; overflow: hidden; }
+        body { margin: 0; background-color: #f8f9fa; font-family: 'Segoe UI', sans-serif; overflow: hidden; }
         
-        /* Information and Instruction Panel */
-        #info-panel { 
-            position: absolute; top: 10px; left: 10px; 
+        #ui-layer { 
+            position: absolute; top: 15px; left: 15px; 
             background: rgba(255,255,255,0.95); 
-            padding: 20px; border-radius: 8px; 
+            padding: 20px; border-radius: 12px; 
             z-index: 100; max-width: 380px; 
-            box-shadow: 0 4px 15px rgba(0,0,0,0.15); 
-            border-left: 5px solid #0d6efd; 
-        }
-        
-        /* Stylized Labels for 3D points */
-        .label { 
-            color: #2c3e50; font-weight: bold; font-size: 16px; 
-            background: rgba(255,255,255,0.8); 
-            padding: 3px 6px; border-radius: 4px; 
-            pointer-events: none; /* User can click through labels */
-        }
-        
-        /* Different styling for length labels */
-        .length-label { 
-            color: #d63384; font-size: 14px; 
-            font-style: italic; font-weight: 500; 
-            border: 1px dashed #d63384; background: white;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.1); 
+            border-top: 6px solid #0d6efd; 
         }
 
-        /* Toggle Button */
+        /* Label Styling for Vertices and Lengths */
+        .vertex-label { 
+            color: #000; font-weight: 800; font-size: 18px; 
+            background: rgba(255,255,255,0.6); padding: 2px 6px; border-radius: 4px; 
+        }
+        .dist-label { 
+            color: #d63384; font-weight: 600; font-size: 14px; 
+            background: white; border: 1px solid #d63384; 
+            padding: 1px 4px; border-radius: 3px;
+        }
+
         #toggle-btn {
-            background-color: #0d6efd; color: white;
-            border: none; padding: 8px 15px;
-            border-radius: 5px; cursor: pointer;
-            font-size: 14px; margin-top: 10px;
-            width: 100%;
+            background-color: #0d6efd; color: white; border: none; 
+            padding: 10px; border-radius: 6px; cursor: pointer;
+            width: 100%; font-weight: bold; margin-top: 10px;
         }
         #toggle-btn:hover { background-color: #0a58ca; }
 
-        /* Calculation Step Display */
-        #calc-display {
-            margin-top: 15px; border-top: 1px solid #dee2e6;
-            padding-top: 15px; display: none; /* Hidden by default */
-            font-size: 14px; line-height: 1.6;
+        #calc-box {
+            display: none; margin-top: 15px; border-top: 1px solid #ddd;
+            padding-top: 10px; font-size: 14px; color: #444;
         }
     </style>
 </head>
 <body>
-    <div id="info-panel">
-        <h4 style="margin:0 0 10px 0; color: #0d6efd;">2020 DSE Math II Q38 (Visualizer)</h4>
+
+    <div id="ui-layer">
+        <h3 style="margin:0 0 10px 0;">DSE 2020 Math II Q38</h3>
+        <p><strong>Instruction:</strong> In the figure, $ABCDEF$ is a right triangular prism. $P$ is a point on $AE$. If $AB=AC=12$, $AP=9$, $EP=5$ and $BD=2k$, find the area of $\Delta BDP$.</p>
+        <p style="font-size: 12px; color: #666;">🖱️ Drag to rotate | 🔍 Scroll to zoom</p>
         
-        <p><strong>Instruction:</strong> In the figure, ABCDEF is a right triangular prism. P is a point lying on AE. If AB=AC=12, AP=9, EP=5 and BD=2k, find the area of $\Delta BDP$.</p>
+        <button id="toggle-btn">Show Calculation Steps</button>
         
-        <button id="toggle-btn" onclick="toggleCalculation()">Show Calculation Steps</button>
-        
-        <div id="calc-display">
-            <strong>Step 1: Find AE (Total Height)</strong><br>
-            $AE = AP + EP = 9 + 5 = 14$<br>
-            Note: For a right prism, $AE = BF = CD = 14$.<br><br>
-            
-            <strong>Step 2: Find DP (Pythagoras in $\Delta DEP$)</strong><br>
-            $DP = \sqrt{DE^2 + EP^2} = \sqrt{AC^2 + EP^2}$<br>
-            $DP = \sqrt{12^2 + 5^2} = \sqrt{144 + 25} = \sqrt{169} = \mathbf{13}$<br><br>
-            
-            <strong>Step 3: Find BP (Pythagoras in $\Delta BAP$)</strong><br>
-            $BP = \sqrt{AB^2 + AP^2} = \sqrt{12^2 + 9^2}$<br>
-            $BP = \sqrt{144 + 81} = \sqrt{225} = \mathbf{15}$<br><br>
-            
-            <strong>Sides of $\Delta BDP$ are now:</strong> $BD=2k$, $DP=13$, $BP=15$.
+        <div id="calc-box">
+            <strong>1. Height of Prism:</strong> $AE = 9 + 5 = 14$.<br>
+            <strong>2. Side $DP$:</strong> In $\Delta DEP$, $DP = \sqrt{12^2 + 5^2} = 13$.<br>
+            <strong>3. Side $BP$:</strong> In $\Delta BAP$, $BP = \sqrt{12^2 + 9^2} = 15$.<br>
+            <strong>4. Side $BD$:</strong> Given as $2k$.
         </div>
     </div>
 
@@ -78,117 +61,92 @@
     <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/renderers/CSS2DRenderer.js"></script>
 
     <script>
+        // Setup Scene
         const scene = new THREE.Scene();
-        scene.background = new THREE.Color(0xf4f7f9);
+        scene.background = new THREE.Color(0xf0f2f5);
         const camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 1000);
-        
-        // 1. Setup Standard 3D Renderer (WebGL)
+        camera.position.set(25, 20, 30);
+
         const renderer = new THREE.WebGLRenderer({ antialias: true });
         renderer.setSize(window.innerWidth, window.innerHeight);
         document.body.appendChild(renderer.domElement);
 
-        // 2. Setup Label Renderer (CSS2D)
         const labelRenderer = new THREE.CSS2DRenderer();
         labelRenderer.setSize(window.innerWidth, window.innerHeight);
         labelRenderer.style.position = 'absolute';
         labelRenderer.style.top = '0px';
         document.body.appendChild(labelRenderer.domElement);
 
-        // --- 3D Coordinates & Vertices ---
-        const h = 14; // Total height AE
-        const s = 12; // Base side length AB=AC
-
-        const A = new THREE.Vector3(0, h, 0);
-        const B = new THREE.Vector3(s, h, 0);
-        const C = new THREE.Vector3(0, h, s);
+        // Coordinates
+        const A = new THREE.Vector3(0, 14, 0);
+        const B = new THREE.Vector3(12, 14, 0);
+        const C = new THREE.Vector3(0, 14, 12);
         const E = new THREE.Vector3(0, 0, 0);
-        const F = new THREE.Vector3(s, 0, 0);
-        const D = new THREE.Vector3(0, 0, s);
-        const P = new THREE.Vector3(0, 5, 0); // AP=9, EP=5 (P is 5 units up from E)
+        const F = new THREE.Vector3(12, 0, 0);
+        const D = new THREE.Vector3(0, 0, 12);
+        const P = new THREE.Vector3(0, 5, 0);
 
-        // --- Drawing Helper Functions ---
-        const matBlack = new THREE.LineBasicMaterial({ color: 0x333333, linewidth: 1 });
-        function drawLine(v1, v2) {
-            scene.add(new THREE.Line(new THREE.BufferGeometry().setFromPoints([v1, v2]), matBlack));
+        // Drawing Helper
+        function line(v1, v2, color = 0x333333) {
+            const geom = new THREE.BufferGeometry().setFromPoints([v1, v2]);
+            const mat = new THREE.LineBasicMaterial({ color: color });
+            scene.add(new THREE.Line(geom, mat));
         }
 
-        // Setup HTML labels function
-        function createLabel(text, position, className = 'label') {
+        // Labels Helper
+        function addLabel(text, pos, cls = 'vertex-label') {
             const div = document.createElement('div');
-            div.className = className;
+            div.className = cls;
             div.textContent = text;
             const label = new THREE.CSS2Object(div);
-            label.position.copy(position);
+            label.position.copy(pos);
             scene.add(label);
         }
 
-        // --- Draw Prism and Labels ---
+        // Draw Prism
+        line(A,B); line(B,C); line(C,A); // Top
+        line(E,F); line(F,D); line(D,E); // Bottom
+        line(A,E); line(B,F); line(C,D); // Verticals
+        
+        // Target Triangle BDP
+        line(B,D, 0xe74c3c); line(D,P, 0xe74c3c); line(P,B, 0xe74c3c);
+        const triGeom = new THREE.BufferGeometry().setFromPoints([B, D, P]);
+        triGeom.setIndex([0, 1, 2]);
+        const triMesh = new THREE.Mesh(triGeom, new THREE.MeshBasicMaterial({ color: 0xffc107, side: THREE.DoubleSide, transparent: true, opacity: 0.3 }));
+        scene.add(triMesh);
 
-        // Vertical Edges
-        drawLine(A, E); drawLine(B, F); drawLine(C, D);
-        // Top Face
-        drawLine(A, B); drawLine(B, C); drawLine(C, A);
-        // Bottom Face
-        drawLine(E, F); drawLine(F, D); drawLine(D, E);
+        // Add Labels
+        addLabel('A', A); addLabel('B', B); addLabel('C', C);
+        addLabel('D', D); addLabel('E', E); addLabel('F', F); addLabel('P', P);
 
-        // --- ADDING ALL LABELS (Vertices) ---
-        // We offset the text slightly (0.8) from the exact corner for readability
-        createLabel('A', A.clone().add(new THREE.Vector3(0, 0.8, 0)));
-        createLabel('B', B.clone().add(new THREE.Vector3(0, 0.8, 0)));
-        createLabel('C', C.clone().add(new THREE.Vector3(0, 0.8, 0)));
-        createLabel('D', D.clone().add(new THREE.Vector3(0, -0.8, 0)));
-        createLabel('E', E.clone().add(new THREE.Vector3(0, -0.8, 0)));
-        createLabel('F', F.clone().add(new THREE.Vector3(0, -0.8, 0)));
-        createLabel('P', P.clone().add(new THREE.Vector3(-0.8, 0, 0)));
+        // Length Labels at Midpoints
+        addLabel('12', new THREE.Vector3(6, 14, 0), 'dist-label'); // AB
+        addLabel('12', new THREE.Vector3(0, 14, 6), 'dist-label'); // AC
+        addLabel('9', new THREE.Vector3(0, 9.5, 0), 'dist-label');  // AP
+        addLabel('5', new THREE.Vector3(0, 2.5, 0), 'dist-label');  // EP
+        addLabel('2k', new THREE.Vector3(6, 7, 6), 'dist-label');   // BD approx
 
-        // --- ADDING ALL LABELS (Lengths) ---
-        // Place text at the midpoint of the edges and offset them 0.8 units
-        createLabel('12', new THREE.Vector3(6, 14.8, 0), 'label length-label');      // AB
-        createLabel('12', new THREE.Vector3(0, 14.8, 6), 'label length-label');      // AC
-        createLabel('9', new THREE.Vector3(-0.8, 9.5, 0), 'label length-label');     // AP
-        createLabel('5', new THREE.Vector3(-0.8, 2.5, 0), 'label length-label');     // EP
-        createLabel('2k', new THREE.Vector3(6.5, 7.5, 6.5), 'label length-label');   // BD (Approx midpoint)
-
-        // Triangle BDP highlight
-        const tri = new THREE.Mesh(
-            new THREE.BufferGeometry().setFromPoints([B, D, P]),
-            new THREE.MeshBasicMaterial({ color: 0xffc107, side: THREE.DoubleSide, transparent: true, opacity: 0.3 })
-        );
-        scene.add(tri);
-
-        // Highlight Triangle BDP Edges in Red
-        const matRed = new THREE.LineBasicMaterial({ color: 0xe74c3c, linewidth: 2 });
-        function drawRedLine(v1, v2) {
-            scene.add(new THREE.Line(new THREE.BufferGeometry().setFromPoints([v1, v2]), matRed));
-        }
-        drawRedLine(B, D); drawRedLine(D, P); drawRedLine(P, B);
-
-        // Define a visible Perspective (not flat)
-        camera.position.set(25, 20, 30);
-        // IMPORTANT: Controls must attach to the labelRenderer's DOM
+        // Controls
         const controls = new THREE.OrbitControls(camera, labelRenderer.domElement);
-
+        
         function animate() {
             requestAnimationFrame(animate);
-            controls.update();
             renderer.render(scene, camera);
             labelRenderer.render(scene, camera);
         }
         animate();
 
-        // --- Toggle Functionality ---
-        function toggleCalculation() {
-            const calcDisplay = document.getElementById('calc-display');
-            const toggleBtn = document.getElementById('toggle-btn');
-            
-            if (calcDisplay.style.display === 'none' || calcDisplay.style.display === '') {
-                calcDisplay.style.display = 'block';
-                toggleBtn.textContent = 'Hide Calculation Steps';
+        // Toggle Script
+        document.getElementById('toggle-btn').onclick = function() {
+            const box = document.getElementById('calc-box');
+            if(box.style.display === 'block') {
+                box.style.display = 'none';
+                this.textContent = 'Show Calculation Steps';
             } else {
-                calcDisplay.style.display = 'none';
-                toggleBtn.textContent = 'Show Calculation Steps';
+                box.style.display = 'block';
+                this.textContent = 'Hide Calculation Steps';
             }
-        }
+        };
     </script>
 </body>
 </html>
