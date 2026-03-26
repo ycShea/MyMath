@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>3,4,5,3,4,5 Polyhedron (Triangular Prism)</title>
+    <style>
+        body { margin: 0; }
+        canvas { display: block; }
+        #instructions {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            background: rgba(255, 255, 255, 0.8);
+            padding: 10px;
+            border-radius: 5px;
+            font-family: Arial, sans-serif;
+            font-size: 14px;
+        }
+    </style>
+</head>
+<body>
+    <div id="instructions">
+        <h3>3,4,5,3,4,5 Polyhedron (Triangular Prism)</h3>
+        <p>Use your mouse to rotate the figure.</p>
+        <p>Scroll to zoom in/out.</p>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
+
+    <script>
+        // 1. Setup the Scene, Camera, and Renderer
+        const scene = new THREE.Scene();
+        scene.background = new THREE.Color(0xf0f0f0); // Light gray background
+        const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+        const renderer = new THREE.WebGLRenderer({ antialias: true }); // Smooth edges
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        document.body.appendChild(renderer.domElement);
+
+        // 2. Create the Triangular Prism Geometry
+        const baseRadius = 1; // Radius of the triangular bases
+        const height = 2; // Height of the prism
+        const geometry = new THREE.CylinderGeometry(baseRadius, baseRadius, height, 3);
+
+        // 3. Create the Material
+        const material = new THREE.MeshNormalMaterial({ wireframe: true }); // Wireframe for visibility
+        // Alternatively, use a solid material with edges
+        // const material = new THREE.MeshBasicMaterial({ color: 0x0077ff, transparent: true, opacity: 0.5 });
+        const prism = new THREE.Mesh(geometry, material);
+        scene.add(prism);
+
+        // 4. Add Edges Helper (Optional: Better visibility)
+        const edges = new THREE.EdgesGeometry(geometry);
+        const lineMaterial = new THREE.LineBasicMaterial({ color: 0x000000 });
+        const line = new THREE.LineSegments(edges, lineMaterial);
+        scene.add(line);
+
+        camera.position.z = 5; // Move camera back to view the object
+
+        // 5. Add User Rotation Controls (OrbitControls)
+        const controls = new THREE.OrbitControls(camera, renderer.domElement);
+        controls.enableDamping = true; // Smooth motion
+        controls.dampingFactor = 0.05;
+
+        // 6. The Animation Loop (to keep drawing the frame)
+        function animate() {
+            requestAnimationFrame(animate);
+            controls.update(); // Required for smooth rotation
+            renderer.render(scene, camera);
+        }
+        animate();
+
+        // Handle Window Resize
+        window.addEventListener('resize', onWindowResize, false);
+        function onWindowResize() {
+            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(window.innerWidth, window.innerHeight);
+        }
+    </script>
+</body>
+</html>
