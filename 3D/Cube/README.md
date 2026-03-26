@@ -1,6 +1,6 @@
 # 3D Geometry Visualizer
 
-The live interactive 3D tool can be accessed at: **[https://ycShea.github.io/MyMath/3D/](https://ycShea.github.io/MyMath/3D/)**
+The live interactive 3D tool can be accessed at: **[https://ycShea.github.io/MyMath/3D/Cube/](https://ycShea.github.io/MyMath/3D/Cube/)**
 
 This project provides an interactive WebGL environment for students and educators to explore 3D geometric figures. It is designed to bridge the gap between 2D paper diagrams and 3D spatial reasoning, specifically for DSE Mathematics modules.
 
