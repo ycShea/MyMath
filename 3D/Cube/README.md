@@ -24,8 +24,9 @@ This project provides an interactive WebGL environment for students and educator
 ## 📂 Folder Structure
 - `MyMath/`
   - `3D/`
-    - `index.html` (The Three.js logic and scene setup)
-    - `README.md` (This documentation)
+    - `Cube/`
+      - `index.html` (The Three.js logic and scene setup)
+      - `README.md` (This documentation)
 
 ## 🔧 Educational Applications
 This tool is particularly useful for explaining:
