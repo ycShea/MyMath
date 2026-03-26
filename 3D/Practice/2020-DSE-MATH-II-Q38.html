@@ -11,6 +11,19 @@
             z-index: 10; max-width: 350px; border-top: 5px solid #0d6efd;
             box-shadow: 0 4px 15px rgba(0,0,0,0.2);
         }
+        /* Change from current size to 1.5x larger */
+        #ui-layer p { 
+            font-size: 21px; /* Was 14px * 1.5 */
+            line-height: 1.6; 
+        }
+        
+        #ui-layer h3 { 
+            font-size: 27px; /* Was 18px * 1.5 */
+        }
+        
+        #calc-box { 
+            font-size: 21px; /* Was 14px * 1.5 */
+        }
         #toggle-btn {
             background: #0d6efd; color: white; border: none; padding: 10px;
             width: 100%; border-radius: 5px; cursor: pointer; font-weight: bold;
@@ -80,7 +93,7 @@
         const ctx = canvas.getContext('2d');
         canvas.width = 256; // Increased resolution
         canvas.height = 128;
-        ctx.font = 'Bold 120px Arial'; // Doubled font size
+        ctx.font = 'Bold 80px Arial'; // Doubled font size
         ctx.fillStyle = color;
         ctx.textAlign = "center";
         ctx.fillText(text, 128, 80);
@@ -90,7 +103,7 @@
         const sprite = new THREE.Sprite(spriteMaterial);
         
         sprite.position.copy(pos);
-        sprite.scale.set(0.12, 0.06, 1); // Increased visual scale
+        sprite.scale.set(0.18, 0.06, 1); // Increased visual scale
         scene.add(sprite);
     }
 
