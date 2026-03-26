@@ -3,15 +3,21 @@
 <head>
     <title>DSE 2020 Q38 Visualizer</title>
     <style>
-        body { margin: 0; background-color: #f8f9fa; font-family: sans-serif; }
-        #info { position: absolute; top: 10px; left: 10px; background: rgba(255,255,255,0.9); padding: 15px; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.2); max-width: 300px; }
+        body { margin: 0; background-color: #f8f9fa; font-family: 'Segoe UI', sans-serif; }
+        #info { position: absolute; top: 10px; left: 10px; background: rgba(255,255,255,0.95); padding: 15px; border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.15); max-width: 350px; border-left: 5px solid #0d6efd; }
+        .label { color: black; font-weight: bold; font-size: 14px; background: rgba(255,255,255,0.6); padding: 2px; }
     </style>
 </head>
 <body>
     <div id="info">
-        <h4 style="margin-top:0">2020 DSE Math II Q38</h4>
-        <p><strong>Instruction:</strong> ABCDEF is a right triangular prism. P lies on AE. AB=AC=12, AP=9, EP=5, BD=10. Find the area of ΔBDP.</p>
-        <small>Drag to rotate | Scroll to zoom</small>
+        <h4 style="margin:0 0 10px 0; color: #0d6efd;">2020 DSE Math II Q38</h4>
+        <p style="font-size: 14px; line-height: 1.4;">
+            <strong>Instruction:</strong> ABCDEF is a right triangular prism. P lies on AE. <br>
+            <span style="color: #d63384;">AB=AC=12, AP=9, EP=5, BD=10.</span><br>
+            Find the area of <strong>triangle BDP</strong>.
+        </p>
+        <hr>
+        <small>🖱️ Drag to rotate | 🔍 Scroll to zoom</small>
     </div>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
@@ -19,65 +25,58 @@
 
     <script>
         const scene = new THREE.Scene();
-        scene.background = new THREE.Color(0xf0f0f0);
-        const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+        scene.background = new THREE.Color(0xf4f7f9);
+        const camera = new THREE.PerspectiveCamera(50, window.innerWidth / window.innerHeight, 0.1, 1000);
         const renderer = new THREE.WebGLRenderer({ antialias: true });
         renderer.setSize(window.innerWidth, window.innerHeight);
         document.body.appendChild(renderer.domElement);
 
-        // --- Coordinates ---
-        // Base Triangle ABC at z=0 (Top)
-        // Base Triangle FED at z=-14 (Bottom)
-        // Since BD=10 and BF=14 (vertical), we use Pythagoras to find FD
-        // FD^2 + FB^2 = BD^2 -> FD^2 + 14^2 = 10^2... 
-        // Note: In DSE Q38, the orientation implies the base is FED.
+        // --- Dimensions ---
+        const h = 14;      // AE = 9 + 5
+        const side = 12;   // AB = AC
         
-        const h = 14; // Total height AE
-        const side = 12; // AB = AC
-        
-        // Vertices
+        // Vertices Calculation
         const A = new THREE.Vector3(0, h, 0);
         const B = new THREE.Vector3(side, h, 0);
         const C = new THREE.Vector3(0, h, side);
         const E = new THREE.Vector3(0, 0, 0);
         const F = new THREE.Vector3(side, 0, 0);
         const D = new THREE.Vector3(0, 0, side);
-        const P = new THREE.Vector3(0, 5, 0); // AP=9, EP=5 (P is 5 units above E)
+        const P = new THREE.Vector3(0, 5, 0); // EP = 5
 
-        // --- Draw Prism Edges ---
-        function drawLine(v1, v2, color = 0x000000, dash = false) {
+        // --- Helper to draw edges ---
+        function drawLine(v1, v2, color = 0x333333, width = 1) {
             const geometry = new THREE.BufferGeometry().setFromPoints([v1, v2]);
-            const material = new THREE.LineBasicMaterial({ color: color });
-            const line = new THREE.Line(geometry, material);
-            scene.add(line);
+            const material = new THREE.LineBasicMaterial({ color: color, linewidth: width });
+            scene.add(new THREE.Line(geometry, material));
         }
 
-        // Vertical Edges
-        drawLine(A, E); drawLine(B, F); drawLine(C, D);
-        // Top Face
-        drawLine(A, B); drawLine(B, C); drawLine(C, A);
-        // Bottom Face
-        drawLine(E, F); drawLine(F, D); drawLine(D, E);
+        // Draw Prism Framework
+        const black = 0x2c3e50;
+        drawLine(A, B); drawLine(B, C); drawLine(C, A); // Top ABC
+        drawLine(E, F); drawLine(F, D); drawLine(D, E); // Bottom EFD
+        drawLine(A, E); drawLine(B, F); drawLine(C, D); // Verticals
 
-        // --- Draw Triangle BDP ---
-        const triGeom = new THREE.BufferGeometry().setFromPoints([B, D, P, B]);
-        const triMat = new THREE.MeshBasicMaterial({ color: 0xff0000, side: THREE.DoubleSide, transparent: true, opacity: 0.3 });
-        const triangle = new THREE.Mesh(triGeom, triMat);
-        scene.add(triangle);
+        // Highlight Triangle BDP
+        const triGeom = new THREE.BufferGeometry().setFromPoints([B, D, P]);
+        triGeom.setIndex([0, 1, 2]);
+        const triMat = new THREE.MeshBasicMaterial({ color: 0xffc107, side: THREE.DoubleSide, transparent: true, opacity: 0.4 });
+        scene.add(new THREE.Mesh(triGeom, triMat));
 
-        // Outline for Triangle BDP
-        drawLine(B, D, 0xff0000); drawLine(D, P, 0xff0000); drawLine(P, B, 0xff0000);
+        // Red Outline for Triangle BDP
+        const red = 0xe74c3c;
+        drawLine(B, D, red, 2); drawLine(D, P, red, 2); drawLine(P, B, red, 2);
 
-        // --- Labels (Simplified) ---
-        function createLabel(text, pos) {
-            // In a real app, use CSS2DRenderer. Here we just place a small sphere.
-            const dot = new THREE.Mesh(new THREE.SphereGeometry(0.2), new THREE.MeshBasicMaterial({color: 0x333333}));
+        // --- Visual Markers & Labels ---
+        function addMarker(pos, labelText) {
+            const dot = new THREE.Mesh(new THREE.SphereGeometry(0.2), new THREE.MeshBasicMaterial({color: 0x000}));
             dot.position.copy(pos);
             scene.add(dot);
         }
-        [A, B, C, D, E, F, P].forEach(v => createLabel('', v));
+        
+        [A, B, C, D, E, F, P].forEach(v => addMarker(v));
 
-        camera.position.set(20, 15, 20);
+        camera.position.set(25, 18, 25);
         const controls = new THREE.OrbitControls(camera, renderer.domElement);
 
         function animate() {
