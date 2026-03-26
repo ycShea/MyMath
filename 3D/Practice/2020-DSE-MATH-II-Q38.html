@@ -1,152 +1,102 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>DSE 2020 Q38 - 3D Geometry</title>
+    <title>DSE 2020 Q38 Visualizer</title>
     <style>
-        body { margin: 0; background-color: #f8f9fa; font-family: 'Segoe UI', sans-serif; overflow: hidden; }
-        
+        body { margin: 0; background-color: #f0f2f5; font-family: 'Segoe UI', sans-serif; overflow: hidden; }
         #ui-layer { 
             position: absolute; top: 15px; left: 15px; 
-            background: rgba(255,255,255,0.95); 
-            padding: 20px; border-radius: 12px; 
-            z-index: 100; max-width: 380px; 
-            box-shadow: 0 8px 32px rgba(0,0,0,0.1); 
-            border-top: 6px solid #0d6efd; 
+            background: white; padding: 20px; border-radius: 10px; 
+            z-index: 10; max-width: 350px; border-top: 5px solid #0d6efd;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
         }
-
-        /* Label Styling for Vertices and Lengths */
-        .vertex-label { 
-            color: #000; font-weight: 800; font-size: 18px; 
-            background: rgba(255,255,255,0.6); padding: 2px 6px; border-radius: 4px; 
-        }
-        .dist-label { 
-            color: #d63384; font-weight: 600; font-size: 14px; 
-            background: white; border: 1px solid #d63384; 
-            padding: 1px 4px; border-radius: 3px;
-        }
-
         #toggle-btn {
-            background-color: #0d6efd; color: white; border: none; 
-            padding: 10px; border-radius: 6px; cursor: pointer;
-            width: 100%; font-weight: bold; margin-top: 10px;
+            background: #0d6efd; color: white; border: none; padding: 10px;
+            width: 100%; border-radius: 5px; cursor: pointer; font-weight: bold;
         }
-        #toggle-btn:hover { background-color: #0a58ca; }
-
-        #calc-box {
-            display: none; margin-top: 15px; border-top: 1px solid #ddd;
-            padding-top: 10px; font-size: 14px; color: #444;
-        }
+        #calc-box { display: none; margin-top: 15px; font-size: 14px; line-height: 1.5; border-top: 1px solid #ddd; padding-top: 10px; }
     </style>
 </head>
 <body>
 
-    <div id="ui-layer">
-        <h3 style="margin:0 0 10px 0;">DSE 2020 Math II Q38</h3>
-        <p><strong>Instruction:</strong> In the figure, $ABCDEF$ is a right triangular prism. $P$ is a point on $AE$. If $AB=AC=12$, $AP=9$, $EP=5$ and $BD=2k$, find the area of $\Delta BDP$.</p>
-        <p style="font-size: 12px; color: #666;">🖱️ Drag to rotate | 🔍 Scroll to zoom</p>
-        
-        <button id="toggle-btn">Show Calculation Steps</button>
-        
-        <div id="calc-box">
-            <strong>1. Height of Prism:</strong> $AE = 9 + 5 = 14$.<br>
-            <strong>2. Side $DP$:</strong> In $\Delta DEP$, $DP = \sqrt{12^2 + 5^2} = 13$.<br>
-            <strong>3. Side $BP$:</strong> In $\Delta BAP$, $BP = \sqrt{12^2 + 9^2} = 15$.<br>
-            <strong>4. Side $BD$:</strong> Given as $2k$.
-        </div>
+<div id="ui-layer">
+    <h3 style="margin:0 0 10px 0;">DSE 2020 Q38</h3>
+    <p>ABCDEF is a right triangular prism. P lies on AE. AB=AC=12, AP=9, EP=5, BD=2k. Find area of ΔBDP.</p>
+    <p style="font-size: 11px; color: #666;">🖱️ Drag to rotate | 🔍 Scroll to zoom</p>
+    <button id="toggle-btn" onclick="toggleCalc()">Show Calculation Steps</button>
+    <div id="calc-box" id="steps">
+        1. <b>Total Height:</b> AE = 9 + 5 = 14<br>
+        2. <b>Side DP:</b> √(12² + 5²) = 13<br>
+        3. <b>Side BP:</b> √(12² + 9²) = 15<br>
+        4. <b>Side BD:</b> 2k
     </div>
+</div>
 
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/renderers/CSS2DRenderer.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
 
-    <script>
-        // Setup Scene
-        const scene = new THREE.Scene();
-        scene.background = new THREE.Color(0xf0f2f5);
-        const camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 1000);
-        camera.position.set(25, 20, 30);
+<script>
+    const scene = new THREE.Scene();
+    scene.background = new THREE.Color(0xf0f2f5);
+    const camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 1000);
+    const renderer = new THREE.WebGLRenderer({ antialias: true });
+    renderer.setSize(window.innerWidth, window.innerHeight);
+    document.body.appendChild(renderer.domElement);
 
-        const renderer = new THREE.WebGLRenderer({ antialias: true });
-        renderer.setSize(window.innerWidth, window.innerHeight);
-        document.body.appendChild(renderer.domElement);
+    // Points
+    const A = new THREE.Vector3(0, 14, 0), B = new THREE.Vector3(12, 14, 0), C = new THREE.Vector3(0, 14, 12);
+    const E = new THREE.Vector3(0, 0, 0), F = new THREE.Vector3(12, 0, 0), D = new THREE.Vector3(0, 0, 12);
+    const P = new THREE.Vector3(0, 5, 0);
 
-        const labelRenderer = new THREE.CSS2DRenderer();
-        labelRenderer.setSize(window.innerWidth, window.innerHeight);
-        labelRenderer.style.position = 'absolute';
-        labelRenderer.style.top = '0px';
-        document.body.appendChild(labelRenderer.domElement);
+    // Draw Lines
+    const mat = new THREE.LineBasicMaterial({ color: 0x333333 });
+    const redMat = new THREE.LineBasicMaterial({ color: 0xff0000, linewidth: 2 });
+    
+    function addLine(v1, v2, m = mat) {
+        scene.add(new THREE.Line(new THREE.BufferGeometry().setFromPoints([v1, v2]), m));
+    }
 
-        // Coordinates
-        const A = new THREE.Vector3(0, 14, 0);
-        const B = new THREE.Vector3(12, 14, 0);
-        const C = new THREE.Vector3(0, 14, 12);
-        const E = new THREE.Vector3(0, 0, 0);
-        const F = new THREE.Vector3(12, 0, 0);
-        const D = new THREE.Vector3(0, 0, 12);
-        const P = new THREE.Vector3(0, 5, 0);
+    // Prism
+    [ [A,B], [B,C], [C,A], [E,F], [F,D], [D,E], [A,E], [B,F], [C,D] ].forEach(pts => addLine(pts[0], pts[1]));
+    // Triangle BDP
+    [ [B,D], [D,P], [P,B] ].forEach(pts => addLine(pts[0], pts[1], redMat));
 
-        // Drawing Helper
-        function line(v1, v2, color = 0x333333) {
-            const geom = new THREE.BufferGeometry().setFromPoints([v1, v2]);
-            const mat = new THREE.LineBasicMaterial({ color: color });
-            scene.add(new THREE.Line(geom, mat));
-        }
+    // Simple Labels using Sprite (More compatible than CSS2D)
+    function makeLabel(text, pos, color = "black") {
+        const canvas = document.createElement('canvas');
+        const ctx = canvas.getContext('2d');
+        ctx.font = 'Bold 40px Arial';
+        ctx.fillStyle = color;
+        ctx.fillText(text, 10, 50);
+        const texture = new THREE.CanvasTexture(canvas);
+        const sprite = new THREE.Sprite(new THREE.SpriteMaterial({ map: texture, sizeAttenuation: false }));
+        sprite.position.copy(pos);
+        sprite.scale.set(0.05, 0.025, 1);
+        scene.add(sprite);
+    }
 
-        // Labels Helper
-        function addLabel(text, pos, cls = 'vertex-label') {
-            const div = document.createElement('div');
-            div.className = cls;
-            div.textContent = text;
-            const label = new THREE.CSS2Object(div);
-            label.position.copy(pos);
-            scene.add(label);
-        }
+    // Vertex Labels
+    makeLabel("A", A); makeLabel("B", B); makeLabel("C", C);
+    makeLabel("D", D); makeLabel("E", E); makeLabel("F", F); makeLabel("P", P);
 
-        // Draw Prism
-        line(A,B); line(B,C); line(C,A); // Top
-        line(E,F); line(F,D); line(D,E); // Bottom
-        line(A,E); line(B,F); line(C,D); // Verticals
-        
-        // Target Triangle BDP
-        line(B,D, 0xe74c3c); line(D,P, 0xe74c3c); line(P,B, 0xe74c3c);
-        const triGeom = new THREE.BufferGeometry().setFromPoints([B, D, P]);
-        triGeom.setIndex([0, 1, 2]);
-        const triMesh = new THREE.Mesh(triGeom, new THREE.MeshBasicMaterial({ color: 0xffc107, side: THREE.DoubleSide, transparent: true, opacity: 0.3 }));
-        scene.add(triMesh);
+    // Length Labels
+    makeLabel("12", new THREE.Vector3(6, 14.5, 0), "#d63384"); // AB
+    makeLabel("12", new THREE.Vector3(-1, 14.5, 6), "#d63384"); // AC
+    makeLabel("9", new THREE.Vector3(-1.5, 9.5, 0), "#d63384");  // AP
+    makeLabel("5", new THREE.Vector3(-1.5, 2.5, 0), "#d63384");  // EP
+    makeLabel("2k", new THREE.Vector3(6, 7, 6), "#d63384");    // BD
 
-        // Add Labels
-        addLabel('A', A); addLabel('B', B); addLabel('C', C);
-        addLabel('D', D); addLabel('E', E); addLabel('F', F); addLabel('P', P);
+    camera.position.set(30, 20, 30);
+    const controls = new THREE.OrbitControls(camera, renderer.domElement);
 
-        // Length Labels at Midpoints
-        addLabel('12', new THREE.Vector3(6, 14, 0), 'dist-label'); // AB
-        addLabel('12', new THREE.Vector3(0, 14, 6), 'dist-label'); // AC
-        addLabel('9', new THREE.Vector3(0, 9.5, 0), 'dist-label');  // AP
-        addLabel('5', new THREE.Vector3(0, 2.5, 0), 'dist-label');  // EP
-        addLabel('2k', new THREE.Vector3(6, 7, 6), 'dist-label');   // BD approx
+    function animate() { requestAnimationFrame(animate); renderer.render(scene, camera); }
+    animate();
 
-        // Controls
-        const controls = new THREE.OrbitControls(camera, labelRenderer.domElement);
-        
-        function animate() {
-            requestAnimationFrame(animate);
-            renderer.render(scene, camera);
-            labelRenderer.render(scene, camera);
-        }
-        animate();
-
-        // Toggle Script
-        document.getElementById('toggle-btn').onclick = function() {
-            const box = document.getElementById('calc-box');
-            if(box.style.display === 'block') {
-                box.style.display = 'none';
-                this.textContent = 'Show Calculation Steps';
-            } else {
-                box.style.display = 'block';
-                this.textContent = 'Hide Calculation Steps';
-            }
-        };
-    </script>
+    function toggleCalc() {
+        const box = document.getElementById('calc-box');
+        box.style.display = (box.style.display === 'block') ? 'none' : 'block';
+    }
+</script>
 </body>
 </html>
