@@ -159,16 +159,17 @@
     animate();
 
     function updateHighlights(step) {
-        // Reset line materials
+        // 1. Reset all lines to standard
         lineAB.material = mat; lineAP.material = mat; lineBP.material = redMat;
         lineDE.material = mat; lineEP.material = mat; lineDP.material = redMat;
         lineBD.material = redMat;
-
-        // Reset shading visibility
+    
+        // 2. Hide ALL shaded meshes by default
         meshABP.visible = false;
         meshDEP.visible = false;
         meshBDP.visible = false;
-
+    
+        // 3. Only show the one matching the current step
         if (step === 1) {
             lineAB.material = blueHighlight; lineAP.material = blueHighlight; lineBP.material = blueHighlight;
             meshABP.visible = true;
@@ -177,7 +178,7 @@
             meshDEP.visible = true;
         } else if (step === 3) {
             lineBP.material = blueHighlight; lineDP.material = blueHighlight; lineBD.material = blueHighlight;
-            meshBDP.visible = true;
+            meshBDP.visible = true; // Only yellow now at Step 3
         }
     }
 
