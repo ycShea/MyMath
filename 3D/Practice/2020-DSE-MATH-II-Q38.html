@@ -1,4 +1,4 @@
-<!-- search "(UPDATE for new exercise)" for a exercise html -->
+<!-- search "(UpdateForNewExercise)" for a exercise html -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -32,7 +32,7 @@
 <body>
 
 <div id="ui-layer">
-    <!-- Question Text ************ (UPDATE for new exercise) (1/10) ************ -->
+    <!-- Question Text ************ (UpdateForNewExercise) (1/9) ************ -->
     <h3 style="margin:0 0 10px 0;">DSE 2020 Q38</h3>
     <p>In the figure, ABCDEF is a right triangular prism. P lies on AE. AB=AC=12, AP=9, EP=5, BD=2k. Find area of ΔBDP.</p>
     <p style="font-size: 11px; color: #666;">🖱️ Left-Click: Rotate | 🖱️ Right-Click: Drag | 🔍 Scroll: Zoom</p>
@@ -53,7 +53,7 @@
     // 1. CALCULATION
     // ==========================================
 
-    // Calculation Text ************ (UPDATE for new exercise) (2/10) ************
+    // Calculation Text ************ (UpdateForNewExercise) (2/9) ************
     const stepData = [
         "1. <b>In the right-angled ΔABP, </b><br> BP = √(12² + 9²) = 15",
         "2. <b>In the right-angled ΔDEP, </b><br> DP = √(12² + 5²) = 13",
@@ -107,29 +107,29 @@
     // 4. OBJECT DEFINITIONS (Lines and Surfaces)
     // ==========================================
 
-    // Define all Vertex Coordinates here ************ (UPDATE for new exercise) (3/10) ************
+    // Define all Vertex Coordinates here ************ (UpdateForNewExercise) (3/9) ************
     const V = {
-        A: new THREE.Vector3(0, 14, 0),
-        B: new THREE.Vector3(12, 14, 0),
-        C: new THREE.Vector3(0, 14, 12),
-        D: new THREE.Vector3(0, 0, 12),
-        E: new THREE.Vector3(0, 0, 0),
-        F: new THREE.Vector3(12, 0, 0),
-        P: new THREE.Vector3(0, 5, 0)
+        E: new THREE.Vector3(0, 14, 0),
+        D: new THREE.Vector3(12, 14, 0),
+        F: new THREE.Vector3(0, 14, 12),
+        B: new THREE.Vector3(0, 0, 12),
+        A: new THREE.Vector3(0, 0, 0),
+        C: new THREE.Vector3(12, 0, 0),
+        P: new THREE.Vector3(0, 9, 0)
     };
     
-    // Static Prism Edges ************ (UPDATE for new exercise) (4/10) ************
-    [ [V.A, V.E], [V.B, V.C], [V.A, V.C], [V.B, V.F], [V.F, V.D], [V.E, V.F], [V.C, V.D] ].forEach(pts => createLine(pts[0], pts[1]));
+    // Static Prism Edges ************ (UpdateForNewExercise) (4/9) ************
+    [ [V.A, V.E], [V.D, V.F], [V.E, V.F], [V.D, V.C], [V.C, V.B], [V.A, V.C], [V.F, V.B] ].forEach(pts => createLine(pts[0], pts[1]));
     
-    // Dynamic Lines (assigned to variables for highlighting) ************ (UPDATE for new exercise) (5/10) ************
-    const lineAB = createLine(V.A, V.B);
-    const lineAP = createLine(V.A, V.P);
-    const lineDE = createLine(V.D, V.E);
-    const lineEP = createLine(V.E, V.P);
+    // Dynamic Lines (assigned to variables for highlighting) ************ (UpdateForNewExercise) (5/9) ************
+    const lineAB = createLine(V.E, V.D);
+    const lineAP = createLine(V.E, V.P);
+    const lineDE = createLine(V.B, V.A);
+    const lineEP = createLine(V.A, V.P);
     const defaultLines = [lineAB, lineAP, lineDE, lineEP];
-    const lineBP = createLine(V.B, V.P, matTarget); // Red "Target" lines
-    const lineDP = createLine(V.D, V.P, matTarget); // Red "Target" lines
-    const lineBD = createLine(V.B, V.D, matTarget); // Red "Target" lines
+    const lineBP = createLine(V.D, V.P, matTarget); // Red "Target" lines
+    const lineDP = createLine(V.B, V.P, matTarget); // Red "Target" lines
+    const lineBD = createLine(V.D, V.B, matTarget); // Red "Target" lines
     const targetLines  = [lineBP, lineDP, lineBD];
     
     // ==========================================
@@ -150,36 +150,36 @@
         return sprite;
     }
     
-    // Define length labels automatically at midpoints ************ (UPDATE for new exercise) (6/10) ************
+    // Define length labels automatically at midpoints ************ (UpdateForNewExercise) (6/9) ************
     const lengthLabels = [
-        { text: "12", pos: new THREE.Vector3().addVectors(V.A, V.B).multiplyScalar(0.5) },
-        { text: "12", pos: new THREE.Vector3().addVectors(V.A, V.C).multiplyScalar(0.5) },
-        { text: "9",  pos: new THREE.Vector3().addVectors(V.A, V.P).multiplyScalar(0.5) },
-        { text: "5",  pos: new THREE.Vector3().addVectors(V.E, V.P).multiplyScalar(0.5) },
-        { text: "2k", pos: new THREE.Vector3().addVectors(V.B, V.D).multiplyScalar(0.5) }
+        { text: "12", pos: new THREE.Vector3().addVectors(V.E, V.D).multiplyScalar(0.5) },
+        { text: "12", pos: new THREE.Vector3().addVectors(V.E, V.F).multiplyScalar(0.5) },
+        { text: "9",  pos: new THREE.Vector3().addVectors(V.E, V.P).multiplyScalar(0.5) },
+        { text: "5",  pos: new THREE.Vector3().addVectors(V.A, V.P).multiplyScalar(0.5) },
+        { text: "2k", pos: new THREE.Vector3().addVectors(V.D, V.B).multiplyScalar(0.5) }
     ];
     // Generate Length Labels
     lengthLabels.forEach(l => makeLabel(l.text, l.pos, "#d63384")); // PINK
     
-    // Labels used in the calculation, hidden at the beginning ************ (UPDATE for new exercise) (7/10) ************
-    const lineDELabel = makeLabel("12", new THREE.Vector3().addVectors(V.D, V.E).multiplyScalar(0.5), "#0d6efd"); // BLUE
-    const lineBPLabel = makeLabel("15", new THREE.Vector3().addVectors(V.B, V.P).multiplyScalar(0.5), "#0d6efd"); // BLUE
-    const lineDPLabel = makeLabel("13", new THREE.Vector3().addVectors(V.D, V.P).multiplyScalar(0.5), "#0d6efd"); // BLUE
+    // Labels used in the calculation, hidden at the beginning ************ (UpdateForNewExercise) (7/9) ************
+    const lineDELabel = makeLabel("12", new THREE.Vector3().addVectors(V.B, V.A).multiplyScalar(0.5), "#0d6efd"); // BLUE
+    const lineBPLabel = makeLabel("15", new THREE.Vector3().addVectors(V.D, V.P).multiplyScalar(0.5), "#0d6efd"); // BLUE
+    const lineDPLabel = makeLabel("13", new THREE.Vector3().addVectors(V.B, V.P).multiplyScalar(0.5), "#0d6efd"); // BLUE
     const lineLabelsForCalculation = [lineDELabel, lineBPLabel, lineDPLabel];
     // Immediately hide them
     lineLabelsForCalculation.forEach(lab => lab.visible = false);
-    
-    // Triangle Surfaces ************ (UPDATE for new exercise) (8/10) ************
-    const meshABPBlue = createTriangle(V.A, V.B, V.P, colorBlueShade);
-    const meshDEPBlue = createTriangle(V.D, V.E, V.P, colorBlueShade);
-    const meshBDPBlue = createTriangle(V.B, V.D, V.P, colorBlueShade);
+
+    // Triangle Surfaces ************ (UpdateForNewExercise) (8/9) ************
+    const meshABPBlue = createTriangle(V.E, V.D, V.P, colorBlueShade);
+    const meshDEPBlue = createTriangle(V.B, V.A, V.P, colorBlueShade);
+    const meshBDPBlue = createTriangle(V.D, V.B, V.P, colorBlueShade);
     const blueMeshes   = [meshABPBlue, meshDEPBlue, meshBDPBlue];
-    const meshBDPGold = createTriangle(V.B, V.D, V.P, colorGoldShade, 0.4);    
+    const meshBDPGold = createTriangle(V.D, V.B, V.P, colorGoldShade, 0.4);    
     const targetMeshes = [meshBDPGold];
     meshBDPGold.visible = true; // Show target initially
 
     // Generate Vertex Labels
-    // Object.keys(V).forEach(key => makeLabel(key, V[key].clone().add(new THREE.Vector3(0, key === 'D' || key === 'E' || key === 'F' ? -0.8 : 0.8, 0))));
+    // Object.keys(V).forEach(key => makeLabel(key, V[key].clone().add(new THREE.Vector3(0, key === 'B' || key === 'A' || key === 'C' ? -0.8 : 0.8, 0))));
     Object.keys(V).forEach(key => makeLabel(key, V[key].clone().add(new THREE.Vector3(0, 0, 0))));
 
     // ==========================================
@@ -209,7 +209,7 @@
             if (div) div.style.color = "black";
         }
 
-        // (UPDATE logic for each step here) ************ (UPDATE for new exercise) (9/10, only 9, lazy to change) ************
+        // (UPDATE logic for each step here) ************ (UpdateForNewExercise) (9/9) ************
         if (step === 1) {
             lineAB.material = lineAP.material = lineBP.material = matActive;
             meshABPBlue.visible = true;
