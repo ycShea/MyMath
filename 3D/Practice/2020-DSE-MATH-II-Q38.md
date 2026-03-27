@@ -28,21 +28,7 @@ For example, if the base of a prism is a rectangle on the ground, you define the
 
 ### 🛠️ How to Update for a New Exercise
 
-To swap the current problem for a new one, search for the `(UpdateForNewExercise)` tag in the HTML file and update these 10 components:
-
-1.  **Question:** Update the `<h3>` and paragraph text in the `#ui-layer`.
-2.  **Solution:** Update the `stepData` array with the new algebraic steps.
-3.  **Points:** Define the `Vector3` coordinates in the `V` object using $(x, y, z)$.
-4.  **Edges:** Update the static wireframe lines in the `Static Edges` array.
-5.  **Angles:** Use `createRightAngle` to define new perpendicular indicators.
-6.  **Labels:** \* Update `lengthLabels` for given values (Pink).
-      * Update `lineLabelsForCalculation` for derived values (Blue).
-      * Ensure vertex labels (A, B, C...) match the new points.
-7.  **Triangles:** Define translucent surfaces using the `createTriangle` function.
-8.  **Logic:** Update the `updateHighlights(step)` function to control object visibility and color changes.
-9.  **Camera:** Update `resetCamera()` with the optimal `camera.position` and `controls.target` (found via the Debug HUD).
-10. **Other Objects:** Add custom meshes or specific properties unique to the new problem.
-
+**Visit [2526-S5UT4-MCQ6.html](https://github.com/ycShea/MyMath/blob/main/3D/Practice/2526-S5UT4-MCQ6.md) and duplicate the file to modify and update it for a new exercise.**
 -----
 
 ### 📖 How to Use
