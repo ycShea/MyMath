@@ -114,6 +114,21 @@
         return line;
     }
 
+    function createRightAngle(vertex, p1, p2, size = 1.2) {
+        const d1 = new THREE.Vector3().subVectors(p1, vertex).normalize().multiplyScalar(size);
+        const d2 = new THREE.Vector3().subVectors(p2, vertex).normalize().multiplyScalar(size);
+        
+        const corner1 = vertex.clone().add(d1);
+        const corner2 = vertex.clone().add(d1).add(d2);
+        const corner3 = vertex.clone().add(d2);
+        
+        const geom = new THREE.BufferGeometry().setFromPoints([corner1, corner2, corner3]);
+        const line = new THREE.Line(geom, new THREE.LineBasicMaterial({ color: 0x000000 }));
+        line.visible = false;
+        scene.add(line);
+        return line;
+    }
+
     function createTriangle(p1, p2, p3, color, opacity = 0.35) {
         const geom = new THREE.BufferGeometry().setFromPoints([p1, p2, p3]);
         geom.setIndex([0, 1, 2]);
@@ -162,6 +177,11 @@
     const lineBP = createLine(V.B, V.P, matTarget); // Red "Target" lines
     const lineBD = createLine(V.D, V.B, matTarget); // Red "Target" lines
     const targetLines  = [lineDP, lineBP, lineBD];
+
+    // Define Right Angle Symbols ************ (UpdateForNewExercise) (6/10) ************
+    const angleBAP = createRightAngle(V.A, V.B, V.P); // Right angle at A
+    const anglePED = createRightAngle(V.E, V.P, V.D); // Right angle at E
+    const angleSymbols = [angleBAP, anglePED];
     
     // ==========================================
     // 5. LABELS
@@ -181,7 +201,7 @@
         return sprite;
     }
     
-    // Define length labels automatically at midpoints ************ (UpdateForNewExercise) (6/9) ************
+    // Define length labels automatically at midpoints ************ (UpdateForNewExercise) (7/10) ************
     const lengthLabels = [
         { text: "12", pos: new THREE.Vector3().addVectors(V.A, V.B).multiplyScalar(0.5) },
         { text: "12", pos: new THREE.Vector3().addVectors(V.A, V.C).multiplyScalar(0.5) },
@@ -192,7 +212,7 @@
     // Generate Length Labels
     lengthLabels.forEach(l => makeLabel(l.text, l.pos, "#d63384")); // PINK
     
-    // Labels used in the calculation, hidden at the beginning ************ (UpdateForNewExercise) (7/9) ************
+    // Labels used in the calculation, hidden at the beginning ************ (UpdateForNewExercise) (8/10) ************
     const lineDELabel = makeLabel("12", new THREE.Vector3().addVectors(V.D, V.E).multiplyScalar(0.5), "#0d6efd"); // BLUE
     const lineBPLabel = makeLabel("15", new THREE.Vector3().addVectors(V.B, V.P).multiplyScalar(0.5), "#0d6efd"); // BLUE
     const lineDPLabel = makeLabel("13", new THREE.Vector3().addVectors(V.D, V.P).multiplyScalar(0.5), "#0d6efd"); // BLUE
@@ -200,7 +220,7 @@
     // Immediately hide them
     lineLabelsForCalculation.forEach(lab => lab.visible = false);
 
-    // Triangle Surfaces ************ (UpdateForNewExercise) (8/9) ************
+    // Triangle Surfaces ************ (UpdateForNewExercise) (9/10) ************
     const meshABPBlue = createTriangle(V.A, V.B, V.P, colorBlueShade);
     const meshDEPBlue = createTriangle(V.D, V.E, V.P, colorBlueShade);
     const meshBDPBlue = createTriangle(V.B, V.D, V.P, colorBlueShade);
@@ -233,22 +253,27 @@
 
         // 5. Hide all labels before the next step's calculation
         lineLabelsForCalculation.forEach(lab => lab.visible = false);
-        
+
+        // 6. Reset Right Angles to hidden
+        angleSymbols.forEach(symbol => symbol.visible = false);
+                
         // Reset Text Colors
         for (let i = 1; i <= stepData.length; i++) {
             const div = document.getElementById('s' + i);
             if (div) div.style.color = "black";
         }
 
-        // (UPDATE logic for each step here) ************ (UpdateForNewExercise) (9/9) ************
+        // (UPDATE logic for each step here) ************ (UpdateForNewExercise) (10/10) ************
         if (step === 1) {
             lineAB.material = lineAP.material = lineBP.material = matActive;
             meshABPBlue.visible = true;
+            angleBAP.visible = true; // Show ∠BAP
             document.getElementById('s1').style.color = "#0d6efd";
         } else if (step === 2) {
             lineDE.material = lineEP.material = lineDP.material = matActive;
             meshDEPBlue.visible = true;
             lineDELabel.visible = true;
+            anglePED.visible = true; // Show ∠PED
             document.getElementById('s2').style.color = "#0d6efd";
         } else if (step === 3) {
             lineBP.material = lineDP.material = lineBD.material = matActive;
