@@ -97,7 +97,18 @@
     function createTriangle(p1, p2, p3, color, opacity = 0.35) {
         const geom = new THREE.BufferGeometry().setFromPoints([p1, p2, p3]);
         geom.setIndex([0, 1, 2]);
-        const mesh = new THREE.Mesh(geom, new THREE.MeshBasicMaterial({ color, side: THREE.DoubleSide, transparent: true, opacity }));
+        const mesh = new THREE.Mesh(geom, new THREE.MeshBasicMaterial({ 
+            color, 
+            side: THREE.DoubleSide, 
+            transparent: true, 
+            opacity,
+            // --- FIXES START HERE ---
+            depthWrite: false,        // Prevents the mesh from "cutting holes" in other objects
+            polygonOffset: true,      // Enables a mathematical offset
+            polygonOffsetFactor: -1,  // Pushes the triangle slightly toward the camera
+            polygonOffsetUnits: -1
+            // --- FIXES END HERE ---
+        }));
         mesh.visible = false;
         scene.add(mesh);
         return mesh;
