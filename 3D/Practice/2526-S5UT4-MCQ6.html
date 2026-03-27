@@ -32,7 +32,7 @@
 <body>
 
 <div id="ui-layer">
-    <h3>Cuboid Exercise</h3>
+    <h3>2526 S5UT4 MCQ6</h3>
     <p>ABCDEFGH is a cuboid. P lies on AF. AB=4, AD=12, AP=6, GP=k, CG=3k. Find the area of ΔCGP in terms of k.</p>
     
     <div class="button-row">
@@ -52,16 +52,12 @@
 <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
 
 <script>
-    // (2/10) Calculation Text
     const stepData = [
         "1. <b>Identify base of ΔCGP:</b><br>The base is the vertical edge CG = 3k.",
         "2. <b>Find the perpendicular height:</b><br>The height of ΔCGP from P to the line containing CG is the horizontal distance FG = 4.",
         "3. <b>Calculate Area:</b><br>Area = 1/2 × base × height<br>= 1/2 × (3k) × (4)<br>= 6k"
     ];
 
-    // ==========================================
-    // SCENE SETUP
-    // ==========================================
     const scene = new THREE.Scene();
     scene.background = new THREE.Color(0xf0f2f5);
     const camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 1000);
@@ -73,33 +69,28 @@
     const matTarget  = new THREE.LineBasicMaterial({ color: 0xff0000, linewidth: 2 });
     const matActive  = new THREE.LineBasicMaterial({ color: 0x0d6efd, linewidth: 4 });
 
-    // (3/10) Vertex Coordinates (k is visualized as 5 for proportions)
-    const kVis = 5;
+    // Updated V to be consistent (X, Depth, Height)
     const V = {
         F: new THREE.Vector3(0, 0, 0),
         G: new THREE.Vector3(4, 0, 0),
         H: new THREE.Vector3(4, 12, 0),
         E: new THREE.Vector3(0, 12, 0),
-        A: new THREE.Vector3(0, 0, 15), // Height is arbitrary for cuboid look
+        A: new THREE.Vector3(0, 0, 15),
         B: new THREE.Vector3(4, 0, 15),
         C: new THREE.Vector3(4, 12, 15),
         D: new THREE.Vector3(0, 12, 15),
-        P: new THREE.Vector3(0, 0, 9),  // AP=6 from top, so 15-6=9
-        CG_top: new THREE.Vector3(4, 12, 15 - (3 * kVis)) // Representing CG=3k
+        P: new THREE.Vector3(0, 0, 9)
     };
 
-    // (4/10) Edges
     function createLine(v1, v2, material = matDefault) {
         const line = new THREE.Line(new THREE.BufferGeometry().setFromPoints([v1, v2]), material);
         scene.add(line); return line;
     }
     
-    // Static Cuboid Edges
     [ [V.F, V.G], [V.G, V.H], [V.H, V.E], [V.E, V.F], 
       [V.A, V.B], [V.B, V.C], [V.C, V.D], [V.D, V.A],
       [V.F, V.A], [V.G, V.B], [V.H, V.C], [V.E, V.D] ].forEach(pts => createLine(pts[0], pts[1]));
 
-    // (5/10) Angles & (6/10) Dynamic Lines
     function createRightAngle(vertex, p1, p2, size = 0.8) {
         const d1 = new THREE.Vector3().subVectors(p1, vertex).normalize().multiplyScalar(size);
         const d2 = new THREE.Vector3().subVectors(p2, vertex).normalize().multiplyScalar(size);
@@ -111,13 +102,9 @@
     const lineCG = createLine(V.C, V.G, matTarget);
     const lineGP = createLine(V.G, V.P, matTarget);
     const lineCP = createLine(V.C, V.P, matTarget);
-    const linePF = createLine(V.P, V.F, matDefault);
     const lineFG = createLine(V.F, V.G, matDefault);
-
     const anglePFG = createRightAngle(V.F, V.P, V.G);
-    const angleSymbols = [anglePFG];
 
-    // (7/10) Labels
     function makeLabel(text, pos, color = "black") {
         const canvas = document.createElement('canvas');
         const ctx = canvas.getContext('2d');
@@ -129,65 +116,44 @@
         scene.add(sprite); return sprite;
     }
 
-    Object.keys(V).filter(k => k.length === 1).forEach(key => makeLabel(key, V[key]));
+    Object.keys(V).forEach(key => makeLabel(key, V[key]));
     makeLabel("4", new THREE.Vector3(2, 0, 0), "#d63384");
     makeLabel("3k", new THREE.Vector3(4, 12, 7.5), "#d63384");
     makeLabel("6", new THREE.Vector3(0, 0, 12), "#d63384");
 
-    // (8/10) Triangles
     function createTriangle(p1, p2, p3, color, opacity = 0.35) {
         const geom = new THREE.BufferGeometry().setFromPoints([p1, p2, p3]);
         geom.setIndex([0, 1, 2]);
         const mesh = new THREE.Mesh(geom, new THREE.MeshBasicMaterial({ color, side: THREE.DoubleSide, transparent: true, opacity, depthTest: false }));
-        mesh.visible = false; scene.add(mesh); return mesh;
+        mesh.visible = true; scene.add(mesh); return mesh;
     }
     const meshCGP = createTriangle(V.C, V.G, V.P, 0xffc107, 0.5);
-    meshCGP.visible = true;
 
-    // (9/10) Interaction Logic
     function updateHighlights(step) {
-        angleSymbols.forEach(s => s.visible = false);
+        anglePFG.visible = false;
         lineCG.material = lineGP.material = lineCP.material = matTarget;
         lineFG.material = matDefault;
-
-        if (step === 1) {
-            lineCG.material = matActive;
-        } else if (step === 2) {
-            lineFG.material = matActive;
-            anglePFG.visible = true;
-        } else if (step === 3) {
-            lineCG.material = lineFG.material = matActive;
-        }
+        if (step === 1) lineCG.material = matActive;
+        else if (step === 2) { lineFG.material = matActive; anglePFG.visible = true; }
+        else if (step === 3) { lineCG.material = lineFG.material = matActive; }
     }
 
-    // Standard Controls
     const controls = new THREE.OrbitControls(camera, renderer.domElement);
-    // Updated Camera and Target for the Side-Profile View
+    
     function resetCamera() {
-        // Positioned to look "across" the cuboid to see CG and P clearly
         camera.position.set(-25, 12, 10); 
-        
-        // Centered on the middle of the ΔCGP region
         controls.target.set(2, 6, 7.5); 
-        
         controls.update();
     }
-    
-    // Call it immediately after defining controls to set the start view
-    const controls = new THREE.OrbitControls(camera, renderer.domElement);
     resetCamera();
 
     function animate() {
         requestAnimationFrame(animate);
-        const debugBox = document.getElementById('debug-info');
-        if (debugBox && controls) {
-            debugBox.innerHTML = `<b>CAMERA:</b> ${camera.position.x.toFixed(1)}, ${camera.position.y.toFixed(1)}, ${camera.position.z.toFixed(1)}<br><b>TARGET:</b> ${controls.target.x.toFixed(1)}, ${controls.target.y.toFixed(1)}, ${controls.target.z.toFixed(1)}`;
-        }
+        document.getElementById('debug-info').innerHTML = `<b>CAMERA:</b> ${camera.position.x.toFixed(1)}, ${camera.position.y.toFixed(1)}, ${camera.position.z.toFixed(1)}<br><b>TARGET:</b> ${controls.target.x.toFixed(1)}, ${controls.target.y.toFixed(1)}, ${controls.target.z.toFixed(1)}`;
         renderer.render(scene, camera);
     }
     animate();
 
-    // Step Management
     const container = document.getElementById('step-container');
     stepData.forEach((text, i) => {
         const div = document.createElement('div');
@@ -199,7 +165,7 @@
     function startSteps() {
         document.getElementById('calc-box').style.display = 'block';
         document.getElementById('toggle-btn').style.display = 'none';
-        currentStep = 0; nextStep();
+        nextStep();
     }
 
     function nextStep() {
