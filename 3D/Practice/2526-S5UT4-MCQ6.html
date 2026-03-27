@@ -1,8 +1,9 @@
+<!-- search "(UpdateForNewExercise)" for a exercise html -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>DSE Geometry: Cuboid Area Analysis</title>
+    <title>DSE Geometry Visualizer (Flexible Template)</title>
     <style>
         body { margin: 0; background-color: #f0f2f5; font-family: 'Segoe UI', sans-serif; overflow: hidden; }
         #ui-layer { 
@@ -11,149 +12,311 @@
             z-index: 10; max-width: 350px; border-top: 5px solid #0d6efd;
             box-shadow: 0 4px 15px rgba(0,0,0,0.2);
         }
-        #ui-layer p { font-size: 18px; line-height: 1.6; }
-        #ui-layer h3 { font-size: 24px; margin: 0 0 10px 0; }
-        .button-row { display: flex; gap: 10px; margin-top: 15px; }
-        .button-row button { flex: 1; padding: 12px; border-radius: 5px; border: none; cursor: pointer; font-weight: bold; }
+        #ui-layer p { font-size: 21px; line-height: 1.6; }
+        #ui-layer h3 { font-size: 27px; }
+        #toggle-btn {
+            background: #0d6efd; color: white; border: none; padding: 10px;
+            width: 100%; border-radius: 5px; cursor: pointer; font-weight: bold;
+        }
         #calc-box { 
-            display: none; margin-top: 15px; font-size: 18px; 
+            display: none; margin-top: 15px; font-size: 21px; 
             line-height: 1.5; border-top: 1px solid #ddd; padding-top: 10px; 
         }
         .step { display: none; margin-bottom: 10px; border-left: 3px solid #0d6efd; padding-left: 10px; }
-        #next-btn { margin-top: 10px; background: #198754; color: white; border: none; padding: 10px; width: 100%; border-radius: 5px; cursor: pointer; }
+        #next-btn { 
+            display: none; margin-top: 10px; background: #198754; color: white; 
+            border: none; padding: 8px; width: 100%; border-radius: 5px; cursor: pointer; 
+        }
         #debug-info {
-            position: absolute; top: 15px; right: 15px; 
-            background: rgba(255, 255, 255, 0.9); padding: 12px; border-radius: 8px; 
-            font-family: monospace; font-size: 14px; pointer-events: none; 
-            border: 1px solid #ccc; z-index: 20;
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background: rgba(255, 255, 255, 0.8);
+            padding: 10px;
+            border-radius: 8px;
+            font-family: monospace;
+            font-size: 14px;
+            pointer-events: none; /* Let clicks pass through to the 3D scene */
+            border: 1px solid #ccc;
+            z-index: 20;
         }
     </style>
 </head>
 <body>
 
 <div id="ui-layer">
-    <h3>2526 S5UT4 MCQ6</h3>
-    <p>ABCDEFGH is a cuboid. P lies on AF. AB=4, AD=12, AP=6, GP=k, CG=3k. Find the area of ΔCGP in terms of k.</p>
-    
-    <div class="button-row">
-        <button id="toggle-btn" style="background: #0d6efd; color: white;" onclick="startSteps()">Show Steps</button>
-        <button id="reset-cam-btn" style="background: #6c757d; color: white;" onclick="resetCamera()">Reset 🎥</button>
-    </div>
+    <!-- Question Text ************ (UpdateForNewExercise) (1/10) ************ -->
+    <h3 style="margin:0 0 10px 0;">DSE 2020 Q38</h3>
+    In the figure, ABCDEF is a right triangular prism. P lies on AE. AB=AC=12, AP=9, EP=5, BD=2k. Find the area of ΔBDP.
+    <button id="reset-cam-btn" style="margin-top: 10px; background: #6c757d; color: white; border: none; padding: 10px; width: 100%; border-radius: 5px; cursor: pointer; font-weight: bold;" onclick="resetCamera()">Reset Camera 🎥</button>
+    <p style="font-size: 11px; color: #666;">🖱️ Left-Click: Rotate | 🖱️ Right-Click: Drag | 🔍 Scroll: Zoom</p>
 
+    <button id="toggle-btn" onclick="startSteps()">Show Calculation Steps</button>
+    
     <div id="calc-box">
         <div id="step-container"></div>
         <button id="next-btn" onclick="nextStep()">Next Step ➔</button>
     </div>
 </div>
-
-<div id="debug-info">Camera: Loading...</div>
-
+<div id="debug-info">
+    Camera: (0, 0, 0)<br>
+    Target: (0, 0, 0)
+</div>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
 
 <script>
-    const stepData = [
-        "1. <b>Identify base of ΔCGP:</b><br>The base is the vertical edge CG = 3k.",
-        "2. <b>Find the perpendicular height:</b><br>The height of ΔCGP from P to the line containing CG is the horizontal distance FG = 4.",
-        "3. <b>Calculate Area:</b><br>Area = 1/2 × base × height<br>= 1/2 × (3k) × (4)<br>= 6k"
-    ];
+    // ==========================================
+    // 1. CALCULATION
+    // ==========================================
 
+    // Calculation Text ************ (UpdateForNewExercise) (2/10) ************
+    const stepData = [
+        "1. <b>In the right-angled ΔABP, </b><br> BP = √(12² + 9²) = 15",
+        "2. <b>In the right-angled ΔDEP, </b><br> DP = √(12² + 5²) = 13",
+        "3. <b>In ΔBDP, BP = 15, DP = 13, BD = 2k</b>" + "<br>"
+            + "Use the Heron's formula." + "<br>"
+            + "Let s = (BP + DP + BD)/2 = 14 + k" + "<br>"
+            + "Area = √s(s - BP)(s - DP)(s - BD)" + "<br>"
+            + "= √(14 + k)(k - 1)(k + 1)(14 - k)" + "<br>"
+            + "= √(k² - 1)(196 - k²)"
+    ];
+    
+    // ==========================================
+    // 2. MATERIALS & COLORS
+    // ==========================================
+    
+    // (UPDATE colors here if needed)
+    const matDefault = new THREE.LineBasicMaterial({ color: 0x333333 }); // Black/Gray lines
+    const matTarget  = new THREE.LineBasicMaterial({ color: 0xff0000, linewidth: 3 }); // Red "Target" lines
+    const matActive  = new THREE.LineBasicMaterial({ color: 0x0d6efd, linewidth: 8 }); // Thick Blue "Highlight"
+    
+    const colorBlueShade = 0x0d6efd; // Blue transparency
+    const colorGoldShade = 0xffc107; // Gold target transparency
+
+    // ==========================================
+    // 3. SCENE SETUP (Usually stays the same)
+    // ==========================================
     const scene = new THREE.Scene();
     scene.background = new THREE.Color(0xf0f2f5);
     const camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 1000);
-    const renderer = new THREE.WebGLRenderer({ antialias: true, logarithmicDepthBuffer: true });
+    const renderer = new THREE.WebGLRenderer({ 
+        antialias: true,
+        logarithmicDepthBuffer: true // Adds high precision to depth calculations
+    });
     renderer.setSize(window.innerWidth, window.innerHeight);
     document.body.appendChild(renderer.domElement);
 
-    const matDefault = new THREE.LineBasicMaterial({ color: 0x333333 });
-    const matTarget  = new THREE.LineBasicMaterial({ color: 0xff0000, linewidth: 2 });
-    const matActive  = new THREE.LineBasicMaterial({ color: 0x0d6efd, linewidth: 4 });
-
-    // Updated V to be consistent (X, Depth, Height)
-    const V = {
-        F: new THREE.Vector3(0, 0, 0),
-        G: new THREE.Vector3(4, 0, 0),
-        H: new THREE.Vector3(4, 12, 0),
-        E: new THREE.Vector3(0, 12, 0),
-        A: new THREE.Vector3(0, 0, 15),
-        B: new THREE.Vector3(4, 0, 15),
-        C: new THREE.Vector3(4, 12, 15),
-        D: new THREE.Vector3(0, 12, 15),
-        P: new THREE.Vector3(0, 0, 9)
-    };
-
+    // Helper functions
     function createLine(v1, v2, material = matDefault) {
         const line = new THREE.Line(new THREE.BufferGeometry().setFromPoints([v1, v2]), material);
-        scene.add(line); return line;
+        scene.add(line);
+        return line;
     }
-    
-    [ [V.F, V.G], [V.G, V.H], [V.H, V.E], [V.E, V.F], 
-      [V.A, V.B], [V.B, V.C], [V.C, V.D], [V.D, V.A],
-      [V.F, V.A], [V.G, V.B], [V.H, V.C], [V.E, V.D] ].forEach(pts => createLine(pts[0], pts[1]));
 
-    function createRightAngle(vertex, p1, p2, size = 0.8) {
+    function createRightAngle(vertex, p1, p2, size = 1.0) {
         const d1 = new THREE.Vector3().subVectors(p1, vertex).normalize().multiplyScalar(size);
         const d2 = new THREE.Vector3().subVectors(p2, vertex).normalize().multiplyScalar(size);
-        const geom = new THREE.BufferGeometry().setFromPoints([vertex.clone().add(d1), vertex.clone().add(d1).add(d2), vertex.clone().add(d2)]);
+        
+        const corner1 = vertex.clone().add(d1);
+        const corner2 = vertex.clone().add(d1).add(d2);
+        const corner3 = vertex.clone().add(d2);
+        
+        const geom = new THREE.BufferGeometry().setFromPoints([corner1, corner2, corner3]);
         const line = new THREE.Line(geom, new THREE.LineBasicMaterial({ color: 0x000000 }));
-        line.visible = false; scene.add(line); return line;
+        line.visible = false;
+        scene.add(line);
+        return line;
     }
-
-    const lineCG = createLine(V.C, V.G, matTarget);
-    const lineGP = createLine(V.G, V.P, matTarget);
-    const lineCP = createLine(V.C, V.P, matTarget);
-    const lineFG = createLine(V.F, V.G, matDefault);
-    const anglePFG = createRightAngle(V.F, V.P, V.G);
-
-    function makeLabel(text, pos, color = "black") {
-        const canvas = document.createElement('canvas');
-        const ctx = canvas.getContext('2d');
-        canvas.width = 256; canvas.height = 256;
-        ctx.font = 'Bold 80px Arial'; ctx.fillStyle = color; ctx.textAlign = "center";
-        ctx.fillText(text, 128, 128);
-        const sprite = new THREE.Sprite(new THREE.SpriteMaterial({ map: new THREE.CanvasTexture(canvas), sizeAttenuation: false }));
-        sprite.position.copy(pos); sprite.scale.set(0.12, 0.12, 1);
-        scene.add(sprite); return sprite;
-    }
-
-    Object.keys(V).forEach(key => makeLabel(key, V[key]));
-    makeLabel("4", new THREE.Vector3(2, 0, 0), "#d63384");
-    makeLabel("3k", new THREE.Vector3(4, 12, 7.5), "#d63384");
-    makeLabel("6", new THREE.Vector3(0, 0, 12), "#d63384");
 
     function createTriangle(p1, p2, p3, color, opacity = 0.35) {
         const geom = new THREE.BufferGeometry().setFromPoints([p1, p2, p3]);
         geom.setIndex([0, 1, 2]);
-        const mesh = new THREE.Mesh(geom, new THREE.MeshBasicMaterial({ color, side: THREE.DoubleSide, transparent: true, opacity, depthTest: false }));
-        mesh.visible = true; scene.add(mesh); return mesh;
+        const mesh = new THREE.Mesh(geom, new THREE.MeshBasicMaterial({ 
+            color, 
+            side: THREE.DoubleSide, 
+            transparent: true, 
+            opacity,
+            depthTest: false,   // <--- This is the "Magic" line
+            depthWrite: false,        // Prevents the mesh from "cutting holes" in other objects
+            // polygonOffset: true,      // Enables a mathematical offset
+            // polygonOffsetFactor: -1,  // Pushes the triangle slightly toward the camera
+            // polygonOffsetUnits: -1
+        }));
+        mesh.renderOrder = 1; // Forces the triangle to be drawn on top of the lines
+        mesh.visible = false;
+        scene.add(mesh);
+        return mesh;
     }
-    const meshCGP = createTriangle(V.C, V.G, V.P, 0xffc107, 0.5);
 
-    function updateHighlights(step) {
-        anglePFG.visible = false;
-        lineCG.material = lineGP.material = lineCP.material = matTarget;
-        lineFG.material = matDefault;
-        if (step === 1) lineCG.material = matActive;
-        else if (step === 2) { lineFG.material = matActive; anglePFG.visible = true; }
-        else if (step === 3) { lineCG.material = lineFG.material = matActive; }
-    }
+    // ==========================================
+    // 4. OBJECT DEFINITIONS (Lines and Surfaces)
+    // ==========================================
 
-    const controls = new THREE.OrbitControls(camera, renderer.domElement);
+    // Define all Vertex Coordinates here ************ (UpdateForNewExercise) (3/10) ************
+    const V = {
+        E: new THREE.Vector3(4, 10, -11),
+        D: new THREE.Vector3(8, 10, 0),
+        F: new THREE.Vector3(0, 10, 0),
+        B: new THREE.Vector3(0, 0, 0),
+        A: new THREE.Vector3(4, 0, -11),
+        C: new THREE.Vector3(8, 0, 0),
+        P: new THREE.Vector3(4, 7, -11)
+    };
     
-    function resetCamera() {
-        camera.position.set(-25, 12, 10); 
-        controls.target.set(2, 6, 7.5); 
-        controls.update();
+    // Static Prism Edges ************ (UpdateForNewExercise) (4/10) ************
+    [ [V.A, V.E], [V.D, V.F], [V.E, V.F], [V.D, V.C], [V.C, V.B], [V.A, V.C], [V.F, V.B] ].forEach(pts => createLine(pts[0], pts[1]));
+    
+    // Dynamic Lines (assigned to variables for highlighting) ************ (UpdateForNewExercise) (5/10) ************
+    const lineDE = createLine(V.E, V.D);
+    const lineEP = createLine(V.E, V.P);
+    const lineAB = createLine(V.B, V.A);
+    const lineAP = createLine(V.A, V.P);
+    const defaultLines = [lineDE, lineEP, lineAB, lineAP];
+    const lineDP = createLine(V.D, V.P, matTarget); // Red "Target" lines
+    const lineBP = createLine(V.B, V.P, matTarget); // Red "Target" lines
+    const lineBD = createLine(V.D, V.B, matTarget); // Red "Target" lines
+    const targetLines  = [lineDP, lineBP, lineBD];
+
+    // Define Right Angle Symbols ************ (UpdateForNewExercise) (6/10) ************
+    const angleBAP = createRightAngle(V.A, V.B, V.P); // Right angle at A
+    const anglePED = createRightAngle(V.E, V.P, V.D); // Right angle at E
+    const angleSymbols = [angleBAP, anglePED];
+    
+    // ==========================================
+    // 5. LABELS
+    // ==========================================
+    function makeLabel(text, pos, color = "black", isLarge = false) {
+        const canvas = document.createElement('canvas');
+        const ctx = canvas.getContext('2d');
+        canvas.width = 512; canvas.height = 512;
+        ctx.font = isLarge ? 'Bold 120px Arial' : 'Bold 90px Arial';
+        ctx.fillStyle = color;
+        ctx.textAlign = "center";
+        ctx.fillText(text, 256, 256);
+        const sprite = new THREE.Sprite(new THREE.SpriteMaterial({ map: new THREE.CanvasTexture(canvas), sizeAttenuation: false }));
+        sprite.position.copy(pos);
+        sprite.scale.set(0.15, 0.15, 1);
+        scene.add(sprite);
+        return sprite;
     }
+    
+    // Define length labels automatically at midpoints ************ (UpdateForNewExercise) (7/10) ************
+    const lengthLabels = [
+        { text: "12", pos: new THREE.Vector3().addVectors(V.A, V.B).multiplyScalar(0.5) },
+        { text: "12", pos: new THREE.Vector3().addVectors(V.A, V.C).multiplyScalar(0.5) },
+        { text: "5",  pos: new THREE.Vector3().addVectors(V.E, V.P).multiplyScalar(0.5) },
+        { text: "9",  pos: new THREE.Vector3().addVectors(V.A, V.P).multiplyScalar(0.5) },
+        { text: "2k", pos: new THREE.Vector3().addVectors(V.D, V.B).multiplyScalar(0.5) }
+    ];
+    // Generate Length Labels
+    lengthLabels.forEach(l => makeLabel(l.text, l.pos, "#d63384")); // PINK
+    
+    // Labels used in the calculation, hidden at the beginning ************ (UpdateForNewExercise) (8/10) ************
+    const lineDELabel = makeLabel("12", new THREE.Vector3().addVectors(V.D, V.E).multiplyScalar(0.5), "#0d6efd"); // BLUE
+    const lineBPLabel = makeLabel("15", new THREE.Vector3().addVectors(V.B, V.P).multiplyScalar(0.5), "#0d6efd"); // BLUE
+    const lineDPLabel = makeLabel("13", new THREE.Vector3().addVectors(V.D, V.P).multiplyScalar(0.5), "#0d6efd"); // BLUE
+    const lineLabelsForCalculation = [lineDELabel, lineBPLabel, lineDPLabel];
+    // Immediately hide them
+    lineLabelsForCalculation.forEach(lab => lab.visible = false);
+
+    // Triangle Surfaces ************ (UpdateForNewExercise) (9/10) ************
+    const meshABPBlue = createTriangle(V.A, V.B, V.P, colorBlueShade);
+    const meshDEPBlue = createTriangle(V.D, V.E, V.P, colorBlueShade);
+    const meshBDPBlue = createTriangle(V.B, V.D, V.P, colorBlueShade);
+    const blueMeshes   = [meshABPBlue, meshDEPBlue, meshBDPBlue];
+    const meshBDPGold = createTriangle(V.B, V.D, V.P, colorGoldShade, 0.4);    
+    const targetMeshes = [meshBDPGold];
+    meshBDPGold.visible = true; // Show target initially
+
+    // Generate Vertex Labels
+    // Object.keys(V).forEach(key => makeLabel(key, V[key].clone().add(new THREE.Vector3(0, key === 'B' || key === 'A' || key === 'C' ? -0.8 : 0.8, 0))));
+    Object.keys(V).forEach(key => makeLabel(key, V[key].clone().add(new THREE.Vector3(0, 0, 0))));
+
+    // ==========================================
+    // 6. INTERACTIVE LOGIC
+    // ==========================================
+    
+    function updateHighlights(step) {
+        // Reset Everything
+        // 1. Reset all lines to their "Standard" look
+        defaultLines.forEach(l => l.material = matDefault);
+        
+        // 2. Reset all "Target" lines to Red
+        targetLines.forEach(l => l.material = matTarget);
+        
+        // 3. Hide all Blue highlight surfaces
+        blueMeshes.forEach(m => m.visible = false);
+        
+        // 4. Handle the Gold Target visibility via the array
+        targetMeshes.forEach(m => m.visible = (step === 0));
+
+        // 5. Hide all labels before the next step's calculation
+        lineLabelsForCalculation.forEach(lab => lab.visible = false);
+
+        // 6. Reset Right Angles to hidden
+        angleSymbols.forEach(symbol => symbol.visible = false);
+                
+        // Reset Text Colors
+        for (let i = 1; i <= stepData.length; i++) {
+            const div = document.getElementById('s' + i);
+            if (div) div.style.color = "black";
+        }
+
+        // (UPDATE logic for each step here) ************ (UpdateForNewExercise) (10/10) ************
+        if (step === 1) {
+            lineAB.material = lineAP.material = lineBP.material = matActive;
+            meshABPBlue.visible = true;
+            angleBAP.visible = true; // Show ∠BAP
+            document.getElementById('s1').style.color = "#0d6efd";
+        } else if (step === 2) {
+            lineDE.material = lineEP.material = lineDP.material = matActive;
+            meshDEPBlue.visible = true;
+            lineDELabel.visible = true;
+            anglePED.visible = true; // Show ∠PED
+            document.getElementById('s2').style.color = "#0d6efd";
+        } else if (step === 3) {
+            lineBP.material = lineDP.material = lineBD.material = matActive;
+            meshBDPBlue.visible = true;
+            lineBPLabel.visible = lineDPLabel.visible = true;
+            document.getElementById('s3').style.color = "#0d6efd";
+        }
+    }
+
+    // Standard UI and Animation Loop
+    const controls = new THREE.OrbitControls(camera, renderer.domElement);
+    // Call your function to set the initial position
     resetCamera();
 
+    // function animate() { requestAnimationFrame(animate); renderer.render(scene, camera); }
+    // animate();
+    // Animation Loop with Real-time Updates
     function animate() {
         requestAnimationFrame(animate);
-        document.getElementById('debug-info').innerHTML = `<b>CAMERA:</b> ${camera.position.x.toFixed(1)}, ${camera.position.y.toFixed(1)}, ${camera.position.z.toFixed(1)}<br><b>TARGET:</b> ${controls.target.x.toFixed(1)}, ${controls.target.y.toFixed(1)}, ${controls.target.z.toFixed(1)}`;
+        
+        // Update the Debug Box Text
+        const debugBox = document.getElementById('debug-info');
+        if (debugBox && controls) {
+            const cp = camera.position;
+            const ct = controls.target;
+            debugBox.innerHTML = `
+                <b style="color:#0d6efd">CAMERA:</b><br>
+                x: ${cp.x.toFixed(1)}<br>
+                y: ${cp.y.toFixed(1)}<br>
+                z: ${cp.z.toFixed(1)}<br>
+                <hr style="margin:5px 0; border:0; border-top:1px solid #eee">
+                <b style="color:#198754">TARGET:</b><br>
+                x: ${ct.x.toFixed(1)}<br>
+                y: ${ct.y.toFixed(1)}<br>
+                z: ${ct.z.toFixed(1)}
+            `;
+        }
+    
         renderer.render(scene, camera);
     }
     animate();
 
+    // Step Management
     const container = document.getElementById('step-container');
     stepData.forEach((text, i) => {
         const div = document.createElement('div');
@@ -165,7 +328,8 @@
     function startSteps() {
         document.getElementById('calc-box').style.display = 'block';
         document.getElementById('toggle-btn').style.display = 'none';
-        nextStep();
+        document.getElementById('next-btn').style.display = 'block';
+        currentStep = 0; nextStep();
     }
 
     function nextStep() {
@@ -176,8 +340,30 @@
         }
         if (currentStep === stepData.length) {
             const btn = document.getElementById('next-btn');
-            btn.innerHTML = "Reset ↺"; btn.onclick = () => location.reload();
+            btn.innerHTML = "Reset ↺"; btn.style.background = "#6c757d";
+            btn.onclick = resetSteps;
         }
+    }
+
+    function resetSteps() {
+        for (let i = 1; i <= stepData.length; i++) document.getElementById('s' + i).style.display = 'none';
+        document.getElementById('calc-box').style.display = 'none';
+        document.getElementById('toggle-btn').style.display = 'block';
+        currentStep = 0; updateHighlights(0);
+        const btn = document.getElementById('next-btn');
+        btn.innerHTML = "Next Step ➔"; btn.style.background = "#198754";
+        btn.onclick = nextStep;
+    }
+    
+    function resetCamera() {
+        // Reset camera position to your initial settings
+        camera.position.set(-20, 15, 10);
+        
+        // Reset the pivot point for OrbitControls
+        controls.target.set(5, 4, -6);
+        
+        // Crucial: update the controls so they realize the camera has moved
+        controls.update();
     }
 </script>
 </body>
