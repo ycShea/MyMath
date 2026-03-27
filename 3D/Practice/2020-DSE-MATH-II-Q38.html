@@ -34,7 +34,7 @@
 <div id="ui-layer">
     <!-- Question Text ************ (UpdateForNewExercise) (1/9) ************ -->
     <h3 style="margin:0 0 10px 0;">DSE 2020 Q38</h3>
-    <p>In the figure, ABCDEF is a right triangular prism. P lies on AE. AB=AC=12, AP=9, EP=5, BD=2k. Find area of ΔBDP.</p>
+    <p>In the figure, ABCDEF is a right triangular prism. P lies on AE. AB=AC=12, AP=9, EP=5, BD=2k. Find the area of ΔBDP.</p>
     <p style="font-size: 11px; color: #666;">🖱️ Left-Click: Rotate | 🖱️ Right-Click: Drag | 🔍 Scroll: Zoom</p>
     
     <button id="toggle-btn" onclick="startSteps()">Show Calculation Steps</button>
@@ -83,7 +83,10 @@
     const scene = new THREE.Scene();
     scene.background = new THREE.Color(0xf0f2f5);
     const camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 1000);
-    const renderer = new THREE.WebGLRenderer({ antialias: true });
+    const renderer = new THREE.WebGLRenderer({ 
+        antialias: true,
+        logarithmicDepthBuffer: true // Adds high precision to depth calculations
+    });
     renderer.setSize(window.innerWidth, window.innerHeight);
     document.body.appendChild(renderer.domElement);
 
