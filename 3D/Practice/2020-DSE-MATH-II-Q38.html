@@ -264,7 +264,32 @@
     controls.target.set(6, 6, -6);
     controls.update();
 
-    function animate() { requestAnimationFrame(animate); renderer.render(scene, camera); }
+    // function animate() { requestAnimationFrame(animate); renderer.render(scene, camera); }
+    // animate();
+    // Animation Loop with Real-time Updates
+    function animate() {
+        requestAnimationFrame(animate);
+        
+        // Update the Debug Box Text
+        const debugBox = document.getElementById('debug-info');
+        if (debugBox && controls) {
+            const cp = camera.position;
+            const ct = controls.target;
+            debugBox.innerHTML = `
+                <b style="color:#0d6efd">CAMERA:</b><br>
+                x: ${cp.x.toFixed(1)}<br>
+                y: ${cp.y.toFixed(1)}<br>
+                z: ${cp.z.toFixed(1)}<br>
+                <hr style="margin:5px 0; border:0; border-top:1px solid #eee">
+                <b style="color:#198754">TARGET:</b><br>
+                x: ${ct.x.toFixed(1)}<br>
+                y: ${ct.y.toFixed(1)}<br>
+                z: ${ct.z.toFixed(1)}
+            `;
+        }
+    
+        renderer.render(scene, camera);
+    }
     animate();
 
     // Step Management
