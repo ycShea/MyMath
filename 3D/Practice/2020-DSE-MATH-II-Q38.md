@@ -1,6 +1,6 @@
 # 📐 DSE Geometry Visualizer
 
-This project ([ycShea/DSE-Geometry-Visualizer](https://www.google.com/search?q=https://github.com/ycShea/DSE-Geometry-Visualizer)) is a flexible, web-based 3D visualization tool designed for mathematics students to explore HKDSE-style 3D geometry problems. It transforms static textbook diagrams into interactive environments where users can manipulate the camera, visualize hidden triangles, and follow step-by-step calculations.
+This project ([ycShea/DSE-Geometry-Visualizer](https://ycshea.github.io/MyMath/3D/Practice/2020-DSE-MATH-II-Q38.html)) is a flexible, web-based 3D visualization tool designed for mathematics students to explore HKDSE-style 3D geometry problems. It transforms static textbook diagrams into interactive environments where users can manipulate the camera, visualize hidden triangles, and follow step-by-step calculations.
 
 -----
 
@@ -64,7 +64,7 @@ To swap the current problem for a new one, search for the `(UpdateForNewExercise
 
 -----
 
-I've updated the coordinate mapping for your cuboid exercise. You can copy these into **Section 3** of your code:
+### 💻 Code Snippet: Section 3 (Vertex Coordinates)
 
 ```javascript
 const V = {
