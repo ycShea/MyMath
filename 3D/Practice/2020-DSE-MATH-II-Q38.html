@@ -32,7 +32,7 @@
 <body>
 
 <div id="ui-layer">
-    <h3 style="margin:0 0 10px 0;">DSE 2020 Q38</h3>
+    <h3 style="margin:0 0 10px 0;">DSE 2020 Q38 2</h3>
     <p>ABCDEF is a right triangular prism. P lies on AE. AB=AC=12, AP=9, EP=5, BD=2k. Find area of ΔBDP.</p>
     <p style="font-size: 11px; color: #666;">🖱️ Left-Click: Rotate | 🖱️ Right-Click: Drag | 🔍 Scroll: Zoom</p>
     
@@ -52,7 +52,7 @@
     // 1. CONFIGURATION: CHANGE THESE FOR NEW EXERCISES
     // ==========================================
 
-    // Calculation Text (UPDATE for new exercise) (1/2)
+    // Calculation Text (UPDATE for new exercise) (1/3)
     const stepData = [
         "1. <b>In the right-angled ΔABP, </b><br> BP = √(12² + 9²) = 15",
         "2. <b>In the right-angled ΔDEP, </b><br> DP = √(12² + 5²) = 13",
@@ -171,15 +171,26 @@
     lengthLabels.forEach(l => makeLabel(l.text, l.pos, "#d63384"));
 
     // ==========================================
-    // 6. INTERACTIVE LOGIC (UPDATE for new exercise) (2/2)
+    // 6. INTERACTIVE LOGIC (UPDATE for new exercise) (2/3)
     // ==========================================
     
     function updateHighlights(step) {
         // Reset Everything
-        lineAB.material = matDefault; lineAP.material = matDefault;
-        lineDE.material = matDefault; lineEP.material = matDefault;
-        lineBP.material = lineDP.material = lineBD.material = matTarget;
-        .visible = meshDEPBlue.visible = meshBDPBlue.visible = false;
+        // 1. Create the arrays at the top of your function
+        const defaultLines = [lineAB, lineAP, lineDE, lineEP];
+        const targetLines  = [lineBP, lineDP, lineBD];
+        const blueMeshes   = [meshABPBlue, meshDEPBlue, meshBDPBlue];
+        
+        // 2. Reset all lines to their "Standard" look
+        defaultLines.forEach(l => l.material = matDefault);
+        
+        // 3. Reset all "Target" lines to Red
+        targetLines.forEach(l => l.material = matTarget);
+        
+        // 4. Hide all Blue highlight surfaces
+        blueMeshes.forEach(m => m.visible = false);
+        
+        // 5. Handle the Gold Target visibility
         meshBDPGold.visible = (step === 0);
 
         // Reset Text Colors
@@ -188,10 +199,10 @@
             if (div) div.style.color = "black";
         }
 
-        // (UPDATE logic for each step here)
+        // (UPDATE logic for each step here) (UPDATE for new exercise) (3/3)
         if (step === 1) {
             lineAB.material = lineAP.material = lineBP.material = matActive;
-            .visible = true;
+            meshABPBlue.visible = true;
             document.getElementById('s1').style.color = "#0d6efd";
         } else if (step === 2) {
             lineDE.material = lineEP.material = lineDP.material = matActive;
