@@ -235,21 +235,22 @@
 
         // (UPDATE logic for each step here) ************ (UpdateForNewExercise) (10/10) ************
         if (step === 1) {
-            lineAC.material = lineAD.material = lineCD.material = matActive;
-            meshACDBlue.visible = true;
-            lineCDLabel.visible = true;
+            lineAC.material = lineAD.material = lineCD.material = matActive;           
+            lineAC.visible = true;
+            lineLabelCD.visible = true;
             angleADC.visible = true; // Show ∠ADC
+            blueMeshACD.visible = true;
             document.getElementById('s1').style.color = "#0d6efd";
         } else if (step === 2) {
-            lineAC.material = lineAP.material = lineCP.material = matActive;
-            meshACPBlue.visible = true;
-            lineACLabel.visible = true;
+            lineAC.material = lineAP.material = lineCP.material = matActive;            
+            lineLabelAC.visible = true;
             angleCAP.visible = true; // Show ∠CAP
+            blueMeshACP.visible = true;
             document.getElementById('s2').style.color = "#0d6efd";
         } else if (step === 3) {
             lineCP.material = lineCG.material = lineGP.material = matActive;
-            meshCGPBlue.visible = true;
-            lineCPLabel.visible = true;
+            lineLabelCP.visible = true;
+            blueMeshCGP.visible = true;
             document.getElementById('s3').style.color = "#0d6efd";
         }
     }
