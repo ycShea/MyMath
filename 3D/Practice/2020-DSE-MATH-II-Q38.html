@@ -48,9 +48,9 @@
     <!-- Question Text ************ (UpdateForNewExercise) (1/9) ************ -->
     <h3 style="margin:0 0 10px 0;">DSE 2020 Q38</h3>
     <p>In the figure, ABCDEF is a right triangular prism. P lies on AE. AB=AC=12, AP=9, EP=5, BD=2k. Find the area of ΔBDP.</p>
+    <button id="reset-cam-btn" style="margin-top: 10px; background: #6c757d; color: white; border: none; padding: 10px; width: 100%; border-radius: 5px; cursor: pointer; font-weight: bold;" onclick="resetCamera()">Reset Camera 🎥</button>
     <p style="font-size: 11px; color: #666;">🖱️ Left-Click: Rotate | 🖱️ Right-Click: Drag | 🔍 Scroll: Zoom</p>
 
-    <button id="reset-cam-btn" style="margin-top: 10px; background: #6c757d; color: white; border: none; padding: 10px; width: 100%; border-radius: 5px; cursor: pointer; font-weight: bold;" onclick="resetCamera()">Reset Camera 🎥</button>
     <button id="toggle-btn" onclick="startSteps()">Show Calculation Steps</button>
     
     <div id="calc-box">
@@ -264,19 +264,7 @@
     controls.target.set(6, 6, -6);
     controls.update();
 
-    function animate() {
-        requestAnimationFrame(animate);
-        
-        // Update the debug text
-        const cp = camera.position;
-        const ct = controls.target;
-        debugBox.innerHTML = `
-            <b>Camera Pos:</b> (${cp.x.toFixed(1)}, ${cp.y.toFixed(1)}, ${cp.z.toFixed(1)})<br>
-            <b>Target Pos:</b> (${ct.x.toFixed(1)}, ${ct.y.toFixed(1)}, ${ct.z.toFixed(1)})
-        `;
-    
-        renderer.render(scene, camera);
-    }
+    function animate() { requestAnimationFrame(animate); renderer.render(scene, camera); }
     animate();
 
     // Step Management
