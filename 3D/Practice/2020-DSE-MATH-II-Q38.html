@@ -51,8 +51,20 @@
     // ==========================================
     // 1. CONFIGURATION: CHANGE THESE FOR NEW EXERCISES
     // ==========================================
-    
-    // (UPDATE for new exercise) Define all Vertex Coordinates here
+
+    // Calculation Text (UPDATE for new exercise) (1/2)
+    const stepData = [
+        "1. <b>In the right-angled ΔABP, </b><br> BP = √(12² + 9²) = 15",
+        "2. <b>In the right-angled ΔDEP, </b><br> DP = √(12² + 5²) = 13",
+        "3. <b>In ΔBDP, BP = 15, DP = 13, BD = 2k</b>" + "<br>"
+            + "Use the Heron's formula." + "<br>"
+            + "Let s = (BP + DP + BD)/2 = 14 + k" + "<br>"
+            + "Area = √s(s - BP)(s - DP)(s - BD)" + "<br>"
+            + "= √(14 + k)(k - 1)(k + 1)(14 - k)" + "<br>"
+            + "= √(k² - 1)(196 - k²)"
+    ];
+
+    // Define all Vertex Coordinates here (UPDATE for new exercise) 
     const V = {
         A: new THREE.Vector3(0, 14, 0),
         B: new THREE.Vector3(12, 14, 0),
@@ -62,23 +74,7 @@
         F: new THREE.Vector3(12, 0, 0),
         P: new THREE.Vector3(0, 5, 0)
     };
-
-    // (UPDATE for new exercise) Define length labels and their positions
-    const lengthLabels = [
-        { text: "12", pos: new THREE.Vector3(6, 15, 0) },
-        { text: "12", pos: new THREE.Vector3(-1.2, 15, 6) },
-        { text: "9",  pos: new THREE.Vector3(-1.2, 9.5, 0) },
-        { text: "5",  pos: new THREE.Vector3(-1.2, 2.5, 0) },
-        { text: "2k", pos: new THREE.Vector3(6, 7, 6) }
-    ];
-
-    // (UPDATE for new exercise) Calculation Text
-    const stepData = [
-        "1. <b>In the right-angled ΔABP, </b><br> BP = √(12² + 9²) = 15",
-        "2. <b>In the right-angled ΔDEP, </b><br> DP = √(12² + 5²) = 13",
-        "3. <b>In ΔBDP, BP = 15, DP = 13, BD = 2k</b><br>Use the Heron's formula.<br>Area = √(k² - 1)(196 - k²)"
-    ];
-
+    
     // ==========================================
     // 2. MATERIALS & COLORS
     // ==========================================
@@ -121,23 +117,32 @@
     // 4. OBJECT DEFINITIONS (Lines and Surfaces)
     // ==========================================
     
-    // (UPDATE for new exercise) Static Prism Edges
+    // Static Prism Edges (UPDATE for new exercise)
     [ [V.B, V.C], [V.C, V.A], [V.B, V.F], [V.F, V.D], [V.E, V.F], [V.C, V.D] ].forEach(pts => createLine(pts[0], pts[1]));
 
-    // (UPDATE for new exercise) Dynamic Lines (assigned to variables for highlighting)
+    // Dynamic Lines (assigned to variables for highlighting) (UPDATE for new exercise)
     const lineAB = createLine(V.A, V.B);
     const lineAP = createLine(V.A, V.P);
-    const lineBP = createLine(V.B, V.P, matTarget);
+    const lineBP = createLine(V.B, V.P, matTarget); // Red "Target" lines
     const lineDE = createLine(V.D, V.E);
     const lineEP = createLine(V.E, V.P);
-    const lineDP = createLine(V.D, V.P, matTarget);
-    const lineBD = createLine(V.B, V.D, matTarget);
+    const lineDP = createLine(V.D, V.P, matTarget); // Red "Target" lines
+    const lineBD = createLine(V.B, V.D, matTarget); // Red "Target" lines
 
-    // (UPDATE for new exercise) Triangle Surfaces
-    const meshABP = createTriangle(V.A, V.B, V.P, colorBlueShade);
-    const meshDEP = createTriangle(V.D, V.E, V.P, colorBlueShade);
+    // Define length labels automatically at midpoints (UPDATE for new exercise)
+    const lengthLabels = [
+        { text: "12", pos: new THREE.Vector3().addVectors(V.A, V.B).multiplyScalar(0.5) },
+        { text: "12", pos: new THREE.Vector3().addVectors(V.A, V.C).multiplyScalar(0.5) },
+        { text: "9",  pos: new THREE.Vector3().addVectors(V.A, V.P).multiplyScalar(0.5) },
+        { text: "5",  pos: new THREE.Vector3().addVectors(V.E, V.P).multiplyScalar(0.5) },
+        { text: "2k", pos: new THREE.Vector3().addVectors(V.B, V.D).multiplyScalar(0.5) }
+    ];
+    
+    // Triangle Surfaces (UPDATE for new exercise)
+    const meshABPBlue = createTriangle(V.A, V.B, V.P, colorBlueShade);
+    const meshDEPBlue = createTriangle(V.D, V.E, V.P, colorBlueShade);
+    const meshBDPBlue = createTriangle(V.B, V.D, V.P, colorBlueShade);
     const meshBDPGold = createTriangle(V.B, V.D, V.P, colorGoldShade, 0.4); 
-    const meshBDPBlue = createTriangle(V.B, V.D, V.P, colorBlueShade, 0.35);
 
     meshBDPGold.visible = true; // Show target initially
 
@@ -159,13 +164,14 @@
     }
 
     // Generate Vertex Labels
-    Object.keys(V).forEach(key => makeLabel(key, V[key].clone().add(new THREE.Vector3(0, key === 'D' || key === 'E' || key === 'F' ? -0.8 : 0.8, 0))));
+    // Object.keys(V).forEach(key => makeLabel(key, V[key].clone().add(new THREE.Vector3(0, key === 'D' || key === 'E' || key === 'F' ? -0.8 : 0.8, 0))));
+    Object.keys(V).forEach(key => makeLabel(key, V[key].clone().add(new THREE.Vector3(0, 0, 0))));
     
     // Generate Length Labels
     lengthLabels.forEach(l => makeLabel(l.text, l.pos, "#d63384"));
 
     // ==========================================
-    // 6. INTERACTIVE LOGIC
+    // 6. INTERACTIVE LOGIC (UPDATE for new exercise) (2/2)
     // ==========================================
     
     function updateHighlights(step) {
@@ -173,7 +179,7 @@
         lineAB.material = matDefault; lineAP.material = matDefault;
         lineDE.material = matDefault; lineEP.material = matDefault;
         lineBP.material = lineDP.material = lineBD.material = matTarget;
-        meshABP.visible = meshDEP.visible = meshBDPBlue.visible = false;
+        .visible = meshDEPBlue.visible = meshBDPBlue.visible = false;
         meshBDPGold.visible = (step === 0);
 
         // Reset Text Colors
@@ -185,11 +191,11 @@
         // (UPDATE logic for each step here)
         if (step === 1) {
             lineAB.material = lineAP.material = lineBP.material = matActive;
-            meshABP.visible = true;
+            .visible = true;
             document.getElementById('s1').style.color = "#0d6efd";
         } else if (step === 2) {
             lineDE.material = lineEP.material = lineDP.material = matActive;
-            meshDEP.visible = true;
+            meshDEPBlue.visible = true;
             document.getElementById('s2').style.color = "#0d6efd";
         } else if (step === 3) {
             lineBP.material = lineDP.material = lineBD.material = matActive;
