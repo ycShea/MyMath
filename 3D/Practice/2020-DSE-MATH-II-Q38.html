@@ -32,8 +32,9 @@
 <body>
 
 <div id="ui-layer">
-    <h3 style="margin:0 0 10px 0;">DSE 2020 Q38 2</h3>
-    <p>ABCDEF is a right triangular prism. P lies on AE. AB=AC=12, AP=9, EP=5, BD=2k. Find area of ΔBDP.</p>
+    <!-- Question Text (UPDATE for new exercise) (1/4) -->
+    <h3 style="margin:0 0 10px 0;">DSE 2020 Q38</h3>
+    <p>In the figure, ABCDEF is a right triangular prism. P lies on AE. AB=AC=12, AP=9, EP=5, BD=2k. Find area of ΔBDP.</p>
     <p style="font-size: 11px; color: #666;">🖱️ Left-Click: Rotate | 🖱️ Right-Click: Drag | 🔍 Scroll: Zoom</p>
     
     <button id="toggle-btn" onclick="startSteps()">Show Calculation Steps</button>
@@ -52,7 +53,7 @@
     // 1. CONFIGURATION: CHANGE THESE FOR NEW EXERCISES
     // ==========================================
 
-    // Calculation Text (UPDATE for new exercise) (1/3)
+    // Calculation Text (UPDATE for new exercise) (2/4)
     const stepData = [
         "1. <b>In the right-angled ΔABP, </b><br> BP = √(12² + 9²) = 15",
         "2. <b>In the right-angled ΔDEP, </b><br> DP = √(12² + 5²) = 13",
@@ -64,7 +65,7 @@
             + "= √(k² - 1)(196 - k²)"
     ];
 
-    // Define all Vertex Coordinates here (UPDATE for new exercise) 
+    // Define all Vertex Coordinates here (UPDATE for new exercise) (3/4)
     const V = {
         A: new THREE.Vector3(0, 14, 0),
         B: new THREE.Vector3(12, 14, 0),
@@ -117,10 +118,10 @@
     // 4. OBJECT DEFINITIONS (Lines and Surfaces)
     // ==========================================
     
-    // Static Prism Edges (UPDATE for new exercise)
+    // Static Prism Edges (UPDATE for new exercise) (4/4)
     [ [V.B, V.C], [V.C, V.A], [V.B, V.F], [V.F, V.D], [V.E, V.F], [V.C, V.D] ].forEach(pts => createLine(pts[0], pts[1]));
 
-    // Dynamic Lines (assigned to variables for highlighting) (UPDATE for new exercise)
+    // Dynamic Lines (assigned to variables for highlighting) (UPDATE for new exercise) (5/4)
     const lineAB = createLine(V.A, V.B);
     const lineAP = createLine(V.A, V.P);
     const lineBP = createLine(V.B, V.P, matTarget); // Red "Target" lines
@@ -128,23 +129,6 @@
     const lineEP = createLine(V.E, V.P);
     const lineDP = createLine(V.D, V.P, matTarget); // Red "Target" lines
     const lineBD = createLine(V.B, V.D, matTarget); // Red "Target" lines
-
-    // Define length labels automatically at midpoints (UPDATE for new exercise)
-    const lengthLabels = [
-        { text: "12", pos: new THREE.Vector3().addVectors(V.A, V.B).multiplyScalar(0.5) },
-        { text: "12", pos: new THREE.Vector3().addVectors(V.A, V.C).multiplyScalar(0.5) },
-        { text: "9",  pos: new THREE.Vector3().addVectors(V.A, V.P).multiplyScalar(0.5) },
-        { text: "5",  pos: new THREE.Vector3().addVectors(V.E, V.P).multiplyScalar(0.5) },
-        { text: "2k", pos: new THREE.Vector3().addVectors(V.B, V.D).multiplyScalar(0.5) }
-    ];
-    
-    // Triangle Surfaces (UPDATE for new exercise)
-    const meshABPBlue = createTriangle(V.A, V.B, V.P, colorBlueShade);
-    const meshDEPBlue = createTriangle(V.D, V.E, V.P, colorBlueShade);
-    const meshBDPBlue = createTriangle(V.B, V.D, V.P, colorBlueShade);
-    const meshBDPGold = createTriangle(V.B, V.D, V.P, colorGoldShade, 0.4); 
-
-    meshBDPGold.visible = true; // Show target initially
 
     // ==========================================
     // 5. LABELS
@@ -161,17 +145,41 @@
         sprite.position.copy(pos);
         sprite.scale.set(0.15, 0.15, 1);
         scene.add(sprite);
+        return sprite;
     }
+    
+    // Define length labels automatically at midpoints (UPDATE for new exercise) (6/4)
+    const lengthLabels = [
+        { text: "12", pos: new THREE.Vector3().addVectors(V.A, V.B).multiplyScalar(0.5) },
+        { text: "12", pos: new THREE.Vector3().addVectors(V.A, V.C).multiplyScalar(0.5) },
+        { text: "9",  pos: new THREE.Vector3().addVectors(V.A, V.P).multiplyScalar(0.5) },
+        { text: "5",  pos: new THREE.Vector3().addVectors(V.E, V.P).multiplyScalar(0.5) },
+        { text: "2k", pos: new THREE.Vector3().addVectors(V.B, V.D).multiplyScalar(0.5) }
+    ];
+    // Generate Length Labels
+    lengthLabels.forEach(l => makeLabel(l.text, l.pos, "#d63384")); // PINK
+    
+    // Labels used in the calculation, hidden at the beginning (UPDATE for new exercise) (7/4)
+    const lineDELabel = makeLabel("12", new THREE.Vector3().addVectors(V.D, V.E).multiplyScalar(0.5), "#0d6efd"); // BLUE
+    const lineBPLabel = makeLabel("15", new THREE.Vector3().addVectors(V.B, V.P).multiplyScalar(0.5), "#0d6efd"); // BLUE
+    const lineDPLabel = makeLabel("13", new THREE.Vector3().addVectors(V.D, V.P).multiplyScalar(0.5), "#0d6efd"); // BLUE
+    // Immediately hide them
+    //lineDELabel.visible = lineBPLabel.visible = lineDPLabel.visible = false;
+    
+    // Triangle Surfaces (UPDATE for new exercise) (8/4)
+    const meshABPBlue = createTriangle(V.A, V.B, V.P, colorBlueShade);
+    const meshDEPBlue = createTriangle(V.D, V.E, V.P, colorBlueShade);
+    const meshBDPBlue = createTriangle(V.B, V.D, V.P, colorBlueShade);
+    const meshBDPGold = createTriangle(V.B, V.D, V.P, colorGoldShade, 0.4); 
+
+    meshBDPGold.visible = true; // Show target initially
 
     // Generate Vertex Labels
     // Object.keys(V).forEach(key => makeLabel(key, V[key].clone().add(new THREE.Vector3(0, key === 'D' || key === 'E' || key === 'F' ? -0.8 : 0.8, 0))));
     Object.keys(V).forEach(key => makeLabel(key, V[key].clone().add(new THREE.Vector3(0, 0, 0))));
-    
-    // Generate Length Labels
-    lengthLabels.forEach(l => makeLabel(l.text, l.pos, "#d63384"));
 
     // ==========================================
-    // 6. INTERACTIVE LOGIC (UPDATE for new exercise) (2/3)
+    // 6. INTERACTIVE LOGIC (UPDATE for new exercise) (8/3)
     // ==========================================
     
     function updateHighlights(step) {
@@ -193,6 +201,9 @@
         // 5. Handle the Gold Target visibility
         meshBDPGold.visible = (step === 0);
 
+        // 6. Hide all labels before calculation
+        lineDELabel.visible = lineBPLabel.visible = lineDPLabel.visible = false;
+        
         // Reset Text Colors
         for (let i = 1; i <= stepData.length; i++) {
             const div = document.getElementById('s' + i);
@@ -207,10 +218,12 @@
         } else if (step === 2) {
             lineDE.material = lineEP.material = lineDP.material = matActive;
             meshDEPBlue.visible = true;
+            lineDELabel.visible = true;
             document.getElementById('s2').style.color = "#0d6efd";
         } else if (step === 3) {
             lineBP.material = lineDP.material = lineBD.material = matActive;
             meshBDPBlue.visible = true;
+            lineBPLabel.visible = lineDPLabel.visible = true;
             document.getElementById('s3').style.color = "#0d6efd";
         }
     }
