@@ -27,6 +27,19 @@
             display: none; margin-top: 10px; background: #198754; color: white; 
             border: none; padding: 8px; width: 100%; border-radius: 5px; cursor: pointer; 
         }
+        #debug-info {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background: rgba(255, 255, 255, 0.8);
+            padding: 10px;
+            border-radius: 8px;
+            font-family: monospace;
+            font-size: 14px;
+            pointer-events: none; /* Let clicks pass through to the 3D scene */
+            border: 1px solid #ccc;
+            z-index: 20;
+        }
     </style>
 </head>
 <body>
@@ -45,7 +58,10 @@
         <button id="next-btn" onclick="nextStep()">Next Step ➔</button>
     </div>
 </div>
-
+<div id="debug-info">
+    Camera: (0, 0, 0)<br>
+    Target: (0, 0, 0)
+</div>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
 
@@ -248,7 +264,19 @@
     controls.target.set(6, 6, -6);
     controls.update();
 
-    function animate() { requestAnimationFrame(animate); renderer.render(scene, camera); }
+    function animate() {
+        requestAnimationFrame(animate);
+        
+        // Update the debug text
+        const cp = camera.position;
+        const ct = controls.target;
+        debugBox.innerHTML = `
+            <b>Camera Pos:</b> (${cp.x.toFixed(1)}, ${cp.y.toFixed(1)}, ${cp.z.toFixed(1)})<br>
+            <b>Target Pos:</b> (${ct.x.toFixed(1)}, ${ct.y.toFixed(1)}, ${ct.z.toFixed(1)})
+        `;
+    
+        renderer.render(scene, camera);
+    }
     animate();
 
     // Step Management
