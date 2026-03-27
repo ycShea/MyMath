@@ -3,7 +3,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>DSE 2020 Q38 Visualizer - Dual Shading</title>
+    <title>DSE Geometry Visualizer (Flexible Template)</title>
     <style>
         body { margin: 0; background-color: #f0f2f5; font-family: 'Segoe UI', sans-serif; overflow: hidden; }
         #ui-layer { 
@@ -49,77 +49,51 @@
 
 <script>
     // ==========================================
-    // Math Steps Data (Keep unchanged) (UPDATE for new exercise) (1/2)
+    // 1. CONFIGURATION: CHANGE THESE FOR NEW EXERCISES
     // ==========================================
+    
+    // (UPDATE for new exercise) Define all Vertex Coordinates here
+    const V = {
+        A: new THREE.Vector3(0, 14, 0),
+        B: new THREE.Vector3(12, 14, 0),
+        C: new THREE.Vector3(0, 14, 12),
+        D: new THREE.Vector3(0, 0, 12),
+        E: new THREE.Vector3(0, 0, 0),
+        F: new THREE.Vector3(12, 0, 0),
+        P: new THREE.Vector3(0, 5, 0)
+    };
+
+    // (UPDATE for new exercise) Define length labels and their positions
+    const lengthLabels = [
+        { text: "12", pos: new THREE.Vector3(6, 15, 0) },
+        { text: "12", pos: new THREE.Vector3(-1.2, 15, 6) },
+        { text: "9",  pos: new THREE.Vector3(-1.2, 9.5, 0) },
+        { text: "5",  pos: new THREE.Vector3(-1.2, 2.5, 0) },
+        { text: "2k", pos: new THREE.Vector3(6, 7, 6) }
+    ];
+
+    // (UPDATE for new exercise) Calculation Text
     const stepData = [
         "1. <b>In the right-angled ΔABP, </b><br> BP = √(12² + 9²) = 15",
         "2. <b>In the right-angled ΔDEP, </b><br> DP = √(12² + 5²) = 13",
-        "3. <b>In ΔBDP, BP = 15, DP = 13, BD = 2k</b>" + "<br>"
-            + "Use the Heron's formula." + "<br>"
-            + "Let s = (BP + DP + BD)/2 = 14 + k" + "<br>"
-            + "Area = √s(s - BP)(s - DP)(s - BD)" + "<br>"
-            + "= √(14 + k)(k - 1)(k + 1)(14 - k)" + "<br>"
-            + "= √(k² - 1)(196 - k²)"
+        "3. <b>In ΔBDP, BP = 15, DP = 13, BD = 2k</b><br>Use the Heron's formula.<br>Area = √(k² - 1)(196 - k²)"
     ];
 
     // ==========================================
-    // UPDATED: Highlighting Logic for Two Shaders (UPDATE for new exercise) (2/2)
+    // 2. MATERIALS & COLORS
     // ==========================================
-    function updateHighlights(step) {
-        // 1. Reset all standard lines
-        lineAB.material = mat; lineAP.material = mat;
-        lineDE.material = mat; lineEP.material = mat;
-        lineBP.material = redMat;
-        lineDP.material = redMat;
-        lineBD.material = redMat;
-
-        // 2. Hide ALL blue shading by default
-        meshABP.visible = false;
-        meshDEP.visible = false;
-        meshBDPBlue.visible = false; 
-
-        // 3. Reset all Step Text colors to black first
-        for (let i = 1; i <= totalSteps; i++) {
-            const stepDiv = document.getElementById('s' + i);
-            if (stepDiv) stepDiv.style.color = "black";
-        }
-
-        // 4. Gold Target logic (Visible at start/0 only)
-        if (step === 0) {
-            meshBDPGold.visible = true;
-        } else {
-            meshBDPGold.visible = false;
-        }
-
-        // 5. Show the specific step highlights and color the text blue
-        if (step === 1) {
-            lineAB.material = blueHighlightLine; lineAP.material = blueHighlightLine; lineBP.material = blueHighlightLine;
-            meshABP.visible = true;
-            document.getElementById('s1').style.color = "#0d6efd"; // Make Step 1 Text Blue
-        } else if (step === 2) {
-            lineDE.material = blueHighlightLine; lineEP.material = blueHighlightLine; lineDP.material = blueHighlightLine;
-            meshDEP.visible = true;
-            document.getElementById('s2').style.color = "#0d6efd"; // Make Step 2 Text Blue
-        } else if (step === 3) {
-            lineBP.material = blueHighlightLine; lineDP.material = blueHighlightLine; lineBD.material = blueHighlightLine;
-            meshBDPBlue.visible = true; 
-            document.getElementById('s3').style.color = "#0d6efd"; // Make Step 3 Text Blue
-        }
-    }
-    // ====================== END of updateHighlights(step) ======================
     
-    const container = document.getElementById('step-container');
-    stepData.forEach((text, index) => {
-        const div = document.createElement('div');
-        div.className = 'step';
-        div.id = 's' + (index + 1);
-        div.innerHTML = text;
-        container.appendChild(div);
-    });
+    // (UPDATE colors here if needed)
+    const matDefault = new THREE.LineBasicMaterial({ color: 0x333333 }); // Black/Gray lines
+    const matTarget  = new THREE.LineBasicMaterial({ color: 0xff0000, linewidth: 3 }); // Red "Target" lines
+    const matActive  = new THREE.LineBasicMaterial({ color: 0x0d6efd, linewidth: 8 }); // Thick Blue "Highlight"
+    
+    const colorBlueShade = 0x0d6efd; // Blue transparency
+    const colorGoldShade = 0xffc107; // Gold target transparency
 
-    let currentStep = 0;
-    const totalSteps = stepData.length;
-
+    // ==========================================
+    // 3. SCENE SETUP (Usually stays the same)
+    // ==========================================
     const scene = new THREE.Scene();
     scene.background = new THREE.Color(0xf0f2f5);
     const camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 1000);
@@ -127,92 +101,104 @@
     renderer.setSize(window.innerWidth, window.innerHeight);
     document.body.appendChild(renderer.domElement);
 
-    const A = new THREE.Vector3(0, 14, 0), B = new THREE.Vector3(12, 14, 0), C = new THREE.Vector3(0, 14, 12);
-    const E = new THREE.Vector3(0, 0, 0), F = new THREE.Vector3(12, 0, 0), D = new THREE.Vector3(0, 0, 12);
-    const P = new THREE.Vector3(0, 5, 0);
-
-    // Standard materials
-    const mat = new THREE.LineBasicMaterial({ color: 0x333333 });
-    const redMat = new THREE.LineBasicMaterial({ color: 0xff0000, linewidth: 3 });
-    const blueHighlightLine = new THREE.LineBasicMaterial({ color: 0x0d6efd, linewidth: 8 });
-
-    // --- Triangle Shading Setup (Updated for Dual Shading) ---
-    function createTriangle(p1, p2, p3, color, opacity = 0.35) {
-        const geom = new THREE.BufferGeometry().setFromPoints([p1, p2, p3]);
-        geom.setIndex([0, 1, 2]);
-        const mesh = new THREE.Mesh(geom, new THREE.MeshBasicMaterial({ 
-            color: color, 
-            side: THREE.DoubleSide, 
-            transparent: true, 
-            opacity: opacity 
-        }));
-        mesh.visible = false; // Start all hidden
-        scene.add(mesh);
-        return mesh;
-    }
-
-    // Step Triangles (Blue shading)
-    const meshABP = createTriangle(A, B, P, 0x0d6efd);
-    const meshDEP = createTriangle(D, E, P, 0x0d6efd);
-    
-    // Final Triangle Triangles (Separate objects for gold and blue)
-    // Initial opacity slightly higher for the "target"
-    const meshBDPGold = createTriangle(B, D, P, 0xffc107, 0.4); 
-    const meshBDPBlue = createTriangle(B, D, P, 0x0d6efd, 0.35); // For Step 3
-
-    // Make gold target visible immediately
-    meshBDPGold.visible = true; 
-
-    function createLine(v1, v2, m = mat) {
-        const line = new THREE.Line(new THREE.BufferGeometry().setFromPoints([v1, v2]), m);
+    // Helper functions
+    function createLine(v1, v2, material = matDefault) {
+        const line = new THREE.Line(new THREE.BufferGeometry().setFromPoints([v1, v2]), material);
         scene.add(line);
         return line;
     }
 
-    // Prism Edges
-    [ [B,C], [C,A], [B,F], [F,D], [E,F], [C,D] ].forEach(pts => createLine(pts[0], pts[1]));
+    function createTriangle(p1, p2, p3, color, opacity = 0.35) {
+        const geom = new THREE.BufferGeometry().setFromPoints([p1, p2, p3]);
+        geom.setIndex([0, 1, 2]);
+        const mesh = new THREE.Mesh(geom, new THREE.MeshBasicMaterial({ color, side: THREE.DoubleSide, transparent: true, opacity }));
+        mesh.visible = false;
+        scene.add(mesh);
+        return mesh;
+    }
 
-    const lineAB = createLine(A, B);
-    const lineAP = createLine(A, P);
-    const lineBP = createLine(B, P, redMat); 
-    const lineDE = createLine(D, E);
-    const lineEP = createLine(E, P);
-    const lineDP = createLine(D, P, redMat); 
-    const lineBD = createLine(B, D, redMat); 
+    // ==========================================
+    // 4. OBJECT DEFINITIONS (Lines and Surfaces)
+    // ==========================================
+    
+    // (UPDATE for new exercise) Static Prism Edges
+    [ [V.B, V.C], [V.C, V.A], [V.B, V.F], [V.F, V.D], [V.E, V.F], [V.C, V.D] ].forEach(pts => createLine(pts[0], pts[1]));
 
-    function makeLabel(text, pos, color = "black") {
+    // (UPDATE for new exercise) Dynamic Lines (assigned to variables for highlighting)
+    const lineAB = createLine(V.A, V.B);
+    const lineAP = createLine(V.A, V.P);
+    const lineBP = createLine(V.B, V.P, matTarget);
+    const lineDE = createLine(V.D, V.E);
+    const lineEP = createLine(V.E, V.P);
+    const lineDP = createLine(V.D, V.P, matTarget);
+    const lineBD = createLine(V.B, V.D, matTarget);
+
+    // (UPDATE for new exercise) Triangle Surfaces
+    const meshABP = createTriangle(V.A, V.B, V.P, colorBlueShade);
+    const meshDEP = createTriangle(V.D, V.E, V.P, colorBlueShade);
+    const meshBDPGold = createTriangle(V.B, V.D, V.P, colorGoldShade, 0.4); 
+    const meshBDPBlue = createTriangle(V.B, V.D, V.P, colorBlueShade, 0.35);
+
+    meshBDPGold.visible = true; // Show target initially
+
+    // ==========================================
+    // 5. LABELS
+    // ==========================================
+    function makeLabel(text, pos, color = "black", isLarge = false) {
         const canvas = document.createElement('canvas');
         const ctx = canvas.getContext('2d');
         canvas.width = 512; canvas.height = 512;
-        ctx.font = 'Bold 120px Arial';
+        ctx.font = isLarge ? 'Bold 120px Arial' : 'Bold 90px Arial';
         ctx.fillStyle = color;
         ctx.textAlign = "center";
-        ctx.textBaseline = "middle";
         ctx.fillText(text, 256, 256);
-        const texture = new THREE.CanvasTexture(canvas);
-        const sprite = new THREE.Sprite(new THREE.SpriteMaterial({ map: texture, sizeAttenuation: false }));
+        const sprite = new THREE.Sprite(new THREE.SpriteMaterial({ map: new THREE.CanvasTexture(canvas), sizeAttenuation: false }));
         sprite.position.copy(pos);
         sprite.scale.set(0.15, 0.15, 1);
         scene.add(sprite);
     }
 
-    // Vertex Labels
-    makeLabel("A", A.clone().add(new THREE.Vector3(0, 0.8, 0))); 
-    makeLabel("B", B.clone().add(new THREE.Vector3(0, 0.8, 0))); 
-    makeLabel("C", C.clone().add(new THREE.Vector3(0, 0.8, 0)));
-    makeLabel("D", D.clone().add(new THREE.Vector3(0, -0.8, 0))); 
-    makeLabel("E", E.clone().add(new THREE.Vector3(0, -0.8, 0))); 
-    makeLabel("F", F.clone().add(new THREE.Vector3(0, -0.8, 0))); 
-    makeLabel("P", P.clone().add(new THREE.Vector3(-1.2, 0, 0)));
+    // Generate Vertex Labels
+    Object.keys(V).forEach(key => makeLabel(key, V[key].clone().add(new THREE.Vector3(0, key === 'D' || key === 'E' || key === 'F' ? -0.8 : 0.8, 0))));
+    
+    // Generate Length Labels
+    lengthLabels.forEach(l => makeLabel(l.text, l.pos, "#d63384"));
 
-    // Length Labels
-    makeLabel("12", new THREE.Vector3(6, 15, 0), "#d63384"); 
-    makeLabel("12", new THREE.Vector3(-1.2, 15, 6), "#d63384");
-    makeLabel("9", new THREE.Vector3(-1.2, 9.5, 0), "#d63384"); 
-    makeLabel("5", new THREE.Vector3(-1.2, 2.5, 0), "#d63384");
-    makeLabel("2k", new THREE.Vector3(6, 7, 6), "#d63384");
+    // ==========================================
+    // 6. INTERACTIVE LOGIC
+    // ==========================================
+    
+    function updateHighlights(step) {
+        // Reset Everything
+        lineAB.material = matDefault; lineAP.material = matDefault;
+        lineDE.material = matDefault; lineEP.material = matDefault;
+        lineBP.material = lineDP.material = lineBD.material = matTarget;
+        meshABP.visible = meshDEP.visible = meshBDPBlue.visible = false;
+        meshBDPGold.visible = (step === 0);
 
-    // Camera/Controls
+        // Reset Text Colors
+        for (let i = 1; i <= stepData.length; i++) {
+            const div = document.getElementById('s' + i);
+            if (div) div.style.color = "black";
+        }
+
+        // (UPDATE logic for each step here)
+        if (step === 1) {
+            lineAB.material = lineAP.material = lineBP.material = matActive;
+            meshABP.visible = true;
+            document.getElementById('s1').style.color = "#0d6efd";
+        } else if (step === 2) {
+            lineDE.material = lineEP.material = lineDP.material = matActive;
+            meshDEP.visible = true;
+            document.getElementById('s2').style.color = "#0d6efd";
+        } else if (step === 3) {
+            lineBP.material = lineDP.material = lineBD.material = matActive;
+            meshBDPBlue.visible = true;
+            document.getElementById('s3').style.color = "#0d6efd";
+        }
+    }
+
+    // Standard UI and Animation Loop
     camera.position.set(30, 20, 30);
     const controls = new THREE.OrbitControls(camera, renderer.domElement);
     controls.target.set(6, 7, 6);
@@ -221,40 +207,43 @@
     function animate() { requestAnimationFrame(animate); renderer.render(scene, camera); }
     animate();
 
+    // Step Management
+    const container = document.getElementById('step-container');
+    stepData.forEach((text, i) => {
+        const div = document.createElement('div');
+        div.className = 'step'; div.id = 's' + (i + 1); div.innerHTML = text;
+        container.appendChild(div);
+    });
+
+    let currentStep = 0;
     function startSteps() {
         document.getElementById('calc-box').style.display = 'block';
         document.getElementById('toggle-btn').style.display = 'none';
-        const nextBtn = document.getElementById('next-btn');
-        nextBtn.style.display = 'block';
-        nextBtn.innerHTML = "Next Step ➔";
-        nextBtn.style.background = "#198754";
-        nextBtn.onclick = nextStep;
-        currentStep = 0;
-        nextStep();
+        document.getElementById('next-btn').style.display = 'block';
+        currentStep = 0; nextStep();
     }
 
     function nextStep() {
         currentStep++;
-        if (currentStep <= totalSteps) {
+        if (currentStep <= stepData.length) {
             document.getElementById('s' + currentStep).style.display = 'block';
-            updateHighlights(currentStep); // Trigger highlights on new step
+            updateHighlights(currentStep);
         }
-        if (currentStep === totalSteps) {
-            const nextBtn = document.getElementById('next-btn');
-            nextBtn.innerHTML = "Reset to Start ↺";
-            nextBtn.style.background = "#6c757d";
-            nextBtn.onclick = resetSteps;
+        if (currentStep === stepData.length) {
+            const btn = document.getElementById('next-btn');
+            btn.innerHTML = "Reset ↺"; btn.style.background = "#6c757d";
+            btn.onclick = resetSteps;
         }
     }
 
     function resetSteps() {
-        for (let i = 1; i <= totalSteps; i++) {
-            document.getElementById('s' + i).style.display = 'none';
-        }
+        for (let i = 1; i <= stepData.length; i++) document.getElementById('s' + i).style.display = 'none';
         document.getElementById('calc-box').style.display = 'none';
         document.getElementById('toggle-btn').style.display = 'block';
-        currentStep = 0;
-        updateHighlights(0); // Return to target-gold visible state
+        currentStep = 0; updateHighlights(0);
+        const btn = document.getElementById('next-btn');
+        btn.innerHTML = "Next Step ➔"; btn.style.background = "#198754";
+        btn.onclick = nextStep;
     }
 </script>
 </body>
