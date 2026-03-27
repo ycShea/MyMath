@@ -163,7 +163,7 @@
         A: new THREE.Vector3(-8, 8, 0),
         B: new THREE.Vector3(0, 8, 0),
         C: new THREE.Vector3(0, 8, 6),
-        H: new THREE.Vector3(0, 8, 6),
+        D: new THREE.Vector3(-8, 8, 6),
         P: new THREE.Vector3(-8, 2.5, 0),
     };
     
@@ -267,20 +267,20 @@
 
         // (UPDATE logic for each step here) ************ (UpdateForNewExercise) (10/10) ************
         if (step === 1) {
-            lineAB.material = lineAP.material = lineBP.material = matActive;
-            meshABPBlue.visible = true;
-            angleBAP.visible = true; // Show ∠BAP
+            lineAC.material = lineAD.material = lineCD.material = matActive;
+            meshACDBlue.visible = true;
+            angleADC.visible = true; // Show ∠ADC
             document.getElementById('s1').style.color = "#0d6efd";
         } else if (step === 2) {
-            lineDE.material = lineEP.material = lineDP.material = matActive;
-            meshDEPBlue.visible = true;
-            lineDELabel.visible = true;
-            anglePED.visible = true; // Show ∠PED
+            lineAC.material = lineAP.material = lineCP.material = matActive;
+            meshACPBlue.visible = true;
+            lineACLabel.visible = true;
+            angleCAP.visible = true; // Show ∠CAP
             document.getElementById('s2').style.color = "#0d6efd";
         } else if (step === 3) {
-            lineBP.material = lineDP.material = lineBD.material = matActive;
-            meshBDPBlue.visible = true;
-            lineBPLabel.visible = lineDPLabel.visible = true;
+            lineCP.material = lineCG.material = lineGP.material = matActive;
+            meshCGPBlue.visible = true;
+            lineCPLabel.visible = true;
             document.getElementById('s3').style.color = "#0d6efd";
         }
     }
