@@ -114,7 +114,7 @@
         return line;
     }
 
-    function createRightAngle(vertex, p1, p2, size = 1.2) {
+    function createRightAngle(vertex, p1, p2, size = 1.0) {
         const d1 = new THREE.Vector3().subVectors(p1, vertex).normalize().multiplyScalar(size);
         const d2 = new THREE.Vector3().subVectors(p2, vertex).normalize().multiplyScalar(size);
         
