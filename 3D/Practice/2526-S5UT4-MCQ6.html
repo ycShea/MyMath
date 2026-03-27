@@ -1,4 +1,5 @@
 <!-- search "(UpdateForNewExercise)" for a exercise html -->
+<!-- Update by myself based on 2020-DSE-MATH-II-Q38.html -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -46,8 +47,8 @@
 
 <div id="ui-layer">
     <!-- Question Text ************ (UpdateForNewExercise) (1/10) ************ -->
-    <h3 style="margin:0 0 10px 0;">DSE 2020 Q38</h3>
-    In the figure, ABCDEF is a right triangular prism. P lies on AE. AB=AC=12, AP=9, EP=5, BD=2k. Find the area of ΔBDP.
+    <h3 style="margin:0 0 10px 0;">2526 S5UT4 MCQ6</h3>
+    In the figure, ABCDEFGH is a cuboid. P lies on AF . If AB=4, AD=12, AP=6, GP=k, CG=3k. Find the area of ΔCGP in terms of k.
     <button id="reset-cam-btn" style="margin-top: 10px; background: #6c757d; color: white; border: none; padding: 10px; width: 100%; border-radius: 5px; cursor: pointer; font-weight: bold;" onclick="resetCamera()">Reset Camera 🎥</button>
     <p style="font-size: 11px; color: #666;">🖱️ Left-Click: Rotate | 🖱️ Right-Click: Drag | 🔍 Scroll: Zoom</p>
 
@@ -155,33 +156,35 @@
 
     // Define all Vertex Coordinates here ************ (UpdateForNewExercise) (3/10) ************
     const V = {
-        E: new THREE.Vector3(4, 10, -11),
-        D: new THREE.Vector3(8, 10, 0),
-        F: new THREE.Vector3(0, 10, 0),
-        B: new THREE.Vector3(0, 0, 0),
-        A: new THREE.Vector3(4, 0, -11),
-        C: new THREE.Vector3(8, 0, 0),
-        P: new THREE.Vector3(4, 7, -11)
+        G: new THREE.Vector3(0, 0, 0),
+        F: new THREE.Vector3(-8, 0, 0),
+        H: new THREE.Vector3(0, 0, 6),
+        E: new THREE.Vector3(-8, 0, 6),
+        A: new THREE.Vector3(-8, 8, 0),
+        B: new THREE.Vector3(0, 8, 0),
+        C: new THREE.Vector3(0, 8, 6),
+        H: new THREE.Vector3(0, 8, 6),
+        P: new THREE.Vector3(-8, 2.5, 0),
     };
     
     // Static Prism Edges ************ (UpdateForNewExercise) (4/10) ************
-    [ [V.A, V.E], [V.D, V.F], [V.E, V.F], [V.D, V.C], [V.C, V.B], [V.A, V.C], [V.F, V.B] ].forEach(pts => createLine(pts[0], pts[1]));
+    [ [V.A, V.B], [V.A, V.D], [V.C, V.D], [V.B, V.C], [V.A, V.F], [V.D, V.E], [V.C, V.H], [V.B, V.G], [V.E, V.F], [V.E, V.H], [V.F, V.G], [V.G, V.H], [V.C, V.G], [V.C, V.P], [V.G, V.P] ].forEach(pts => createLine(pts[0], pts[1]));
     
     // Dynamic Lines (assigned to variables for highlighting) ************ (UpdateForNewExercise) (5/10) ************
-    const lineDE = createLine(V.E, V.D);
-    const lineEP = createLine(V.E, V.P);
-    const lineAB = createLine(V.B, V.A);
+    const lineAC = createLine(V.A, V.C);
+    const lineCD = createLine(V.C, V.D);
+    const lineAD = createLine(V.A, V.D);
     const lineAP = createLine(V.A, V.P);
-    const defaultLines = [lineDE, lineEP, lineAB, lineAP];
-    const lineDP = createLine(V.D, V.P, matTarget); // Red "Target" lines
-    const lineBP = createLine(V.B, V.P, matTarget); // Red "Target" lines
-    const lineBD = createLine(V.D, V.B, matTarget); // Red "Target" lines
-    const targetLines  = [lineDP, lineBP, lineBD];
+    const defaultLines = [lineAC, lineCD, lineAD, lineAP];
+    const lineCP = createLine(V.C, V.P, matTarget); // Red "Target" lines
+    const lineGP = createLine(V.G, V.P, matTarget); // Red "Target" lines
+    const lineCG = createLine(V.C, V.G, matTarget); // Red "Target" lines
+    const targetLines  = [lineCP, lineGP, lineCG];
 
     // Define Right Angle Symbols ************ (UpdateForNewExercise) (6/10) ************
-    const angleBAP = createRightAngle(V.A, V.B, V.P); // Right angle at A
-    const anglePED = createRightAngle(V.E, V.P, V.D); // Right angle at E
-    const angleSymbols = [angleBAP, anglePED];
+    const angleADC = createRightAngle(V.A, V.D, V.C); // Right angle at D
+    const angleCDP = createRightAngle(V.C, V.D, V.P); // Right angle at D
+    const angleSymbols = [angleADC, angleCDP];
     
     // ==========================================
     // 5. LABELS
@@ -203,31 +206,30 @@
     
     // Define length labels automatically at midpoints ************ (UpdateForNewExercise) (7/10) ************
     const lengthLabels = [
-        { text: "12", pos: new THREE.Vector3().addVectors(V.A, V.B).multiplyScalar(0.5) },
-        { text: "12", pos: new THREE.Vector3().addVectors(V.A, V.C).multiplyScalar(0.5) },
-        { text: "5",  pos: new THREE.Vector3().addVectors(V.E, V.P).multiplyScalar(0.5) },
-        { text: "9",  pos: new THREE.Vector3().addVectors(V.A, V.P).multiplyScalar(0.5) },
-        { text: "2k", pos: new THREE.Vector3().addVectors(V.D, V.B).multiplyScalar(0.5) }
+        { text: "12", pos: new THREE.Vector3().addVectors(V.A, V.D).multiplyScalar(0.5) },
+        { text: "6", pos: new THREE.Vector3().addVectors(V.A, V.P).multiplyScalar(0.5) },
+        { text: "4",  pos: new THREE.Vector3().addVectors(V.A, V.B).multiplyScalar(0.5) },
+        { text: "k",  pos: new THREE.Vector3().addVectors(V.G, V.P).multiplyScalar(0.5) },
+        { text: "3k", pos: new THREE.Vector3().addVectors(V.C, V.G).multiplyScalar(0.5) }
     ];
     // Generate Length Labels
     lengthLabels.forEach(l => makeLabel(l.text, l.pos, "#d63384")); // PINK
     
     // Labels used in the calculation, hidden at the beginning ************ (UpdateForNewExercise) (8/10) ************
-    const lineDELabel = makeLabel("12", new THREE.Vector3().addVectors(V.D, V.E).multiplyScalar(0.5), "#0d6efd"); // BLUE
-    const lineBPLabel = makeLabel("15", new THREE.Vector3().addVectors(V.B, V.P).multiplyScalar(0.5), "#0d6efd"); // BLUE
-    const lineDPLabel = makeLabel("13", new THREE.Vector3().addVectors(V.D, V.P).multiplyScalar(0.5), "#0d6efd"); // BLUE
-    const lineLabelsForCalculation = [lineDELabel, lineBPLabel, lineDPLabel];
+    const lineACLabel = makeLabel("√160", new THREE.Vector3().addVectors(V.A, V.C).multiplyScalar(0.5), "#0d6efd"); // BLUE
+    const lineCPLabel = makeLabel("14", new THREE.Vector3().addVectors(V.C, V.P).multiplyScalar(0.5), "#0d6efd"); // BLUE
+    const lineLabelsForCalculation = [lineACLabel, lineCPLabel];
     // Immediately hide them
     lineLabelsForCalculation.forEach(lab => lab.visible = false);
 
     // Triangle Surfaces ************ (UpdateForNewExercise) (9/10) ************
-    const meshABPBlue = createTriangle(V.A, V.B, V.P, colorBlueShade);
-    const meshDEPBlue = createTriangle(V.D, V.E, V.P, colorBlueShade);
-    const meshBDPBlue = createTriangle(V.B, V.D, V.P, colorBlueShade);
-    const blueMeshes   = [meshABPBlue, meshDEPBlue, meshBDPBlue];
-    const meshBDPGold = createTriangle(V.B, V.D, V.P, colorGoldShade, 0.4);    
-    const targetMeshes = [meshBDPGold];
-    meshBDPGold.visible = true; // Show target initially
+    const meshACDBlue = createTriangle(V.A, V.C, V.D, colorBlueShade);
+    const meshACPBlue = createTriangle(V.A, V.C, V.P, colorBlueShade);
+    const meshCGPBlue = createTriangle(V.G, V.G, V.P, colorBlueShade);
+    const blueMeshes   = [meshACDBlue, meshACPBlue, meshCGPBlue];
+    const meshCGPGold = createTriangle(V.C, V.G, V.P, colorGoldShade, 0.4);    
+    const targetMeshes = [meshCGPGold];
+    meshCGPGold.visible = true; // Show target initially
 
     // Generate Vertex Labels
     // Object.keys(V).forEach(key => makeLabel(key, V[key].clone().add(new THREE.Vector3(0, key === 'B' || key === 'A' || key === 'C' ? -0.8 : 0.8, 0))));
