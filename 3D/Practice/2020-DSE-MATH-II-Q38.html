@@ -103,6 +103,7 @@
     const meshABP = createTriangle(A, B, P, 0x0d6efd);
     const meshDEP = createTriangle(D, E, P, 0x0d6efd);
     const meshBDP = createTriangle(B, D, P, 0xffc107); // Keep original gold for final triangle
+    meshBDP.visible = true; // Make it visible on page load
     
     function createLine(v1, v2, m = mat) {
         const line = new THREE.Line(new THREE.BufferGeometry().setFromPoints([v1, v2]), m);
@@ -164,12 +165,20 @@
         lineDE.material = mat; lineEP.material = mat; lineDP.material = redMat;
         lineBD.material = redMat;
     
-        // 2. Hide ALL shaded meshes by default
+        // 2. Hide Blue Shading by default
         meshABP.visible = false;
         meshDEP.visible = false;
-        meshBDP.visible = false;
+        
+        // 3. Logic for Yellow Triangle Visibility
+        // We show it at the start (0), and the final step (3). 
+        // We hide it during Step 1 and 2 to avoid "overlap" colors.
+        if (step === 0 || step === 3) {
+            meshBDP.visible = true;
+        } else {
+            meshBDP.visible = false;
+        }
     
-        // 3. Only show the one matching the current step
+        // 4. Show the specific step highlights
         if (step === 1) {
             lineAB.material = blueHighlight; lineAP.material = blueHighlight; lineBP.material = blueHighlight;
             meshABP.visible = true;
@@ -178,7 +187,7 @@
             meshDEP.visible = true;
         } else if (step === 3) {
             lineBP.material = blueHighlight; lineDP.material = blueHighlight; lineBD.material = blueHighlight;
-            meshBDP.visible = true; // Only yellow now at Step 3
+            // meshBDP.visible is already set to true by step 3 logic above
         }
     }
 
