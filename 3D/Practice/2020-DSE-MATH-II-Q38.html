@@ -45,7 +45,7 @@
 <body>
 
 <div id="ui-layer">
-    <!-- Question Text ************ (UpdateForNewExercise) (1/9) ************ -->
+    <!-- Question Text ************ (UpdateForNewExercise) (1/10) ************ -->
     <h3 style="margin:0 0 10px 0;">DSE 2020 Q38</h3>
     In the figure, ABCDEF is a right triangular prism. P lies on AE. AB=AC=12, AP=9, EP=5, BD=2k. Find the area of ΔBDP.
     <button id="reset-cam-btn" style="margin-top: 10px; background: #6c757d; color: white; border: none; padding: 10px; width: 100%; border-radius: 5px; cursor: pointer; font-weight: bold;" onclick="resetCamera()">Reset Camera 🎥</button>
@@ -70,7 +70,7 @@
     // 1. CALCULATION
     // ==========================================
 
-    // Calculation Text ************ () (2/9) ************
+    // Calculation Text ************ (UpdateForNewExercise) (2/10) ************
     const stepData = [
         "1. <b>In the right-angled ΔABP, </b><br> BP = √(12² + 9²) = 15",
         "2. <b>In the right-angled ΔDEP, </b><br> DP = √(12² + 5²) = 13",
@@ -153,7 +153,7 @@
     // 4. OBJECT DEFINITIONS (Lines and Surfaces)
     // ==========================================
 
-    // Define all Vertex Coordinates here ************ (UpdateForNewExercise) (3/9) ************
+    // Define all Vertex Coordinates here ************ (UpdateForNewExercise) (3/10) ************
     const V = {
         E: new THREE.Vector3(4, 10, -11),
         D: new THREE.Vector3(8, 10, 0),
@@ -164,10 +164,10 @@
         P: new THREE.Vector3(4, 7, -11)
     };
     
-    // Static Prism Edges ************ (UpdateForNewExercise) (4/9) ************
+    // Static Prism Edges ************ (UpdateForNewExercise) (4/10) ************
     [ [V.A, V.E], [V.D, V.F], [V.E, V.F], [V.D, V.C], [V.C, V.B], [V.A, V.C], [V.F, V.B] ].forEach(pts => createLine(pts[0], pts[1]));
     
-    // Dynamic Lines (assigned to variables for highlighting) ************ (UpdateForNewExercise) (5/9) ************
+    // Dynamic Lines (assigned to variables for highlighting) ************ (UpdateForNewExercise) (5/10) ************
     const lineDE = createLine(V.E, V.D);
     const lineEP = createLine(V.E, V.P);
     const lineAB = createLine(V.B, V.A);
