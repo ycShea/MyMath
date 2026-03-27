@@ -203,6 +203,15 @@
     targetGoldMeshes.forEach(mesh => mesh.visible = true); // Show target initially
 
     // ==========================================
+    // 4e. Ground Shadow (Always Visible)
+    // ==========================================
+    // Create a light gray floor under the cuboid base (G-F-E-H)
+    const floorPart1 = createTriangle(V.G, V.F, V.E, 0xcccccc, 0.15); 
+    const floorPart2 = createTriangle(V.G, V.H, V.E, 0xcccccc, 0.15); 
+
+// Make them visible immediately
+floorPart1.visible = floorPart2.visible = true;
+    // ==========================================
     // 5. INTERACTIVE LOGIC
     // ==========================================
     function updateHighlights(step) {
