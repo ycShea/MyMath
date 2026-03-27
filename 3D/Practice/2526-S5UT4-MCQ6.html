@@ -73,14 +73,14 @@
 
     // Calculation Text ************ (UpdateForNewExercise) (2/10) ************
     const stepData = [
-        "1. <b>In the right-angled ΔADC, </b><br> AC = √(12² + 4²) = √160",
-        "2. <b>In the right-angled ΔDEP, </b><br> DP = √(12² + 5²) = 13",
-        "3. <b>In ΔBDP, BP = 15, DP = 13, BD = 2k</b>" + "<br>"
+        "1. <b>In the right-angled ΔACD, </b><br> AC = √(12² + 4²) = √160",
+        "2. <b>In the right-angled ΔACP, </b><br> CP = √((√160)² + 6²) = 14",
+        "3. <b>In ΔCGP, CP = 14, GP = k, CG = 3k</b>" + "<br>"
             + "Use the Heron's formula." + "<br>"
-            + "Let s = (BP + DP + BD)/2 = 14 + k" + "<br>"
-            + "Area = √s(s - BP)(s - DP)(s - BD)" + "<br>"
-            + "= √(14 + k)(k - 1)(k + 1)(14 - k)" + "<br>"
-            + "= √(k² - 1)(196 - k²)"
+            + "Let s = (CP + GP + CG)/2 = 7 + 2k" + "<br>"
+            + "Area = √s(s - CP)(s - GP)(s - CG)" + "<br>"
+            + "= √(7 + 2k)(2k - 7)(7 + k)(7 - k)" + "<br>"
+            + "= √(4k² - 49)(49 - k²)"
     ];
     
     // ==========================================
@@ -219,7 +219,7 @@
     const lineACLabel = makeLabel("√160", new THREE.Vector3().addVectors(V.A, V.C).multiplyScalar(0.5), "#0d6efd"); // BLUE
     const lineCDLabel = makeLabel("4", new THREE.Vector3().addVectors(V.C, V.D).multiplyScalar(0.5), "#0d6efd"); // BLUE
     const lineCPLabel = makeLabel("14", new THREE.Vector3().addVectors(V.C, V.P).multiplyScalar(0.5), "#0d6efd"); // BLUE
-    const lineLabelsForCalculation = [lineACLabel, lineCPLabel];
+    const lineLabelsForCalculation = [lineACLabel, lineCDLabel, lineCPLabel];
     // Immediately hide them
     lineLabelsForCalculation.forEach(lab => lab.visible = false);
 
