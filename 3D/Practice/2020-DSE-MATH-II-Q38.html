@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>DSE 2020 Q38 Visualizer - Shaded Triangles</title>
+    <title>DSE 2020 Q38 Visualizer - Dual Shading</title>
     <style>
         body { margin: 0; background-color: #f0f2f5; font-family: 'Segoe UI', sans-serif; overflow: hidden; }
         #ui-layer { 
@@ -47,6 +47,9 @@
 <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
 
 <script>
+    // ==========================================
+    // Math Steps Data (Keep unchanged)
+    // ==========================================
     const stepData = [
         "1. <b>In the right-angled ΔABP, </b><br> BP = √(12² + 9²) = 15",
         "2. <b>In the right-angled ΔDEP, </b><br> DP = √(12² + 5²) = 13",
@@ -81,30 +84,38 @@
     const E = new THREE.Vector3(0, 0, 0), F = new THREE.Vector3(12, 0, 0), D = new THREE.Vector3(0, 0, 12);
     const P = new THREE.Vector3(0, 5, 0);
 
+    // Standard materials
     const mat = new THREE.LineBasicMaterial({ color: 0x333333 });
     const redMat = new THREE.LineBasicMaterial({ color: 0xff0000, linewidth: 3 });
-    const blueHighlight = new THREE.LineBasicMaterial({ color: 0x0d6efd, linewidth: 8 });
+    const blueHighlightLine = new THREE.LineBasicMaterial({ color: 0x0d6efd, linewidth: 8 });
 
-    // --- Triangle Shading Setup ---
-    function createTriangle(p1, p2, p3, color = 0x0d6efd) {
+    // --- Triangle Shading Setup (Updated for Dual Shading) ---
+    function createTriangle(p1, p2, p3, color, opacity = 0.35) {
         const geom = new THREE.BufferGeometry().setFromPoints([p1, p2, p3]);
         geom.setIndex([0, 1, 2]);
         const mesh = new THREE.Mesh(geom, new THREE.MeshBasicMaterial({ 
             color: color, 
             side: THREE.DoubleSide, 
             transparent: true, 
-            opacity: 0.35 
+            opacity: opacity 
         }));
-        mesh.visible = false; // Start hidden
+        mesh.visible = false; // Start all hidden
         scene.add(mesh);
         return mesh;
     }
 
+    // Step Triangles (Blue shading)
     const meshABP = createTriangle(A, B, P, 0x0d6efd);
     const meshDEP = createTriangle(D, E, P, 0x0d6efd);
-    const meshBDP = createTriangle(B, D, P, 0xffc107); // Keep original gold for final triangle
-    meshBDP.visible = true; // Make it visible on page load
     
+    // Final Triangle Triangles (Separate objects for gold and blue)
+    // Initial opacity slightly higher for the "target"
+    const meshBDPGold = createTriangle(B, D, P, 0xffc107, 0.4); 
+    const meshBDPBlue = createTriangle(B, D, P, 0x0d6efd, 0.35); // For Step 3
+
+    // Make gold target visible immediately
+    meshBDPGold.visible = true; 
+
     function createLine(v1, v2, m = mat) {
         const line = new THREE.Line(new THREE.BufferGeometry().setFromPoints([v1, v2]), m);
         scene.add(line);
@@ -138,6 +149,7 @@
         scene.add(sprite);
     }
 
+    // Vertex Labels
     makeLabel("A", A.clone().add(new THREE.Vector3(0, 0.8, 0))); 
     makeLabel("B", B.clone().add(new THREE.Vector3(0, 0.8, 0))); 
     makeLabel("C", C.clone().add(new THREE.Vector3(0, 0.8, 0)));
@@ -145,12 +157,15 @@
     makeLabel("E", E.clone().add(new THREE.Vector3(0, -0.8, 0))); 
     makeLabel("F", F.clone().add(new THREE.Vector3(0, -0.8, 0))); 
     makeLabel("P", P.clone().add(new THREE.Vector3(-1.2, 0, 0)));
+
+    // Length Labels
     makeLabel("12", new THREE.Vector3(6, 15, 0), "#d63384"); 
     makeLabel("12", new THREE.Vector3(-1.2, 15, 6), "#d63384");
     makeLabel("9", new THREE.Vector3(-1.2, 9.5, 0), "#d63384"); 
     makeLabel("5", new THREE.Vector3(-1.2, 2.5, 0), "#d63384");
     makeLabel("2k", new THREE.Vector3(6, 7, 6), "#d63384");
 
+    // Camera/Controls
     camera.position.set(30, 20, 30);
     const controls = new THREE.OrbitControls(camera, renderer.domElement);
     controls.target.set(6, 7, 6);
@@ -159,35 +174,40 @@
     function animate() { requestAnimationFrame(animate); renderer.render(scene, camera); }
     animate();
 
+    // ==========================================
+    // UPDATED: Highlighting Logic for Two Shaders
+    // ==========================================
     function updateHighlights(step) {
-        // 1. Reset all lines to standard
+        // 1. Reset all standard lines
         lineAB.material = mat; lineAP.material = mat; lineBP.material = redMat;
         lineDE.material = mat; lineEP.material = mat; lineDP.material = redMat;
         lineBD.material = redMat;
-    
-        // 2. Hide Blue Shading by default
+
+        // 2. Hide ALL blue shading by default
         meshABP.visible = false;
         meshDEP.visible = false;
-        
-        // 3. Logic for Yellow Triangle Visibility
-        // We show it at the start (0), and the final step (3). 
-        // We hide it during Step 1 and 2 to avoid "overlap" colors.
-        if (step === 0 || step === 3) {
-            meshBDP.visible = true;
+        meshBDPBlue.visible = false; 
+
+        // 3. Gold Target logic: 
+        // Visible at start (0) and final reveal (3).
+        // Hiding it during step 1 and 2 avoids overlap with blue.
+        if (step === 0) {
+            meshBDPGold.visible = true;
         } else {
-            meshBDP.visible = false;
+            meshBDPGold.visible = false;
         }
-    
+
         // 4. Show the specific step highlights
         if (step === 1) {
-            lineAB.material = blueHighlight; lineAP.material = blueHighlight; lineBP.material = blueHighlight;
+            lineAB.material = blueHighlightLine; lineAP.material = blueHighlightLine; lineBP.material = blueHighlightLine;
             meshABP.visible = true;
         } else if (step === 2) {
-            lineDE.material = blueHighlight; lineEP.material = blueHighlight; lineDP.material = blueHighlight;
+            lineDE.material = blueHighlightLine; lineEP.material = blueHighlightLine; lineDP.material = blueHighlightLine;
             meshDEP.visible = true;
         } else if (step === 3) {
-            lineBP.material = blueHighlight; lineDP.material = blueHighlight; lineBD.material = blueHighlight;
-            // meshBDP.visible is already set to true by step 3 logic above
+            // Apply blue borders and BLUE shading to the target triangle
+            lineBP.material = blueHighlightLine; lineDP.material = blueHighlightLine; lineBD.material = blueHighlightLine;
+            meshBDPBlue.visible = true; // Use the blue one here
         }
     }
 
@@ -207,7 +227,7 @@
         currentStep++;
         if (currentStep <= totalSteps) {
             document.getElementById('s' + currentStep).style.display = 'block';
-            updateHighlights(currentStep);
+            updateHighlights(currentStep); // Trigger highlights on new step
         }
         if (currentStep === totalSteps) {
             const nextBtn = document.getElementById('next-btn');
@@ -224,7 +244,7 @@
         document.getElementById('calc-box').style.display = 'none';
         document.getElementById('toggle-btn').style.display = 'block';
         currentStep = 0;
-        updateHighlights(0);
+        updateHighlights(0); // Return to target-gold visible state
     }
 </script>
 </body>
