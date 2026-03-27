@@ -32,6 +32,11 @@
             border-top: 1px solid #ddd; 
             padding-top: 10px; 
         }
+        .step { display: none; margin-bottom: 10px; border-left: 3px solid #0d6efd; padding-left: 10px; }
+        #next-btn { 
+            display: none; margin-top: 10px; background: #198754; color: white; 
+            border: none; padding: 8px; width: 100%; border-radius: 5px; cursor: pointer; 
+        }
     </style>
 </head>
 <body>
@@ -39,13 +44,16 @@
 <div id="ui-layer">
     <h3 style="margin:0 0 10px 0;">DSE 2020 Q38</h3>
     <p>ABCDEF is a right triangular prism. P lies on AE. AB=AC=12, AP=9, EP=5, BD=2k. Find area of ΔBDP.</p>
-    <p style="font-size: 11px; color: #666;">🖱️ Left-Click: Rotate | 🖱️ Right-Click: Drag E | 🔍 Scroll: Zoom</p>
-    <button id="toggle-btn" onclick="toggleCalc()">Show Calculation Steps</button>
+    <p style="font-size: 11px; color: #666;">🖱️ Drag to rotate | 🔍 Scroll to zoom</p>
+    
+    <button id="toggle-btn" onclick="startSteps()">Show Calculation Steps</button>
+    
     <div id="calc-box">
-        1. <b>Total Height:</b> AE = 9 + 5 = 14<br>
-        2. <b>Side DP:</b> √(12² + 5²) = 13<br>
-        3. <b>Side BP:</b> √(12² + 9²) = 15<br>
-        4. <b>Side BD:</b> 2k
+        <div class="step" id="s1">1. <b>Total Height:</b> AE = 9 + 5 = 14</div>
+        <div class="step" id="s2">2. <b>Side DP:</b> √(12² + 5²) = 13</div>
+        <div class="step" id="s3">3. <b>Side BP:</b> √(12² + 9²) = 15</div>
+        <div class="step" id="s4">4. <b>Side BD:</b> 2k</div>
+        <button id="next-btn" onclick="nextStep()">Next Step ➔</button>
     </div>
 </div>
 
@@ -141,10 +149,33 @@
     function animate() { requestAnimationFrame(animate); renderer.render(scene, camera); }
     animate();
 
-    function toggleCalc() {
+    let currentStep = 0;
+    const totalSteps = 4;
+
+    function startSteps() {
         const box = document.getElementById('calc-box');
-        box.style.display = (box.style.display === 'block') ? 'none' : 'block';
+        const mainBtn = document.getElementById('toggle-btn');
+        const nextBtn = document.getElementById('next-btn');
+        
+        box.style.display = 'block';
+        mainBtn.style.display = 'none'; // Hide the "Show" button
+        nextBtn.style.display = 'block'; // Show the "Next" button
+        
+        nextStep(); // Show first step immediately
     }
+
+    function nextStep() {
+        currentStep++;
+        if (currentStep <= totalSteps) {
+            document.getElementById('s' + currentStep).style.display = 'block';
+        }
+        
+        // Hide "Next" button on last step
+        if (currentStep === totalSteps) {
+            document.getElementById('next-btn').style.display = 'none';
+        }
+    }
+    
 </script>
 </body>
 </html>
