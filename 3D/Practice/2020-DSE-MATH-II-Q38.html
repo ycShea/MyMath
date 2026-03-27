@@ -259,10 +259,9 @@
     }
 
     // Standard UI and Animation Loop
-    camera.position.set(-23, 23, 15);
     const controls = new THREE.OrbitControls(camera, renderer.domElement);
-    controls.target.set(6, 6, -6);
-    controls.update();
+    // Call your function to set the initial position
+    resetCamera();
 
     // function animate() { requestAnimationFrame(animate); renderer.render(scene, camera); }
     // animate();
@@ -333,10 +332,10 @@
     
     function resetCamera() {
         // Reset camera position to your initial settings
-        camera.position.set(-23, 23, 15);
+        camera.position.set(-20, 15, 10);
         
         // Reset the pivot point for OrbitControls
-        controls.target.set(6, 6, -6);
+        controls.target.set(5, 4, -6);
         
         // Crucial: update the controls so they realize the camera has moved
         controls.update();
