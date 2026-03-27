@@ -48,9 +48,6 @@
 <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
 
 <script>
-    // ==============================================================
-    // 1. CALCULATION STEPS (Edit these easily here)
-    // ==============================================================
     const stepData = [
         "1. <b>In the right-angled ΔABP, </b><br> BP = √(12² + 9²) = 15",
         "2. <b>In the right-angled ΔDEP, </b><br> DP = √(12² + 5²) = 13",
@@ -58,12 +55,10 @@
             + "Apply the Heron's formula" + "<br>"
             + "Let s = (BP + DP + BD)/2 = 14 + k" + "<br>"
             + "Area = √s(s - BP)(s - DP)(s - BD)" + "<br>"
-            + "= √(14 + k)(k - 1)(k + 1)(14 - 2k)" + "<br>"
+            + "= √(14 + k)(k - 1)(k + 1)(14 - k)" + "<br>"
             + "= √(k² - 1)(196 - k²)"
     ];
-    // ==============================================================
 
-    // Automatically build the HTML steps from the array above
     const container = document.getElementById('step-container');
     stepData.forEach((text, index) => {
         const div = document.createElement('div');
@@ -76,7 +71,6 @@
     let currentStep = 0;
     const totalSteps = stepData.length;
 
-    // --- Three.js Scene Setup ---
     const scene = new THREE.Scene();
     scene.background = new THREE.Color(0xf0f2f5);
     const camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 1000);
@@ -84,29 +78,40 @@
     renderer.setSize(window.innerWidth, window.innerHeight);
     document.body.appendChild(renderer.domElement);
 
-    // Points
     const A = new THREE.Vector3(0, 14, 0), B = new THREE.Vector3(12, 14, 0), C = new THREE.Vector3(0, 14, 12);
     const E = new THREE.Vector3(0, 0, 0), F = new THREE.Vector3(12, 0, 0), D = new THREE.Vector3(0, 0, 12);
     const P = new THREE.Vector3(0, 5, 0);
 
     const mat = new THREE.LineBasicMaterial({ color: 0x333333 });
-    const redMat = new THREE.LineBasicMaterial({ color: 0xff0000, linewidth: 2 });
+    const redMat = new THREE.LineBasicMaterial({ color: 0xff0000, linewidth: 3 });
+    const blueHighlight = new THREE.LineBasicMaterial({ color: 0x0d6efd, linewidth: 4 });
 
-    // Triangle Mesh
     const triGeom = new THREE.BufferGeometry().setFromPoints([B, D, P]);
     triGeom.setIndex([0, 1, 2]);
     const triMesh = new THREE.Mesh(triGeom, new THREE.MeshBasicMaterial({ color: 0xffc107, side: THREE.DoubleSide, transparent: true, opacity: 0.4 }));
     scene.add(triMesh);
     
-    function addLine(v1, v2, m = mat) {
-        scene.add(new THREE.Line(new THREE.BufferGeometry().setFromPoints([v1, v2]), m));
+    // UPDATED: Function now returns the line object
+    function createLine(v1, v2, m = mat) {
+        const line = new THREE.Line(new THREE.BufferGeometry().setFromPoints([v1, v2]), m);
+        scene.add(line);
+        return line;
     }
 
-    // Draw Edges
-    [ [A,B], [B,C], [C,A], [E,F], [F,D], [D,E], [A,E], [B,F], [C,D] ].forEach(pts => addLine(pts[0], pts[1]));
-    [ [B,D], [D,P], [P,B] ].forEach(pts => addLine(pts[0], pts[1], redMat));
+    // Standard Prism Edges (not highlighted)
+    [ [B,C], [C,A], [B,F], [F,D], [E,F], [C,D] ].forEach(pts => createLine(pts[0], pts[1]));
 
-    // Labels
+    // Store references to specific lines for highlighting
+    const lineAB = createLine(A, B);
+    const lineAP = createLine(A, P);
+    const lineBP = createLine(B, P, redMat); // Target triangle edge
+    
+    const lineDE = createLine(D, E);
+    const lineEP = createLine(E, P);
+    const lineDP = createLine(D, P, redMat); // Target triangle edge
+    
+    const lineBD = createLine(B, D, redMat); // Final target triangle edge
+
     function makeLabel(text, pos, color = "black") {
         const canvas = document.createElement('canvas');
         const ctx = canvas.getContext('2d');
@@ -145,7 +150,21 @@
     function animate() { requestAnimationFrame(animate); renderer.render(scene, camera); }
     animate();
 
-    // --- Step Control Logic ---
+    function updateHighlights(step) {
+        // Reset colors
+        lineAB.material = mat; lineAP.material = mat; lineBP.material = redMat;
+        lineDE.material = mat; lineEP.material = mat; lineDP.material = redMat;
+        lineBD.material = redMat;
+
+        if (step === 1) {
+            lineAB.material = blueHighlight; lineAP.material = blueHighlight; lineBP.material = blueHighlight;
+        } else if (step === 2) {
+            lineDE.material = blueHighlight; lineEP.material = blueHighlight; lineDP.material = blueHighlight;
+        } else if (step === 3) {
+            lineBP.material = blueHighlight; lineDP.material = blueHighlight; lineBD.material = blueHighlight;
+        }
+    }
+
     function startSteps() {
         document.getElementById('calc-box').style.display = 'block';
         document.getElementById('toggle-btn').style.display = 'none';
@@ -162,6 +181,7 @@
         currentStep++;
         if (currentStep <= totalSteps) {
             document.getElementById('s' + currentStep).style.display = 'block';
+            updateHighlights(currentStep); // Added highlight trigger
         }
         if (currentStep === totalSteps) {
             const nextBtn = document.getElementById('next-btn');
@@ -178,6 +198,7 @@
         document.getElementById('calc-box').style.display = 'none';
         document.getElementById('toggle-btn').style.display = 'block';
         currentStep = 0;
+        updateHighlights(0); // Clear highlights
     }
 </script>
 </body>
