@@ -184,7 +184,7 @@
     // Define Right Angle Symbols ************ (UpdateForNewExercise) (6/10) ************
     const angleADC = createRightAngle(V.A, V.D, V.C); // Right angle at D
     const angleCAP = createRightAngle(V.C, V.A, V.P); // Right angle at A
-    const angleSymbols = [angleADC, angleCDP];
+    const angleSymbols = [angleADC, angleCAP];
     
     // ==========================================
     // 5. LABELS
@@ -225,7 +225,7 @@
     // Triangle Surfaces ************ (UpdateForNewExercise) (9/10) ************
     const meshACDBlue = createTriangle(V.A, V.C, V.D, colorBlueShade);
     const meshACPBlue = createTriangle(V.A, V.C, V.P, colorBlueShade);
-    const meshCGPBlue = createTriangle(V.G, V.G, V.P, colorBlueShade);
+    const meshCGPBlue = createTriangle(V.C, V.G, V.P, colorBlueShade);
     const blueMeshes   = [meshACDBlue, meshACPBlue, meshCGPBlue];
     const meshCGPGold = createTriangle(V.C, V.G, V.P, colorGoldShade, 0.4);    
     const targetMeshes = [meshCGPGold];
