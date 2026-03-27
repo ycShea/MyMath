@@ -228,9 +228,9 @@
     }
 
     // Standard UI and Animation Loop
-    camera.position.set(30, 20, 30);
+    camera.position.set(30, 30, 150);
     const controls = new THREE.OrbitControls(camera, renderer.domElement);
-    controls.target.set(6, 7, 6);
+    controls.target.set(6, 6, -6);
     controls.update();
 
     function animate() { requestAnimationFrame(animate); renderer.render(scene, camera); }
