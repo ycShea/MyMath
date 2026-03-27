@@ -119,17 +119,19 @@
     };
     
     // Static Prism Edges ************ (UPDATE for new exercise) (4/10) ************
-    [ [V.B, V.C], [V.A, V.C], [V.B, V.F], [V.F, V.D], [V.E, V.F], [V.C, V.D] ].forEach(pts => createLine(pts[0], pts[1]));
-
+    [ [V.A, V.E], [V.B, V.C], [V.A, V.C], [V.B, V.F], [V.F, V.D], [V.E, V.F], [V.C, V.D] ].forEach(pts => createLine(pts[0], pts[1]));
+    
     // Dynamic Lines (assigned to variables for highlighting) ************ (UPDATE for new exercise) (5/10) ************
     const lineAB = createLine(V.A, V.B);
     const lineAP = createLine(V.A, V.P);
-    const lineBP = createLine(V.B, V.P, matTarget); // Red "Target" lines
     const lineDE = createLine(V.D, V.E);
     const lineEP = createLine(V.E, V.P);
+    const defaultLines = [lineAB, lineAP, lineDE, lineEP];
+    const lineBP = createLine(V.B, V.P, matTarget); // Red "Target" lines
     const lineDP = createLine(V.D, V.P, matTarget); // Red "Target" lines
     const lineBD = createLine(V.B, V.D, matTarget); // Red "Target" lines
-
+    const targetLines  = [lineBP, lineDP, lineBD];
+    
     // ==========================================
     // 5. LABELS
     // ==========================================
@@ -163,17 +165,17 @@
     const lineDELabel = makeLabel("12", new THREE.Vector3().addVectors(V.D, V.E).multiplyScalar(0.5), "#0d6efd"); // BLUE
     const lineBPLabel = makeLabel("15", new THREE.Vector3().addVectors(V.B, V.P).multiplyScalar(0.5), "#0d6efd"); // BLUE
     const lineDPLabel = makeLabel("13", new THREE.Vector3().addVectors(V.D, V.P).multiplyScalar(0.5), "#0d6efd"); // BLUE
-    // Group the "Discovery" labels (the ones that start hidden)
-    const linesForCalculation = [lineDELabel, lineBPLabel, lineDPLabel];
+    const lineLabelsForCalculation = [lineDELabel, lineBPLabel, lineDPLabel];
     // Immediately hide them
-    linesForCalculation.forEach(lab => lab.visible = false);
+    lineLabelsForCalculation.forEach(lab => lab.visible = false);
     
     // Triangle Surfaces ************ (UPDATE for new exercise) (8/10) ************
     const meshABPBlue = createTriangle(V.A, V.B, V.P, colorBlueShade);
     const meshDEPBlue = createTriangle(V.D, V.E, V.P, colorBlueShade);
     const meshBDPBlue = createTriangle(V.B, V.D, V.P, colorBlueShade);
-    const meshBDPGold = createTriangle(V.B, V.D, V.P, colorGoldShade, 0.4); 
-
+    const blueMeshes   = [meshABPBlue, meshDEPBlue, meshBDPBlue];
+    const meshBDPGold = createTriangle(V.B, V.D, V.P, colorGoldShade, 0.4);    
+    const targetMeshes = [meshBDPGold];
     meshBDPGold.visible = true; // Show target initially
 
     // Generate Vertex Labels
@@ -186,26 +188,20 @@
     
     function updateHighlights(step) {
         // Reset Everything
-        // 1. Create the arrays at the top of your function ************ (UPDATE for new exercise) (9/10) ************
-        const defaultLines = [lineAB, lineAP, lineDE, lineEP];
-        const targetLines  = [lineBP, lineDP, lineBD];
-        const blueMeshes   = [meshABPBlue, meshDEPBlue, meshBDPBlue];
-        const targetMeshes = [meshBDPGold];
-        
-        // 2. Reset all lines to their "Standard" look
+        // 1. Reset all lines to their "Standard" look
         defaultLines.forEach(l => l.material = matDefault);
         
-        // 3. Reset all "Target" lines to Red
+        // 2. Reset all "Target" lines to Red
         targetLines.forEach(l => l.material = matTarget);
         
-        // 4. Hide all Blue highlight surfaces
+        // 3. Hide all Blue highlight surfaces
         blueMeshes.forEach(m => m.visible = false);
         
-        // 5. Handle the Gold Target visibility via the array
+        // 4. Handle the Gold Target visibility via the array
         targetMeshes.forEach(m => m.visible = (step === 0));
 
-        // 6. Hide all labels before the next step's calculation
-        linesForCalculation.forEach(lab => lab.visible = false);
+        // 5. Hide all labels before the next step's calculation
+        lineLabelsForCalculation.forEach(lab => lab.visible = false);
         
         // Reset Text Colors
         for (let i = 1; i <= stepData.length; i++) {
@@ -213,7 +209,7 @@
             if (div) div.style.color = "black";
         }
 
-        // (UPDATE logic for each step here) ************ (UPDATE for new exercise) (10/10) ************
+        // (UPDATE logic for each step here) ************ (UPDATE for new exercise) (9/10, only 9, lazy to change) ************
         if (step === 1) {
             lineAB.material = lineAP.material = lineBP.material = matActive;
             meshABPBlue.visible = true;
