@@ -70,7 +70,6 @@
     // ==========================================
     // 1. CALCULATION
     // ==========================================
-
     // Calculation Text ************ (UpdateForNewExercise) (2/10) ************
     const stepData = [
         "1. <b>In the right-angled ΔACD, </b><br> AC = √(12² + 4²) = √160",
@@ -108,7 +107,172 @@
     renderer.setSize(window.innerWidth, window.innerHeight);
     document.body.appendChild(renderer.domElement);
 
+    // ==========================================
+    // 4. OBJECT DEFINITIONS (Vertices, Lines, Angles and Surfaces)
+    // ==========================================
+
+    // ==========================================
+    // 4a. Vertices
+    // ==========================================
+    // Define all Vertex Coordinates here ************ (UpdateForNewExercise) (3/10) ************
+    const V = {
+        G: new THREE.Vector3(0, 0, 0),
+        F: new THREE.Vector3(-6, 0, 0),
+        H: new THREE.Vector3(0, 0, -8),
+        E: new THREE.Vector3(-6, 0, -8),
+        B: new THREE.Vector3(0, 8, 0),
+        A: new THREE.Vector3(-6, 8, 0),
+        C: new THREE.Vector3(0, 8, -8),
+        D: new THREE.Vector3(-6, 8, -8),
+        P: new THREE.Vector3(-6, 2.5, 0),
+    };
+    
+    // Generate Vertex Labels
+    // Object.keys(V).forEach(key => makeLabel(key, V[key].clone().add(new THREE.Vector3(0, key === 'B' || key === 'A' || key === 'C' ? -0.8 : 0.8, 0))));
+    Object.keys(V).forEach(key => makeLabel(key, V[key].clone().add(new THREE.Vector3(0, 0, 0))));
+
+    // ==========================================
+    // 4b. Lines
+    // ==========================================
+    // Static Edges ************ (UpdateForNewExercise) (4/10) ************
+    [ [V.A, V.B], [V.A, V.D], [V.C, V.D], [V.B, V.C] ].forEach(pts => createLine(pts[0], pts[1]));
+    [ [V.A, V.F], [V.D, V.E], [V.C, V.H], [V.B, V.G] ].forEach(pts => createLine(pts[0], pts[1]));
+    [ [V.E, V.F], [V.E, V.H], [V.F, V.G], [V.G, V.H], [V.C, V.G], [V.C, V.P], [V.G, V.P] ].forEach(pts => createLine(pts[0], pts[1]));
+
+    // Define length labels automatically at midpoints ************ (UpdateForNewExercise) (7/10) ************
+    const defaultLengthLabels = [
+        { text: "12", pos: new THREE.Vector3().addVectors(V.A, V.D).multiplyScalar(0.5) },
+        { text: "6", pos: new THREE.Vector3().addVectors(V.A, V.P).multiplyScalar(0.5) },
+        { text: "4",  pos: new THREE.Vector3().addVectors(V.A, V.B).multiplyScalar(0.5) },
+        { text: "k",  pos: new THREE.Vector3().addVectors(V.G, V.P).multiplyScalar(0.5) },
+        { text: "3k", pos: new THREE.Vector3().addVectors(V.C, V.G).multiplyScalar(0.5) }
+    ];
+    // Generate Length Labels
+    defaultLengthLabels.forEach(l => makeLabel(l.text, l.pos, "#d63384")); // PINK
+    
+    // Dynamic Lines (assigned to variables for highlighting) ************ (UpdateForNewExercise) (5/10) ************
+    const lineCD = createLine(V.C, V.D);
+    const lineAD = createLine(V.A, V.D);
+    const lineAP = createLine(V.A, V.P);
+    const defaultLines = [lineCD, lineAD, lineAP];
+    // Reset all lines to their "Standard" look
+    defaultLines.forEach(l => l.material = matDefault);
+    
+    const lineAC = createLine(V.A, V.C);
+    const dynamicLines = [lineAC];
+    // Immediately hide dynamic lines
+    dynamicLines.forEach(line => line.visible = false);
+
+    // Lines enclosing the target area
+    const lineCP = createLine(V.C, V.P, matTarget); // Red "Target" lines
+    const lineGP = createLine(V.G, V.P, matTarget); // Red "Target" lines
+    const lineCG = createLine(V.C, V.G, matTarget); // Red "Target" lines
+    const targetLines  = [lineCP, lineGP, lineCG];
+    // Reset all "Target" lines to Red
+    targetLines.forEach(l => l.material = matTarget);
+
+    // Labels used in the calculation, hidden at the beginning ************ (UpdateForNewExercise) (8/10) ************
+    const lineLabelAC = makeLabel("√160", new THREE.Vector3().addVectors(V.A, V.C).multiplyScalar(0.5), "#0d6efd"); // BLUE
+    const lineLabelCD = makeLabel("4", new THREE.Vector3().addVectors(V.C, V.D).multiplyScalar(0.5), "#0d6efd"); // BLUE
+    const lineLabelCP = makeLabel("14", new THREE.Vector3().addVectors(V.C, V.P).multiplyScalar(0.5), "#0d6efd"); // BLUE
+    const dynamicLengthLabels = [lineLabelAC, lineLabelCD, lineLabelCP];
+    // Immediately hide them
+    dynamicLengthLabels.forEach(lab => lab.visible = false);
+
+    // ==========================================
+    // 4c. Angles
+    // ==========================================
+    // Define Right Angle Symbols ************ (UpdateForNewExercise) (6/10) ************
+    const angleADC = createRightAngle(V.A, V.D, V.C); // Right angle at D
+    const angleCAP = createRightAngle(V.C, V.A, V.P); // Right angle at A
+    const dynamiAngleSymbols = [angleADC, angleCAP];
+    // Immediately hide dynamic angle symbols
+    dynamiAngleSymbols.forEach(angle => angle.visible = false);
+    
+    // ==========================================
+    // 4d. Surfaces
+    // ==========================================
+    // Triangle Surfaces ************ (UpdateForNewExercise) (9/10) ************
+    const blueMeshACD = createTriangle(V.A, V.C, V.D, colorBlueShade);
+    const blueMeshACP = createTriangle(V.A, V.C, V.P, colorBlueShade);
+    const blueMeshCGP = createTriangle(V.C, V.G, V.P, colorBlueShade);
+    const dynamciBlueMeshes   = [blueMeshACD, blueMeshACP, blueMeshCGP];
+    dynamciBlueMeshes.forEach(mesh => mesh.visible = false);
+    const goldMeshCGP = createTriangle(V.C, V.G, V.P, colorGoldShade, 0.4);    
+    const targetGoldMeshes = [goldMeshCGP];
+    targetGoldMeshes.forEach(mesh => mesh.visible = true); // Show target initially
+
+    // ==========================================
+    // 5. INTERACTIVE LOGIC
+    // ==========================================
+    function updateHighlights(step) {
+        // Reset Everything
+        // 1. Reset all lines to their "Standard" look
+        defaultLines.forEach(l => l.material = matDefault);
+        dynamicLines.forEach(line => line.visible = false);
+        
+        // 2. Reset all "Target" lines to Red
+        targetLines.forEach(l => l.material = matTarget);
+        
+        // 3. Hide all Blue highlight surfaces
+        dynamciBlueMeshes.forEach(m => m.visible = false);
+        
+        // 4. Hide all labels before the next step's calculation
+        dynamicLengthLabels.forEach(lab => lab.visible = false);
+        
+        // 5. Reset Right Angles to hidden
+        dynamiAngleSymbols.forEach(symbol => symbol.visible = false); 
+        
+        // 6. Handle the Gold Target visibility via the array
+        dynamciBlueMeshes.forEach(mesh => mesh.visible = false);
+        targetGoldMeshes.forEach(m => m.visible = (step === 0));
+                
+        // Reset Text Colors
+        for (let i = 1; i <= stepData.length; i++) {
+            const div = document.getElementById('s' + i);
+            if (div) div.style.color = "black";
+        }
+
+        // (UPDATE logic for each step here) ************ (UpdateForNewExercise) (10/10) ************
+        if (step === 1) {
+            lineAC.material = lineAD.material = lineCD.material = matActive;
+            meshACDBlue.visible = true;
+            lineCDLabel.visible = true;
+            angleADC.visible = true; // Show ∠ADC
+            document.getElementById('s1').style.color = "#0d6efd";
+        } else if (step === 2) {
+            lineAC.material = lineAP.material = lineCP.material = matActive;
+            meshACPBlue.visible = true;
+            lineACLabel.visible = true;
+            angleCAP.visible = true; // Show ∠CAP
+            document.getElementById('s2').style.color = "#0d6efd";
+        } else if (step === 3) {
+            lineCP.material = lineCG.material = lineGP.material = matActive;
+            meshCGPBlue.visible = true;
+            lineCPLabel.visible = true;
+            document.getElementById('s3').style.color = "#0d6efd";
+        }
+    }
+
+    // ==========================================
+    // DECLARED FUNCTIONS
+    // ==========================================
     // Helper functions
+    function makeLabel(text, pos, color = "black", isLarge = false) {
+        const canvas = document.createElement('canvas');
+        const ctx = canvas.getContext('2d');
+        canvas.width = 512; canvas.height = 512;
+        ctx.font = isLarge ? 'Bold 120px Arial' : 'Bold 90px Arial';
+        ctx.fillStyle = color;
+        ctx.textAlign = "center";
+        ctx.fillText(text, 256, 256);
+        const sprite = new THREE.Sprite(new THREE.SpriteMaterial({ map: new THREE.CanvasTexture(canvas), sizeAttenuation: false }));
+        sprite.position.copy(pos);
+        sprite.scale.set(0.15, 0.15, 1);
+        scene.add(sprite);
+        return sprite;
+    }
+    
     function createLine(v1, v2, material = matDefault) {
         const line = new THREE.Line(new THREE.BufferGeometry().setFromPoints([v1, v2]), material);
         scene.add(line);
@@ -149,152 +313,12 @@
         scene.add(mesh);
         return mesh;
     }
-
-    // ==========================================
-    // 4. OBJECT DEFINITIONS (Lines and Surfaces)
-    // ==========================================
-
-    // Define all Vertex Coordinates here ************ (UpdateForNewExercise) (3/10) ************
-    const V = {
-        G: new THREE.Vector3(0, 0, 0),
-        F: new THREE.Vector3(-8, 0, 0),
-        H: new THREE.Vector3(0, 0, -6),
-        E: new THREE.Vector3(-8, 0, -6),
-        A: new THREE.Vector3(-8, 8, 0),
-        B: new THREE.Vector3(0, 8, 0),
-        C: new THREE.Vector3(0, 8, -6),
-        D: new THREE.Vector3(-8, 8, -6),
-        P: new THREE.Vector3(-8, 2.5, 0),
-    };
     
-    // Static Prism Edges ************ (UpdateForNewExercise) (4/10) ************
-    [ [V.A, V.B], [V.A, V.D], [V.C, V.D], [V.B, V.C], [V.A, V.F], [V.D, V.E], [V.C, V.H], [V.B, V.G], [V.E, V.F], [V.E, V.H], [V.F, V.G], [V.G, V.H], [V.C, V.G], [V.C, V.P], [V.G, V.P] ].forEach(pts => createLine(pts[0], pts[1]));
-    
-    // Dynamic Lines (assigned to variables for highlighting) ************ (UpdateForNewExercise) (5/10) ************
-    const lineAC = createLine(V.A, V.C);
-    const lineCD = createLine(V.C, V.D);
-    const lineAD = createLine(V.A, V.D);
-    const lineAP = createLine(V.A, V.P);
-    lineAC.visible = false;
-    const defaultLines = [lineCD, lineAD, lineAP];
-    const lineCP = createLine(V.C, V.P, matTarget); // Red "Target" lines
-    const lineGP = createLine(V.G, V.P, matTarget); // Red "Target" lines
-    const lineCG = createLine(V.C, V.G, matTarget); // Red "Target" lines
-    const targetLines  = [lineCP, lineGP, lineCG];
-
-    // Define Right Angle Symbols ************ (UpdateForNewExercise) (6/10) ************
-    const angleADC = createRightAngle(V.A, V.D, V.C); // Right angle at D
-    const angleCAP = createRightAngle(V.C, V.A, V.P); // Right angle at A
-    const angleSymbols = [angleADC, angleCAP];
-    
-    // ==========================================
-    // 5. LABELS
-    // ==========================================
-    function makeLabel(text, pos, color = "black", isLarge = false) {
-        const canvas = document.createElement('canvas');
-        const ctx = canvas.getContext('2d');
-        canvas.width = 512; canvas.height = 512;
-        ctx.font = isLarge ? 'Bold 120px Arial' : 'Bold 90px Arial';
-        ctx.fillStyle = color;
-        ctx.textAlign = "center";
-        ctx.fillText(text, 256, 256);
-        const sprite = new THREE.Sprite(new THREE.SpriteMaterial({ map: new THREE.CanvasTexture(canvas), sizeAttenuation: false }));
-        sprite.position.copy(pos);
-        sprite.scale.set(0.15, 0.15, 1);
-        scene.add(sprite);
-        return sprite;
-    }
-    
-    // Define length labels automatically at midpoints ************ (UpdateForNewExercise) (7/10) ************
-    const lengthLabels = [
-        { text: "12", pos: new THREE.Vector3().addVectors(V.A, V.D).multiplyScalar(0.5) },
-        { text: "6", pos: new THREE.Vector3().addVectors(V.A, V.P).multiplyScalar(0.5) },
-        { text: "4",  pos: new THREE.Vector3().addVectors(V.A, V.B).multiplyScalar(0.5) },
-        { text: "k",  pos: new THREE.Vector3().addVectors(V.G, V.P).multiplyScalar(0.5) },
-        { text: "3k", pos: new THREE.Vector3().addVectors(V.C, V.G).multiplyScalar(0.5) }
-    ];
-    // Generate Length Labels
-    lengthLabels.forEach(l => makeLabel(l.text, l.pos, "#d63384")); // PINK
-    
-    // Labels used in the calculation, hidden at the beginning ************ (UpdateForNewExercise) (8/10) ************
-    const lineACLabel = makeLabel("√160", new THREE.Vector3().addVectors(V.A, V.C).multiplyScalar(0.5), "#0d6efd"); // BLUE
-    const lineCDLabel = makeLabel("4", new THREE.Vector3().addVectors(V.C, V.D).multiplyScalar(0.5), "#0d6efd"); // BLUE
-    const lineCPLabel = makeLabel("14", new THREE.Vector3().addVectors(V.C, V.P).multiplyScalar(0.5), "#0d6efd"); // BLUE
-    const lineLabelsForCalculation = [lineACLabel, lineCDLabel, lineCPLabel];
-    // Immediately hide them
-    lineLabelsForCalculation.forEach(lab => lab.visible = false);
-
-    // Triangle Surfaces ************ (UpdateForNewExercise) (9/10) ************
-    const meshACDBlue = createTriangle(V.A, V.C, V.D, colorBlueShade);
-    const meshACPBlue = createTriangle(V.A, V.C, V.P, colorBlueShade);
-    const meshCGPBlue = createTriangle(V.C, V.G, V.P, colorBlueShade);
-    const blueMeshes   = [meshACDBlue, meshACPBlue, meshCGPBlue];
-    const meshCGPGold = createTriangle(V.C, V.G, V.P, colorGoldShade, 0.4);    
-    const targetMeshes = [meshCGPGold];
-    meshCGPGold.visible = true; // Show target initially
-
-    // Generate Vertex Labels
-    // Object.keys(V).forEach(key => makeLabel(key, V[key].clone().add(new THREE.Vector3(0, key === 'B' || key === 'A' || key === 'C' ? -0.8 : 0.8, 0))));
-    Object.keys(V).forEach(key => makeLabel(key, V[key].clone().add(new THREE.Vector3(0, 0, 0))));
-
-    // ==========================================
-    // 6. INTERACTIVE LOGIC
-    // ==========================================
-    
-    function updateHighlights(step) {
-        // Reset Everything
-        // 1. Reset all lines to their "Standard" look
-        defaultLines.forEach(l => l.material = matDefault);
-        
-        // 2. Reset all "Target" lines to Red
-        targetLines.forEach(l => l.material = matTarget);
-        
-        // 3. Hide all Blue highlight surfaces
-        blueMeshes.forEach(m => m.visible = false);
-        
-        // 4. Handle the Gold Target visibility via the array
-        targetMeshes.forEach(m => m.visible = (step === 0));
-
-        // 5. Hide all labels before the next step's calculation
-        lineLabelsForCalculation.forEach(lab => lab.visible = false);
-
-        // 6. Reset Right Angles to hidden
-        angleSymbols.forEach(symbol => symbol.visible = false);
-                
-        // Reset Text Colors
-        for (let i = 1; i <= stepData.length; i++) {
-            const div = document.getElementById('s' + i);
-            if (div) div.style.color = "black";
-        }
-
-        // (UPDATE logic for each step here) ************ (UpdateForNewExercise) (10/10) ************
-        if (step === 1) {
-            lineAC.material = lineAD.material = lineCD.material = matActive;
-            meshACDBlue.visible = true;
-            lineCDLabel.visible = true;
-            angleADC.visible = true; // Show ∠ADC
-            document.getElementById('s1').style.color = "#0d6efd";
-        } else if (step === 2) {
-            lineAC.material = lineAP.material = lineCP.material = matActive;
-            meshACPBlue.visible = true;
-            lineACLabel.visible = true;
-            angleCAP.visible = true; // Show ∠CAP
-            document.getElementById('s2').style.color = "#0d6efd";
-        } else if (step === 3) {
-            lineCP.material = lineCG.material = lineGP.material = matActive;
-            meshCGPBlue.visible = true;
-            lineCPLabel.visible = true;
-            document.getElementById('s3').style.color = "#0d6efd";
-        }
-    }
-
     // Standard UI and Animation Loop
     const controls = new THREE.OrbitControls(camera, renderer.domElement);
     // Call your function to set the initial position
     resetCamera();
 
-    // function animate() { requestAnimationFrame(animate); renderer.render(scene, camera); }
-    // animate();
     // Animation Loop with Real-time Updates
     function animate() {
         requestAnimationFrame(animate);
@@ -370,6 +394,7 @@
         // Crucial: update the controls so they realize the camera has moved
         controls.update();
     }
+    
 </script>
 </body>
 </html>
