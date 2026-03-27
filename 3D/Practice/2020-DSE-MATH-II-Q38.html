@@ -54,9 +54,12 @@
     const stepData = [
         "1. <b>In the right-angled ΔABP, </b><br> BP = √(12² + 9²) = 15",
         "2. <b>In the right-angled ΔDEP, </b><br> DP = √(12² + 5²) = 13",
-        "3. <b>In ΔBDP, </b> Apply the Heron's formula" + "<br>"
+        "3. <b>In ΔBDP, BP = 15, DP = 13, BD = 2k</b>" + "<br>"
+            + "Apply the Heron's formula" + "<br>"
             + "Let s = (BP + DP + BD)/2 = 14 + k" + "<br>"
-            + "Area = √s(s - BP)(s - DP)(s - BD) = √(k² - 1)(196 - k²)"
+            + "Area = √s(s - BP)(s - DP)(s - BD)" + "<br>"
+            + "= √(14 + k)(k - 1)(k + 1)(14 - 2k)" + "<br>"
+            + "= √(k² - 1)(196 - k²)"
     ];
     // ==============================================================
 
