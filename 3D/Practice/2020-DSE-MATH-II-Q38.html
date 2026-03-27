@@ -36,7 +36,8 @@
     <h3 style="margin:0 0 10px 0;">DSE 2020 Q38</h3>
     <p>In the figure, ABCDEF is a right triangular prism. P lies on AE. AB=AC=12, AP=9, EP=5, BD=2k. Find the area of ΔBDP.</p>
     <p style="font-size: 11px; color: #666;">🖱️ Left-Click: Rotate | 🖱️ Right-Click: Drag | 🔍 Scroll: Zoom</p>
-    
+
+    <button id="reset-cam-btn" style="margin-top: 10px; background: #6c757d; color: white; border: none; padding: 10px; width: 100%; border-radius: 5px; cursor: pointer; font-weight: bold;" onclick="resetCamera()">Reset Camera 🎥</button>
     <button id="toggle-btn" onclick="startSteps()">Show Calculation Steps</button>
     
     <div id="calc-box">
@@ -287,6 +288,17 @@
         const btn = document.getElementById('next-btn');
         btn.innerHTML = "Next Step ➔"; btn.style.background = "#198754";
         btn.onclick = nextStep;
+    }
+    
+    function resetCamera() {
+        // Reset camera position to your initial settings
+        camera.position.set(-23, 23, 15);
+        
+        // Reset the pivot point for OrbitControls
+        controls.target.set(6, 6, -6);
+        
+        // Crucial: update the controls so they realize the camera has moved
+        controls.update();
     }
 </script>
 </body>
