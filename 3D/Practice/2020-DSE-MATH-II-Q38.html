@@ -11,26 +11,16 @@
             z-index: 10; max-width: 350px; border-top: 5px solid #0d6efd;
             box-shadow: 0 4px 15px rgba(0,0,0,0.2);
         }
-        #ui-layer p { 
-            font-size: 21px; 
-            line-height: 1.6; 
-        }
-        
-        #ui-layer h3 { 
-            font-size: 27px; 
-        }
+        #ui-layer p { font-size: 21px; line-height: 1.6; }
+        #ui-layer h3 { font-size: 27px; }
         
         #toggle-btn {
             background: #0d6efd; color: white; border: none; padding: 10px;
             width: 100%; border-radius: 5px; cursor: pointer; font-weight: bold;
         }
         #calc-box { 
-            display: none; 
-            margin-top: 15px; 
-            font-size: 21px; 
-            line-height: 1.5; 
-            border-top: 1px solid #ddd; 
-            padding-top: 10px; 
+            display: none; margin-top: 15px; font-size: 21px; 
+            line-height: 1.5; border-top: 1px solid #ddd; padding-top: 10px; 
         }
         .step { display: none; margin-bottom: 10px; border-left: 3px solid #0d6efd; padding-left: 10px; }
         #next-btn { 
@@ -44,15 +34,12 @@
 <div id="ui-layer">
     <h3 style="margin:0 0 10px 0;">DSE 2020 Q38</h3>
     <p>ABCDEF is a right triangular prism. P lies on AE. AB=AC=12, AP=9, EP=5, BD=2k. Find area of ΔBDP.</p>
-    <p style="font-size: 11px; color: #666;">🖱️ Left-Click: Rotate | 🖱️ Right-Click: Drag E | 🔍 Scroll: Zoom</p>
+    <p style="font-size: 11px; color: #666;">🖱️ Left-Click: Rotate | 🖱️ Right-Click: Drag | 🔍 Scroll: Zoom</p>
     
     <button id="toggle-btn" onclick="startSteps()">Show Calculation Steps</button>
     
     <div id="calc-box">
-        <div class="step" id="s1">1. <b>Total Height:</b> AE = 9 + 5 = 14</div>
-        <div class="step" id="s2">2. <b>Side DP:</b> √(12² + 5²) = 13</div>
-        <div class="step" id="s3">3. <b>Side BP:</b> √(12² + 9²) = 15</div>
-        <div class="step" id="s4">4. <b>Side BD:</b> 2k</div>
+        <div id="step-container"></div>
         <button id="next-btn" onclick="nextStep()">Next Step ➔</button>
     </div>
 </div>
@@ -61,6 +48,31 @@
 <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
 
 <script>
+    // ==============================================================
+    // 1. CALCULATION STEPS (Edit these easily here)
+    // ==============================================================
+    const stepData = [
+        "1. <b>Total Height:</b> AE = 9 + 5 = 14",
+        "2. <b>Side DP:</b> √(12² + 5²) = 13",
+        "3. <b>Side BP:</b> √(12² + 9²) = 15",
+        "4. <b>Side BD:</b> 2k"
+    ];
+    // ==============================================================
+
+    // Automatically build the HTML steps from the array above
+    const container = document.getElementById('step-container');
+    stepData.forEach((text, index) => {
+        const div = document.createElement('div');
+        div.className = 'step';
+        div.id = 's' + (index + 1);
+        div.innerHTML = text;
+        container.appendChild(div);
+    });
+
+    let currentStep = 0;
+    const totalSteps = stepData.length;
+
+    // --- Three.js Scene Setup ---
     const scene = new THREE.Scene();
     scene.background = new THREE.Color(0xf0f2f5);
     const camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 1000);
@@ -73,58 +85,40 @@
     const E = new THREE.Vector3(0, 0, 0), F = new THREE.Vector3(12, 0, 0), D = new THREE.Vector3(0, 0, 12);
     const P = new THREE.Vector3(0, 5, 0);
 
-    // Draw Lines
     const mat = new THREE.LineBasicMaterial({ color: 0x333333 });
     const redMat = new THREE.LineBasicMaterial({ color: 0xff0000, linewidth: 2 });
 
-    // --- New: Shaped (Filled) Triangle BDP ---
-    const triangleGeometry = new THREE.BufferGeometry().setFromPoints([B, D, P]);
-    triangleGeometry.setIndex([0, 1, 2]);
-    const triangleMaterial = new THREE.MeshBasicMaterial({ 
-        color: 0xffc107, 
-        side: THREE.DoubleSide, 
-        transparent: true, 
-        opacity: 0.4 
-    });
-    const triangleMesh = new THREE.Mesh(triangleGeometry, triangleMaterial);
-    scene.add(triangleMesh);
+    // Triangle Mesh
+    const triGeom = new THREE.BufferGeometry().setFromPoints([B, D, P]);
+    triGeom.setIndex([0, 1, 2]);
+    const triMesh = new THREE.Mesh(triGeom, new THREE.MeshBasicMaterial({ color: 0xffc107, side: THREE.DoubleSide, transparent: true, opacity: 0.4 }));
+    scene.add(triMesh);
     
     function addLine(v1, v2, m = mat) {
         scene.add(new THREE.Line(new THREE.BufferGeometry().setFromPoints([v1, v2]), m));
     }
 
-    // Prism Edges
+    // Draw Edges
     [ [A,B], [B,C], [C,A], [E,F], [F,D], [D,E], [A,E], [B,F], [C,D] ].forEach(pts => addLine(pts[0], pts[1]));
-    // Triangle BDP Edges
     [ [B,D], [D,P], [P,B] ].forEach(pts => addLine(pts[0], pts[1], redMat));
 
-    // --- UPDATED: makeLabel for proportional, large text ---
+    // Labels
     function makeLabel(text, pos, color = "black") {
         const canvas = document.createElement('canvas');
         const ctx = canvas.getContext('2d');
-        
-        // Use a square canvas to prevent stretching
-        canvas.width = 512; 
-        canvas.height = 512;
-        
-        ctx.font = 'Bold 120px Arial'; 
+        canvas.width = 512; canvas.height = 512;
+        ctx.font = 'Bold 120px Arial';
         ctx.fillStyle = color;
         ctx.textAlign = "center";
         ctx.textBaseline = "middle";
-        ctx.fillText(text, 256, 256); 
-        
+        ctx.fillText(text, 256, 256);
         const texture = new THREE.CanvasTexture(canvas);
-        const spriteMaterial = new THREE.SpriteMaterial({ map: texture, sizeAttenuation: false });
-        const sprite = new THREE.Sprite(spriteMaterial);
-        
+        const sprite = new THREE.Sprite(new THREE.SpriteMaterial({ map: texture, sizeAttenuation: false }));
         sprite.position.copy(pos);
-        
-        // Set a uniform scale (height = width)
-        sprite.scale.set(0.15, 0.15, 1); 
+        sprite.scale.set(0.15, 0.15, 1);
         scene.add(sprite);
     }
 
-    // Vertex Labels with slight offsets so they don't sit directly on the points
     makeLabel("A", A.clone().add(new THREE.Vector3(0, 0.8, 0))); 
     makeLabel("B", B.clone().add(new THREE.Vector3(0, 0.8, 0))); 
     makeLabel("C", C.clone().add(new THREE.Vector3(0, 0.8, 0)));
@@ -133,38 +127,31 @@
     makeLabel("F", F.clone().add(new THREE.Vector3(0, -0.8, 0))); 
     makeLabel("P", P.clone().add(new THREE.Vector3(-1.2, 0, 0)));
 
-    // Length Labels (Pink/Magenta color)
-    makeLabel("12", new THREE.Vector3(6, 15, 0), "#d63384"); // AB
-    makeLabel("12", new THREE.Vector3(-1.2, 15, 6), "#d63384"); // AC
-    makeLabel("9", new THREE.Vector3(-1.2, 9.5, 0), "#d63384");  // AP
-    makeLabel("5", new THREE.Vector3(-1.2, 2.5, 0), "#d63384");  // EP
-    makeLabel("2k", new THREE.Vector3(6, 7, 6), "#d63384");    // BD mid-region
+    makeLabel("12", new THREE.Vector3(6, 15, 0), "#d63384"); 
+    makeLabel("12", new THREE.Vector3(-1.2, 15, 6), "#d63384");
+    makeLabel("9", new THREE.Vector3(-1.2, 9.5, 0), "#d63384"); 
+    makeLabel("5", new THREE.Vector3(-1.2, 2.5, 0), "#d63384");
+    makeLabel("2k", new THREE.Vector3(6, 7, 6), "#d63384");
 
     camera.position.set(30, 20, 30);
     const controls = new THREE.OrbitControls(camera, renderer.domElement);
-    // Pivot around the center of the prism (6, 7, 6)
     controls.target.set(6, 7, 6);
     controls.update();
 
     function animate() { requestAnimationFrame(animate); renderer.render(scene, camera); }
     animate();
 
-    let currentStep = 0;
-    const totalSteps = 4;
-
+    // --- Step Control Logic ---
     function startSteps() {
-        const box = document.getElementById('calc-box');
-        const mainBtn = document.getElementById('toggle-btn');
+        document.getElementById('calc-box').style.display = 'block';
+        document.getElementById('toggle-btn').style.display = 'none';
         const nextBtn = document.getElementById('next-btn');
-        
-        box.style.display = 'block';
-        mainBtn.style.display = 'none'; 
-        nextBtn.style.display = 'block'; 
-        nextBtn.innerHTML = "Next Step ➔"; // Ensure it says Next Step
-        nextBtn.onclick = nextStep; // Ensure it calls nextStep
-        
-        currentStep = 0; // Reset counter
-        nextStep(); 
+        nextBtn.style.display = 'block';
+        nextBtn.innerHTML = "Next Step ➔";
+        nextBtn.style.background = "#198754";
+        nextBtn.onclick = nextStep;
+        currentStep = 0;
+        nextStep();
     }
 
     function nextStep() {
@@ -172,33 +159,22 @@
         if (currentStep <= totalSteps) {
             document.getElementById('s' + currentStep).style.display = 'block';
         }
-        
-        // If we reach the last step, change the button to a "Reset" button
         if (currentStep === totalSteps) {
             const nextBtn = document.getElementById('next-btn');
             nextBtn.innerHTML = "Reset to Start ↺";
-            nextBtn.style.background = "#6c757d"; // Grey color for reset
+            nextBtn.style.background = "#6c757d";
             nextBtn.onclick = resetSteps;
         }
     }
 
     function resetSteps() {
-        // 1. Hide all individual step divs
         for (let i = 1; i <= totalSteps; i++) {
             document.getElementById('s' + i).style.display = 'none';
         }
-
-        // 2. Hide the whole calculation box
         document.getElementById('calc-box').style.display = 'none';
-
-        // 3. Show the original "Show Calculation Steps" button again
-        const mainBtn = document.getElementById('toggle-btn');
-        mainBtn.style.display = 'block';
-        
-        // 4. Reset the internal counter
+        document.getElementById('toggle-btn').style.display = 'block';
         currentStep = 0;
     }
-    
 </script>
 </body>
 </html>
