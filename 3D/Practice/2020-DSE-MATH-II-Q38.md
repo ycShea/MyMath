@@ -28,7 +28,8 @@ For example, if the base of a prism is a rectangle on the ground, you define the
 
 ### 🛠️ How to Update for a New Exercise
 
-**Visit [2526-S5UT4-MCQ6.html](https://github.com/ycShea/MyMath/blob/main/3D/Practice/2526-S5UT4-MCQ6.md) and duplicate the file to modify and update it for a new exercise.**
+  * **Visit [2526-S5UT4-MCQ6.html](https://github.com/ycShea/MyMath/blob/main/3D/Practice/2526-S5UT4-MCQ6.md) and duplicate the file to modify and update it for a new exercise.**
+
 -----
 
 ### 📖 How to Use
