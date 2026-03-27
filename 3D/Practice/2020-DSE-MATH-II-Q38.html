@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>DSE 2020 Q38 Visualizer</title>
+    <title>DSE 2020 Q38 Visualizer - Shaded Triangles</title>
     <style>
         body { margin: 0; background-color: #f0f2f5; font-family: 'Segoe UI', sans-serif; overflow: hidden; }
         #ui-layer { 
@@ -13,7 +13,6 @@
         }
         #ui-layer p { font-size: 21px; line-height: 1.6; }
         #ui-layer h3 { font-size: 27px; }
-        
         #toggle-btn {
             background: #0d6efd; color: white; border: none; padding: 10px;
             width: 100%; border-radius: 5px; cursor: pointer; font-weight: bold;
@@ -34,7 +33,7 @@
 <div id="ui-layer">
     <h3 style="margin:0 0 10px 0;">DSE 2020 Q38</h3>
     <p>ABCDEF is a right triangular prism. P lies on AE. AB=AC=12, AP=9, EP=5, BD=2k. Find area of ΔBDP.</p>
-    <p style="font-size: 11px; color: #666;">🖱️ Left-Click: Rotate | 🖱️ Right-Click: Drag | 🔍 Scroll: Zoom</p>
+    <p style="font-size: 11px; color: #666;">🖱️ Left-Click: Rotate | 🔍 Scroll: Zoom</p>
     
     <button id="toggle-btn" onclick="startSteps()">Show Calculation Steps</button>
     
@@ -84,33 +83,43 @@
 
     const mat = new THREE.LineBasicMaterial({ color: 0x333333 });
     const redMat = new THREE.LineBasicMaterial({ color: 0xff0000, linewidth: 3 });
-    const blueHighlight = new THREE.LineBasicMaterial({ color: 0x0d6efd, linewidth: 9 });
+    const blueHighlight = new THREE.LineBasicMaterial({ color: 0x0d6efd, linewidth: 8 });
 
-    const triGeom = new THREE.BufferGeometry().setFromPoints([B, D, P]);
-    triGeom.setIndex([0, 1, 2]);
-    const triMesh = new THREE.Mesh(triGeom, new THREE.MeshBasicMaterial({ color: 0xffc107, side: THREE.DoubleSide, transparent: true, opacity: 0.4 }));
-    scene.add(triMesh);
+    // --- Triangle Shading Setup ---
+    function createTriangle(p1, p2, p3, color = 0x0d6efd) {
+        const geom = new THREE.BufferGeometry().setFromPoints([p1, p2, p3]);
+        geom.setIndex([0, 1, 2]);
+        const mesh = new THREE.Mesh(geom, new THREE.MeshBasicMaterial({ 
+            color: color, 
+            side: THREE.DoubleSide, 
+            transparent: true, 
+            opacity: 0.35 
+        }));
+        mesh.visible = false; // Start hidden
+        scene.add(mesh);
+        return mesh;
+    }
+
+    const meshABP = createTriangle(A, B, P, 0x0d6efd);
+    const meshDEP = createTriangle(D, E, P, 0x0d6efd);
+    const meshBDP = createTriangle(B, D, P, 0xffc107); // Keep original gold for final triangle
     
-    // UPDATED: Function now returns the line object
     function createLine(v1, v2, m = mat) {
         const line = new THREE.Line(new THREE.BufferGeometry().setFromPoints([v1, v2]), m);
         scene.add(line);
         return line;
     }
 
-    // Standard Prism Edges (not highlighted)
+    // Prism Edges
     [ [B,C], [C,A], [B,F], [F,D], [E,F], [C,D] ].forEach(pts => createLine(pts[0], pts[1]));
 
-    // Store references to specific lines for highlighting
     const lineAB = createLine(A, B);
     const lineAP = createLine(A, P);
-    const lineBP = createLine(B, P, redMat); // Target triangle edge
-    
+    const lineBP = createLine(B, P, redMat); 
     const lineDE = createLine(D, E);
     const lineEP = createLine(E, P);
-    const lineDP = createLine(D, P, redMat); // Target triangle edge
-    
-    const lineBD = createLine(B, D, redMat); // Final target triangle edge
+    const lineDP = createLine(D, P, redMat); 
+    const lineBD = createLine(B, D, redMat); 
 
     function makeLabel(text, pos, color = "black") {
         const canvas = document.createElement('canvas');
@@ -135,7 +144,6 @@
     makeLabel("E", E.clone().add(new THREE.Vector3(0, -0.8, 0))); 
     makeLabel("F", F.clone().add(new THREE.Vector3(0, -0.8, 0))); 
     makeLabel("P", P.clone().add(new THREE.Vector3(-1.2, 0, 0)));
-
     makeLabel("12", new THREE.Vector3(6, 15, 0), "#d63384"); 
     makeLabel("12", new THREE.Vector3(-1.2, 15, 6), "#d63384");
     makeLabel("9", new THREE.Vector3(-1.2, 9.5, 0), "#d63384"); 
@@ -151,17 +159,25 @@
     animate();
 
     function updateHighlights(step) {
-        // Reset colors
+        // Reset line materials
         lineAB.material = mat; lineAP.material = mat; lineBP.material = redMat;
         lineDE.material = mat; lineEP.material = mat; lineDP.material = redMat;
         lineBD.material = redMat;
 
+        // Reset shading visibility
+        meshABP.visible = false;
+        meshDEP.visible = false;
+        meshBDP.visible = false;
+
         if (step === 1) {
             lineAB.material = blueHighlight; lineAP.material = blueHighlight; lineBP.material = blueHighlight;
+            meshABP.visible = true;
         } else if (step === 2) {
             lineDE.material = blueHighlight; lineEP.material = blueHighlight; lineDP.material = blueHighlight;
+            meshDEP.visible = true;
         } else if (step === 3) {
             lineBP.material = blueHighlight; lineDP.material = blueHighlight; lineBD.material = blueHighlight;
+            meshBDP.visible = true;
         }
     }
 
@@ -181,7 +197,7 @@
         currentStep++;
         if (currentStep <= totalSteps) {
             document.getElementById('s' + currentStep).style.display = 'block';
-            updateHighlights(currentStep); // Added highlight trigger
+            updateHighlights(currentStep);
         }
         if (currentStep === totalSteps) {
             const nextBtn = document.getElementById('next-btn');
@@ -198,7 +214,7 @@
         document.getElementById('calc-box').style.display = 'none';
         document.getElementById('toggle-btn').style.display = 'block';
         currentStep = 0;
-        updateHighlights(0); // Clear highlights
+        updateHighlights(0);
     }
 </script>
 </body>
