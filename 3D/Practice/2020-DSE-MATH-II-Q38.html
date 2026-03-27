@@ -158,10 +158,13 @@
         const nextBtn = document.getElementById('next-btn');
         
         box.style.display = 'block';
-        mainBtn.style.display = 'none'; // Hide the "Show" button
-        nextBtn.style.display = 'block'; // Show the "Next" button
+        mainBtn.style.display = 'none'; 
+        nextBtn.style.display = 'block'; 
+        nextBtn.innerHTML = "Next Step ➔"; // Ensure it says Next Step
+        nextBtn.onclick = nextStep; // Ensure it calls nextStep
         
-        nextStep(); // Show first step immediately
+        currentStep = 0; // Reset counter
+        nextStep(); 
     }
 
     function nextStep() {
@@ -170,25 +173,30 @@
             document.getElementById('s' + currentStep).style.display = 'block';
         }
         
-        // Hide "Next" button on last step
+        // If we reach the last step, change the button to a "Reset" button
         if (currentStep === totalSteps) {
             const nextBtn = document.getElementById('next-btn');
-            nextBtn.innerHTML = "Restart Steps ↺";
-            nextBtn.style.background = "#6c757d";
+            nextBtn.innerHTML = "Reset to Start ↺";
+            nextBtn.style.background = "#6c757d"; // Grey color for reset
             nextBtn.onclick = resetSteps;
         }
     }
 
     function resetSteps() {
-        currentStep = 0;
-        for(let i=1; i<=totalSteps; i++) {
+        // 1. Hide all individual step divs
+        for (let i = 1; i <= totalSteps; i++) {
             document.getElementById('s' + i).style.display = 'none';
         }
-        const nextBtn = document.getElementById('next-btn');
-        nextBtn.innerHTML = "Next Step ➔";
-        nextBtn.style.background = "#198754";
-        nextBtn.onclick = nextStep;
-        nextStep();
+
+        // 2. Hide the whole calculation box
+        document.getElementById('calc-box').style.display = 'none';
+
+        // 3. Show the original "Show Calculation Steps" button again
+        const mainBtn = document.getElementById('toggle-btn');
+        mainBtn.style.display = 'block';
+        
+        // 4. Reset the internal counter
+        currentStep = 0;
     }
     
 </script>
