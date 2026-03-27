@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>DSE 2020 Q38 Visualizer</title>
+    <title>DSE 2020 Q38 Visualizer - Draggable</title>
     <style>
         body { margin: 0; background-color: #f0f2f5; font-family: 'Segoe UI', sans-serif; overflow: hidden; }
         #ui-layer { 
@@ -11,43 +11,32 @@
             z-index: 10; max-width: 350px; border-top: 5px solid #0d6efd;
             box-shadow: 0 4px 15px rgba(0,0,0,0.2);
         }
-        /* Change from current size to 1.5x larger */
-        #ui-layer p { 
-            font-size: 21px; /* Was 14px * 1.5 */
-            line-height: 1.6; 
-        }
-        
-        #ui-layer h3 { 
-            font-size: 27px; /* Was 18px * 1.5 */
-        }
-        
-        #calc-box { 
-            font-size: 21px; /* Was 14px * 1.5 */
-        }
+        #ui-layer p { font-size: 21px; line-height: 1.6; }
+        #ui-layer h3 { font-size: 27px; }
         #toggle-btn {
             background: #0d6efd; color: white; border: none; padding: 10px;
             width: 100%; border-radius: 5px; cursor: pointer; font-weight: bold;
         }
-        #calc-box { display: none; margin-top: 15px; font-size: 14px; line-height: 1.5; border-top: 1px solid #ddd; padding-top: 10px; }
+        #calc-box { display: none; margin-top: 15px; font-size: 21px; line-height: 1.5; border-top: 1px solid #ddd; padding-top: 10px; }
     </style>
 </head>
 <body>
 
 <div id="ui-layer">
     <h3 style="margin:0 0 10px 0;">DSE 2020 Q38</h3>
-    <p>ABCDEF is a right triangular prism. P lies on AE. AB=AC=12, AP=9, EP=5, BD=2k. Find area of ΔBDP.</p>
-    <p style="font-size: 11px; color: #666;">🖱️ Drag to rotate | 🔍 Scroll to zoom</p>
+    <p>ABCDEF is a right triangular prism. P lies on AE. AB=AC=12, AP=9, EP=5, BD=2k.</p>
+    <p style="font-size: 11px; color: #666;">🖱️ Left-Click: Rotate | 🖱️ Right-Click: Drag E | 🔍 Scroll: Zoom</p>
     <button id="toggle-btn" onclick="toggleCalc()">Show Calculation Steps</button>
-    <div id="calc-box" id="steps">
-        1. <b>Total Height:</b> AE = 9 + 5 = 14<br>
-        2. <b>Side DP:</b> √(12² + 5²) = 13<br>
-        3. <b>Side BP:</b> √(12² + 9²) = 15<br>
-        4. <b>Side BD:</b> 2k
+    <div id="calc-box">
+        1. <b>Height:</b> AE = 14<br>
+        2. <b>Side DP:</b> 13<br>
+        3. <b>Side BP:</b> 15
     </div>
 </div>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/TransformControls.js"></script>
 
 <script>
     const scene = new THREE.Scene();
@@ -57,71 +46,90 @@
     renderer.setSize(window.innerWidth, window.innerHeight);
     document.body.appendChild(renderer.domElement);
 
-    // Points
-    const A = new THREE.Vector3(0, 14, 0), B = new THREE.Vector3(12, 14, 0), C = new THREE.Vector3(0, 14, 12);
-    const E = new THREE.Vector3(0, 0, 0), F = new THREE.Vector3(12, 0, 0), D = new THREE.Vector3(0, 0, 12);
-    const P = new THREE.Vector3(0, 5, 0);
+    // Initial Points
+    let A = new THREE.Vector3(0, 14, 0), B = new THREE.Vector3(12, 14, 0), C = new THREE.Vector3(0, 14, 12);
+    let E = new THREE.Vector3(0, 0, 0), F = new THREE.Vector3(12, 0, 0), D = new THREE.Vector3(0, 0, 12);
+    let P = new THREE.Vector3(0, 5, 0);
 
-    // Draw Lines
-    const mat = new THREE.LineBasicMaterial({ color: 0x333333 });
-    const redMat = new THREE.LineBasicMaterial({ color: 0xff0000, linewidth: 2 });
+    // Group for the prism lines so we can clear and redraw
+    const prismGroup = new THREE.Group();
+    scene.add(prismGroup);
 
-    // --- New: Shaped (Filled) Triangle BDP ---
-    const triangleGeometry = new THREE.BufferGeometry().setFromPoints([B, D, P]);
-    triangleGeometry.setIndex([0, 1, 2]); // Connects the three points as a face
-    const triangleMaterial = new THREE.MeshBasicMaterial({ 
-        color: 0xffc107, 
-        side: THREE.DoubleSide, 
-        transparent: true, 
-        opacity: 0.4 
+    // 1. Initialize Transform Controls (for dragging)
+    const transformControls = new THREE.TransformControls(camera, renderer.domElement);
+    scene.add(transformControls);
+
+    const controls = new THREE.OrbitControls(camera, renderer.domElement);
+
+    transformControls.addEventListener('dragging-changed', function (event) {
+        controls.enabled = !event.value;
     });
-    const triangleMesh = new THREE.Mesh(triangleGeometry, triangleMaterial);
-    scene.add(triangleMesh);
-    
-    function addLine(v1, v2, m = mat) {
-        scene.add(new THREE.Line(new THREE.BufferGeometry().setFromPoints([v1, v2]), m));
-    }
 
-    // Prism
-    [ [A,B], [B,C], [C,A], [E,F], [F,D], [D,E], [A,E], [B,F], [C,D] ].forEach(pts => addLine(pts[0], pts[1]));
-    // Triangle BDP
-    [ [B,D], [D,P], [P,B] ].forEach(pts => addLine(pts[0], pts[1], redMat));
+    // 3. Invisible mesh at E to act as a handle
+    const meshE = new THREE.Mesh(new THREE.SphereGeometry(0.5), new THREE.MeshBasicMaterial({visible: false}));
+    meshE.position.copy(E);
+    scene.add(meshE);
+    transformControls.attach(meshE);
 
-    // --- Updated makeLabel for larger text ---
+    // Fix labels aspect ratio (Bigger Canvas, square-ish Scale)
+    const labelGroup = new THREE.Group();
+    scene.add(labelGroup);
+
     function makeLabel(text, pos, color = "black") {
         const canvas = document.createElement('canvas');
         const ctx = canvas.getContext('2d');
-        canvas.width = 256; // Increased resolution
-        canvas.height = 128;
-        ctx.font = 'Bold 80px Arial'; // Doubled font size
+        canvas.width = 512; 
+        canvas.height = 512; // Use a square canvas to keep ratio safe
+        ctx.font = 'Bold 100px Arial';
         ctx.fillStyle = color;
         ctx.textAlign = "center";
-        ctx.fillText(text, 128, 80);
+        ctx.fillText(text, 256, 256);
         
         const texture = new THREE.CanvasTexture(canvas);
-        const spriteMaterial = new THREE.SpriteMaterial({ map: texture, sizeAttenuation: false });
-        const sprite = new THREE.Sprite(spriteMaterial);
-        
+        const sprite = new THREE.Sprite(new THREE.SpriteMaterial({ map: texture, sizeAttenuation: false }));
         sprite.position.copy(pos);
-        sprite.scale.set(0.18, 0.06, 1); // Increased visual scale
-        scene.add(sprite);
+        sprite.scale.set(0.12, 0.12, 1); // 1:1 ratio so width isn't stretched
+        labelGroup.add(sprite);
     }
 
-    // Vertex Labels
-    makeLabel("A", A); makeLabel("B", B); makeLabel("C", C);
-    makeLabel("D", D); makeLabel("E", E); makeLabel("F", F); makeLabel("P", P);
+    function updatePrismGeometry() {
+        prismGroup.clear();
+        labelGroup.clear();
+        
+        // Recalculate other points based on E (to keep it a prism)
+        const offset = new THREE.Vector3().copy(meshE.position).sub(E);
+        [A, B, C, E, F, D, P].forEach(p => p.add(offset));
 
-    // Length Labels
-    makeLabel("12", new THREE.Vector3(6, 14.5, 0), "#d63384"); // AB
-    makeLabel("12", new THREE.Vector3(-1, 14.5, 6), "#d63384"); // AC
-    makeLabel("9", new THREE.Vector3(-1.5, 9.5, 0), "#d63384");  // AP
-    makeLabel("5", new THREE.Vector3(-1.5, 2.5, 0), "#d63384");  // EP
-    makeLabel("2k", new THREE.Vector3(6, 7, 6), "#d63384");    // BD
+        const mat = new THREE.LineBasicMaterial({ color: 0x333333 });
+        const redMat = new THREE.LineBasicMaterial({ color: 0xff0000 });
+
+        function drawLine(v1, v2, m = mat) {
+            prismGroup.add(new THREE.Line(new THREE.BufferGeometry().setFromPoints([v1, v2]), m));
+        }
+
+        // Redraw Prism Edges
+        [ [A,B], [B,C], [C,A], [E,F], [F,D], [D,E], [A,E], [B,F], [C,D] ].forEach(pts => drawLine(pts[0], pts[1]));
+        // Redraw Triangle BDP
+        [ [B,D], [D,P], [P,B] ].forEach(pts => drawLine(pts[0], pts[1], redMat));
+
+        // Redraw Labels
+        makeLabel("A", A); makeLabel("B", B); makeLabel("C", C);
+        makeLabel("D", D); makeLabel("E", E); makeLabel("F", F); makeLabel("P", P);
+        makeLabel("12", new THREE.Vector3().addVectors(A, B).multiplyScalar(0.5).add(new THREE.Vector3(0,1,0)), "#d63384");
+        makeLabel("14", new THREE.Vector3().addVectors(A, E).multiplyScalar(0.5).add(new THREE.Vector3(-1,0,0)), "#d63384");
+    }
 
     camera.position.set(30, 20, 30);
-    const controls = new THREE.OrbitControls(camera, renderer.domElement);
+    controls.update();
 
-    function animate() { requestAnimationFrame(animate); renderer.render(scene, camera); }
+    function animate() { 
+        requestAnimationFrame(animate); 
+        E.copy(meshE.position); // Sync E to the draggable handle
+        updatePrismGeometry();  // Redraw the geometry every frame
+        renderer.render(scene, camera); 
+    }
+    
+    updatePrismGeometry();
     animate();
 
     function toggleCalc() {
