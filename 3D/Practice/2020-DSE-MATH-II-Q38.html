@@ -115,22 +115,22 @@
         B: new THREE.Vector3(0, 0, 0),
         A: new THREE.Vector3(4, 0, -11),
         C: new THREE.Vector3(8, 0, 0),
-        P: new THREE.Vector3(4, 8, -11)
+        P: new THREE.Vector3(4, 4, -11)
     };
     
     // Static Prism Edges ************ (UpdateForNewExercise) (4/9) ************
     [ [V.A, V.E], [V.D, V.F], [V.E, V.F], [V.D, V.C], [V.C, V.B], [V.A, V.C], [V.F, V.B] ].forEach(pts => createLine(pts[0], pts[1]));
     
     // Dynamic Lines (assigned to variables for highlighting) ************ (UpdateForNewExercise) (5/9) ************
-    const lineAB = createLine(V.E, V.D);
-    const lineAP = createLine(V.E, V.P);
-    const lineDE = createLine(V.B, V.A);
-    const lineEP = createLine(V.A, V.P);
-    const defaultLines = [lineAB, lineAP, lineDE, lineEP];
-    const lineBP = createLine(V.D, V.P, matTarget); // Red "Target" lines
-    const lineDP = createLine(V.B, V.P, matTarget); // Red "Target" lines
+    const lineDE = createLine(V.E, V.D);
+    const lineEP = createLine(V.E, V.P);
+    const lineAB = createLine(V.B, V.A);
+    const lineAP = createLine(V.A, V.P);
+    const defaultLines = [lineDE, lineEP, lineAB, lineAP];
+    const lineDP = createLine(V.D, V.P, matTarget); // Red "Target" lines
+    const lineBP = createLine(V.B, V.P, matTarget); // Red "Target" lines
     const lineBD = createLine(V.D, V.B, matTarget); // Red "Target" lines
-    const targetLines  = [lineBP, lineDP, lineBD];
+    const targetLines  = [lineDP, lineBP, lineBD];
     
     // ==========================================
     // 5. LABELS
@@ -152,29 +152,29 @@
     
     // Define length labels automatically at midpoints ************ (UpdateForNewExercise) (6/9) ************
     const lengthLabels = [
-        { text: "12", pos: new THREE.Vector3().addVectors(V.E, V.D).multiplyScalar(0.5) },
-        { text: "12", pos: new THREE.Vector3().addVectors(V.E, V.F).multiplyScalar(0.5) },
-        { text: "9",  pos: new THREE.Vector3().addVectors(V.E, V.P).multiplyScalar(0.5) },
-        { text: "5",  pos: new THREE.Vector3().addVectors(V.A, V.P).multiplyScalar(0.5) },
+        { text: "12", pos: new THREE.Vector3().addVectors(V.A, V.B).multiplyScalar(0.5) },
+        { text: "12", pos: new THREE.Vector3().addVectors(V.A, V.C).multiplyScalar(0.5) },
+        { text: "5",  pos: new THREE.Vector3().addVectors(V.E, V.P).multiplyScalar(0.5) },
+        { text: "9",  pos: new THREE.Vector3().addVectors(V.A, V.P).multiplyScalar(0.5) },
         { text: "2k", pos: new THREE.Vector3().addVectors(V.D, V.B).multiplyScalar(0.5) }
     ];
     // Generate Length Labels
     lengthLabels.forEach(l => makeLabel(l.text, l.pos, "#d63384")); // PINK
     
     // Labels used in the calculation, hidden at the beginning ************ (UpdateForNewExercise) (7/9) ************
-    const lineDELabel = makeLabel("12", new THREE.Vector3().addVectors(V.B, V.A).multiplyScalar(0.5), "#0d6efd"); // BLUE
-    const lineBPLabel = makeLabel("15", new THREE.Vector3().addVectors(V.D, V.P).multiplyScalar(0.5), "#0d6efd"); // BLUE
-    const lineDPLabel = makeLabel("13", new THREE.Vector3().addVectors(V.B, V.P).multiplyScalar(0.5), "#0d6efd"); // BLUE
+    const lineDELabel = makeLabel("12", new THREE.Vector3().addVectors(V.D, V.E).multiplyScalar(0.5), "#0d6efd"); // BLUE
+    const lineBPLabel = makeLabel("15", new THREE.Vector3().addVectors(V.B, V.P).multiplyScalar(0.5), "#0d6efd"); // BLUE
+    const lineDPLabel = makeLabel("13", new THREE.Vector3().addVectors(V.D, V.P).multiplyScalar(0.5), "#0d6efd"); // BLUE
     const lineLabelsForCalculation = [lineDELabel, lineBPLabel, lineDPLabel];
     // Immediately hide them
     lineLabelsForCalculation.forEach(lab => lab.visible = false);
 
     // Triangle Surfaces ************ (UpdateForNewExercise) (8/9) ************
-    const meshABPBlue = createTriangle(V.E, V.D, V.P, colorBlueShade);
-    const meshDEPBlue = createTriangle(V.B, V.A, V.P, colorBlueShade);
-    const meshBDPBlue = createTriangle(V.D, V.B, V.P, colorBlueShade);
+    const meshABPBlue = createTriangle(V.A, V.B, V.P, colorBlueShade);
+    const meshDEPBlue = createTriangle(V.D, V.E, V.P, colorBlueShade);
+    const meshBDPBlue = createTriangle(V.B, V.D, V.P, colorBlueShade);
     const blueMeshes   = [meshABPBlue, meshDEPBlue, meshBDPBlue];
-    const meshBDPGold = createTriangle(V.D, V.B, V.P, colorGoldShade, 0.4);    
+    const meshBDPGold = createTriangle(V.B, V.D, V.P, colorGoldShade, 0.4);    
     const targetMeshes = [meshBDPGold];
     meshBDPGold.visible = true; // Show target initially
 
