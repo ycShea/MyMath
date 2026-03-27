@@ -55,13 +55,59 @@
         "1. <b>In the right-angled ΔABP, </b><br> BP = √(12² + 9²) = 15",
         "2. <b>In the right-angled ΔDEP, </b><br> DP = √(12² + 5²) = 13",
         "3. <b>In ΔBDP, BP = 15, DP = 13, BD = 2k</b>" + "<br>"
-            + "Apply the Heron's formula" + "<br>"
+            + "Use the Heron's formula." + "<br>"
             + "Let s = (BP + DP + BD)/2 = 14 + k" + "<br>"
             + "Area = √s(s - BP)(s - DP)(s - BD)" + "<br>"
             + "= √(14 + k)(k - 1)(k + 1)(14 - k)" + "<br>"
             + "= √(k² - 1)(196 - k²)"
     ];
 
+    // ==========================================
+    // UPDATED: Highlighting Logic for Two Shaders (UPDATE for new exercise) (2/2)
+    // ==========================================
+    function updateHighlights(step) {
+        // 1. Reset all standard lines
+        lineAB.material = mat; lineAP.material = mat;
+        lineDE.material = mat; lineEP.material = mat;
+        lineBP.material = redMat;
+        lineDP.material = redMat;
+        lineBD.material = redMat;
+
+        // 2. Hide ALL blue shading by default
+        meshABP.visible = false;
+        meshDEP.visible = false;
+        meshBDPBlue.visible = false; 
+
+        // 3. Reset all Step Text colors to black first
+        for (let i = 1; i <= totalSteps; i++) {
+            const stepDiv = document.getElementById('s' + i);
+            if (stepDiv) stepDiv.style.color = "black";
+        }
+
+        // 4. Gold Target logic (Visible at start/0 only)
+        if (step === 0) {
+            meshBDPGold.visible = true;
+        } else {
+            meshBDPGold.visible = false;
+        }
+
+        // 5. Show the specific step highlights and color the text blue
+        if (step === 1) {
+            lineAB.material = blueHighlightLine; lineAP.material = blueHighlightLine; lineBP.material = blueHighlightLine;
+            meshABP.visible = true;
+            document.getElementById('s1').style.color = "#0d6efd"; // Make Step 1 Text Blue
+        } else if (step === 2) {
+            lineDE.material = blueHighlightLine; lineEP.material = blueHighlightLine; lineDP.material = blueHighlightLine;
+            meshDEP.visible = true;
+            document.getElementById('s2').style.color = "#0d6efd"; // Make Step 2 Text Blue
+        } else if (step === 3) {
+            lineBP.material = blueHighlightLine; lineDP.material = blueHighlightLine; lineBD.material = blueHighlightLine;
+            meshBDPBlue.visible = true; 
+            document.getElementById('s3').style.color = "#0d6efd"; // Make Step 3 Text Blue
+        }
+    }
+    // ====================== END of updateHighlights(step) ======================
+    
     const container = document.getElementById('step-container');
     stepData.forEach((text, index) => {
         const div = document.createElement('div');
@@ -174,51 +220,6 @@
 
     function animate() { requestAnimationFrame(animate); renderer.render(scene, camera); }
     animate();
-
-    // ==========================================
-    // UPDATED: Highlighting Logic for Two Shaders (UPDATE for new exercise) (2/2)
-    // ==========================================
-    function updateHighlights(step) {
-        // 1. Reset all standard lines
-        lineAB.material = mat; lineAP.material = mat;
-        lineDE.material = mat; lineEP.material = mat;
-        lineBP.material = redMat;
-        lineDP.material = redMat;
-        lineBD.material = redMat;
-
-        // 2. Hide ALL blue shading by default
-        meshABP.visible = false;
-        meshDEP.visible = false;
-        meshBDPBlue.visible = false; 
-
-        // 3. Reset all Step Text colors to black first
-        for (let i = 1; i <= totalSteps; i++) {
-            const stepDiv = document.getElementById('s' + i);
-            if (stepDiv) stepDiv.style.color = "black";
-        }
-
-        // 4. Gold Target logic (Visible at start/0 only)
-        if (step === 0) {
-            meshBDPGold.visible = true;
-        } else {
-            meshBDPGold.visible = false;
-        }
-
-        // 5. Show the specific step highlights and color the text blue
-        if (step === 1) {
-            lineAB.material = blueHighlightLine; lineAP.material = blueHighlightLine; lineBP.material = blueHighlightLine;
-            meshABP.visible = true;
-            document.getElementById('s1').style.color = "#0d6efd"; // Make Step 1 Text Blue
-        } else if (step === 2) {
-            lineDE.material = blueHighlightLine; lineEP.material = blueHighlightLine; lineDP.material = blueHighlightLine;
-            meshDEP.visible = true;
-            document.getElementById('s2').style.color = "#0d6efd"; // Make Step 2 Text Blue
-        } else if (step === 3) {
-            lineBP.material = blueHighlightLine; lineDP.material = blueHighlightLine; lineBD.material = blueHighlightLine;
-            meshBDPBlue.visible = true; 
-            document.getElementById('s3').style.color = "#0d6efd"; // Make Step 3 Text Blue
-        }
-    }
 
     function startSteps() {
         document.getElementById('calc-box').style.display = 'block';
