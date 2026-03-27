@@ -105,13 +105,12 @@
             side: THREE.DoubleSide, 
             transparent: true, 
             opacity,
-            // --- FIXES START HERE ---
             depthWrite: false,        // Prevents the mesh from "cutting holes" in other objects
             polygonOffset: true,      // Enables a mathematical offset
             polygonOffsetFactor: -1,  // Pushes the triangle slightly toward the camera
             polygonOffsetUnits: -1
-            // --- FIXES END HERE ---
         }));
+        mesh.renderOrder = 1; // Forces the triangle to be drawn on top of the lines
         mesh.visible = false;
         scene.add(mesh);
         return mesh;
