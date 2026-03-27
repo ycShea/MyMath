@@ -114,7 +114,7 @@
         return line;
     }
 
-    function createRightAngle(vertex, p1, p2, size = 1.0) {
+    function createRightAngle(p1, vertex, p2, size = 1.0) {
         const d1 = new THREE.Vector3().subVectors(p1, vertex).normalize().multiplyScalar(size);
         const d2 = new THREE.Vector3().subVectors(p2, vertex).normalize().multiplyScalar(size);
         
@@ -179,9 +179,9 @@
     const targetLines  = [lineDP, lineBP, lineBD];
 
     // Define Right Angle Symbols ************ (UpdateForNewExercise) (6/10) ************
-    const angleBAP = createRightAngle(V.A, V.B, V.P); // Right angle at A
-    const anglePED = createRightAngle(V.E, V.P, V.D); // Right angle at E
-    const angleSymbols = [angleBAP, anglePED];
+    const angleBAP = createRightAngle(V.B, V.A, V.P); // Right angle at A
+    const angleDEP = createRightAngle(V.D, V.E, V.P); // Right angle at E
+    const angleSymbols = [angleBAP, angleDEP];
     
     // ==========================================
     // 5. LABELS
@@ -273,7 +273,7 @@
             lineDE.material = lineEP.material = lineDP.material = matActive;
             meshDEPBlue.visible = true;
             lineDELabel.visible = true;
-            anglePED.visible = true; // Show ∠PED
+            angleDEP.visible = true; // Show ∠PED
             document.getElementById('s2').style.color = "#0d6efd";
         } else if (step === 3) {
             lineBP.material = lineDP.material = lineBD.material = matActive;
