@@ -2,295 +2,203 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>2024 DSE Paper I Q18 Solution</title>
-    <link rel="stylesheet" href="../style.css">
+    <title>DSE Geometry Visualizer - Quadrilateral PQRS</title>
     <style>
-        body, html { margin: 0; padding: 0; height: 100%; overflow: hidden; font-family: 'Segoe UI', sans-serif; }
-        .split-container { display: flex; height: 100vh; }
-        .canvas-side { flex: 1; background: #f0f0f0; position: relative; }
-        .content-side { flex: 1; padding: 30px; overflow-y: auto; background: white; border-left: 1px solid #ddd; }
-        
-        .question-summary { 
-            background: #eef6ff; 
-            padding: 15px; 
-            border-radius: 8px; 
-            cursor: help; 
-            position: relative;
-            margin-bottom: 20px;
-            border: 1px dashed #007bff;
-        }
-        .summary-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: flex-start;
-        }
-        .full-question-popup {
-            display: none;
-            position: absolute;
-            top: 100%;
-            left: 0;
-            right: 0;
-            background: white;
-            border: 1px solid #ccc;
-            padding: 20px;
+        body { margin: 0; background-color: #f0f2f5; font-family: 'Segoe UI', sans-serif; overflow: hidden; }
+        #ui-layer { 
+            position: absolute; top: 15px; left: 15px; 
+            background: white; padding: 20px; border-radius: 10px; 
+            z-index: 10; max-width: 350px; border-top: 5px solid #0d6efd;
             box-shadow: 0 4px 15px rgba(0,0,0,0.2);
-            z-index: 100;
-            border-radius: 8px;
         }
-        .question-summary:hover .full-question-popup { display: block; }
-
-        .part-container { 
-            margin-bottom: 15px; 
-            border: 1px solid #eee; 
-            border-radius: 8px;
-            overflow: hidden;
+        #ui-layer p { font-size: 18px; line-height: 1.6; }
+        #ui-layer h3 { font-size: 24px; margin: 0 0 10px 0; }
+        #toggle-btn {
+            background: #0d6efd; color: white; border: none; padding: 12px;
+            width: 100%; border-radius: 5px; cursor: pointer; font-weight: bold; font-size: 16px;
         }
-        .part-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 12px 20px;
-            background: #fafafa;
+        #calc-box { 
+            display: none; margin-top: 15px; font-size: 18px; 
+            line-height: 1.5; border-top: 1px solid #ddd; padding-top: 10px; 
         }
-        .solution-content {
-            display: none;
-            padding: 20px;
-            background: #fff;
-            border-top: 1px solid #eee;
+        .step { display: none; margin-bottom: 10px; border-left: 3px solid #0d6efd; padding-left: 10px; }
+        #next-btn { 
+            display: none; margin-top: 10px; background: #198754; color: white; 
+            border: none; padding: 10px; width: 100%; border-radius: 5px; cursor: pointer; 
         }
-        .math-block { font-family: "Times New Roman", serif; font-size: 1.1rem; color: #d63384; margin: 10px 0; }
-        .btn-show { 
-            background: #007bff; 
-            color: white; 
-            border: none; 
-            padding: 8px 15px; 
-            border-radius: 4px; 
-            cursor: pointer;
-            white-space: nowrap;
+        #debug-info {
+            position: absolute; top: 15px; right: 15px;
+            background: rgba(255, 255, 255, 0.8); padding: 10px;
+            border-radius: 8px; font-family: monospace; font-size: 12px;
+            pointer-events: none; border: 1px solid #ccc; z-index: 20;
         }
-        .btn-show:hover { background: #0056b3; }
-        
-        /* Label styling for 3D points */
-        .label {
-            position: absolute;
-            background: rgba(255, 255, 255, 0.9);
-            padding: 2px 6px;
-            border-radius: 4px;
-            font-weight: bold;
-            font-size: 14px;
-            pointer-events: none;
-            border: 1px solid #666;
-            z-index: 10;
-        }
-
-        .dev-marker { color: #cc0000; font-size: 0.85rem; font-weight: bold; display: block; }
     </style>
-
-    <script>
-        window.MathJax = {
-            tex: {
-                inlineMath: [['$', '$'], ['\\(', '\\)']],
-                displayMath: [['$$', '$$'], ['\\[', '\\]']]
-            }
-        };
-    </script>
-    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
-    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
 </head>
 <body>
 
-    <div class="split-container">
-        <div class="canvas-side" id="threejs-container"></div>
-
-        <div class="content-side">
-            <a href="index.html" style="text-decoration: none; color: #007bff;">← Back to List</a>
-            <h1>2024 DSE Paper I Q18</h1>
-
-            <div class="question-summary">
-                <div class="summary-header">
-                    <div>
-                        <p class="dev-marker">Question Summary 1/2 (UpdateForNewExercise) Delete this before released.</p>
-                        <strong>PQRS a quadrilateral, where $PQ = 12\text{ cm}$, $PS = 10\text{ cm}$, $QR = 13\text{ cm}$, $\angle QPS = 82^\circ$ and $\angle QRS = 65^\circ$.</strong>
-                    </div>
-                    <button class="btn-show" onclick="drawQuadrilateral()">Show Figure</button>
-                </div>
-                <div class="full-question-popup">
-                    <p class="dev-marker">Full Question (UpdateForNewExercise) Delete this before released.</p>
-                    <img src="questions-images/2024 DSE-MATH-I Q18.png" alt="2024 DSE Q18 Diagram">
-                </div>
-            </div>
-
-            <div class="part-container">
-                <div class="part-header">
-                    <div>
-                        <p class="dev-marker">Solution 1/4 (UpdateForNewExercise) Delete this before released.</p>
-                        <span><strong>(a)(i) </strong>Find the length of $QS$.</span>
-                    </div>
-                    <button class="btn-show" onclick="toggle('sol-ai')">Show Solution</button>
-                </div>
-                <div id="sol-ai" class="solution-content">
-                    <p>In $\triangle PQS$, by the Cosine Rule:</p>
-                    <p class="math-block">$QS^2 = 12^2 + 10^2 - 2(12)(10)\cos(82^\circ)$</p>
-                    <p class="math-block">$QS \approx 14.5126 \text{ cm}$</p>
-                </div>
-            </div>
-
-            <div class="part-container">
-                <div class="part-header">
-                    <div>
-                        <p class="dev-marker">Solution 2/4 (UpdateForNewExercise) Delete this before released.</p>
-                        <span><strong>(a)(ii)</strong> Find $\angle RQS$.</span>
-                    </div>
-                    <button class="btn-show" onclick="toggle('sol-aii')">Show Solution</button>
-                </div>
-                <div id="sol-aii" class="solution-content">
-                    <p>In $\triangle RQS$, by the Sine Rule:</p>
-                    <p class="math-block">$\frac{13}{\sin(\angle RSQ)} = \frac{14.5126}{\sin(65^\circ)}$</p>
-                    <p>$\angle RSQ \approx 54.2687^\circ$</p>
-                    <p class="math-block">$\angle RQS = 180^\circ - 65^\circ - 54.2687^\circ \approx 60.7^\circ$</p>
-                </div>
-            </div>
-
-            <div class="question-summary">
-                <p class="dev-marker">Question Summary 2/2 (UpdateForNewExercise) Delete this before released.</p>
-                <strong>The metal sheet $PQRS$ described in (a) is now folded along $QS$. It is given that the angle between plane $PQS$ and plane $QRS$ is $80^\circ$.</strong>
-            </div>
-            
-            <div class="part-container">
-                <div class="part-header">
-                    <div>
-                        <p class="dev-marker">Solution 3/4 (UpdateForNewExercise) Delete this before released.</p>
-                        <span><strong>(b)(i)</strong> Find the shortest distance from $R$ to the plane $PQS$.</span>
-                    </div>
-                    <button class="btn-show" onclick="toggle('sol-bi')">Show Solution</button>
-                </div>
-                <div id="sol-bi" class="solution-content">
-                    <p>Let $h$ be the perpendicular height from $R$ to $QS$:</p>
-                    <p class="math-block">$h = 13 \sin(60.7^\circ) \approx 11.3406 \text{ cm}$</p>
-                    <p>Shortest distance to plane = $h \sin(80^\circ)$</p>
-                    <p class="math-block">Distance $\approx 11.2 \text{ cm}$</p>
-                </div>
-            </div>
-
-            <div class="part-container">
-                <div class="part-header">
-                    <div>
-                        <p class="dev-marker">Solution 4/4 (UpdateForNewExercise) Delete this before released.</p>
-                        <span><strong>(b)(ii)</strong> Let $X$ be any point lying on the plane $QRS$. Someone claims that the distance between $P$ and $X$ exceeds $8\text{ cm}$. Is the claim correct?</span>
-                    </div>
-                    <button class="btn-show" onclick="toggle('sol-bii')">Show Solution</button>
-                </div>
-                <div id="sol-bii" class="solution-content">
-                    <p>Calculate minimum distance from $P$ to plane $QRS$:</p>
-                    <p class="math-block">$PX = 12 \sin(\angle PQS) \sin(80^\circ) \approx 8.0643 \text{ cm}$</p>
-                    <p>Since $8.06 > 8$, the claim is **Correct**.</p>
-                </div>
-            </div>
-        </div>
+<div id="ui-layer">
+    <h3>2024 DSE Math Paper I Q18</h3>
+    <p>PQRS is a quadrilateral where $PQ=12$, $PS=10$, $QR=13$, $\angle QPS=82^\circ$ and $\angle QRS=65^\circ$.</p>
+    
+    <button id="reset-cam-btn" style="margin-bottom: 10px; background: #fd7e14; color: white; border: none; padding: 10px; width: 100%; border-radius: 5px; cursor: pointer; font-weight: bold;" onclick="resetCamera()">Reset Camera 🎥</button>
+    
+    <button id="toggle-btn" onclick="startSteps()">Show Calculation Steps</button>
+    
+    <div id="calc-box">
+        <div id="step-container"></div>
+        <button id="next-btn" onclick="nextStep()">Next Step ➔</button>
     </div>
+</div>
 
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
+<div id="debug-info"></div>
 
-    <script>
-        function toggle(id) {
-            const el = document.getElementById(id);
-            const isHidden = (el.style.display === 'none' || el.style.display === '');
-            el.style.display = isHidden ? 'block' : 'none';
-            if (isHidden && window.MathJax) {
-                MathJax.typesetPromise([el]);
-            }
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
+
+<script>
+    // 1. CALCULATION DATA
+    const stepData = [
+        "1. <b>In ΔPQS, find QS:</b><br>$QS^2 = 12^2 + 10^2 - 2(12)(10)\cos 82^\circ$<br>$QS \approx 14.5126$",
+        "2. <b>In ΔQRS, find ∠RSQ:</b><br>$\frac{13}{\sin \angle RSQ} = \frac{QS}{\sin 65^\circ}$<br>$\angle RSQ \approx 54.27^\circ$",
+        "3. <b>Find ∠RQS:</b><br>$\angle RQS = 180^\circ - 65^\circ - 54.27^\circ = 60.73^\circ$"
+    ];
+
+    // 2. SCENE SETUP
+    const scene = new THREE.Scene();
+    scene.background = new THREE.Color(0xf0f2f5);
+    const camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 1000);
+    const renderer = new THREE.WebGLRenderer({ antialias: true });
+    renderer.setSize(window.innerWidth, window.innerHeight);
+    document.body.appendChild(renderer.domElement);
+
+    const matDefault = new THREE.LineBasicMaterial({ color: 0x333333 });
+    const matActive  = new THREE.LineBasicMaterial({ color: 0x0d6efd, linewidth: 3 });
+    const matTarget  = new THREE.LineBasicMaterial({ color: 0xff0000 });
+
+    // 3. GEOMETRY DEFINITION
+    const rad82 = 82 * Math.PI / 180;
+    const V = {
+        P: new THREE.Vector3(0, 0, 0),
+        S: new THREE.Vector3(10, 0, 0),
+        Q: new THREE.Vector3(12 * Math.cos(rad82), 12 * Math.sin(rad82), 0),
+        R: new THREE.Vector3(18, 5, 0) // Visual approximation for R
+    };
+
+    // Labels
+    Object.keys(V).forEach(key => makeLabel(key, V[key], "black", true));
+
+    // Lines
+    const linePQ = createLine(V.P, V.Q);
+    const linePS = createLine(V.P, V.S);
+    const lineQR = createLine(V.Q, V.R);
+    const lineRS = createLine(V.R, V.S);
+    const lineQS = createLine(V.Q, V.S); // Hinge/Diagonal
+
+    const defaultLines = [linePQ, linePS, lineQR, lineRS];
+    
+    // Meshes (Solved Flashing with polygonOffset)
+    const meshPQS = createTriangle(V.P, V.Q, V.S, 0x0d6efd);
+    const meshQRS = createTriangle(V.Q, V.R, V.S, 0xffc107);
+
+    // 4. INTERACTIVE LOGIC
+    function updateHighlights(step) {
+        // Reset
+        defaultLines.forEach(l => l.material = matDefault);
+        lineQS.visible = false;
+        meshPQS.visible = false;
+        meshQRS.visible = false;
+
+        if (step === 1) {
+            linePQ.material = linePS.material = lineQS.material = matActive;
+            lineQS.visible = true;
+            meshPQS.visible = true;
+        } else if (step === 2 || step === 3) {
+            lineQR.material = lineRS.material = lineQS.material = matActive;
+            lineQS.visible = true;
+            meshQRS.visible = true;
         }
+    }
 
-        const container = document.getElementById('threejs-container');
-        const scene = new THREE.Scene();
-        scene.background = new THREE.Color(0xf0f0f0);
-        const camera = new THREE.PerspectiveCamera(75, container.clientWidth/container.clientHeight, 0.1, 1000);
-        camera.position.set(10, 8, 15);
-        
-        const renderer = new THREE.WebGLRenderer({ antialias: true });
-        renderer.setSize(container.clientWidth, container.clientHeight);
-        container.appendChild(renderer.domElement);
-        const controls = new THREE.OrbitControls(camera, renderer.domElement);
+    // 5. HELPER FUNCTIONS
+    function createLine(v1, v2, material = matDefault) {
+        const line = new THREE.Line(new THREE.BufferGeometry().setFromPoints([v1, v2]), material);
+        scene.add(line);
+        return line;
+    }
 
-        let mesh, wireframe;
-        let labels = {};
-        const material = new THREE.MeshPhongMaterial({ color: 0x007bff, side: THREE.DoubleSide, transparent: true, opacity: 0.6 });
-        const lineMaterial = new THREE.LineBasicMaterial({ color: 0x000000 });
+    function createTriangle(p1, p2, p3, color, opacity = 0.3) {
+        const geom = new THREE.BufferGeometry().setFromPoints([p1, p2, p3]);
+        geom.setIndex([0, 1, 2]);
+        const mesh = new THREE.Mesh(geom, new THREE.MeshBasicMaterial({ 
+            color, side: THREE.DoubleSide, transparent: true, opacity,
+            // SOLUTION FOR FLASHING:
+            polygonOffset: true,
+            polygonOffsetFactor: 1,
+            polygonOffsetUnits: 1
+        }));
+        mesh.visible = false;
+        scene.add(mesh);
+        return mesh;
+    }
 
-        scene.add(new THREE.AmbientLight(0xffffff, 0.8));
-        const dirLight = new THREE.DirectionalLight(0xffffff, 0.5);
-        dirLight.position.set(10, 10, 10);
-        scene.add(dirLight);
+    function makeLabel(text, pos, color = "black", isLarge = false) {
+        const canvas = document.createElement('canvas');
+        const ctx = canvas.getContext('2d');
+        canvas.width = 256; canvas.height = 256;
+        ctx.font = isLarge ? 'Bold 100px Arial' : '80px Arial';
+        ctx.fillStyle = color;
+        ctx.textAlign = "center";
+        ctx.fillText(text, 128, 128);
+        const sprite = new THREE.Sprite(new THREE.SpriteMaterial({ map: new THREE.CanvasTexture(canvas), sizeAttenuation: false }));
+        sprite.position.copy(pos);
+        sprite.scale.set(0.05, 0.05, 1);
+        scene.add(sprite);
+        return sprite;
+    }
 
-        // Coordinates for the quadrilateral
-        const rad82 = 82 * Math.PI / 180;
-        const pts = {
-            P: new THREE.Vector3(0, 0, 0),
-            S: new THREE.Vector3(10, 0, 0),
-            Q: new THREE.Vector3(12 * Math.cos(rad82), 12 * Math.sin(rad82), 0),
-            R: new THREE.Vector3(18, 5, 0)
-        };
+    const controls = new THREE.OrbitControls(camera, renderer.domElement);
+    function resetCamera() {
+        camera.position.set(5, 5, 25);
+        controls.target.set(8, 4, 0);
+        controls.update();
+    }
+    resetCamera();
 
-        function createLabel(text) {
-            const div = document.createElement('div');
-            div.className = 'label';
-            div.textContent = text;
-            container.appendChild(div);
-            return div;
+    function animate() {
+        requestAnimationFrame(animate);
+        const cp = camera.position;
+        document.getElementById('debug-info').innerHTML = `Cam: ${cp.x.toFixed(1)}, ${cp.y.toFixed(1)}, ${cp.z.toFixed(1)}`;
+        renderer.render(scene, camera);
+    }
+    animate();
+
+    // UI Step Management
+    const container = document.getElementById('step-container');
+    stepData.forEach((text, i) => {
+        const div = document.createElement('div');
+        div.className = 'step'; div.id = 's' + (i + 1); div.innerHTML = text;
+        container.appendChild(div);
+    });
+
+    let currentStep = 0;
+    function startSteps() {
+        document.getElementById('calc-box').style.display = 'block';
+        document.getElementById('toggle-btn').style.display = 'none';
+        document.getElementById('next-btn').style.display = 'block';
+        nextStep();
+    }
+
+    function nextStep() {
+        currentStep++;
+        if (currentStep <= stepData.length) {
+            document.getElementById('s' + currentStep).style.display = 'block';
+            updateHighlights(currentStep);
         }
-
-        function updateLabelPositions() {
-            for (let key in labels) {
-                const vector = pts[key].clone();
-                vector.project(camera);
-                const x = (vector.x * 0.5 + 0.5) * container.clientWidth;
-                const y = (vector.y * -0.5 + 0.5) * container.clientHeight;
-                labels[key].style.transform = `translate(-50%, -50%) translate(${x}px,${y}px)`;
-            }
+        if (currentStep === stepData.length) {
+            const btn = document.getElementById('next-btn');
+            btn.innerHTML = "Reset ↺"; btn.onclick = () => location.reload();
         }
-
-        function drawQuadrilateral() {
-            if (mesh) scene.remove(mesh);
-            if (wireframe) scene.remove(wireframe);
-            for (let key in labels) labels[key].remove();
-
-            const vertices = new Float32Array([
-                pts.P.x, pts.P.y, pts.P.z, pts.S.x, pts.S.y, pts.S.z, pts.Q.x, pts.Q.y, pts.Q.z,
-                pts.S.x, pts.S.y, pts.S.z, pts.R.x, pts.R.y, pts.R.z, pts.Q.x, pts.Q.y, pts.Q.z
-            ]);
-
-            const geometry = new THREE.BufferGeometry();
-            geometry.setAttribute('position', new THREE.BufferAttribute(vertices, 3));
-            mesh = new THREE.Mesh(geometry, material);
-            wireframe = new THREE.LineSegments(new THREE.EdgesGeometry(geometry), lineMaterial);
-            
-            scene.add(mesh);
-            scene.add(wireframe);
-
-            labels.P = createLabel('P');
-            labels.Q = createLabel('Q');
-            labels.R = createLabel('R');
-            labels.S = createLabel('S');
-
-            controls.target.set(7, 3, 0);
-            controls.update();
-        }
-
-        function animate() {
-            requestAnimationFrame(animate);
-            controls.update();
-            if (Object.keys(labels).length > 0) updateLabelPositions();
-            renderer.render(scene, camera);
-        }
-        animate();
-
-        window.addEventListener('resize', () => {
-            camera.aspect = container.clientWidth / container.clientHeight;
-            camera.updateProjectionMatrix();
-            renderer.setSize(container.clientWidth, container.clientHeight);
-        });
-    </script>
+    }
+</script>
 </body>
 </html>
