@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Solution Walkthrough | MyMath</title>
+    <link rel="stylesheet" href="../style.css">
+    <style>
+        .split-container { display: flex; height: 100vh; }
+        .canvas-side { flex: 1; background: #eee; position: relative; } /* Three.js goes here */
+        .content-side { flex: 1; padding: 40px; overflow-y: auto; background: white; }
+        .step { margin-bottom: 30px; border-left: 4px solid #007bff; padding-left: 15px; }
+        .math { font-style: italic; font-family: "Times New Roman", serif; background: #f9f9f9; padding: 5px; }
+        .back-link { margin-bottom: 20px; display: block; }
+    </style>
+</head>
+<body>
+
+    <div class="split-container">
+        <div class="canvas-side" id="threejs-container">
+            <div style="position:absolute; top:50%; left:50%; transform:translate(-50%,-50%); color:#999;">
+                [ 3D Model Loading... ]
+            </div>
+        </div>
+
+        <div class="content-side">
+            <a href="index.html" class="back-link">← Back to List</a>
+            
+            <h1>2020 DSE Paper II Q38</h1>
+            
+            <div class="step">
+                <h3>Step 1: Identify the Angle</h3>
+                <p>The angle between the line $VA$ and the base $ABCD$ is $\angle VAO$.</p>
+            </div>
+
+            <div class="step">
+                <h3>Step 2: Calculate Height</h3>
+                <p class="math">Height = 10 \sin(60^\circ)</p>
+            </div>
+
+            <div class="step">
+                <h3>Step 3: Final Answer</h3>
+                <p>The volume is 400 cubic units.</p>
+            </div>
+        </div>
+    </div>
+
+    </body>
+</html>
