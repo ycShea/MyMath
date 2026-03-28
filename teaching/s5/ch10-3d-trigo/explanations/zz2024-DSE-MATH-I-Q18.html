@@ -251,6 +251,7 @@
         }
 
         function drawFigureA() {
+            // (UpdateForNewExercise) 
             const lines = [[V.P, V.Q], [V.Q, V.Ra], [V.Ra, V.S], [V.S, V.P], [V.Q, V.S]];
             const matLine = new THREE.LineBasicMaterial({ color: 0x333333, linewidth: 2 });
             createTriangle(V.P, V.S, V.Q, 0x0d6efd);
@@ -265,6 +266,7 @@
         }
 
         function drawFigureB() {
+            // (UpdateForNewExercise) 
             const lines = [[V.P, V.Q], [V.Q, V.Rb], [V.Rb, V.S], [V.S, V.P], [V.Q, V.S]];
             const matLine = new THREE.LineBasicMaterial({ color: 0x333333, linewidth: 2 });
             createTriangle(V.P, V.S, V.Q, 0x0d6efd);
@@ -279,7 +281,7 @@
         }
 
         function resetCamera() {
-            camera.position.set(17, -2, 15);
+            camera.position.set(0, 0, 20);
             controls.target.set(1, 4, -4);
             controls.update();
         }
