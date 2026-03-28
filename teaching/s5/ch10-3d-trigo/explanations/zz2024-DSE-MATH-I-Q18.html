@@ -78,7 +78,7 @@
                     <img src="questions-images/2024 DSE-MATH-I Q18.png" alt="2024 DSE Q18 Diagram">
                 </div>
                 <div style="margin-top:10px;">
-                    <button class="btn-show" onclick="drawFigure()">Show 3D Figure</button>
+                    <button class="btn-show" onclick="drawFigureA()">Show 3D Figure</button>
                 </div>
             </div>
 
@@ -194,7 +194,7 @@
             scene.add(mesh);
         }
 
-        function drawFigure() {
+        function drawFigureA() {
             scene.children.filter(c => c.type === "Mesh" || c.type === "Line").forEach(c => scene.remove(c));
             Object.values(activeLabels).forEach(l => l.remove());
             activeLabels = {};
@@ -206,6 +206,7 @@
                 scene.add(line);
             });
             config.labels.forEach(name => { activeLabels[name] = makeLabel(name); });
+            controls.enableRotate = false;.
         }
 
         function resetCamera() {
