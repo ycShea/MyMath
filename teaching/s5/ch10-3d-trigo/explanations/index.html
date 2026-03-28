@@ -31,26 +31,32 @@
 </div>
 
 <script>
-    // Replace this with YOUR published CSV link
     const csvUrl = "https://docs.google.com/spreadsheets/d/e/2PACX-1vRSnkbeTpuYjuWRdy7IW9DZUI8tcwrl98OLKMe3nXNzKB1HBvpQzpmSqf9NlmX0b7RJ5y8AIK9GI8AL/pub?gid=0&single=true&output=csv";
 
     async function fetchData() {
         try {
             const response = await fetch(csvUrl);
             const csvData = await response.text();
-            const rows = csvData.split('\n').map(row => row.split(','));
             
-            // Remove header row
-            rows.shift();
+            // 1. Split by any newline (\n or \r\n)
+            const rows = csvData.split(/\r?\n/).map(row => row.split(','));
+            
+            console.log("Data received:", rows); // Debugging: Press F12 to see this
+
+            rows.shift(); // Remove header
 
             const contentArea = document.getElementById('content-area');
-            contentArea.innerHTML = ""; // Clear loading text
+            contentArea.innerHTML = ""; 
 
-            // Group by Category (Column B)
             const categories = {};
             rows.forEach(row => {
-                const [title, category, tag, url] = row;
-                if (!title || !category) return; // Skip empty rows
+                // 2. Clean quotes and whitespace from each cell
+                const title = row[0]?.replace(/"/g, '').trim();
+                const category = row[1]?.replace(/"/g, '').trim();
+                const tag = row[2]?.replace(/"/g, '').trim();
+                const url = row[3]?.replace(/"/g, '').trim();
+
+                if (!title || !category) return; 
 
                 if (!categories[category]) {
                     categories[category] = [];
@@ -58,7 +64,11 @@
                 categories[category].push({ title, tag, url });
             });
 
-            // Generate HTML for each category
+            if (Object.keys(categories).length === 0) {
+                contentArea.innerHTML = "<p>No data found in the spreadsheet.</p>";
+                return;
+            }
+
             for (const category in categories) {
                 const sectionHeader = document.createElement('h2');
                 sectionHeader.className = "year-group";
@@ -68,7 +78,7 @@
                 categories[category].forEach(item => {
                     const link = document.createElement('a');
                     link.className = "problem-link";
-                    link.href = item.url.trim();
+                    link.href = item.url; 
                     link.innerHTML = `
                         <span>${item.title}</span>
                         <span class="tag">${item.tag}</span>
@@ -77,7 +87,8 @@
                 });
             }
         } catch (error) {
-            document.getElementById('content-area').innerHTML = "<p>Error loading data. Please check the spreadsheet publication.</p>";
+            console.error("Fetch error:", error);
+            document.getElementById('content-area').innerHTML = "<p>Error: " + error.message + "</p>";
         }
     }
 
