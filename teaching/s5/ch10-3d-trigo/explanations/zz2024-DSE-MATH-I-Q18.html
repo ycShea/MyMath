@@ -20,6 +20,11 @@
             margin-bottom: 20px;
             border: 1px dashed #007bff;
         }
+        .summary-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+        }
         .full-question-popup {
             display: none;
             position: absolute;
@@ -71,10 +76,11 @@
             padding: 8px 15px; 
             border-radius: 4px; 
             cursor: pointer;
+            white-space: nowrap;
+            margin-left: 10px;
         }
         .btn-show:hover { background: #0056b3; }
         
-        /* Marker style: visible for now, safe to delete line */
         .dev-marker { color: #cc0000; font-size: 0.85rem; font-weight: bold; display: block; }
     </style>
 
@@ -99,8 +105,13 @@
             <h1>2024 DSE Paper I Q18</h1>
 
             <div class="question-summary">
-                <p class="dev-marker">Question Summary 1/2 (UpdateForNewExercise) Delete this before released.</p>
-                <strong>PQRS a quadrilateral, where $PQ = 12\text{ cm}$, $PS = 10\text{ cm}$, $QR = 13\text{ cm}$, $\angle QPS = 82^\circ$ and $\angle QRS = 65^\circ$.</strong>
+                <div class="summary-header">
+                    <div>
+                        <p class="dev-marker">Question Summary 1/2 (UpdateForNewExercise) Delete this before released.</p>
+                        <strong>PQRS a quadrilateral, where $PQ = 12\text{ cm}$, $PS = 10\text{ cm}$, $QR = 13\text{ cm}$, $\angle QPS = 82^\circ$ and $\angle QRS = 65^\circ$.</strong>
+                    </div>
+                    <button class="btn-show" onclick="drawQuadrilateral()">Show Figure</button>
+                </div>
                 <div class="full-question-popup">
                     <p class="dev-marker">Full Question (UpdateForNewExercise) Delete this before released.</p>
                     <img src="questions-images/2024 DSE-MATH-I Q18.png" alt="2024 DSE Q18 Diagram">
@@ -197,28 +208,53 @@
         const scene = new THREE.Scene();
         scene.background = new THREE.Color(0xf0f0f0);
         const camera = new THREE.PerspectiveCamera(75, container.clientWidth/container.clientHeight, 0.1, 1000);
-        camera.position.set(15, 10, 15);
+        camera.position.set(10, 8, 15);
+        
         const renderer = new THREE.WebGLRenderer({ antialias: true });
         renderer.setSize(container.clientWidth, container.clientHeight);
         container.appendChild(renderer.domElement);
         const controls = new THREE.OrbitControls(camera, renderer.domElement);
 
+        let mesh, wireframe;
         const geometry = new THREE.BufferGeometry();
-        const vertices = new Float32Array([
-            0,0,0,  12,0,0,  6,8,0,
-            0,0,0,  12,0,0,  6,4,6
-        ]);
-        geometry.setAttribute('position', new THREE.BufferAttribute(vertices, 3));
         const material = new THREE.MeshPhongMaterial({ color: 0x007bff, side: THREE.DoubleSide, transparent: true, opacity: 0.6 });
-        const mesh = new THREE.Mesh(geometry, material);
-        scene.add(mesh);
-        
-        const wireframe = new THREE.LineSegments(
-            new THREE.EdgesGeometry(geometry),
-            new THREE.LineBasicMaterial({ color: 0x000000 })
-        );
-        scene.add(wireframe);
+        const lineMaterial = new THREE.LineBasicMaterial({ color: 0x000000 });
+
         scene.add(new THREE.AmbientLight(0xffffff, 0.8));
+        const dirLight = new THREE.DirectionalLight(0xffffff, 0.5);
+        dirLight.position.set(10, 10, 10);
+        scene.add(dirLight);
+
+        function drawQuadrilateral() {
+            if (mesh) scene.remove(mesh);
+            if (wireframe) scene.remove(wireframe);
+
+            // Calculations based on 2024 DSE Q18
+            const rad82 = 82 * Math.PI / 180;
+            const P = [0, 0, 0];
+            const S = [10, 0, 0];
+            const Q = [12 * Math.cos(rad82), 12 * Math.sin(rad82), 0];
+            
+            // Approximate R for 2D visual (QS is the hinge)
+            // R is roughly placed to form the QR=13 property
+            const R = [18, 5, 0]; 
+
+            const vertices = new Float32Array([
+                ...P, ...S, ...Q, // Triangle PQS
+                ...S, ...R, ...Q  // Triangle SQR
+            ]);
+
+            geometry.setAttribute('position', new THREE.BufferAttribute(vertices, 3));
+            mesh = new THREE.Mesh(geometry, material);
+            wireframe = new THREE.LineSegments(new THREE.EdgesGeometry(geometry), lineMaterial);
+            
+            scene.add(mesh);
+            scene.add(wireframe);
+
+            // Center view
+            controls.target.set(7, 3, 0);
+            controls.update();
+        }
 
         function animate() {
             requestAnimationFrame(animate);
