@@ -1,3 +1,4 @@
+<!-- search (UpdateForNewExercise) for a exercise html -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -50,26 +51,7 @@
     </style>
 
     <script>
-        // Define text variables at the beginning for easy modification
-        const textQuestion_0 = "<strong>PQRS a quadrilateral, where $PQ = 12\\text{ cm}$, $PS = 10\\text{ cm}$, $QR = 13\\text{ cm}$, $\\angle QPS = 82^\\circ$ and $\\angle QRS = 65^\\circ$.</strong>";
-        const textQuestion_a1 = "<strong>(a)(i) </strong>Find the length of $QS$.";
-        const textQuestion_a2 = "<strong>(a)(ii)</strong> Find $\\angle RQS$.";
-        const textQuestion_1 = "<strong>The metal sheet $PQRS$ is now folded along $QS$. It is given that the angle between plane $PQS$ and plane $QRS$ is $80^\\circ$.</strong>";
-        const textQuestion_b1 = "<strong>(b)(i)</strong> Find the shortest distance from $R$ to the plane $PQS$.";
-        const textQuestion_b2 = "<strong>(b)(ii)</strong> Claim: distance between $P$ and $X$ exceeds $8\\text{ cm}$. Is it correct?";
-
         window.MathJax = { tex: { inlineMath: [['$', '$'], ['\\(', '\\)']], displayMath: [['$$', '$$']] } };
-
-        // Inject text variables once DOM is loaded
-        document.addEventListener("DOMContentLoaded", () => {
-            document.getElementById("tQ0").innerHTML = textQuestion_0;
-            document.getElementById("tQa1").innerHTML = textQuestion_a1;
-            document.getElementById("tQa2").innerHTML = textQuestion_a2;
-            document.getElementById("tQ1").innerHTML = textQuestion_1;
-            document.getElementById("tQb1").innerHTML = textQuestion_b1;
-            document.getElementById("tQb2").innerHTML = textQuestion_b2;
-            if (window.MathJax) { MathJax.typeset(); }
-        });
     </script>
     <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
 </head>
@@ -88,8 +70,8 @@
             <h1>2024 DSE Paper I Q18</h1>
 
             <div class="question-summary">
-                <p class="dev-marker">Question Summary 1/2</p>
-                <strong id="tQ0"></strong>
+                <p class="dev-marker">Question Summary 1/2 (UpdateForNewExercise) Delete this before released.</p>
+                <strong>PQRS a quadrilateral, where $PQ = 12\text{ cm}$, $PS = 10\text{ cm}$, $QR = 13\text{ cm}$, $\angle QPS = 82^\circ$ and $\angle QRS = 65^\circ$.</strong>
                 <div class="full-question-popup">
                     <img src="questions-images/2024 DSE-MATH-I Q18.png" alt="2024 DSE Q18 Diagram">
                 </div>
@@ -100,8 +82,8 @@
 
             <div class="part-container">
                 <div class="part-header">
-                    <p class="dev-marker">Solution 1/4</p>
-                    <span id="tQa1"></span>
+                    <p class="dev-marker">Solution 1/4 (UpdateForNewExercise) Delete this before released.</p>
+                    <span><strong>(a)(i) </strong>Find the length of $QS$.</span>
                     <button class="btn-show" onclick="toggle('sol-ai')">Show Solution</button>
                 </div>
                 <div id="sol-ai" class="solution-content">
@@ -111,8 +93,8 @@
 
             <div class="part-container">
                 <div class="part-header">
-                    <p class="dev-marker">Solution 2/4</p>
-                    <span id="tQa2"></span>
+                    <p class="dev-marker">Solution 2/4 (UpdateForNewExercise) Delete this before released.</p>
+                    <span><strong>(a)(ii)</strong> Find $\angle RQS$.</span>
                     <button class="btn-show" onclick="toggle('sol-aii')">Show Solution</button>
                 </div>
                 <div id="sol-aii" class="solution-content">
@@ -123,8 +105,8 @@
             <hr style="margin: 30px 0; border: 0; border-top: 1px solid #ddd;">
 
             <div class="question-summary">
-                <p class="dev-marker">Question Summary 2/2</p>
-                <strong id="tQ1"></strong>
+                <p class="dev-marker">Question Summary 2/2 (UpdateForNewExercise) Delete this before released.</p>
+                <strong>The metal sheet $PQRS$ is now folded along $QS$. It is given that the angle between plane $PQS$ and plane $QRS$ is $80^\circ$.</strong>
                 <div class="full-question-popup">
                     <img src="questions-images/2024 DSE-MATH-I Q18.png" alt="2024 DSE Q18 Diagram">
                 </div>
@@ -135,8 +117,8 @@
 
             <div class="part-container">
                 <div class="part-header">
-                    <p class="dev-marker">Solution 3/4</p>
-                    <span id="tQb1"></span>
+                    <p class="dev-marker">Solution 3/4 (UpdateForNewExercise) Delete this before released.</p>
+                    <span><strong>(b)(i)</strong> Find the shortest distance from $R$ to the plane $PQS$.</span>
                     <button class="btn-show" onclick="toggle('sol-bi')">Show Solution</button>
                 </div>
                 <div id="sol-bi" class="solution-content">
@@ -148,8 +130,8 @@
 
             <div class="part-container">
                 <div class="part-header">
-                    <p class="dev-marker">Solution 4/4</p>
-                    <span id="tQb2"></span>
+                    <p class="dev-marker">Solution 4/4 (UpdateForNewExercise) Delete this before released.</p>
+                    <span><strong>(b)(ii)</strong> Claim: distance between $P$ and $X$ exceeds $8\text{ cm}$. Is it correct?</span>
                     <button class="btn-show" onclick="toggle('sol-bii')">Show Solution</button>
                 </div>
                 <div id="sol-bii" class="solution-content">
@@ -176,6 +158,7 @@
         function handleToggle(type) {
             const btnA = document.getElementById('btn-figA');
             const btnB = document.getElementById('btn-figB');
+
             if (currentFigure === type) {
                 clearScene();
                 currentFigure = null;
@@ -184,12 +167,14 @@
             } else {
                 clearScene();
                 if (type === 'A') {
+                    resetCamera();
                     // FIX CAMERA for Part A
                     controls.enableRotate = false;
                     drawFigureA();
                     btnA.textContent = "Hide Figure";
                     btnB.textContent = "Show Figure";
                 } else {
+                    resetCamera();
                     // ALLOW ROTATION for Part B
                     controls.enableRotate = true;
                     drawFigureB();
@@ -209,7 +194,7 @@
         container.appendChild(renderer.domElement);
         
         const controls = new THREE.OrbitControls(camera, renderer.domElement);
-        controls.enableRotate = false; // Fixed camera
+        controls.enableRotate = false; // Disable rotation as requested
 
         scene.add(new THREE.AmbientLight(0xffffff, 1.0));
 
@@ -217,13 +202,17 @@
         const rad82 = 82 * Math.PI / 180;
         const rad80 = 80 * Math.PI / 180;
         
+        // Vertices for Part A
         const V = {
             P: new THREE.Vector3(0, 0, 0),
             S: new THREE.Vector3(10 * scale, 0, 0),
             Q: new THREE.Vector3(12 * scale * Math.cos(rad82), 12 * scale * Math.sin(rad82), 0)
         };
+        // R for Part A (Flat)
         V.Ra = new THREE.Vector3(16 * scale, 5 * scale, 0);
 
+        // R for Part B (Folded 80 deg)
+        // Calculating R' such that the angle between PQS and QRS is 80
         const h_r = 11.3406 * scale; 
         const dist_q_foot = 6.4 * scale; 
         const dirQS = new THREE.Vector3().subVectors(V.S, V.Q).normalize();
@@ -253,7 +242,11 @@
         function createTriangle(p1, p2, p3, color) {
             const geom = new THREE.BufferGeometry().setFromPoints([p1, p2, p3]);
             geom.setIndex([0, 1, 2]);
-            const mesh = new THREE.Mesh(geom, new THREE.MeshBasicMaterial({ color, side: THREE.DoubleSide, transparent: true, opacity: 0.4 }));
+            const mesh = new THREE.Mesh(geom, new THREE.MeshBasicMaterial({ 
+                color, side: THREE.DoubleSide, transparent: true, opacity: 0.4,
+                depthTest: false, depthWrite: false
+            }));
+            mesh.renderOrder = 1;
             scene.add(mesh);
         }
 
@@ -262,7 +255,10 @@
             const matLine = new THREE.LineBasicMaterial({ color: 0x333333, linewidth: 2 });
             createTriangle(V.P, V.S, V.Q, 0x0d6efd);
             createTriangle(V.S, V.Ra, V.Q, 0x0d6efd);
-            lines.forEach(pair => scene.add(new THREE.Line(new THREE.BufferGeometry().setFromPoints(pair), matLine)));
+            lines.forEach(pair => {
+                const line = new THREE.Line(new THREE.BufferGeometry().setFromPoints(pair), matLine);
+                scene.add(line);
+            });
             ["P", "Q", "S"].forEach(name => activeLabels[name] = makeLabel(name));
             activeLabels["R"] = makeLabel("R");
             V.currentR = V.Ra;
@@ -272,8 +268,11 @@
             const lines = [[V.P, V.Q], [V.Q, V.Rb], [V.Rb, V.S], [V.S, V.P], [V.Q, V.S]];
             const matLine = new THREE.LineBasicMaterial({ color: 0x333333, linewidth: 2 });
             createTriangle(V.P, V.S, V.Q, 0x0d6efd);
-            createTriangle(V.S, V.Rb, V.Q, 0x28a745);
-            lines.forEach(pair => scene.add(new THREE.Line(new THREE.BufferGeometry().setFromPoints(pair), matLine)));
+            createTriangle(V.S, V.Rb, V.Q, 0x28a745); // Different color for folded part
+            lines.forEach(pair => {
+                const line = new THREE.Line(new THREE.BufferGeometry().setFromPoints(pair), matLine);
+                scene.add(line);
+            });
             ["P", "Q", "S"].forEach(name => activeLabels[name] = makeLabel(name));
             activeLabels["R"] = makeLabel("R");
             V.currentR = V.Rb;
@@ -294,15 +293,19 @@
                 debugBox.innerHTML = `<b style="color:#0d6efd">TARGET:</b> x:${ct.x.toFixed(1)} y:${ct.y.toFixed(1)} z:${ct.z.toFixed(1)}<br>` +
                                     `<b style="color:#198754">CAMERA:</b> x:${cp.x.toFixed(1)} y:${cp.y.toFixed(1)} z:${cp.z.toFixed(1)}`;
             }
+            
+            // Update labels
             const widthHalf = container.clientWidth / 2;
             const heightHalf = container.clientHeight / 2;
             for (let key in activeLabels) {
                 let pos = V[key] || V.currentR;
                 const vector = pos.clone().project(camera);
                 if (vector.z < 1) {
+                    const x = (vector.x * widthHalf) + widthHalf;
+                    const y = -(vector.y * heightHalf) + heightHalf;
                     activeLabels[key].style.display = 'block';
-                    activeLabels[key].style.left = `${Math.round((vector.x * widthHalf) + widthHalf)}px`;
-                    activeLabels[key].style.top = `${Math.round(-(vector.y * heightHalf) + heightHalf)}px`;
+                    activeLabels[key].style.left = `${Math.round(x)}px`;
+                    activeLabels[key].style.top = `${Math.round(y)}px`;
                 } else { activeLabels[key].style.display = 'none'; }
             }
             renderer.render(scene, camera);
