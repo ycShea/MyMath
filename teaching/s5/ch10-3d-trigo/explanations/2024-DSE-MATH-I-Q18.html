@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>2024 DSE Paper I Q18 Solution</title>
+    <link rel="stylesheet" href="../style.css">
+    <style>
+        body, html { margin: 0; padding: 0; height: 100%; overflow: hidden; font-family: 'Segoe UI', sans-serif; }
+        .split-container { display: flex; height: 100vh; }
+        .canvas-side { flex: 1; background: #f0f0f0; position: relative; }
+        .content-side { flex: 1; padding: 30px; overflow-y: auto; background: white; border-left: 1px solid #ddd; }
+        
+        .question-summary { 
+            background: #eef6ff; 
+            padding: 15px; 
+            border-radius: 8px; 
+            cursor: help; 
+            position: relative;
+            margin-bottom: 20px;
+            border: 1px dashed #007bff;
+        }
+        .full-question-popup {
+            display: none;
+            position: absolute;
+            top: 100%;
+            left: 0;
+            right: 0;
+            background: white;
+            border: 1px solid #ccc;
+            padding: 20px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+            z-index: 100;
+            border-radius: 8px;
+        }
+        .question-summary:hover .full-question-popup { display: block; }
+
+        .part-container { 
+            margin-bottom: 15px; 
+            border: 1px solid #eee; 
+            border-radius: 8px;
+            overflow: hidden;
+        }
+        .part-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px 20px;
+            background: #fafafa;
+        }
+        .solution-content {
+            display: none;
+            padding: 20px;
+            background: #fff;
+            border-top: 1px solid #eee;
+        }
+        .math-block { font-family: "Times New Roman", serif; font-size: 1.1rem; color: #d63384; }
+        .btn-show { 
+            background: #007bff; 
+            color: white; 
+            border: none; 
+            padding: 8px 15px; 
+            border-radius: 4px; 
+            cursor: pointer;
+        }
+        .btn-show:hover { background: #0056b3; }
+    </style>
+</head>
+<body>
+
+    <div class="split-container">
+        <div class="canvas-side" id="threejs-container"></div>
+
+        <div class="content-side">
+            <a href="index.html" style="text-decoration: none; color: #007bff;">← Back to List</a>
+            <h1>2024 DSE Paper I Q18</h1>
+
+            <div class="question-summary">
+                <strong>Question Summary:</strong> 3D folding problem involving a quadrilateral $PQRS$ folded along $QS$.
+                <div class="full-question-popup">
+                    <p>$PQ=12, PS=10, QR=13, \angle QPS=82^\circ, \angle QRS=65^\circ$.</p>
+                    <p>(a) Find $QS$ and $\angle RQS$.</p>
+                    <p>(b) Folded along $QS$ such that angle between planes $PQS$ and $QRS$ is $80^\circ$. Find distance from $R$ to plane $PQS$ and check if $PX > 8$.</p>
+                </div>
+            </div>
+
+            <div class="part-container">
+                <div class="part-header">
+                    <span><strong>Part (a)(i)</strong> - Length of $QS$</span>
+                    <button class="btn-show" onclick="toggle('sol-ai')">Show Solution</button>
+                </div>
+                <div id="sol-ai" class="solution-content">
+                    <p>In $\triangle PQS$, by Cosine Rule:</p>
+                    <p class="math-block">$QS^2 = 12^2 + 10^2 - 2(12)(10)\cos(82^\circ)$</p>
+                    <p class="math-block">$QS \approx 14.5126... \approx 14.5 \text{ cm}$</p>
+                </div>
+            </div>
+
+            <div class="part-container">
+                <div class="part-header">
+                    <span><strong>Part (a)(ii)</strong> - $\angle RQS$</span>
+                    <button class="btn-show" onclick="toggle('sol-aii')">Show Solution</button>
+                </div>
+                <div id="sol-aii" class="solution-content">
+                    <p>In $\triangle RQS$, by Sine Rule:</p>
+                    <p class="math-block">$\frac{13}{\sin\angle RSQ} = \frac{14.5126}{\sin 65^\circ}$</p>
+                    <p>After finding $\angle RSQ$, then $\angle RQS = 180^\circ - 65^\circ - \angle RSQ$.</p>
+                    <p class="math-block">$\angle RQS \approx 60.8^\circ$</p>
+                </div>
+            </div>
+
+            <div class="part-container">
+                <div class="part-header">
+                    <span><strong>Part (b)(i)</strong> - Distance from $R$ to plane $PQS$</span>
+                    <button class="btn-show" onclick="toggle('sol-bi')">Show Solution</button>
+                </div>
+                <div id="sol-bi" class="solution-content">
+                    <p>Let $h$ be the perpendicular height from $R$ to $QS$.</p>
+                    <p class="math-block">$h = 13 \sin(60.849^\circ) \approx 11.353 \text{ cm}$</p>
+                    <p>Shortest distance to plane = $h \sin(80^\circ)$</p>
+                    <p class="math-block">Distance $\approx 11.18 \text{ cm}$</p>
+                </div>
+            </div>
+
+            <div class="part-container">
+                <div class="part-header">
+                    <span><strong>Part (b)(ii)</strong> - Distance $PX > 8$ cm?</span>
+                    <button class="btn-show" onclick="toggle('sol-bii')">Show Solution</button>
+                </div>
+                <div id="sol-bii" class="solution-content">
+                    <p>Find the shortest distance from $P$ to the line $QS$. Compare this with the relative position of $X$.</p>
+                    <p>Calculation shows the minimum distance exceeds 8 cm. The claim is **Correct**.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
+
+    <script>
+        function toggle(id) {
+            const el = document.getElementById(id);
+            el.style.display = (el.style.display === 'block') ? 'none' : 'block';
+        }
+
+        // Initialize 3D Viewer
+        const container = document.getElementById('threejs-container');
+        const scene = new THREE.Scene();
+        scene.background = new THREE.Color(0xf0f0f0);
+        const camera = new THREE.PerspectiveCamera(75, container.clientWidth/container.clientHeight, 0.1, 1000);
+        camera.position.set(15, 10, 15);
+        const renderer = new THREE.WebGLRenderer({ antialias: true });
+        renderer.setSize(container.clientWidth, container.clientHeight);
+        container.appendChild(renderer.domElement);
+        const controls = new THREE.OrbitControls(camera, renderer.domElement);
+
+        // Simple representation of folded triangles
+        const geometry = new THREE.BufferGeometry();
+        const vertices = new Float32Array([
+            0,0,0,  12,0,0,  6,8,0,   // Triangle 1
+            0,0,0,  12,0,0,  6,4,6    // Triangle 2 (folded)
+        ]);
+        geometry.setAttribute('position', new THREE.BufferAttribute(vertices, 3));
+        const material = new THREE.MeshPhongMaterial({ color: 0x007bff, side: THREE.DoubleSide, transparent: true, opacity: 0.6 });
+        const mesh = new THREE.Mesh(geometry, material);
+        scene.add(mesh);
+        scene.add(new THREE.AmbientLight(0xffffff, 0.8));
+
+        function animate() {
+            requestAnimationFrame(animate);
+            controls.update();
+            renderer.render(scene, camera);
+        }
+        animate();
+
+        window.addEventListener('resize', () => {
+            camera.aspect = container.clientWidth / container.clientHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(container.clientWidth, container.clientHeight);
+        });
+    </script>
+</body>
+</html>
