@@ -10,21 +10,19 @@
         .canvas-side { flex: 1; background: #f0f2f5; position: relative; }
         .content-side { flex: 1; padding: 30px; overflow-y: auto; background: white; border-left: 1px solid #ddd; }
         
-        /* UI Overlay with Bigger Fonts */
+        /* UI Overlay Box - Top Right */
         #ui-overlay {
             position: absolute; top: 15px; right: 15px; background: rgba(255, 255, 255, 0.9);
-            padding: 15px; border-radius: 10px; font-family: monospace; 
+            padding: 12px; border-radius: 10px; font-family: monospace; font-size: 14px;
             border: 1px solid #ccc; z-index: 20; box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-            min-width: 220px;
+            min-width: 180px;
         }
-        #debug-info { font-size: 14px; line-height: 1.4; }
-        
         #reset-cam-btn { 
-            background: #fd7e14; color: white; border: none; padding: 10px; 
-            width: 100%; border-radius: 4px; cursor: pointer; font-weight: bold; 
-            margin-top: 15px; font-size: 16px;
+            background: #fd7e14; color: white; border: none; padding: 8px; 
+            width: 100%; border-radius: 4px; cursor: pointer; font-weight: bold; margin-top: 10px; 
         }
 
+        /* Label Styling */
         .label {
             position: absolute; background: transparent; color: #000; font-weight: bold;
             font-size: 26px; pointer-events: none; z-index: 100;
@@ -33,6 +31,7 @@
             display: none; 
         }
 
+        /* Right Side Content Styling */
         .question-summary { 
             background: #eef6ff; padding: 15px; border-radius: 8px; cursor: help; 
             position: relative; margin-bottom: 20px; border: 1px dashed #007bff;
@@ -73,13 +72,13 @@
             <h1>2024 DSE Paper I Q18</h1>
 
             <div class="question-summary">
-                <p class="dev-marker">Question Summary 1/2 (UpdateForNewExercise) delete this after released </p>
-                PQRS a quadrilateral, where $PQ = 12\text{ cm}$, $PS = 10\text{ cm}$, $QR = 13\text{ cm}$, $\angle QPS = 82^\circ$ and $\angle QRS = 65^\circ$.
+                <p class="dev-marker">Question Summary 1/2 (UpdateForNewExercise) Delete this before released.</p>
+                <strong>PQRS a quadrilateral, where $PQ = 12\text{ cm}$, $PS = 10\text{ cm}$, $QR = 13\text{ cm}$, $\angle QPS = 82^\circ$ and $\angle QRS = 65^\circ$.</strong>
                 <div class="full-question-popup">
                     <img src="questions-images/2024 DSE-MATH-I Q18.png" alt="2024 DSE Q18 Diagram">
                 </div>
                 <div style="margin-top:10px;">
-                    <button id="toggle-figure-btn" class="btn-show" onclick="handleFigureToggle()">Show Figure</button>
+                    <button class="btn-show" onclick="drawFigure()">Show 3D Figure</button>
                 </div>
             </div>
 
@@ -89,7 +88,50 @@
                     <button class="btn-show" onclick="toggle('sol-ai')">Show Solution</button>
                 </div>
                 <div id="sol-ai" class="solution-content">
-                    <p class="math-block">$QS = \sqrt{12^2 + 10^2 - 2(12)(10)\cos(82^\circ)} \approx 14.51 \text{ cm}$</p>
+                    <p class="math-block">$QS = \sqrt{12^2 + 10^2 - 2(12)(10)\cos(82^\circ)} \approx 14.5126 \text{ cm}$</p>
+                </div>
+            </div>
+
+            <div class="part-container">
+                <div class="part-header">
+                    <span><strong>(a)(ii)</strong> Find $\angle RQS$.</span>
+                    <button class="btn-show" onclick="toggle('sol-aii')">Show Solution</button>
+                </div>
+                <div id="sol-aii" class="solution-content">
+                    <p class="math-block">$\frac{13}{\sin(\angle RSQ)} = \frac{14.5126}{\sin(65^\circ)} \implies \angle RQS \approx 60.7^\circ$</p>
+                </div>
+            </div>
+
+            <hr style="margin: 30px 0; border: 0; border-top: 1px solid #ddd;">
+
+            <div class="question-summary">
+                <p class="dev-marker">Question Summary 2/2 (UpdateForNewExercise) Delete this before released.</p>
+                <strong>The metal sheet $PQRS$ is now folded along $QS$. It is given that the angle between plane $PQS$ and plane $QRS$ is $80^\circ$.</strong>
+                <div class="full-question-popup">
+                    <img src="questions-images/2024 DSE-MATH-I Q18.png" alt="2024 DSE Q18 Diagram">
+                </div>
+            </div>
+
+            <div class="part-container">
+                <div class="part-header">
+                    <span><strong>(b)(i)</strong> Find the shortest distance from $R$ to the plane $PQS$.</span>
+                    <button class="btn-show" onclick="toggle('sol-bi')">Show Solution</button>
+                </div>
+                <div id="sol-bi" class="solution-content">
+                    <p>Let $h$ be the perpendicular height from $R$ to $QS$:</p>
+                    <p class="math-block">$h = 13 \sin(60.7^\circ) \approx 11.3406 \text{ cm}$</p>
+                    <p>Shortest distance = $h \sin(80^\circ) \approx 11.2 \text{ cm}$</p>
+                </div>
+            </div>
+
+            <div class="part-container">
+                <div class="part-header">
+                    <span><strong>(b)(ii)</strong> Claim: distance between $P$ and $X$ exceeds $8\text{ cm}$. Is it correct?</span>
+                    <button class="btn-show" onclick="toggle('sol-bii')">Show Solution</button>
+                </div>
+                <div id="sol-bii" class="solution-content">
+                    <p class="math-block">$PX_{\text{min}} = 12 \sin(\angle PQS) \sin(80^\circ) \approx 8.0643 \text{ cm}$</p>
+                    <p>Since $8.06 > 8$, the claim is **Correct**.</p>
                 </div>
             </div>
         </div>
@@ -99,27 +141,11 @@
     <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
 
     <script>
-        let figureVisible = false;
-
         function toggle(id) {
             const el = document.getElementById(id);
             const isHidden = (el.style.display === 'none' || el.style.display === '');
             el.style.display = isHidden ? 'block' : 'none';
             if (isHidden && window.MathJax) { MathJax.typesetPromise([el]); }
-        }
-
-        // Toggle logic for the 3D figure
-        function handleFigureToggle() {
-            const btn = document.getElementById('toggle-figure-btn');
-            if (!figureVisible) {
-                drawFigure();
-                btn.textContent = "Hide Figure";
-                figureVisible = true;
-            } else {
-                clearFigure();
-                btn.textContent = "Show Figure";
-                figureVisible = false;
-            }
         }
 
         const container = document.getElementById('threejs-container');
@@ -133,11 +159,18 @@
         scene.add(new THREE.AmbientLight(0xffffff, 1.0));
 
         const scale = 0.6; 
+        const rad82 = 82 * Math.PI / 180;
         const V = {
             P: new THREE.Vector3(0, 0, 0),
             S: new THREE.Vector3(10 * scale, 0, 0),
-            Q: new THREE.Vector3(12 * scale * Math.cos(82 * Math.PI / 180), 12 * scale * Math.sin(82 * Math.PI / 180), 0),
+            Q: new THREE.Vector3(12 * scale * Math.cos(rad82), 12 * scale * Math.sin(rad82), 0),
             R: new THREE.Vector3(16 * scale, 5 * scale, 0)
+        };
+
+        const config = {
+            lines: [ [V.P, V.Q], [V.Q, V.R], [V.R, V.S], [V.S, V.P], [V.Q, V.S] ],
+            surfaces: [ { p: [V.P, V.S, V.Q], col: 0x0d6efd }, { p: [V.S, V.R, V.Q], col: 0x0d6efd } ],
+            labels: ["P", "Q", "R", "S"]
         };
 
         let activeLabels = {};
@@ -150,27 +183,50 @@
             return div;
         }
 
-        function clearFigure() {
-            scene.children.filter(c => c.type === "Mesh" || c.type === "Line").forEach(c => scene.remove(c));
-            Object.values(activeLabels).forEach(l => l.remove());
-            activeLabels = {};
+        function createTriangle(p1, p2, p3, color) {
+            const geom = new THREE.BufferGeometry().setFromPoints([p1, p2, p3]);
+            geom.setIndex([0, 1, 2]);
+            const mesh = new THREE.Mesh(geom, new THREE.MeshBasicMaterial({ 
+                color, side: THREE.DoubleSide, transparent: true, opacity: 0.4,
+                depthTest: false, depthWrite: false
+            }));
+            mesh.renderOrder = 1;
+            scene.add(mesh);
         }
 
         function drawFigure() {
-            clearFigure();
+            scene.children.filter(c => c.type === "Mesh" || c.type === "Line").forEach(c => scene.remove(c));
+            Object.values(activeLabels).forEach(l => l.remove());
+            activeLabels = {};
+            config.surfaces.forEach(s => createTriangle(s.p[0], s.p[1], s.p[2], s.col));
             const matLine = new THREE.LineBasicMaterial({ color: 0x333333, linewidth: 2 });
-            const lines = [[V.P, V.Q], [V.Q, V.R], [V.R, V.S], [V.S, V.P], [V.Q, V.S]];
-            lines.forEach(pair => {
+            config.lines.forEach(pair => {
                 const line = new THREE.Line(new THREE.BufferGeometry().setFromPoints(pair), matLine);
+                line.renderOrder = 2;
                 scene.add(line);
             });
-            ["P", "Q", "R", "S"].forEach(name => { activeLabels[name] = makeLabel(name); });
+            config.labels.forEach(name => { activeLabels[name] = makeLabel(name); });
         }
 
         function resetCamera() {
-            camera.position.set(17, -2, 15);
-            controls.target.set(1, 4, -4);
+            camera.position.set(10, 18, 17);
+            controls.target.set(-3, 5, 0);
             controls.update();
+        }
+
+        function updateLabels() {
+            const widthHalf = container.clientWidth / 2;
+            const heightHalf = container.clientHeight / 2;
+            for (let key in activeLabels) {
+                const vector = V[key].clone().project(camera);
+                if (vector.z < 1) {
+                    const x = (vector.x * widthHalf) + widthHalf;
+                    const y = -(vector.y * heightHalf) + heightHalf;
+                    activeLabels[key].style.display = 'block';
+                    activeLabels[key].style.left = `${Math.round(x)}px`;
+                    activeLabels[key].style.top = `${Math.round(y)}px`;
+                } else { activeLabels[key].style.display = 'none'; }
+            }
         }
 
         function animate() {
@@ -179,30 +235,20 @@
             const debugBox = document.getElementById('debug-info');
             if (debugBox) {
                 const cp = camera.position, ct = controls.target;
-                debugBox.innerHTML = `
-                    <b style="color:#0d6efd">TARGET:</b><br>
-                    x:${ct.x.toFixed(1)} y:${ct.y.toFixed(1)} z:${ct.z.toFixed(1)}<br>
-                    <hr style="border:0; border-top:1px solid #ccc; margin:10px 0;">
-                    <b style="color:#198754">CAMERA:</b><br>
-                    x:${cp.x.toFixed(1)} y:${cp.y.toFixed(1)} z:${cp.z.toFixed(1)}
-                `;
+                debugBox.innerHTML = `<b style="color:#0d6efd">TARGET:</b> x:${ct.x.toFixed(1)} y:${ct.y.toFixed(1)} z:${ct.z.toFixed(1)}<br>` +
+                                    `<b style="color:#198754">CAMERA:</b> x:${cp.x.toFixed(1)} y:${cp.y.toFixed(1)} z:${cp.z.toFixed(1)}`;
             }
-
-            const widthHalf = container.clientWidth / 2;
-            const heightHalf = container.clientHeight / 2;
-            for (let key in activeLabels) {
-                const vector = V[key].clone().project(camera);
-                if (vector.z < 1) {
-                    activeLabels[key].style.display = 'block';
-                    activeLabels[key].style.left = `${(vector.x * widthHalf) + widthHalf}px`;
-                    activeLabels[key].style.top = `${-(vector.y * heightHalf) + heightHalf}px`;
-                } else { activeLabels[key].style.display = 'none'; }
-            }
+            updateLabels();
             renderer.render(scene, camera);
         }
 
         resetCamera();
         animate();
+        window.addEventListener('resize', () => {
+            camera.aspect = container.clientWidth / container.clientHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(container.clientWidth, container.clientHeight);
+        });
     </script>
 </body>
 </html>
