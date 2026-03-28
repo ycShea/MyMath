@@ -1,0 +1,25 @@
+body, html { margin: 0; padding: 0; height: 100%; overflow: hidden; font-family: 'Segoe UI', sans-serif; }
+.split-container { display: flex; height: 100vh; }
+.canvas-side { flex: 1; background: #f0f2f5; position: relative; }
+.content-side { flex: 1; padding: 30px; overflow-y: auto; background: white; border-left: 1px solid #ddd; }
+
+#ui-overlay {
+    position: absolute; top: 15px; right: 15px; background: rgba(255, 255, 255, 0.9);
+    padding: 12px; border-radius: 10px; font-family: monospace; font-size: 14px;
+    border: 1px solid #ccc; z-index: 20; box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+}
+
+.label {
+    position: absolute; background: transparent; color: #000; font-weight: bold;
+    font-size: 24px; pointer-events: none; z-index: 100;
+    text-shadow: 2px 2px 4px white; transform: translate(-50%, -50%);
+}
+
+.part-container { margin-bottom: 20px; border: 1px solid #eee; border-radius: 8px; overflow: hidden; }
+.part-header { display: flex; justify-content: space-between; align-items: center; padding: 15px; background: #fafafa; }
+.solution-content { display: none; padding: 20px; background: #fff; border-top: 1px solid #eee; }
+
+.step-item { display: none; padding: 15px; border-left: 4px solid #007bff; background: #f8f9fa; margin-bottom: 10px; }
+.step-item.active { display: block; }
+.math-block { font-family: "Times New Roman", serif; font-size: 1.1rem; color: #d63384; margin: 10px 0; }
+.btn-show { background: #007bff; color: white; border: none; padding: 8px 15px; border-radius: 4px; cursor: pointer; font-weight: bold; }
