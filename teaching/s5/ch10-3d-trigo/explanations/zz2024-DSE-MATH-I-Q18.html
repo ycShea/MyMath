@@ -40,15 +40,6 @@
         }
         .question-summary:hover .full-question-popup { display: block; }
 
-        .full-question-popup img {
-            display: block;
-            max-width: 100%;
-            height: auto;
-            margin: 15px 0;
-            border: 1px solid #ddd;
-            border-radius: 4px;
-        }
-
         .part-container { 
             margin-bottom: 15px; 
             border: 1px solid #eee; 
@@ -77,10 +68,22 @@
             border-radius: 4px; 
             cursor: pointer;
             white-space: nowrap;
-            margin-left: 10px;
         }
         .btn-show:hover { background: #0056b3; }
         
+        /* Label styling for 3D points */
+        .label {
+            position: absolute;
+            background: rgba(255, 255, 255, 0.9);
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-weight: bold;
+            font-size: 14px;
+            pointer-events: none;
+            border: 1px solid #666;
+            z-index: 10;
+        }
+
         .dev-marker { color: #cc0000; font-size: 0.85rem; font-weight: bold; display: block; }
     </style>
 
@@ -152,10 +155,6 @@
             <div class="question-summary">
                 <p class="dev-marker">Question Summary 2/2 (UpdateForNewExercise) Delete this before released.</p>
                 <strong>The metal sheet $PQRS$ described in (a) is now folded along $QS$. It is given that the angle between plane $PQS$ and plane $QRS$ is $80^\circ$.</strong>
-                <div class="full-question-popup">
-                    <p class="dev-marker">Full Question (UpdateForNewExercise) Delete this before released.</p>
-                    <img src="questions-images/2024 DSE-MATH-I Q18.png" alt="2024 DSE Q18 Diagram">
-                </div>
             </div>
             
             <div class="part-container">
@@ -216,7 +215,7 @@
         const controls = new THREE.OrbitControls(camera, renderer.domElement);
 
         let mesh, wireframe;
-        const geometry = new THREE.BufferGeometry();
+        let labels = {};
         const material = new THREE.MeshPhongMaterial({ color: 0x007bff, side: THREE.DoubleSide, transparent: true, opacity: 0.6 });
         const lineMaterial = new THREE.LineBasicMaterial({ color: 0x000000 });
 
@@ -225,25 +224,44 @@
         dirLight.position.set(10, 10, 10);
         scene.add(dirLight);
 
+        // Coordinates for the quadrilateral
+        const rad82 = 82 * Math.PI / 180;
+        const pts = {
+            P: new THREE.Vector3(0, 0, 0),
+            S: new THREE.Vector3(10, 0, 0),
+            Q: new THREE.Vector3(12 * Math.cos(rad82), 12 * Math.sin(rad82), 0),
+            R: new THREE.Vector3(18, 5, 0)
+        };
+
+        function createLabel(text) {
+            const div = document.createElement('div');
+            div.className = 'label';
+            div.textContent = text;
+            container.appendChild(div);
+            return div;
+        }
+
+        function updateLabelPositions() {
+            for (let key in labels) {
+                const vector = pts[key].clone();
+                vector.project(camera);
+                const x = (vector.x * 0.5 + 0.5) * container.clientWidth;
+                const y = (vector.y * -0.5 + 0.5) * container.clientHeight;
+                labels[key].style.transform = `translate(-50%, -50%) translate(${x}px,${y}px)`;
+            }
+        }
+
         function drawQuadrilateral() {
             if (mesh) scene.remove(mesh);
             if (wireframe) scene.remove(wireframe);
-
-            // Calculations based on 2024 DSE Q18
-            const rad82 = 82 * Math.PI / 180;
-            const P = [0, 0, 0];
-            const S = [10, 0, 0];
-            const Q = [12 * Math.cos(rad82), 12 * Math.sin(rad82), 0];
-            
-            // Approximate R for 2D visual (QS is the hinge)
-            // R is roughly placed to form the QR=13 property
-            const R = [18, 5, 0]; 
+            for (let key in labels) labels[key].remove();
 
             const vertices = new Float32Array([
-                ...P, ...S, ...Q, // Triangle PQS
-                ...S, ...R, ...Q  // Triangle SQR
+                pts.P.x, pts.P.y, pts.P.z, pts.S.x, pts.S.y, pts.S.z, pts.Q.x, pts.Q.y, pts.Q.z,
+                pts.S.x, pts.S.y, pts.S.z, pts.R.x, pts.R.y, pts.R.z, pts.Q.x, pts.Q.y, pts.Q.z
             ]);
 
+            const geometry = new THREE.BufferGeometry();
             geometry.setAttribute('position', new THREE.BufferAttribute(vertices, 3));
             mesh = new THREE.Mesh(geometry, material);
             wireframe = new THREE.LineSegments(new THREE.EdgesGeometry(geometry), lineMaterial);
@@ -251,7 +269,11 @@
             scene.add(mesh);
             scene.add(wireframe);
 
-            // Center view
+            labels.P = createLabel('P');
+            labels.Q = createLabel('Q');
+            labels.R = createLabel('R');
+            labels.S = createLabel('S');
+
             controls.target.set(7, 3, 0);
             controls.update();
         }
@@ -259,6 +281,7 @@
         function animate() {
             requestAnimationFrame(animate);
             controls.update();
+            if (Object.keys(labels).length > 0) updateLabelPositions();
             renderer.render(scene, camera);
         }
         animate();
