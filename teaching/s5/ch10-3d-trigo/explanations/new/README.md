@@ -7,10 +7,10 @@ A modular web application for visualizing 3D geometry problems. Features synchro
 
 ```text
 .
-├── index.html              # Main navigation hub
-├── 2024-dse-p1-q18.html       # Exercise page
+├── index.html                # Main navigation hub
+├── 2024-dse-p1-q18.html      # Exercise page
 ├── css/
-│   └── style.css           # Global styles
+│   └── style.css             # Global styles
 └── js/
-    ├── three-helper.js     # Shared 3D engine utilities
-    └──2024-p1-q18-logic.js  # Coordinate data and drawing logic
+    ├── three-helper.js       # Shared 3D engine utilities
+    └── 2024-p1-q18-logic.js  # Coordinate data and drawing logic
