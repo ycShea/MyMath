@@ -13,4 +13,4 @@ A modular web application for visualizing 3D geometry problems. Features synchro
 │   └── style.css           # Global styles
 └── js/
     ├── three-helper.js     # Shared 3D engine utilities
-    └── q18-logic.js        # Coordinate data and drawing logic
+    └──2024-p1-q18-logic.js  # Coordinate data and drawing logic
