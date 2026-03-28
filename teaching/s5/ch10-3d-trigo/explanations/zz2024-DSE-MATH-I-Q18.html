@@ -19,18 +19,26 @@
         .math-block { font-family: "Times New Roman", serif; font-size: 1.1rem; color: #d63384; margin: 10px 0; }
         
         .btn-show { background: #007bff; color: white; border: none; padding: 8px 15px; border-radius: 4px; cursor: pointer; font-weight: bold; }
-        #reset-cam-btn { background: #fd7e14; color: white; border: none; padding: 10px; width: 100%; border-radius: 5px; cursor: pointer; font-weight: bold; margin-top: 10px; }
 
-        .label {
-            position: absolute; background: transparent; color: #000; font-weight: bold;
-            font-size: 24px; pointer-events: none; z-index: 100;
-            text-shadow: 2px 2px 4px rgba(255, 255, 255, 0.9); transform: translate(-50%, -50%);
+        /* UI Overlay Box */
+        #ui-overlay {
+            position: absolute; top: 15px; right: 15px; background: rgba(255, 255, 255, 0.9);
+            padding: 12px; border-radius: 10px; font-family: monospace; font-size: 13px;
+            border: 1px solid #ccc; z-index: 20; box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            min-width: 180px;
+        }
+        #reset-cam-btn { 
+            background: #fd7e14; color: white; border: none; padding: 6px; 
+            width: 100%; border-radius: 4px; cursor: pointer; font-weight: bold; margin-top: 8px; 
         }
 
-        #debug-info {
-            position: absolute; top: 15px; right: 15px; background: rgba(255, 255, 255, 0.8);
-            padding: 10px; border-radius: 8px; font-family: monospace; font-size: 14px;
-            pointer-events: none; border: 1px solid #ccc; z-index: 20;
+        /* Fixed Labels */
+        .label {
+            position: absolute; background: transparent; color: #000; font-weight: bold;
+            font-size: 26px; pointer-events: none; z-index: 100;
+            text-shadow: 2px 2px 4px white, -2px -2px 4px white; 
+            transform: translate(-50%, -50%);
+            display: none; /* Hidden until drawFigure is called */
         }
     </style>
     <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
@@ -39,7 +47,10 @@
 
     <div class="split-container">
         <div class="canvas-side" id="threejs-container">
-            <div id="debug-info"></div>
+            <div id="ui-overlay">
+                <div id="debug-info"></div>
+                <button id="reset-cam-btn" onclick="resetCamera()">Reset Camera 🎥</button>
+            </div>
         </div>
 
         <div class="content-side">
@@ -49,7 +60,6 @@
                     <div><strong>$PQRS$ quadrilateral: $PQ=12, PS=10, QR=13$.</strong></div>
                     <button class="btn-show" onclick="drawFigure()">Show Figure</button>
                 </div>
-                <button id="reset-cam-btn" onclick="resetCamera()">Reset Camera 🎥</button>
             </div>
 
             <div class="part-container">
@@ -73,9 +83,6 @@
             el.style.display = (el.style.display === 'none' || el.style.display === '') ? 'block' : 'none';
         }
 
-        // ==========================================
-        // 1. SCENE SETUP
-        // ==========================================
         const container = document.getElementById('threejs-container');
         const scene = new THREE.Scene();
         scene.background = new THREE.Color(0xf0f2f5);
@@ -83,12 +90,10 @@
         const renderer = new THREE.WebGLRenderer({ antialias: true, logarithmicDepthBuffer: true });
         renderer.setSize(container.clientWidth, container.clientHeight);
         container.appendChild(renderer.domElement);
+        
         const controls = new THREE.OrbitControls(camera, renderer.domElement);
         scene.add(new THREE.AmbientLight(0xffffff, 0.9));
 
-        // ==========================================
-        // 2. GEOMETRY DEFINITIONS (Grouped)
-        // ==========================================
         const scale = 0.6; 
         const rad82 = 82 * Math.PI / 180;
         
@@ -107,9 +112,6 @@
 
         let activeLabels = {};
 
-        // ==========================================
-        // 3. HELPER FUNCTIONS
-        // ==========================================
         function makeLabel(text) {
             const div = document.createElement('div');
             div.className = 'label';
@@ -130,14 +132,11 @@
         }
 
         function drawFigure() {
-            // Clear existing
             scene.children.filter(c => c.type === "Mesh" || c.type === "Line").forEach(c => scene.remove(c));
             Object.values(activeLabels).forEach(l => l.remove());
+            activeLabels = {};
 
-            // Add Surfaces
             config.surfaces.forEach(s => createTriangle(s.p[0], s.p[1], s.p[2], s.col));
-
-            // Add Lines
             const matLine = new THREE.LineBasicMaterial({ color: 0x333333, linewidth: 2 });
             config.lines.forEach(pair => {
                 const line = new THREE.Line(new THREE.BufferGeometry().setFromPoints(pair), matLine);
@@ -145,20 +144,39 @@
                 scene.add(line);
             });
 
-            // Add Labels
             config.labels.forEach(name => { activeLabels[name] = makeLabel(name); });
         }
 
         function resetCamera() {
-            camera.position.set(10, 18, 17);
-            controls.target.set(3, 3, 0);
+            camera.position.set(10, 15, 15);
+            controls.target.set(4, 3, 0);
             controls.update();
+        }
+
+        function updateLabels() {
+            const widthHalf = container.clientWidth / 2;
+            const heightHalf = container.clientHeight / 2;
+
+            for (let key in activeLabels) {
+                const vector = V[key].clone().project(camera);
+                
+                // Only show labels that are in front of the camera (z < 1)
+                if (vector.z < 1) {
+                    const x = (vector.x * widthHalf) + widthHalf;
+                    const y = -(vector.y * heightHalf) + heightHalf;
+                    activeLabels[key].style.display = 'block';
+                    activeLabels[key].style.left = `${x}px`;
+                    activeLabels[key].style.top = `${y}px`;
+                } else {
+                    activeLabels[key].style.display = 'none';
+                }
+            }
         }
 
         function animate() {
             requestAnimationFrame(animate);
+            controls.update(); // Ensure camera matrix is updated before projecting labels
             
-            // Debug Info
             const debugBox = document.getElementById('debug-info');
             if (debugBox) {
                 const cp = camera.position, ct = controls.target;
@@ -166,19 +184,18 @@
                                     `<b style="color:#198754">TARGET:</b> x:${ct.x.toFixed(1)} y:${ct.y.toFixed(1)} z:${ct.z.toFixed(1)}`;
             }
             
-            // Label Projection
-            const widthHalf = container.clientWidth / 2, heightHalf = container.clientHeight / 2;
-            for (let key in activeLabels) {
-                const vector = V[key].clone().project(camera);
-                activeLabels[key].style.left = (vector.x * widthHalf + widthHalf) + 'px';
-                activeLabels[key].style.top = (-(vector.y * heightHalf) + heightHalf) + 'px';
-                activeLabels[key].style.display = vector.z < 1 ? 'block' : 'none';
-            }
+            updateLabels();
             renderer.render(scene, camera);
         }
 
         resetCamera();
         animate();
+        
+        window.addEventListener('resize', () => {
+            camera.aspect = container.clientWidth / container.clientHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(container.clientWidth, container.clientHeight);
+        });
     </script>
 </body>
 </html>
