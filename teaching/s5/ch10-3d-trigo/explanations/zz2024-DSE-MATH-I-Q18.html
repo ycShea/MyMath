@@ -10,7 +10,6 @@
         .canvas-side { flex: 1; background: #f0f2f5; position: relative; }
         .content-side { flex: 1; padding: 30px; overflow-y: auto; background: white; border-left: 1px solid #ddd; }
         
-        /* UI Overlay Box - Top Right */
         #ui-overlay {
             position: absolute; top: 15px; right: 15px; background: rgba(255, 255, 255, 0.9);
             padding: 12px; border-radius: 10px; font-family: monospace; font-size: 13px;
@@ -22,7 +21,6 @@
             width: 100%; border-radius: 4px; cursor: pointer; font-weight: bold; margin-top: 10px; 
         }
 
-        /* Label Styling */
         .label {
             position: absolute; background: transparent; color: #000; font-weight: bold;
             font-size: 26px; pointer-events: none; z-index: 100;
@@ -31,7 +29,6 @@
             display: none; 
         }
 
-        /* Right Side Content Styling */
         .question-summary { 
             background: #eef6ff; padding: 15px; border-radius: 8px; cursor: help; 
             position: relative; margin-bottom: 20px; border: 1px dashed #007bff;
@@ -72,7 +69,7 @@
             <h1>2024 DSE Paper I Q18</h1>
 
             <div class="question-summary">
-                <p class="dev-marker">Question Summary 1/2 (UpdateForNewExercise) Delete this before released.</p>
+                <p class="dev-marker">Question Summary 1/2</p>
                 <strong>PQRS a quadrilateral, where $PQ = 12\text{ cm}$, $PS = 10\text{ cm}$, $QR = 13\text{ cm}$, $\angle QPS = 82^\circ$ and $\angle QRS = 65^\circ$.</strong>
                 <div class="full-question-popup">
                     <img src="questions-images/2024 DSE-MATH-I Q18.png" alt="2024 DSE Q18 Diagram">
@@ -105,7 +102,7 @@
             <hr style="margin: 30px 0; border: 0; border-top: 1px solid #ddd;">
 
             <div class="question-summary">
-                <p class="dev-marker">Question Summary 2/2 (UpdateForNewExercise) Delete this before released.</p>
+                <p class="dev-marker">Question Summary 2/2</p>
                 <strong>The metal sheet $PQRS$ is now folded along $QS$. It is given that the angle between plane $PQS$ and plane $QRS$ is $80^\circ$.</strong>
                 <div class="full-question-popup">
                     <img src="questions-images/2024 DSE-MATH-I Q18.png" alt="2024 DSE Q18 Diagram">
@@ -209,8 +206,8 @@
         }
 
         function resetCamera() {
-            camera.position.set(10, 18, 17);
-            controls.target.set(-3, 5, 0);
+            camera.position.set(17, -2, 15);
+            controls.target.set(1, 4, -4);
             controls.update();
         }
 
