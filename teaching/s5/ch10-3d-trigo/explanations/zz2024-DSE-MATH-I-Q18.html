@@ -10,7 +10,7 @@
         .canvas-side { flex: 1; background: #f0f2f5; position: relative; }
         .content-side { flex: 1; padding: 30px; overflow-y: auto; background: white; border-left: 1px solid #ddd; }
         
-        /* Left Side UI Overlay */
+        /* UI Overlay Box - Top Right */
         #ui-overlay {
             position: absolute; top: 15px; right: 15px; background: rgba(255, 255, 255, 0.9);
             padding: 12px; border-radius: 10px; font-family: monospace; font-size: 13px;
@@ -22,7 +22,7 @@
             width: 100%; border-radius: 4px; cursor: pointer; font-weight: bold; margin-top: 10px; 
         }
 
-        /* 3D Labels */
+        /* Label Styling */
         .label {
             position: absolute; background: transparent; color: #000; font-weight: bold;
             font-size: 26px; pointer-events: none; z-index: 100;
@@ -31,7 +31,7 @@
             display: none; 
         }
 
-        /* Right Side Styling */
+        /* Right Side Content Styling */
         .question-summary { 
             background: #eef6ff; padding: 15px; border-radius: 8px; cursor: help; 
             position: relative; margin-bottom: 20px; border: 1px dashed #007bff;
@@ -75,7 +75,6 @@
                 <p class="dev-marker">Question Summary 1/2 (UpdateForNewExercise) Delete this before released.</p>
                 <strong>PQRS a quadrilateral, where $PQ = 12\text{ cm}$, $PS = 10\text{ cm}$, $QR = 13\text{ cm}$, $\angle QPS = 82^\circ$ and $\angle QRS = 65^\circ$.</strong>
                 <div class="full-question-popup">
-                    <p class="dev-marker">Full Question (UpdateForNewExercise) Delete this before released.</p>
                     <img src="questions-images/2024 DSE-MATH-I Q18.png" alt="2024 DSE Q18 Diagram">
                 </div>
                 <div style="margin-top:10px;">
@@ -85,32 +84,54 @@
 
             <div class="part-container">
                 <div class="part-header">
-                    <div>
-                        <span class="dev-marker">Solution 1/4</span>
-                        <span><strong>(a)(i) </strong>Find the length of $QS$.</span>
-                    </div>
+                    <span><strong>(a)(i) </strong>Find the length of $QS$.</span>
                     <button class="btn-show" onclick="toggle('sol-ai')">Show Solution</button>
                 </div>
                 <div id="sol-ai" class="solution-content">
-                    <p>In $\triangle PQS$, by the Cosine Rule:</p>
-                    <p class="math-block">$QS^2 = 12^2 + 10^2 - 2(12)(10)\cos(82^\circ)$</p>
-                    <p class="math-block">$QS \approx 14.5126 \text{ cm}$</p>
+                    <p class="math-block">$QS = \sqrt{12^2 + 10^2 - 2(12)(10)\cos(82^\circ)} \approx 14.5126 \text{ cm}$</p>
                 </div>
             </div>
 
             <div class="part-container">
                 <div class="part-header">
-                    <div>
-                        <span class="dev-marker">Solution 2/4</span>
-                        <span><strong>(a)(ii)</strong> Find $\angle RQS$.</span>
-                    </div>
+                    <span><strong>(a)(ii)</strong> Find $\angle RQS$.</span>
                     <button class="btn-show" onclick="toggle('sol-aii')">Show Solution</button>
                 </div>
                 <div id="sol-aii" class="solution-content">
-                    <p>In $\triangle RQS$, by the Sine Rule:</p>
-                    <p class="math-block">$\frac{13}{\sin(\angle RSQ)} = \frac{14.5126}{\sin(65^\circ)}$</p>
-                    <p>$\angle RSQ \approx 54.2687^\circ$</p>
-                    <p class="math-block">$\angle RQS = 180^\circ - 65^\circ - 54.2687^\circ \approx 60.7^\circ$</p>
+                    <p class="math-block">$\frac{13}{\sin(\angle RSQ)} = \frac{14.5126}{\sin(65^\circ)} \implies \angle RQS \approx 60.7^\circ$</p>
+                </div>
+            </div>
+
+            <hr style="margin: 30px 0; border: 0; border-top: 1px solid #ddd;">
+
+            <div class="question-summary">
+                <p class="dev-marker">Question Summary 2/2 (UpdateForNewExercise) Delete this before released.</p>
+                <strong>The metal sheet $PQRS$ is now folded along $QS$. It is given that the angle between plane $PQS$ and plane $QRS$ is $80^\circ$.</strong>
+                <div class="full-question-popup">
+                    <img src="questions-images/2024 DSE-MATH-I Q18.png" alt="2024 DSE Q18 Diagram">
+                </div>
+            </div>
+
+            <div class="part-container">
+                <div class="part-header">
+                    <span><strong>(b)(i)</strong> Find the shortest distance from $R$ to the plane $PQS$.</span>
+                    <button class="btn-show" onclick="toggle('sol-bi')">Show Solution</button>
+                </div>
+                <div id="sol-bi" class="solution-content">
+                    <p>Let $h$ be the perpendicular height from $R$ to $QS$:</p>
+                    <p class="math-block">$h = 13 \sin(60.7^\circ) \approx 11.3406 \text{ cm}$</p>
+                    <p>Shortest distance = $h \sin(80^\circ) \approx 11.2 \text{ cm}$</p>
+                </div>
+            </div>
+
+            <div class="part-container">
+                <div class="part-header">
+                    <span><strong>(b)(ii)</strong> Claim: distance between $P$ and $X$ exceeds $8\text{ cm}$. Is it correct?</span>
+                    <button class="btn-show" onclick="toggle('sol-bii')">Show Solution</button>
+                </div>
+                <div id="sol-bii" class="solution-content">
+                    <p class="math-block">$PX_{\text{min}} = 12 \sin(\angle PQS) \sin(80^\circ) \approx 8.0643 \text{ cm}$</p>
+                    <p>Since $8.06 > 8$, the claim is **Correct**.</p>
                 </div>
             </div>
         </div>
@@ -214,8 +235,8 @@
             const debugBox = document.getElementById('debug-info');
             if (debugBox) {
                 const cp = camera.position, ct = controls.target;
-                debugBox.innerHTML = `<b style="color:#0d6efd">TARGET:</b><br>x:${ct.x.toFixed(1)} y:${ct.y.toFixed(1)} z:${ct.z.toFixed(1)}<br>` +
-                                    `<b style="color:#198754">CAMERA:</b><br>x:${cp.x.toFixed(1)} y:${cp.y.toFixed(1)} z:${cp.z.toFixed(1)}`;
+                debugBox.innerHTML = `<b style="color:#0d6efd">TARGET:</b> x:${ct.x.toFixed(1)} y:${ct.y.toFixed(1)} z:${ct.z.toFixed(1)}<br>` +
+                                    `<b style="color:#198754">CAMERA:</b> x:${cp.x.toFixed(1)} y:${cp.y.toFixed(1)} z:${cp.z.toFixed(1)}`;
             }
             updateLabels();
             renderer.render(scene, camera);
