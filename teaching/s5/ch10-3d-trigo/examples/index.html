@@ -3,16 +3,15 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>S5 Ch10 - Under Construction</title>
+    <title>Math in Progress</title>
     <style>
-        /* This keeps the design very light and fast */
         body {
             font-family: 'Segoe UI', system-ui, sans-serif;
             margin: 0;
             display: flex;
             align-items: center;
             justify-content: center;
-            height: 100vh; /* Centered in the middle of the screen */
+            height: 100vh;
             background-color: #f4f7f6;
             color: #333;
             text-align: center;
@@ -26,11 +25,16 @@
             max-width: 400px;
         }
 
-        /* The cute emoji figure */
         .figure {
-            font-size: 80px; /* Big and friendly */
+            font-size: 80px;
             margin-bottom: 20px;
             display: block;
+            animation: float 2s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-8px); }
         }
 
         h1 {
@@ -45,7 +49,6 @@
             margin-bottom: 30px;
         }
 
-        /* The cute back button */
         .back-button {
             display: inline-block;
             padding: 12px 24px;
@@ -68,10 +71,10 @@
     <div class="main-container">
         <span class="figure">🤖🚧</span>
         
-        <h1>Building the DSE Hub!</h1>
-        <p>This section is currently under construction. Please check back soon.</p>
+        <h1>Content Coming Soon...</h1>
+        <p>Still calculating something brilliant. Check back soon.</p>
         
-        <a href="index.html" class="back-button">← Go Back</a>
+        <a href="../index.html" class="back-button">← Go Back</a>
     </div>
 
 </body>
