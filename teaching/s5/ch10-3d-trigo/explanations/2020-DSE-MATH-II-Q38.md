@@ -1,6 +1,6 @@
 # 📐 DSE Geometry Visualizer
 
-This project ([ycShea/DSE-Geometry-Visualizer](https://ycshea.github.io/MyMath/teaching/s5/ch10-3d-trigo/explanations/2020-DSE-MATH-II-Q38.html)) is a flexible, web-based 3D visualization tool designed for mathematics students to explore HKDSE-style 3D geometry problems. It transforms static textbook diagrams into interactive environments where users can manipulate the camera, visualize hidden triangles, and follow step-by-step calculations.
+This project ([ycShea/DSE-Geometry-Visualizer](https://ycShea.github.io/MyMath/teaching/s5/ch10-3d-trigo/explanations/2020-DSE-MATH-II-Q38.html)) is a flexible, web-based 3D visualization tool designed for mathematics students to explore HKDSE-style 3D geometry problems. It transforms static textbook diagrams into interactive environments where users can manipulate the camera, visualize hidden triangles, and follow step-by-step calculations.
 
 -----
 
