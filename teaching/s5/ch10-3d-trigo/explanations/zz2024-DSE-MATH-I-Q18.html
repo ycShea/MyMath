@@ -51,10 +51,10 @@
 
     <script>
         // Define text variables at the beginning for easy modification
-        const textQuestion_0 = "PQRS a quadrilateral, where $PQ = 12\\text{ cm}$, $PS = 10\\text{ cm}$, $QR = 13\\text{ cm}$, $\\angle QPS = 82^\\circ$ and $\\angle QRS = 65^\\circ$.";
+        const textQuestion_0 = "<strong>PQRS a quadrilateral, where $PQ = 12\\text{ cm}$, $PS = 10\\text{ cm}$, $QR = 13\\text{ cm}$, $\\angle QPS = 82^\\circ$ and $\\angle QRS = 65^\\circ$.</strong>";
         const textQuestion_a1 = "<strong>(a)(i) </strong>Find the length of $QS$.";
         const textQuestion_a2 = "<strong>(a)(ii)</strong> Find $\\angle RQS$.";
-        const textQuestion_1 = "The metal sheet $PQRS$ is now folded along $QS$. It is given that the angle between plane $PQS$ and plane $QRS$ is $80^\\circ$.";
+        const textQuestion_1 = "<strong>The metal sheet $PQRS$ is now folded along $QS$. It is given that the angle between plane $PQS$ and plane $QRS$ is $80^\\circ$.</strong>";
         const textQuestion_b1 = "<strong>(b)(i)</strong> Find the shortest distance from $R$ to the plane $PQS$.";
         const textQuestion_b2 = "<strong>(b)(ii)</strong> Claim: distance between $P$ and $X$ exceeds $8\\text{ cm}$. Is it correct?";
 
@@ -184,10 +184,14 @@
             } else {
                 clearScene();
                 if (type === 'A') {
+                    // FIX CAMERA for Part A
+                    controls.enableRotate = false;
                     drawFigureA();
                     btnA.textContent = "Hide Figure";
                     btnB.textContent = "Show Figure";
                 } else {
+                    // ALLOW ROTATION for Part B
+                    controls.enableRotate = true;
                     drawFigureB();
                     btnB.textContent = "Hide Figure";
                     btnA.textContent = "Show Figure";
