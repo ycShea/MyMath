@@ -1,0 +1,16 @@
+# 3D Trigonometry Interactive Question Bank
+
+A modular web application for visualizing 3D geometry problems. Features synchronized 3D model highlights, step-by-step solution toggles, and LaTeX math rendering.
+
+## Directory Structure
+`teaching/s5/ch10-3d-trigo/explanations/new/`
+
+```text
+.
+├── index.html              # Main navigation hub
+├── 2024-dse-q18.html       # Exercise page
+├── css/
+│   └── style.css           # Global styles
+└── js/
+    ├── three-helper.js     # Shared 3D engine utilities
+    └── q18-logic.js        # Coordinate data and drawing logic
