@@ -4,159 +4,176 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>2024 DSE Paper I Q18 Solution</title>
+    <link rel="stylesheet" href="../style.css">
     <style>
         body, html { margin: 0; padding: 0; height: 100%; overflow: hidden; font-family: 'Segoe UI', sans-serif; }
         .split-container { display: flex; height: 100vh; }
-        .canvas-side { flex: 1; background: #f8f9fa; position: relative; }
+        .canvas-side { flex: 1; background: #f0f0f0; position: relative; }
         .content-side { flex: 1; padding: 30px; overflow-y: auto; background: white; border-left: 1px solid #ddd; }
         
         .question-summary { 
-            background: #eef6ff; padding: 15px; border-radius: 8px; 
-            margin-bottom: 20px; border: 1px dashed #007bff;
+            background: #eef6ff; padding: 15px; border-radius: 8px; margin-bottom: 20px; border: 1px dashed #007bff;
         }
+        .part-container { margin-bottom: 15px; border: 1px solid #eee; border-radius: 8px; overflow: hidden; }
+        .part-header { display: flex; justify-content: space-between; align-items: center; padding: 12px 20px; background: #fafafa; }
+        .solution-content { display: none; padding: 20px; background: #fff; border-top: 1px solid #eee; }
+        .math-block { font-family: "Times New Roman", serif; font-size: 1.1rem; color: #d63384; margin: 10px 0; }
+        .btn-show { background: #007bff; color: white; border: none; padding: 8px 15px; border-radius: 4px; cursor: pointer; }
 
-        /* FIXED: Transparent labels without the white square */
+        /* FIXED: Clean labels without the background square */
         .label {
             position: absolute;
-            background: transparent; 
+            background: transparent;
             color: #000;
             font-weight: bold;
-            font-size: 18px;
+            font-size: 16px;
             pointer-events: none;
-            z-index: 100;
-            text-shadow: 2px 2px 4px rgba(255, 255, 255, 0.9);
+            z-index: 10;
+            text-shadow: 1px 1px 2px white;
             transform: translate(-50%, -50%);
         }
-
-        .btn-show { 
-            background: #007bff; color: white; border: none; 
-            padding: 10px 20px; border-radius: 4px; cursor: pointer; 
-        }
     </style>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
 </head>
 <body>
 
-<div class="split-container">
-    <div class="canvas-side" id="threejs-container"></div>
+    <div class="split-container">
+        <div class="canvas-side" id="threejs-container"></div>
 
-    <div class="content-side">
-        <h1>2024 DSE Paper I Q18</h1>
-        <div class="question-summary">
-            <div style="display: flex; justify-content: space-between; align-items: center;">
-                <strong>Quadrilateral $PQRS$ Visualization</strong>
-                <button class="btn-show" onclick="drawQuadrilateral()">Show Figure</button>
+        <div class="content-side">
+            <a href="index.html" style="text-decoration: none; color: #007bff;">← Back to List</a>
+            <h1>2024 DSE Paper I Q18</h1>
+
+            <div class="question-summary">
+                <div style="display:flex; justify-content:space-between; align-items:center;">
+                    <div><strong>$PQRS$ quadrilateral: $PQ=12, PS=10, QR=13$.</strong></div>
+                    <button class="btn-show" onclick="drawQuadrilateral()">Show Figure</button>
+                </div>
             </div>
-        </div>
-        <p>Click "Show Figure" to render the 3D model. Use mouse to rotate/zoom.</p>
+
+            <div class="part-container">
+                <div class="part-header">
+                    <span><strong>(a)(i) </strong>Find the length of $QS$.</span>
+                    <button class="btn-show" onclick="toggle('sol-ai')">Show Solution</button>
+                </div>
+                <div id="sol-ai" class="solution-content">
+                    <p>In $\triangle PQS$, by the Cosine Rule:</p>
+                    <p class="math-block">$QS = \sqrt{12^2 + 10^2 - 2(12)(10)\cos(82^\circ)} \approx 14.5\text{ cm}$</p>
+                </div>
+            </div>
+            </div>
     </div>
-</div>
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
 
-<script>
-    const container = document.getElementById('threejs-container');
-    const scene = new THREE.Scene();
-    scene.background = new THREE.Color(0xf8f9fa);
-    
-    // Tight near/far planes help with depth precision
-    const camera = new THREE.PerspectiveCamera(45, container.clientWidth/container.clientHeight, 0.1, 500);
-    camera.position.set(12, 10, 20);
-    
-    const renderer = new THREE.WebGLRenderer({ antialias: true });
-    renderer.setSize(container.clientWidth, container.clientHeight);
-    container.appendChild(renderer.domElement);
-    const controls = new THREE.OrbitControls(camera, renderer.domElement);
-
-    // FIXED: Polygon Offset stops the "Flashing" (Z-fighting)
-    const material = new THREE.MeshPhongMaterial({ 
-        color: 0x007bff, 
-        side: THREE.DoubleSide, 
-        transparent: true, 
-        opacity: 0.5,
-        polygonOffset: true,
-        polygonOffsetFactor: 1,
-        polygonOffsetUnits: 1
-    });
-    
-    const lineMaterial = new THREE.LineBasicMaterial({ color: 0x000000, linewidth: 2 });
-
-    scene.add(new THREE.AmbientLight(0xffffff, 0.8));
-    const light = new THREE.DirectionalLight(0xffffff, 0.4);
-    light.position.set(10, 20, 10);
-    scene.add(light);
-
-    const rad82 = 82 * Math.PI / 180;
-    const pts = {
-        P: new THREE.Vector3(0, 0, 0),
-        S: new THREE.Vector3(10, 0, 0),
-        Q: new THREE.Vector3(12 * Math.cos(rad82), 12 * Math.sin(rad82), 0),
-        R: new THREE.Vector3(17, 6, 0)
-    };
-
-    let labels = {};
-
-    function createLabel(text) {
-        const div = document.createElement('div');
-        div.className = 'label';
-        div.textContent = text;
-        container.appendChild(div);
-        return div;
-    }
-
-    function updateLabels() {
-        const widthHalf = container.clientWidth / 2;
-        const heightHalf = container.clientHeight / 2;
-
-        for (let key in labels) {
-            const vector = pts[key].clone().project(camera);
-            labels[key].style.left = (vector.x * widthHalf + widthHalf) + 'px';
-            labels[key].style.top = (-(vector.y * heightHalf) + heightHalf) + 'px';
-            // Only show labels in front of the camera
-            labels[key].style.display = (vector.z < 1) ? 'block' : 'none';
+    <script>
+        function toggle(id) {
+            const el = document.getElementById(id);
+            el.style.display = (el.style.display === 'none' || el.style.display === '') ? 'block' : 'none';
         }
-    }
 
-    function drawQuadrilateral() {
-        // Clear old scene items
-        scene.children.filter(c => c.type === "Mesh" || c.type === "LineSegments").forEach(c => scene.remove(c));
-        Object.values(labels).forEach(l => l.remove());
-
-        const vertices = new Float32Array([
-            pts.P.x, pts.P.y, pts.P.z, pts.S.x, pts.S.y, pts.S.z, pts.Q.x, pts.Q.y, pts.Q.z,
-            pts.S.x, pts.S.y, pts.S.z, pts.R.x, pts.R.y, pts.R.z, pts.Q.x, pts.Q.y, pts.Q.z
-        ]);
-
-        const geom = new THREE.BufferGeometry();
-        geom.setAttribute('position', new THREE.BufferAttribute(vertices, 3));
+        const container = document.getElementById('threejs-container');
+        const scene = new THREE.Scene();
+        scene.background = new THREE.Color(0xf0f0f0);
+        const camera = new THREE.PerspectiveCamera(45, container.clientWidth/container.clientHeight, 0.1, 1000);
+        camera.position.set(12, 10, 18);
         
-        const mesh = new THREE.Mesh(geom, material);
-        const wireframe = new THREE.LineSegments(new THREE.EdgesGeometry(geom), lineMaterial);
-        
-        // Ensure wireframe is drawn after the mesh
-        mesh.renderOrder = 0;
-        wireframe.renderOrder = 1;
-
-        scene.add(mesh, wireframe);
-
-        labels = { P: createLabel('P'), Q: createLabel('Q'), R: createLabel('R'), S: createLabel('S') };
-        
-        controls.target.set(8, 3, 0);
-        controls.update();
-    }
-
-    function animate() {
-        requestAnimationFrame(animate);
-        updateLabels();
-        renderer.render(scene, camera);
-    }
-    animate();
-
-    window.addEventListener('resize', () => {
-        camera.aspect = container.clientWidth / container.clientHeight;
-        camera.updateProjectionMatrix();
+        const renderer = new THREE.WebGLRenderer({ antialias: true, logarithmicDepthBuffer: true });
         renderer.setSize(container.clientWidth, container.clientHeight);
-    });
-</script>
+        container.appendChild(renderer.domElement);
+        const controls = new THREE.OrbitControls(camera, renderer.domElement);
+
+        // Standard materials from your reference
+        const matDefault = new THREE.LineBasicMaterial({ color: 0x333333 });
+        const lineMaterial = new THREE.LineBasicMaterial({ color: 0x000000 });
+
+        scene.add(new THREE.AmbientLight(0xffffff, 0.8));
+
+        const rad82 = 82 * Math.PI / 180;
+        const pts = {
+            P: new THREE.Vector3(0, 0, 0),
+            S: new THREE.Vector3(10, 0, 0),
+            Q: new THREE.Vector3(12 * Math.cos(rad82), 12 * Math.sin(rad82), 0),
+            R: new THREE.Vector3(16, 5, 0)
+        };
+
+        let labels = {};
+
+        function makeLabel(text, pos) {
+            const div = document.createElement('div');
+            div.className = 'label';
+            div.textContent = text;
+            container.appendChild(div);
+            return div;
+        }
+
+        // The "Anti-Flashing" Triangle Function from your reference
+        function createTriangle(p1, p2, p3, color, opacity = 0.4) {
+            const geom = new THREE.BufferGeometry().setFromPoints([p1, p2, p3]);
+            geom.setIndex([0, 1, 2]);
+            const mesh = new THREE.Mesh(geom, new THREE.MeshBasicMaterial({ 
+                color, 
+                side: THREE.DoubleSide, 
+                transparent: true, 
+                opacity,
+                depthTest: false,   // Crucial: stops fighting with lines
+                depthWrite: false
+            }));
+            mesh.renderOrder = 1; // Drawn behind lines but visible
+            scene.add(mesh);
+            return mesh;
+        }
+
+        function drawQuadrilateral() {
+            // Cleanup
+            scene.children.filter(c => c.type === "Mesh" || c.type === "Line").forEach(c => scene.remove(c));
+            Object.values(labels).forEach(l => l.remove());
+
+            // Create solid surfaces (Surfaces first in code, but renderOrder handles depth)
+            createTriangle(pts.P, pts.S, pts.Q, 0x0d6efd);
+            createTriangle(pts.S, pts.R, pts.Q, 0x0d6efd);
+
+            // Create Edges
+            const edges = [
+                [pts.P, pts.Q], [pts.Q, pts.R], [pts.R, pts.S], [pts.S, pts.P], [pts.Q, pts.S]
+            ];
+            edges.forEach(pair => {
+                const geom = new THREE.BufferGeometry().setFromPoints(pair);
+                const line = new THREE.Line(geom, lineMaterial);
+                line.renderOrder = 2; // Lines draw on top
+                scene.add(line);
+            });
+
+            // Create Labels
+            labels = {
+                P: makeLabel('P', pts.P),
+                Q: makeLabel('Q', pts.Q),
+                R: makeLabel('R', pts.R),
+                S: makeLabel('S', pts.S)
+            };
+
+            controls.target.set(8, 4, 0);
+            controls.update();
+        }
+
+        function updateLabelPositions() {
+            const widthHalf = container.clientWidth / 2;
+            const heightHalf = container.clientHeight / 2;
+            for (let key in labels) {
+                const vector = pts[key].clone().project(camera);
+                labels[key].style.left = (vector.x * widthHalf + widthHalf) + 'px';
+                labels[key].style.top = (-(vector.y * heightHalf) + heightHalf) + 'px';
+            }
+        }
+
+        function animate() {
+            requestAnimationFrame(animate);
+            controls.update();
+            updateLabelPositions();
+            renderer.render(scene, camera);
+        }
+        animate();
+    </script>
 </body>
 </html>
