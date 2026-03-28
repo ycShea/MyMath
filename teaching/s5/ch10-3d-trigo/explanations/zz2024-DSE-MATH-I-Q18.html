@@ -36,6 +36,16 @@
         }
         .question-summary:hover .full-question-popup { display: block; }
 
+        /* Style for the hover image (UpdateForNewExercise) */
+        .full-question-popup img {
+            display: block;
+            max-width: 100%;
+            height: auto;
+            margin: 15px 0;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+
         .part-container { 
             margin-bottom: 15px; 
             border: 1px solid #eee; 
@@ -88,25 +98,14 @@
             <h1>2024 DSE Paper I Q18</h1>
 
             <div class="question-summary">
-                <!-- Question Summary (UpdateForNewExercise) -->
                 <strong>Question Summary:</strong> 3D folding problem involving a quadrilateral $PQRS$ folded along $QS$.
-                Quadrilateral $PQRS$ with $PQ=12$ cm, $PS=10$ cm, $QR=13$ cm, $\angle QPS=82^\circ$, and $\angle QRS=65^\circ$. The sheet is folded along $QS$ so the angle between planes $PQS$ and $QRS$ is $80^\circ$.
                 <div class="full-question-popup">
-                    <!-- Full Question (UpdateForNewExercise) -->
-                    $PQRS$ is a quadrilateral sheet of paper, where $PQ = 12\text{ cm}$, $PS = 10\text{ cm}$, $QR = 13\text{ cm}$, $\angle QPS = 82^\circ$ and $\angle QRS = 65^\circ$. The sheet of paper is folded along $QS$ such that the angle between the plane $PQS$ and the plane $QRS$ is $80^\circ$ (see Figure 10).
+                    <p>18. $PQRS$ is a quadrilateral sheet where $PQ=12, PS=10, QR=13, \angle QPS=82^\circ, \angle QRS=65^\circ$. The sheet is folded along $QS$ such that the angle between planes $PQS$ and $QRS$ is $80^\circ$.</p>
+                    
+                    <img src="questions-images/2024 DSE-MATH-I Q18.png" alt="2024 DSE Q18 Diagram">
 
-(a) Find
-    (i) the length of $QS$,
-    (ii) $\angle RQS$.
-(4 marks)
-
-(b) Let $X$ be a point on the plane $QRS$ such that $PX$ is the shortest distance from $P$ to the plane $QRS$.
-    (i) Find the shortest distance from $R$ to the plane $PQS$.
-    (ii) A student claims that the distance between $P$ and $X$ is greater than $8\text{ cm}$. Is the claim correct? Explain your answer.
-(4 marks)
-                    <p>$PQ=12, PS=10, QR=13, \angle QPS=82^\circ, \angle QRS=65^\circ$.</p>
-                    <p>(a) Find $QS$ and $\angle RQS$.</p>
-                    <p>(b) Folded along $QS$ such that angle between planes $PQS$ and $QRS$ is $80^\circ$. Find distance from $R$ to plane $PQS$ and check if $PX > 8$.</p>
+                    <p><strong>(a) Find:</strong> (i) the length of $QS$, (ii) $\angle RQS$.</p>
+                    <p><strong>(b)</strong> (i) Find the distance from $R$ to plane $PQS$. (ii) Verify if the distance $PX > 8\text{ cm}$.</p>
                 </div>
             </div>
 
@@ -116,17 +115,9 @@
                     <button class="btn-show" onclick="toggle('sol-ai')">Show Solution</button>
                 </div>
                 <div id="sol-ai" class="solution-content">
-                    <!-- Solution 1/4 (UpdateForNewExercise) -->
-                    In $\triangle PQS$, by the Cosine Rule:
-                    $QS^2 = PQ^2 + PS^2 - 2(PQ)(PS)\cos(\angle QPS)$
-                    $QS^2 = 12^2 + 10^2 - 2(12)(10)\cos(82^\circ)$
-                    $QS^2 = 144 + 100 - 240\cos(82^\circ)$
-                    $QS \approx \sqrt{210.598}$
-                    $QS \approx 14.5120 \text{ cm}$
-                    $QS \approx 14.5 \text{ cm}$
-                    <p>In $\triangle PQS$, by Cosine Rule:</p>
+                    <p>In $\triangle PQS$, by the Cosine Rule:</p>
                     <p class="math-block">$QS^2 = 12^2 + 10^2 - 2(12)(10)\cos(82^\circ)$</p>
-                    <p class="math-block">$QS \approx 14.5126... \approx 14.5 \text{ cm}$</p>
+                    <p class="math-block">$QS \approx 14.5126 \text{ cm}$</p>
                 </div>
             </div>
 
@@ -136,20 +127,10 @@
                     <button class="btn-show" onclick="toggle('sol-aii')">Show Solution</button>
                 </div>
                 <div id="sol-aii" class="solution-content">
-                    <!-- Solution 2/4 (UpdateForNewExercise) -->
-                    In $\triangle RQS$, by the Sine Rule:
-                    $\frac{QR}{\sin(\angle RSQ)} = \frac{QS}{\sin(\angle QRS)}$
-                    $\frac{13}{\sin(\angle RSQ)} = \frac{14.5120}{\sin(65^\circ)}$
-                    $\sin(\angle RSQ) = \frac{13 \sin(65^\circ)}{14.5120} \approx 0.8118$
-                    $\angle RSQ \approx 54.2687^\circ$
-                    
-                    $\angle RQS = 180^\circ - 65^\circ - 54.2687^\circ$
-                    $\angle RQS \approx 60.7313^\circ$
-                    $\angle RQS \approx 60.7^\circ$
-                    <p>In $\triangle RQS$, by Sine Rule:</p>
-                    <p class="math-block">$\frac{13}{\sin\angle RSQ} = \frac{14.5126}{\sin 65^\circ}$</p>
-                    <p>After finding $\angle RSQ$, then $\angle RQS = 180^\circ - 65^\circ - \angle RSQ$.</p>
-                    <p class="math-block">$\angle RQS \approx 60.8^\circ$</p>
+                    <p>In $\triangle RQS$, by the Sine Rule:</p>
+                    <p class="math-block">$\frac{13}{\sin(\angle RSQ)} = \frac{14.5126}{\sin(65^\circ)}$</p>
+                    <p>$\angle RSQ \approx 54.2687^\circ$</p>
+                    <p class="math-block">$\angle RQS = 180^\circ - 65^\circ - 54.2687^\circ \approx 60.7^\circ$</p>
                 </div>
             </div>
 
@@ -159,20 +140,10 @@
                     <button class="btn-show" onclick="toggle('sol-bi')">Show Solution</button>
                 </div>
                 <div id="sol-bi" class="solution-content">
-                    <!-- Solution 3/4 (UpdateForNewExercise) -->
-                    Let $M$ be a point on $QS$ such that $RM \perp QS$. 
-                    $RM$ is the height of $\triangle RQS$ with base $QS$.
-                    $RM = QR \sin(\angle RQS) = 13 \sin(60.7313^\circ) \approx 11.3406 \text{ cm}$
-                    
-                    Let $h$ be the shortest distance from $R$ to plane $PQS$.
-                    Since the angle between planes $PQS$ and $QRS$ is $80^\circ$:
-                    $h = RM \sin(80^\circ)$
-                    $h = 11.3406 \sin(80^\circ) \approx 11.1683 \text{ cm}$
-                    The shortest distance is $\approx 11.2 \text{ cm}$.
-                    <p>Let $h$ be the perpendicular height from $R$ to $QS$.</p>
-                    <p class="math-block">$h = 13 \sin(60.849^\circ) \approx 11.353 \text{ cm}$</p>
+                    <p>Let $h$ be the perpendicular height from $R$ to $QS$:</p>
+                    <p class="math-block">$h = 13 \sin(60.7^\circ) \approx 11.3406 \text{ cm}$</p>
                     <p>Shortest distance to plane = $h \sin(80^\circ)$</p>
-                    <p class="math-block">Distance $\approx 11.18 \text{ cm}$</p>
+                    <p class="math-block">Distance $\approx 11.2 \text{ cm}$</p>
                 </div>
             </div>
 
@@ -182,24 +153,9 @@
                     <button class="btn-show" onclick="toggle('sol-bii')">Show Solution</button>
                 </div>
                 <div id="sol-bii" class="solution-content">
-                    <!-- Solution 4/4 (UpdateForNewExercise) -->
-                    Let $N$ be a point on $QS$ such that $PN \perp QS$.
-                    In $\triangle PQS$:
-                    $PN = PQ \sin(\angle PQS)$
-                    First, find $\angle PQS$ using Sine Rule in $\triangle PQS$:
-                    $\frac{PS}{\sin(\angle PQS)} = \frac{QS}{\sin(\angle QPS)}$
-                    $\sin(\angle PQS) = \frac{10 \sin(82^\circ)}{14.5120} \approx 0.6824$
-                    $\angle PQS \approx 43.0315^\circ$
-                    
-                    $PN = 12 \sin(43.0315^\circ) \approx 8.1887 \text{ cm}$
-                    
-                    The shortest distance from $P$ to any point on plane $QRS$ is the perpendicular distance from $P$ to the plane. 
-                    Let $d$ be this distance. Since the angle between planes is $80^\circ$:
-                    $d = PN \sin(80^\circ) = 8.1887 \sin(80^\circ) \approx 8.0643 \text{ cm}$
-                    
-                    Since the minimum possible distance from $P$ to any point $X$ in plane $QRS$ is $8.0643 \text{ cm}$, which is $> 8 \text{ cm}$, the claim is correct.
-                    <p>Find the shortest distance from $P$ to the line $QS$. Compare this with the relative position of $X$.</p>
-                    <p>Calculation shows the minimum distance exceeds 8 cm. The claim is **Correct**.</p>
+                    <p>Calculate minimum distance from $P$ to plane $QRS$:</p>
+                    <p class="math-block">$PX = 12 \sin(\angle PQS) \sin(80^\circ) \approx 8.0643 \text{ cm}$</p>
+                    <p>Since $8.06 > 8$, the claim is **Correct**.</p>
                 </div>
             </div>
         </div>
@@ -213,14 +169,11 @@
             const el = document.getElementById(id);
             const isHidden = (el.style.display === 'none' || el.style.display === '');
             el.style.display = isHidden ? 'block' : 'none';
-            
-            // Re-render math if newly shown
             if (isHidden && window.MathJax) {
                 MathJax.typesetPromise([el]);
             }
         }
 
-        // Initialize 3D Viewer
         const container = document.getElementById('threejs-container');
         const scene = new THREE.Scene();
         scene.background = new THREE.Color(0xf0f0f0);
@@ -231,24 +184,21 @@
         container.appendChild(renderer.domElement);
         const controls = new THREE.OrbitControls(camera, renderer.domElement);
 
-        // Simple representation of folded triangles
         const geometry = new THREE.BufferGeometry();
         const vertices = new Float32Array([
-            0,0,0,  12,0,0,  6,8,0,   // Triangle 1
-            0,0,0,  12,0,0,  6,4,6    // Triangle 2 (folded)
+            0,0,0,  12,0,0,  6,8,0,
+            0,0,0,  12,0,0,  6,4,6
         ]);
         geometry.setAttribute('position', new THREE.BufferAttribute(vertices, 3));
         const material = new THREE.MeshPhongMaterial({ color: 0x007bff, side: THREE.DoubleSide, transparent: true, opacity: 0.6 });
         const mesh = new THREE.Mesh(geometry, material);
         scene.add(mesh);
         
-        // Add edges
         const wireframe = new THREE.LineSegments(
             new THREE.EdgesGeometry(geometry),
             new THREE.LineBasicMaterial({ color: 0x000000 })
         );
         scene.add(wireframe);
-
         scene.add(new THREE.AmbientLight(0xffffff, 0.8));
 
         function animate() {
