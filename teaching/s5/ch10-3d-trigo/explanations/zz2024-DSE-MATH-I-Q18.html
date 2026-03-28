@@ -170,6 +170,7 @@
                     resetCamera();
                     // FIX CAMERA for Part A
                     controls.enableRotate = false;
+                    controls.enablePan = false;
                     drawFigureA();
                     btnA.textContent = "Hide Figure";
                     btnB.textContent = "Show Figure";
@@ -177,6 +178,7 @@
                     resetCamera();
                     // ALLOW ROTATION for Part B
                     controls.enableRotate = true;
+                    controls.enablePan = true;
                     drawFigureB();
                     btnB.textContent = "Hide Figure";
                     btnA.textContent = "Show Figure";
@@ -282,7 +284,7 @@
 
         function resetCamera() {
             camera.position.set(0, 0, 20);
-            controls.target.set(3, 4, -3);
+            controls.target.set(5, 4, -3);
             controls.update();
         }
 
