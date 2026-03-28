@@ -7,7 +7,6 @@ A modular web application for visualizing 3D geometry problems. Features synchro
 
 ```text
 .
-├── index.html                # Main navigation hub
 ├── 2024-dse-p1-q18.html      # Exercise page
 ├── css/
 │   └── style.css             # Global styles
