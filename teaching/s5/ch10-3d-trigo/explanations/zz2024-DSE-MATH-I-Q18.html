@@ -22,15 +22,9 @@
         #reset-cam-btn { background: #fd7e14; color: white; border: none; padding: 10px; width: 100%; border-radius: 5px; cursor: pointer; font-weight: bold; margin-top: 10px; }
 
         .label {
-            position: absolute;
-            background: transparent;
-            color: #000;
-            font-weight: bold;
-            font-size: 24px; /* Larger label size */
-            pointer-events: none;
-            z-index: 100;
-            text-shadow: 2px 2px 4px rgba(255, 255, 255, 0.9);
-            transform: translate(-50%, -50%);
+            position: absolute; background: transparent; color: #000; font-weight: bold;
+            font-size: 24px; pointer-events: none; z-index: 100;
+            text-shadow: 2px 2px 4px rgba(255, 255, 255, 0.9); transform: translate(-50%, -50%);
         }
 
         #debug-info {
@@ -45,16 +39,15 @@
 
     <div class="split-container">
         <div class="canvas-side" id="threejs-container">
-            <div id="debug-info">Camera: (0, 0, 0)<br>Target: (0, 0, 0)</div>
+            <div id="debug-info"></div>
         </div>
 
         <div class="content-side">
             <h1>2024 DSE Paper I Q18</h1>
-
             <div class="question-summary">
                 <div style="display:flex; justify-content:space-between; align-items:center;">
                     <div><strong>$PQRS$ quadrilateral: $PQ=12, PS=10, QR=13$.</strong></div>
-                    <button class="btn-show" onclick="drawQuadrilateral()">Show Figure</button>
+                    <button class="btn-show" onclick="drawFigure()">Show Figure</button>
                 </div>
                 <button id="reset-cam-btn" onclick="resetCamera()">Reset Camera 🎥</button>
             </div>
@@ -80,31 +73,43 @@
             el.style.display = (el.style.display === 'none' || el.style.display === '') ? 'block' : 'none';
         }
 
+        // ==========================================
+        // 1. SCENE SETUP
+        // ==========================================
         const container = document.getElementById('threejs-container');
         const scene = new THREE.Scene();
         scene.background = new THREE.Color(0xf0f2f5);
         const camera = new THREE.PerspectiveCamera(45, container.clientWidth/container.clientHeight, 0.1, 1000);
-        
         const renderer = new THREE.WebGLRenderer({ antialias: true, logarithmicDepthBuffer: true });
         renderer.setSize(container.clientWidth, container.clientHeight);
         container.appendChild(renderer.domElement);
         const controls = new THREE.OrbitControls(camera, renderer.domElement);
-
-        const lineMaterial = new THREE.LineBasicMaterial({ color: 0x333333, linewidth: 2 });
         scene.add(new THREE.AmbientLight(0xffffff, 0.9));
 
-        // Reduced sizing for the quadrilateral coordinates
+        // ==========================================
+        // 2. GEOMETRY DEFINITIONS (Grouped)
+        // ==========================================
         const scale = 0.6; 
         const rad82 = 82 * Math.PI / 180;
-        const pts = {
+        
+        const V = {
             P: new THREE.Vector3(0, 0, 0),
             S: new THREE.Vector3(10 * scale, 0, 0),
             Q: new THREE.Vector3(12 * scale * Math.cos(rad82), 12 * scale * Math.sin(rad82), 0),
             R: new THREE.Vector3(16 * scale, 5 * scale, 0)
         };
 
-        let labels = {};
+        const config = {
+            lines: [ [V.P, V.Q], [V.Q, V.R], [V.R, V.S], [V.S, V.P], [V.Q, V.S] ],
+            surfaces: [ { p: [V.P, V.S, V.Q], col: 0x0d6efd }, { p: [V.S, V.R, V.Q], col: 0x0d6efd } ],
+            labels: ["P", "Q", "R", "S"]
+        };
 
+        let activeLabels = {};
+
+        // ==========================================
+        // 3. HELPER FUNCTIONS
+        // ==========================================
         function makeLabel(text) {
             const div = document.createElement('div');
             div.className = 'label';
@@ -122,53 +127,52 @@
             }));
             mesh.renderOrder = 1;
             scene.add(mesh);
-            return mesh;
         }
 
-        function drawQuadrilateral() {
+        function drawFigure() {
+            // Clear existing
             scene.children.filter(c => c.type === "Mesh" || c.type === "Line").forEach(c => scene.remove(c));
-            Object.values(labels).forEach(l => l.remove());
+            Object.values(activeLabels).forEach(l => l.remove());
 
-            createTriangle(pts.P, pts.S, pts.Q, 0x0d6efd);
-            createTriangle(pts.S, pts.R, pts.Q, 0x0d6efd);
+            // Add Surfaces
+            config.surfaces.forEach(s => createTriangle(s.p[0], s.p[1], s.p[2], s.col));
 
-            [[pts.P, pts.Q], [pts.Q, pts.R], [pts.R, pts.S], [pts.S, pts.P], [pts.Q, pts.S]].forEach(pair => {
-                const line = new THREE.Line(new THREE.BufferGeometry().setFromPoints(pair), lineMaterial);
+            // Add Lines
+            const matLine = new THREE.LineBasicMaterial({ color: 0x333333, linewidth: 2 });
+            config.lines.forEach(pair => {
+                const line = new THREE.Line(new THREE.BufferGeometry().setFromPoints(pair), matLine);
                 line.renderOrder = 2;
                 scene.add(line);
             });
 
-            labels = { P: makeLabel('P'), Q: makeLabel('Q'), R: makeLabel('R'), S: makeLabel('S') };
+            // Add Labels
+            config.labels.forEach(name => { activeLabels[name] = makeLabel(name); });
         }
 
         function resetCamera() {
             camera.position.set(10, 18, 17);
-            controls.target.set(3, 3, 0); // Adjusted target for smaller quad
+            controls.target.set(3, 3, 0);
             controls.update();
         }
 
         function animate() {
             requestAnimationFrame(animate);
+            
+            // Debug Info
             const debugBox = document.getElementById('debug-info');
-            if (debugBox && controls) {
-                const cp = camera.position;
-                const ct = controls.target;
-                debugBox.innerHTML = `
-                    <b style="color:#0d6efd">CAMERA:</b><br>
-                    x: ${cp.x.toFixed(1)} y: ${cp.y.toFixed(1)} z: ${cp.z.toFixed(1)}
-                    <hr style="margin:5px 0; border:0; border-top:1px solid #eee">
-                    <b style="color:#198754">TARGET:</b><br>
-                    x: ${ct.x.toFixed(1)} y: ${ct.y.toFixed(1)} z: ${ct.z.toFixed(1)}
-                `;
+            if (debugBox) {
+                const cp = camera.position, ct = controls.target;
+                debugBox.innerHTML = `<b style="color:#0d6efd">CAMERA:</b> x:${cp.x.toFixed(1)} y:${cp.y.toFixed(1)} z:${cp.z.toFixed(1)}<br>` +
+                                    `<b style="color:#198754">TARGET:</b> x:${ct.x.toFixed(1)} y:${ct.y.toFixed(1)} z:${ct.z.toFixed(1)}`;
             }
             
-            const widthHalf = container.clientWidth / 2;
-            const heightHalf = container.clientHeight / 2;
-            for (let key in labels) {
-                const vector = pts[key].clone().project(camera);
-                labels[key].style.left = (vector.x * widthHalf + widthHalf) + 'px';
-                labels[key].style.top = (-(vector.y * heightHalf) + heightHalf) + 'px';
-                labels[key].style.display = vector.z < 1 ? 'block' : 'none';
+            // Label Projection
+            const widthHalf = container.clientWidth / 2, heightHalf = container.clientHeight / 2;
+            for (let key in activeLabels) {
+                const vector = V[key].clone().project(camera);
+                activeLabels[key].style.left = (vector.x * widthHalf + widthHalf) + 'px';
+                activeLabels[key].style.top = (-(vector.y * heightHalf) + heightHalf) + 'px';
+                activeLabels[key].style.display = vector.z < 1 ? 'block' : 'none';
             }
             renderer.render(scene, camera);
         }
