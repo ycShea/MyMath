@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Problem Explanations | MyMath</title>
+    <link rel="stylesheet" href="../style.css">
+    <style>
+        .container { max-width: 800px; margin: 0 auto; padding: 20px; font-family: sans-serif; }
+        .year-group { margin-top: 30px; border-bottom: 2px solid #007bff; padding-bottom: 5px; color: #007bff; }
+        .problem-link {
+            display: flex; justify-content: space-between; align-items: center;
+            padding: 15px; background: white; margin: 10px 0;
+            border-radius: 8px; text-decoration: none; color: #333;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05); transition: 0.2s;
+        }
+        .problem-link:hover { transform: translateX(10px); background: #eef6ff; }
+        .tag { font-size: 0.8rem; padding: 4px 8px; background: #eee; border-radius: 4px; color: #666; }
+        .loading { text-align: center; color: #999; margin-top: 50px; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <a href="../index.html" style="text-decoration: none;">← Back to Menu</a>
+    <h1>Problem Explanations</h1>
+    
+    <div id="content-area">
+        <p class="loading">Loading problems from database...</p>
+    </div>
+</div>
+
+<script>
+    // Replace this with YOUR published CSV link
+    const csvUrl = "https://docs.google.com/spreadsheets/d/e/2PACX-1vS_...YOUR_ID.../pub?gid=0&single=true&output=csv";
+
+    async function fetchData() {
+        try {
+            const response = await fetch(csvUrl);
+            const csvData = await response.text();
+            const rows = csvData.split('\n').map(row => row.split(','));
+            
+            // Remove header row
+            rows.shift();
+
+            const contentArea = document.getElementById('content-area');
+            contentArea.innerHTML = ""; // Clear loading text
+
+            // Group by Category (Column B)
+            const categories = {};
+            rows.forEach(row => {
+                const [title, category, tag, url] = row;
+                if (!title || !category) return; // Skip empty rows
+
+                if (!categories[category]) {
+                    categories[category] = [];
+                }
+                categories[category].push({ title, tag, url });
+            });
+
+            // Generate HTML for each category
+            for (const category in categories) {
+                const sectionHeader = document.createElement('h2');
+                sectionHeader.className = "year-group";
+                sectionHeader.innerText = category;
+                contentArea.appendChild(sectionHeader);
+
+                categories[category].forEach(item => {
+                    const link = document.createElement('a');
+                    link.className = "problem-link";
+                    link.href = item.url.trim();
+                    link.innerHTML = `
+                        <span>${item.title}</span>
+                        <span class="tag">${item.tag}</span>
+                    `;
+                    contentArea.appendChild(link);
+                });
+            }
+        } catch (error) {
+            document.getElementById('content-area').innerHTML = "<p>Error loading data. Please check the spreadsheet publication.</p>";
+        }
+    }
+
+    fetchData();
+</script>
+
+</body>
+</html>
