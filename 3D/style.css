@@ -33,7 +33,7 @@ body { font-family: sans-serif; background-color: #f4f7f6; margin: 0; }
 
 .nav-button:hover { transform: scale(1.02); border-color: #007bff; }
 
-/* Assign the 4 images you saved */
+/* Inside 3D/style.css */
 .basic-concepts { background-image: url('images/concept.png'); }
 .examples { background-image: url('images/example.png'); }
 .exercises { background-image: url('images/exercise.png'); }
