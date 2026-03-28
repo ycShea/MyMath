@@ -2,64 +2,36 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>2024 DSE Paper I Q18 Solution</title>
+    <title>2024 DSE Q18 - Corrected Visuals</title>
     <style>
-        body, html { margin: 0; padding: 0; height: 100%; overflow: hidden; font-family: 'Segoe UI', sans-serif; }
+        body, html { margin: 0; padding: 0; height: 100%; overflow: hidden; font-family: sans-serif; }
         .split-container { display: flex; height: 100vh; }
         .canvas-side { flex: 1; background: #f0f0f0; position: relative; }
-        .content-side { flex: 1; padding: 30px; overflow-y: auto; background: white; border-left: 1px solid #ddd; }
+        .content-side { flex: 1; padding: 20px; background: white; border-left: 1px solid #ddd; }
         
-        .question-summary { 
-            background: #eef6ff; padding: 15px; border-radius: 8px; 
-            margin-bottom: 20px; border: 1px dashed #007bff;
-        }
-        .part-container { margin-bottom: 15px; border: 1px solid #eee; border-radius: 8px; overflow: hidden; }
-        .part-header { display: flex; justify-content: space-between; align-items: center; padding: 12px 20px; background: #fafafa; }
-        .solution-content { display: none; padding: 20px; background: #fff; border-top: 1px solid #eee; }
-        .math-block { font-family: "Times New Roman", serif; font-size: 1.1rem; color: #d63384; margin: 10px 0; }
-        .btn-show { background: #007bff; color: white; border: none; padding: 8px 15px; border-radius: 4px; cursor: pointer; }
-
-        /* Fixed Label Styling */
+        /* Updated Label Styling: No background square, clean text */
         .label {
             position: absolute;
-            background: rgba(255, 255, 255, 0.9);
-            padding: 2px 8px;
-            border-radius: 4px;
-            font-weight: bold;
-            font-size: 14px;
-            pointer-events: none;
-            border: 1px solid #666;
-            z-index: 100;
+            background: transparent; /* Removes the white box */
             color: #000;
+            font-weight: bold;
+            font-size: 18px;
+            pointer-events: none;
+            z-index: 100;
+            text-shadow: 1px 1px 2px white; /* Makes text readable against any color */
             transform: translate(-50%, -50%);
         }
+
+        .btn-show { background: #007bff; color: white; border: none; padding: 10px 20px; cursor: pointer; border-radius: 5px; }
     </style>
-    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
 </head>
 <body>
 
     <div class="split-container">
         <div class="canvas-side" id="threejs-container"></div>
-
         <div class="content-side">
-            <h1>2024 DSE Paper I Q18</h1>
-            <div class="question-summary">
-                <div style="display: flex; justify-content: space-between;">
-                    <strong>PQRS a quadrilateral: $PQ=12, PS=10, QR=13, \angle QPS=82^\circ$.</strong>
-                    <button class="btn-show" onclick="drawQuadrilateral()">Show Figure</button>
-                </div>
-            </div>
-
-            <div class="part-container">
-                <div class="part-header">
-                    <span><strong>(a)</strong> Solve Triangle</span>
-                    <button class="btn-show" onclick="toggle('sol-a')">Solution</button>
-                </div>
-                <div id="sol-a" class="solution-content">
-                    <p class="math-block">$QS = \sqrt{12^2 + 10^2 - 2(12)(10)\cos(82^\circ)} \approx 14.51$</p>
-                </div>
-            </div>
+            <h1>2024 DSE Q18</h1>
+            <button class="btn-show" onclick="drawQuadrilateral()">Draw Figure</button>
         </div>
     </div>
 
@@ -67,32 +39,33 @@
     <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
 
     <script>
-        function toggle(id) {
-            const el = document.getElementById(id);
-            el.style.display = (el.style.display === 'none' || el.style.display === '') ? 'block' : 'none';
-        }
-
         const container = document.getElementById('threejs-container');
         const scene = new THREE.Scene();
         scene.background = new THREE.Color(0xf0f0f0);
-        const camera = new THREE.PerspectiveCamera(75, container.clientWidth/container.clientHeight, 0.1, 1000);
-        camera.position.set(10, 10, 20);
-        
+        const camera = new THREE.PerspectiveCamera(45, container.clientWidth/container.clientHeight, 0.1, 1000);
+        camera.position.set(15, 12, 20);
+
         const renderer = new THREE.WebGLRenderer({ antialias: true });
         renderer.setSize(container.clientWidth, container.clientHeight);
         container.appendChild(renderer.domElement);
         const controls = new THREE.OrbitControls(camera, renderer.domElement);
 
-        // Anti-Flashing Material
+        // 1. FIXED: Added polygonOffset to prevent flashing (Z-fighting)
         const material = new THREE.MeshPhongMaterial({ 
-            color: 0x007bff, side: THREE.DoubleSide, transparent: true, opacity: 0.6,
-            polygonOffset: true, polygonOffsetFactor: 1, polygonOffsetUnits: 1 
+            color: 0x007bff, 
+            side: THREE.DoubleSide, 
+            transparent: true, 
+            opacity: 0.5,
+            polygonOffset: true,
+            polygonOffsetFactor: 1,
+            polygonOffsetUnits: 1
         });
-        const lineMaterial = new THREE.LineBasicMaterial({ color: 0x000000 });
+        
+        const lineMaterial = new THREE.LineBasicMaterial({ color: 0x000000, linewidth: 2 });
 
-        scene.add(new THREE.AmbientLight(0xffffff, 0.8));
+        scene.add(new THREE.AmbientLight(0xffffff, 0.7));
         const light = new THREE.DirectionalLight(0xffffff, 0.5);
-        light.position.set(10, 10, 10);
+        light.position.set(10, 20, 10);
         scene.add(light);
 
         const rad82 = 82 * Math.PI / 180;
@@ -100,10 +73,9 @@
             P: new THREE.Vector3(0, 0, 0),
             S: new THREE.Vector3(10, 0, 0),
             Q: new THREE.Vector3(12 * Math.cos(rad82), 12 * Math.sin(rad82), 0),
-            R: new THREE.Vector3(18, 5, 0)
+            R: new THREE.Vector3(16, 6, 0)
         };
 
-        let mesh, wireframe;
         let labels = {};
 
         function createLabel(text) {
@@ -122,14 +94,14 @@
                 const vector = pts[key].clone().project(camera);
                 labels[key].style.left = (vector.x * widthHalf + widthHalf) + 'px';
                 labels[key].style.top = (-(vector.y * heightHalf) + heightHalf) + 'px';
-                labels[key].style.display = vector.z < 1 ? 'block' : 'none';
+                labels[key].style.display = (vector.z < 1) ? 'block' : 'none';
             }
         }
 
         function drawQuadrilateral() {
-            if (mesh) scene.remove(mesh);
-            if (wireframe) scene.remove(wireframe);
-            for (let key in labels) labels[key].remove();
+            // Clear old objects
+            scene.children.filter(c => c.type === "Mesh" || c.type === "LineSegments").forEach(c => scene.remove(c));
+            Object.values(labels).forEach(l => l.remove());
 
             const vertices = new Float32Array([
                 pts.P.x, pts.P.y, pts.P.z, pts.S.x, pts.S.y, pts.S.z, pts.Q.x, pts.Q.y, pts.Q.z,
@@ -138,23 +110,29 @@
 
             const geom = new THREE.BufferGeometry();
             geom.setAttribute('position', new THREE.BufferAttribute(vertices, 3));
-            mesh = new THREE.Mesh(geom, material);
-            wireframe = new THREE.LineSegments(new THREE.EdgesGeometry(geom), lineMaterial);
+            
+            const mesh = new THREE.Mesh(geom, material);
+            const wireframe = new THREE.LineSegments(new THREE.EdgesGeometry(geom), lineMaterial);
             
             scene.add(mesh, wireframe);
 
             labels = { P: createLabel('P'), Q: createLabel('Q'), R: createLabel('R'), S: createLabel('S') };
-            controls.target.set(8, 4, 0);
+            controls.target.set(8, 3, 0);
             controls.update();
         }
 
         function animate() {
             requestAnimationFrame(animate);
-            controls.update();
             updateLabels();
             renderer.render(scene, camera);
         }
         animate();
+
+        window.addEventListener('resize', () => {
+            camera.aspect = container.clientWidth / container.clientHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(container.clientWidth, container.clientHeight);
+        });
     </script>
 </body>
 </html>
