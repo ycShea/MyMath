@@ -21,5 +21,5 @@ teaching/
         │   └── index.html            <-- Step-by-Step Worked Examples
         ├── exercises/
         │   └── index.html            <-- Practice Problems for Students
-        └── explanation/
+        └── explanations/
             └── index.html            <-- Deep-dive Problem Explanations
