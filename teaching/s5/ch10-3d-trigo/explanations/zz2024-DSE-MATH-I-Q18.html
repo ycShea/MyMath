@@ -310,8 +310,9 @@
         // toggle(id)
         // handleToggle(type)
         // resetCamera()
-        // drawAngleArc(p1, vertex, p2, labelText = "", radius = 2, color = 0xff0000)
         // drawLines(linePairs)
+        // drawLineLabels(p1, p2, labelText = "")
+        // drawAngleArc(p1, vertex, p2, labelText = "", radius = 2, color = 0xff0000)
         // drawRightAngle(p1, vertex, p2, size = 1.0)
         // setupLabels(labelMap)
         // createPolygon(points, color = 0x0d6efd)
@@ -355,6 +356,24 @@
                     .multiplyScalar(this.radius)
                     .add(this.vertex);
             }
+        }
+
+        function drawLines(linePairs) {
+            const matLine = new THREE.LineBasicMaterial({ color: 0x333333, linewidth: 2 });
+            linePairs.forEach(pair => {
+                const geometry = new THREE.BufferGeometry().setFromPoints(pair);
+                const line = new THREE.Line(geometry, matLine);
+                scene.add(line);
+            });
+        }
+
+        function drawLineLabels(p1, p2, labelText = "") {
+            const midPoint = new THREE.Vector3().addVectors(p1, p2).multiplyScalar(0.5);
+            const labelDiv = makeLabel(labelText);
+            
+            const labelKey = "lineLabel_" + Math.random().toString(36).substr(2, 9);
+            V[labelKey] = midPoint;
+            activeLabels[labelKey] = labelDiv;
         }
         
         // 3D version of drawing arcs
@@ -413,15 +432,6 @@
             scene.add(arcLine);
         }*/
 
-        function drawLines(linePairs) {
-            const matLine = new THREE.LineBasicMaterial({ color: 0x333333, linewidth: 2 });
-            linePairs.forEach(pair => {
-                const geometry = new THREE.BufferGeometry().setFromPoints(pair);
-                const line = new THREE.Line(geometry, matLine);
-                scene.add(line);
-            });
-        }
-        
         function drawRightAngle(p1, vertex, p2, size = 1.0) {
             const d1 = new THREE.Vector3().subVectors(p1, vertex).normalize().multiplyScalar(size);
             const d2 = new THREE.Vector3().subVectors(p2, vertex).normalize().multiplyScalar(size);
