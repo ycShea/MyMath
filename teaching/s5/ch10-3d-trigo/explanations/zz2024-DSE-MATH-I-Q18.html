@@ -262,10 +262,23 @@
             });
             const angleQPS = drawAngleArc(V.Q, V.P, V.S, "82°", 0.5)
             const angleQRS = drawAngleArc(V.Q, V.Ra, V.S, "65°", 0.5)
-            ["P", "Q", "R", "S"].forEach(name => {
+
+            // Corrected Label Assignment for Part A
+            activeLabels["P"] = makeLabel("P");
+            activeLabels["Q"] = makeLabel("Q");
+            activeLabels["R"] = makeLabel("R");
+            activeLabels["S"] = makeLabel("S");
+
+            // Ensure V contains the active positions for the animate loop
+            V["P"] = V.P;
+            V["Q"] = V.Q;
+            V["R"] = V.Ra;
+            V["S"] = V.S;
+            
+/*            ["P", "Q", "R", "S"].forEach(name => {
                 V[name] = V[name === "R" ? "Ra" : name]; // Point "R" to "Ra"
                 activeLabels[name] = makeLabel(name);
-            });
+            });*/
 //            ["P", "Q", "S"].forEach(name => activeLabels[name] = makeLabel(name));
 //            activeLabels["R"] = makeLabel("R");
 //            V.currentR = V.Ra;
