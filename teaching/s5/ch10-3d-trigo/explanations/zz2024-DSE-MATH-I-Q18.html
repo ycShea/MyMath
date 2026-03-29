@@ -5,6 +5,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>2024 DSE Paper I Q18 Solution</title>
+
+    <!-------------------------->
+    <!-- CSS at the beginning -->
+    <!-------------------------->
     <style>
         body, html { margin: 0; padding: 0; height: 100%; overflow: hidden; font-family: 'Segoe UI', sans-serif; }
         .split-container { display: flex; height: 100vh; }
@@ -50,14 +54,24 @@
         .dev-marker { color: #cc0000; font-size: 0.85rem; font-weight: bold; margin-bottom: 5px; display: block; }
     </style>
 
+    <!-------------------------->
+    <!-- MathJax at beginning -->
+    <!-------------------------->
     <script>
         window.MathJax = { tex: { inlineMath: [['$', '$'], ['\\(', '\\)']], displayMath: [['$$', '$$']] } };
     </script>
     <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
+    <!--------------------------->
+    <!-- three.js at beginning -->
+    <!--------------------------->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
 </head>
 <body>
-
+    
     <div class="split-container">
+        <!-- This container holds the 3D scene and an interactive UI overlay for camera tracking and resetting. -->
         <div class="canvas-side" id="threejs-container">
             <div id="ui-overlay">
                 <div id="debug-info"></div>
@@ -65,6 +79,7 @@
             </div>
         </div>
 
+        <!-- This section contains the scrollable problem text, interactive solution toggles, and MathJax-rendered (渲染) formulas. -->
         <div class="content-side">
             <a href="index.html" style="text-decoration: none; color: #007bff;">← Back to List</a>
             <h1>2024 DSE Paper I Q18</h1>
@@ -102,7 +117,7 @@
                 </div>
             </div>
 
-            <hr style="margin: 30px 0; border: 0; border-top: 1px solid #ddd;">
+            <!-- <hr style="margin: 30px 0; border: 0; border-top: 1px solid #ddd;"> -->
 
             <div class="question-summary">
                 <p class="dev-marker">Question Summary 2/2 (UpdateForNewExercise) Delete this before released.</p>
@@ -142,12 +157,10 @@
         </div>
     </div>
 
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
-
     <script>
         let currentFigure = null;
 
+        // This function toggles (切換) the visibility of solution elements and triggers MathJax to render any LaTeX formulas when they are revealed.
         function toggle(id) {
             const el = document.getElementById(id);
             const isHidden = (el.style.display === 'none' || el.style.display === '');
@@ -155,6 +168,8 @@
             if (isHidden && window.MathJax) { MathJax.typesetPromise([el]); }
         }
 
+        // This function switches between parts a and b by clearing the scene, toggling button text, and adjusting camera controls based on the selected part.
+        // (UpdateForNewExercise)
         function handleToggle(type) {
             const btnA = document.getElementById('btn-figA');
             const btnB = document.getElementById('btn-figB');
@@ -187,6 +202,7 @@
             }
         }
 
+        // This block initializes the Three.js scene, camera, renderer, and orbit controls to set up the 3D environment.
         const container = document.getElementById('threejs-container');
         const scene = new THREE.Scene();
         scene.background = new THREE.Color(0xf0f2f5);
@@ -200,11 +216,11 @@
 
         scene.add(new THREE.AmbientLight(0xffffff, 1.0));
 
+        // Definition of points (UpdateForNewExercise)
         const scale = 0.6; 
         const rad82 = 82 * Math.PI / 180;
         const rad80 = 80 * Math.PI / 180;
 
-        // Definition of objects (UpdateForNewExercise)
         // Vertices for Part A
         const V = {
             P: new THREE.Vector3(0, 0, 0),
@@ -228,31 +244,7 @@
 
         let activeLabels = {};
 
-        function makeLabel(text) {
-            const div = document.createElement('div');
-            div.className = 'label';
-            div.textContent = text;
-            container.appendChild(div);
-            return div;
-        }
-
-        function clearScene() {
-            scene.children.filter(c => c.type === "Mesh" || c.type === "Line").forEach(c => scene.remove(c));
-            Object.values(activeLabels).forEach(l => l.remove());
-            activeLabels = {};
-        }
-
-        function createTriangle(p1, p2, p3, color) {
-            const geom = new THREE.BufferGeometry().setFromPoints([p1, p2, p3]);
-            geom.setIndex([0, 1, 2]);
-            const mesh = new THREE.Mesh(geom, new THREE.MeshBasicMaterial({ 
-                color, side: THREE.DoubleSide, transparent: true, opacity: 0.4,
-                depthTest: false, depthWrite: false
-            }));
-            mesh.renderOrder = 1;
-            scene.add(mesh);
-        }
-
+        // Draw figures in parts A and B (UpdateForNewExercise)
         function drawFigureA() {
             // (UpdateForNewExercise) 
             const lines = [[V.P, V.Q], [V.Q, V.Ra], [V.Ra, V.S], [V.S, V.P], [V.Q, V.S]];
@@ -283,12 +275,38 @@
             V.currentR = V.Rb;
         }
 
+        // Camera setting (UpdateForNewExercise)
         function resetCamera() {
             camera.position.set(0, 0, 20);
             controls.target.set(5, 4, -3);
             controls.update();
         }
 
+        function makeLabel(text) {
+            const div = document.createElement('div');
+            div.className = 'label';
+            div.textContent = text;
+            container.appendChild(div);
+            return div;
+        }
+
+        function clearScene() {
+            scene.children.filter(c => c.type === "Mesh" || c.type === "Line").forEach(c => scene.remove(c));
+            Object.values(activeLabels).forEach(l => l.remove());
+            activeLabels = {};
+        }
+
+        function createTriangle(p1, p2, p3, color) {
+            const geom = new THREE.BufferGeometry().setFromPoints([p1, p2, p3]);
+            geom.setIndex([0, 1, 2]);
+            const mesh = new THREE.Mesh(geom, new THREE.MeshBasicMaterial({ 
+                color, side: THREE.DoubleSide, transparent: true, opacity: 0.4,
+                depthTest: false, depthWrite: false
+            }));
+            mesh.renderOrder = 1;
+            scene.add(mesh);
+        }
+        
         function animate() {
             requestAnimationFrame(animate);
             controls.update(); 
