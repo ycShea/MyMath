@@ -246,9 +246,7 @@
 
         // Draw figures in parts A and B (UpdateForNewExercise)
         function drawFigureA() {
-            // (UpdateForNewExercise)
-            
-            // Set R specifically for Part A
+            // Set R specifically for Part a
             V.R = V.Ra;
             
             const lines = [[V.P, V.Q], [V.Q, V.R], [V.R, V.S], [V.S, V.P]];
@@ -260,9 +258,9 @@
             drawLines(lines);
 
             const angleQPS = drawAngleArc(V.Q, V.P, V.S, "82°", 0.5)
-            const angleQRS = drawAngleArc(V.Q, V.Ra, V.S, "65°", 0.5)
+            const angleQRS = drawAngleArc(V.Q, V.R, V.S, "65°", 0.5)
 
-            // Corrected Label Assignment for Part A
+            // Corrected Label Assignment for Part a
             activeLabels["P"] = makeLabel("P");
             activeLabels["Q"] = makeLabel("Q");
             activeLabels["R"] = makeLabel("R");
@@ -273,29 +271,23 @@
             V["Q"] = V.Q;
             V["R"] = V.R;
             V["S"] = V.S;
-            
-/*            ["P", "Q", "R", "S"].forEach(name => {
-                V[name] = V[name === "R" ? "Ra" : name]; // Point "R" to "Ra"
-                activeLabels[name] = makeLabel(name);
-            });*/
-//            ["P", "Q", "S"].forEach(name => activeLabels[name] = makeLabel(name));
-//            activeLabels["R"] = makeLabel("R");
-//            V.currentR = V.Ra;
+
         }
 
         function drawFigureB() {
             // (UpdateForNewExercise) 
-            const lines = [[V.P, V.Q], [V.Q, V.Rb], [V.Rb, V.S], [V.S, V.P], [V.Q, V.S]];
+            // Set R specifically for Part b
+            V.R = V.Rb;
+            
+            const lines = [[V.P, V.Q], [V.Q, V.R], [V.R, V.S], [V.S, V.P], [V.Q, V.S]];
             const matLine = new THREE.LineBasicMaterial({ color: 0x333333, linewidth: 2 });
             createPolygon([V.P, V.S, V.Q], 0x0d6efd); // replace: createTriangle(V.P, V.S, V.Q, 0x0d6efd);
             // Different color for folded part
-            createPolygon([V.S, V.Rb, V.Q], 0x28a745); // replace: createTriangle(V.S, V.Rb, V.Q, 0x28a745);
+            createPolygon([V.S, V.R, V.Q], 0x28a745); // replace: createTriangle(V.S, V.Rb, V.Q, 0x28a745);
             
-            lines.forEach(pair => {
-                const line = new THREE.Line(new THREE.BufferGeometry().setFromPoints(pair), matLine);
-                scene.add(line);
-            });
-            // Corrected Label Assignment for Part A
+            drawLines(lines);
+            
+            // Corrected Label Assignment for Part b
             activeLabels["P"] = makeLabel("P");
             activeLabels["Q"] = makeLabel("Q");
             activeLabels["R"] = makeLabel("R");
