@@ -160,18 +160,9 @@
     <script>
         let currentFigure = null;
 
-        /*
-        setupLabels(labelMap)
-        drawLines(linePairs)
-        createPolygon(points, color)
-        drawAngleArc(p1, vertex, p2, labelText, radius, color)
-        drawRightAngle(p1, vertex, p2, size)
-        makeLabel(text)
-        clearScene()
-        handleToggle(type)
-        resetCamera()
-        animate()
-        */
+        // ==========================================
+        // TOGGLES BEWTEEN PARTS A AND B
+        // ==========================================
         
         // This function toggles (切換) the visibility of solution elements and triggers MathJax to render any LaTeX formulas when they are revealed.
         function toggle(id) {
@@ -215,6 +206,9 @@
             }
         }
 
+        // ==========================================
+        // INITIALIZATION
+        // ==========================================
         // This block initializes the Three.js scene, camera, renderer, and orbit controls to set up the 3D environment.
         const container = document.getElementById('threejs-container');
         const scene = new THREE.Scene();
@@ -229,7 +223,10 @@
 
         scene.add(new THREE.AmbientLight(0xffffff, 1.0));
 
-        // Definition of points (UpdateForNewExercise)
+        // ==========================================
+        // DEFINITION OF POINTS AND OBJECTS (UpdateForNewExercise)
+        // ==========================================
+        // Definition of points 
         const scale = 0.6; 
         const rad82 = 82 * Math.PI / 180;
         const rad80 = 80 * Math.PI / 180;
@@ -310,7 +307,7 @@
         // toggle(id)
         // handleToggle(type)
         // resetCamera()
-        // drawLines(linePairs)
+        // drawLines(linePairs, isSolid = true, color = 0x333333)
         // drawLineLabels(p1, p2, labelText = "")
         // drawAngleArc(p1, vertex, p2, labelText = "", radius = 2, color = 0xff0000)
         // drawRightAngle(p1, vertex, p2, size = 1.0)
@@ -358,11 +355,19 @@
             }
         }
 
-        function drawLines(linePairs) {
-            const matLine = new THREE.LineBasicMaterial({ color: 0x333333, linewidth: 2 });
+        function drawLines(linePairs, isSolid = true, color = 0x333333) {
+            const material = isSolid 
+                ? new THREE.LineBasicMaterial({ color: color, linewidth: 2 })
+                : new THREE.LineDashedMaterial({ color: color, dashSize: 0.5, gapSize: 0.2, linewidth: 2 });
+        
             linePairs.forEach(pair => {
                 const geometry = new THREE.BufferGeometry().setFromPoints(pair);
-                const line = new THREE.Line(geometry, matLine);
+                const line = new THREE.Line(geometry, material);
+                
+                if (!isSolid) {
+                    line.computeLineDistances();
+                }
+                
                 scene.add(line);
             });
         }
