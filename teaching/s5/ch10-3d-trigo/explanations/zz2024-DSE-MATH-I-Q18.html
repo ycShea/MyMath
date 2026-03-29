@@ -256,9 +256,9 @@
                 const line = new THREE.Line(new THREE.BufferGeometry().setFromPoints(pair), matLine);
                 scene.add(line);
             });
-            ["P", "Q", "S"].forEach(name => activeLabels[name] = makeLabel(name));
             const angleQPS = drawAngleArc(V.Q, V.P, V.S, "82°", 0.5)
             const angleQRS = drawAngleArc(V.Q, V.Ra, V.S, "65°", 0.5)
+            ["P", "Q", "S"].forEach(name => activeLabels[name] = makeLabel(name));
             activeLabels["R"] = makeLabel("R");
             V.currentR = V.Ra;
         }
@@ -447,7 +447,9 @@
             const widthHalf = container.clientWidth / 2;
             const heightHalf = container.clientHeight / 2;
             for (let key in activeLabels) {
-                let pos = V[key] || V.currentR;
+                let pos = V[key];
+                if (!pos) continue; // Skip if no position vector found
+                
                 const vector = pos.clone().project(camera);
                 if (vector.z < 1) {
                     const x = (vector.x * widthHalf) + widthHalf;
