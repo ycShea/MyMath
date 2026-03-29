@@ -256,8 +256,8 @@
                 const line = new THREE.Line(new THREE.BufferGeometry().setFromPoints(pair), matLine);
                 scene.add(line);
             });
-            const angleQPS = drawAngleArc(V.Q, V.P, V.S)
-            const angleQRS = drawAngleArc(V.Q, V.Ra, V.S)
+            const angleQPS = drawAngleArc(V.Q, V.P, V.S, "82°", 0.5)
+            const angleQRS = drawAngleArc(V.Q, V.Ra, V.S, "65°", 0.5)
             ["P", "Q", "S"].forEach(name => activeLabels[name] = makeLabel(name));
             activeLabels["R"] = makeLabel("R");
             V.currentR = V.Ra;
@@ -317,19 +317,32 @@
         }
         
         // 3D version of drawing arcs
-        function drawAngleArc(p1, vertex, p2, radius = 2, color = 0xff0000) {
+        function drawAngleArc(p1, vertex, p2, labelText = "", radius = 2, color = 0xff0000) {
             // 1. Initialize our custom 3D curve
             const arcCurve = new Arc3D(p1, vertex, p2, radius);
         
-            // 2. Get 50 points along the curve (Three.js runs the loop internally)
+            // 2. Get points along the curve
             const points = arcCurve.getPoints(50);
         
             // 3. Create the geometry and line
             const geometry = new THREE.BufferGeometry().setFromPoints(points);
             const material = new THREE.LineBasicMaterial({ color: color, linewidth: 2 });
             const arcLine = new THREE.Line(geometry, material);
-        
             scene.add(arcLine);
+        
+            // 4. Add the Label at the midpoint
+            if (labelText) {
+                // Calculate the midpoint (t = 0.5)
+                const midPoint = arcCurve.getPoint(0.5);
+                
+                // Create the label element
+                const labelDiv = makeLabel(labelText);
+                
+                // Assign a unique key so the animate() loop can track this 3D position
+                const labelKey = "label_" + Math.random().toString(36).substr(2, 9);
+                V[labelKey] = midPoint; 
+                activeLabels[labelKey] = labelDiv;
+            }
         }
 
         /* 2D version
