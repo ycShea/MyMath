@@ -270,9 +270,10 @@
 
             drawLines(lines);
 
-            const angleQPS = drawAngleArc(V.Q, V.P, V.S, "82°", 0.5)
-            const angleQRS = drawAngleArc(V.Q, V.R, V.S, "65°", 0.5)
+            const angleQPS = drawAngleArc(V.Q, V.P, V.S, "82°", 1.0)
+            const angleQRS = drawAngleArc(V.Q, V.R, V.S, "65°", 1.0)
 
+            // Corrected Label Assignment for Part a
             setupLabels({
                 "P": V.P,
                 "Q": V.Q,
@@ -295,19 +296,31 @@
             drawLines(lines);
             
             // Corrected Label Assignment for Part b
-            activeLabels["P"] = makeLabel("P");
-            activeLabels["Q"] = makeLabel("Q");
-            activeLabels["R"] = makeLabel("R");
-            activeLabels["S"] = makeLabel("S");
-
-            // Ensure V contains the active positions for the animate loop
-            V["P"] = V.P;
-            V["Q"] = V.Q;
-            V["R"] = V.R;
-            V["S"] = V.S;
-            V.currentR = V.Rb;
+            setupLabels({
+                "P": V.P,
+                "Q": V.Q,
+                "R": V.R,
+                "S": V.S
+            });
         }
 
+        // ==========================================
+        // HELPER FUNCTIONS
+        // ==========================================
+        // toggle(id)
+        // handleToggle(type)
+        // resetCamera()
+        // drawAngleArc(p1, vertex, p2, labelText = "", radius = 2, color = 0xff0000)
+        // drawLines(linePairs)
+        // drawRightAngle(p1, vertex, p2, size = 1.0)
+        // setupLabels(labelMap)
+        // createPolygon(points, color = 0x0d6efd)
+        // createTriangle(p1, p2, p3, color = 0x0d6efd)
+        // handleToggle(type)
+        // clearScene()
+        // animate()
+        // ==========================================
+        
         // Camera setting (UpdateForNewExercise)
         function resetCamera() {
             camera.position.set(0, 0, 20);
@@ -441,15 +454,9 @@
                 V[name] = positionVec;
             }
         }
-        
-        function clearScene() {
-            scene.children.filter(c => c.type === "Mesh" || c.type === "Line").forEach(c => scene.remove(c));
-            Object.values(activeLabels).forEach(l => l.remove());
-            activeLabels = {};
-        }
 
         // A newer function than createTriangle()
-        function createPolygon(points, color) {
+        function createPolygon(points, color = 0x0d6efd) {
             const geom = new THREE.BufferGeometry().setFromPoints(points);
             
             // If 3 points, one triangle (0,1,2). If 4 points, two triangles (0,1,2 and 0,2,3)
@@ -469,7 +476,7 @@
         }
 
         // an older function
-        function createTriangle(p1, p2, p3, color) {
+        function createTriangle(p1, p2, p3, color = 0x0d6efd) {
             const geom = new THREE.BufferGeometry().setFromPoints([p1, p2, p3]);
             geom.setIndex([0, 1, 2]);
             const mesh = new THREE.Mesh(geom, new THREE.MeshBasicMaterial({ 
@@ -478,6 +485,12 @@
             }));
             mesh.renderOrder = 1;
             scene.add(mesh);
+        }
+
+        function clearScene() {
+            scene.children.filter(c => c.type === "Mesh" || c.type === "Line").forEach(c => scene.remove(c));
+            Object.values(activeLabels).forEach(l => l.remove());
+            activeLabels = {};
         }
         
         function animate() {
