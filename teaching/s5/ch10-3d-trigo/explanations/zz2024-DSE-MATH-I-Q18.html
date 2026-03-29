@@ -160,6 +160,19 @@
     <script>
         let currentFigure = null;
 
+        /*
+        setupLabels(labelMap)
+        drawLines(linePairs)
+        createPolygon(points, color)
+        drawAngleArc(p1, vertex, p2, labelText, radius, color)
+        drawRightAngle(p1, vertex, p2, size)
+        makeLabel(text)
+        clearScene()
+        handleToggle(type)
+        resetCamera()
+        animate()
+        */
+        
         // This function toggles (切換) the visibility of solution elements and triggers MathJax to render any LaTeX formulas when they are revealed.
         function toggle(id) {
             const el = document.getElementById(id);
@@ -260,18 +273,12 @@
             const angleQPS = drawAngleArc(V.Q, V.P, V.S, "82°", 0.5)
             const angleQRS = drawAngleArc(V.Q, V.R, V.S, "65°", 0.5)
 
-            // Corrected Label Assignment for Part a
-            activeLabels["P"] = makeLabel("P");
-            activeLabels["Q"] = makeLabel("Q");
-            activeLabels["R"] = makeLabel("R");
-            activeLabels["S"] = makeLabel("S");
-
-            // Ensure V contains the active positions for the animate loop
-            V["P"] = V.P;
-            V["Q"] = V.Q;
-            V["R"] = V.R;
-            V["S"] = V.S;
-
+            setupLabels({
+                "P": V.P,
+                "Q": V.Q,
+                "R": V.R,
+                "S": V.S
+            });
         }
 
         function drawFigureB() {
@@ -425,6 +432,16 @@
             return div;
         }
 
+        function setupLabels(labelMap) {
+            for (const [name, positionVec] of Object.entries(labelMap)) {
+                // 1. Create the DOM element and store in activeLabels
+                activeLabels[name] = makeLabel(name);
+                
+                // 2. Map the coordinate for the animate() loop projection
+                V[name] = positionVec;
+            }
+        }
+        
         function clearScene() {
             scene.children.filter(c => c.type === "Mesh" || c.type === "Line").forEach(c => scene.remove(c));
             Object.values(activeLabels).forEach(l => l.remove());
