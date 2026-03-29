@@ -246,10 +246,14 @@
 
         // Draw figures in parts A and B (UpdateForNewExercise)
         function drawFigureA() {
-            // (UpdateForNewExercise) 
-            const lines = [[V.P, V.Q], [V.Q, V.Ra], [V.Ra, V.S], [V.S, V.P], [V.Q, V.S]];
+            // (UpdateForNewExercise)
+            
+            // Set R specifically for Part A
+            V.R = V.Ra;
+            
+            const lines = [[V.P, V.Q], [V.Q, V.R], [V.R, V.S], [V.S, V.P]];
             const matLine = new THREE.LineBasicMaterial({ color: 0x333333, linewidth: 2 });
-            createPolygon([V.P, V.Q, V.Ra, V.S], 0x0d6efd);
+            createPolygon([V.P, V.Q, V.R, V.S], 0x0d6efd);
             // replace createTriangle(V.P, V.S, V.Q, 0x0d6efd);
             // replace createTriangle(V.S, V.Ra, V.Q, 0x0d6efd);
             lines.forEach(pair => {
@@ -258,9 +262,13 @@
             });
             const angleQPS = drawAngleArc(V.Q, V.P, V.S, "82°", 0.5)
             const angleQRS = drawAngleArc(V.Q, V.Ra, V.S, "65°", 0.5)
-            ["P", "Q", "S"].forEach(name => activeLabels[name] = makeLabel(name));
-            activeLabels["R"] = makeLabel("R");
-            V.currentR = V.Ra;
+            ["P", "Q", "R", "S"].forEach(name => {
+                V[name] = V[name === "R" ? "Ra" : name]; // Point "R" to "Ra"
+                activeLabels[name] = makeLabel(name);
+            });
+//            ["P", "Q", "S"].forEach(name => activeLabels[name] = makeLabel(name));
+//            activeLabels["R"] = makeLabel("R");
+//            V.currentR = V.Ra;
         }
 
         function drawFigureB() {
