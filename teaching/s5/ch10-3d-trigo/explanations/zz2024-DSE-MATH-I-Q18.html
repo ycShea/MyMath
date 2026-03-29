@@ -256,6 +256,8 @@
                 const line = new THREE.Line(new THREE.BufferGeometry().setFromPoints(pair), matLine);
                 scene.add(line);
             });
+            const angleQPS = drawAngleArc(V.Q, V.P, V.S)
+            const angleQRS = drawAngleArc(V.Q, V.Ra, V.S)
             ["P", "Q", "S"].forEach(name => activeLabels[name] = makeLabel(name));
             activeLabels["R"] = makeLabel("R");
             V.currentR = V.Ra;
@@ -285,6 +287,93 @@
             controls.update();
         }
 
+        // used in 3D version of drawAngleArc() 
+        class Arc3D extends THREE.Curve {
+            constructor(p1, vertex, p2, radius) {
+                super();
+                this.vertex = vertex;
+                this.radius = radius;
+        
+                // Create vectors from vertex to points
+                this.v1 = new THREE.Vector3().subVectors(p1, vertex).normalize();
+                this.v2 = new THREE.Vector3().subVectors(p2, vertex).normalize();
+        
+                // The 'axis' is the normal to the plane formed by p1, vertex, p2
+                this.axis = new THREE.Vector3().crossVectors(this.v1, this.v2).normalize();
+                
+                // Total interior angle
+                this.totalAngle = this.v1.angleTo(this.v2);
+            }
+        
+            // Three.js calls this internally to get points along the curve
+            getPoint(t, optionalTarget = new THREE.Vector3()) {
+                const currentAngle = t * this.totalAngle;
+                return optionalTarget
+                    .copy(this.v1)
+                    .applyAxisAngle(this.axis, currentAngle)
+                    .multiplyScalar(this.radius)
+                    .add(this.vertex);
+            }
+        }
+        
+        // 3D version of drawing arcs
+        function drawAngleArc(p1, vertex, p2, radius = 2, color = 0xff0000) {
+            // 1. Initialize our custom 3D curve
+            const arcCurve = new Arc3D(p1, vertex, p2, radius);
+        
+            // 2. Get 50 points along the curve (Three.js runs the loop internally)
+            const points = arcCurve.getPoints(50);
+        
+            // 3. Create the geometry and line
+            const geometry = new THREE.BufferGeometry().setFromPoints(points);
+            const material = new THREE.LineBasicMaterial({ color: color, linewidth: 2 });
+            const arcLine = new THREE.Line(geometry, material);
+        
+            scene.add(arcLine);
+        }
+
+        /* 2D version
+        function drawAngleArc(p1, vertex, p2, radius = 2, color = 0xff0000) {
+            // 1. Get directions from vertex to points p1 and p2
+            const vec1 = new THREE.Vector3().subVectors(p1, vertex).normalize();
+            const vec2 = new THREE.Vector3().subVectors(p2, vertex).normalize();
+        
+            // 2. Calculate the start and end angles in radians
+            const startAngle = Math.atan2(vec1.y, vec1.x);
+            let endAngle = Math.atan2(vec2.y, vec2.x);
+        
+            // 3. Create the curve
+            const curve = new THREE.EllipseCurve(
+                vertex.x, vertex.y,   // Center of the arc (Vertex Q)
+                radius, radius,       // X and Y radius
+                startAngle, endAngle, // Start and end rotation
+                false,                // Clockwise
+                0                     // Rotation of the ellipse itself
+            );
+        
+            const points = curve.getPoints(50);
+            const geometry = new THREE.BufferGeometry().setFromPoints(points);
+            const material = new THREE.LineBasicMaterial({ color: color });
+            const arcLine = new THREE.Line(geometry, material);
+            
+            scene.add(arcLine);
+        }*/
+
+        function drawRightAngle(p1, vertex, p2, size = 1.0) {
+            const d1 = new THREE.Vector3().subVectors(p1, vertex).normalize().multiplyScalar(size);
+            const d2 = new THREE.Vector3().subVectors(p2, vertex).normalize().multiplyScalar(size);
+            
+            const corner1 = vertex.clone().add(d1);
+            const corner2 = vertex.clone().add(d1).add(d2);
+            const corner3 = vertex.clone().add(d2);
+            
+            const geom = new THREE.BufferGeometry().setFromPoints([corner1, corner2, corner3]);
+            const line = new THREE.Line(geom, new THREE.LineBasicMaterial({ color: 0x000000 }));
+            line.visible = false;
+            scene.add(line);
+            return line;
+        }
+        
         function makeLabel(text) {
             const div = document.createElement('div');
             div.className = 'label';
