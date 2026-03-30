@@ -798,6 +798,13 @@
             // 1. Update the controls
             controls.update();
             
+            const debugBox = document.getElementById('debug-info');
+            if (debugBox) {
+                const cp = camera.position, ct = controls.target;
+                debugBox.innerHTML = `<b style="color:#0d6efd">TARGET:</b> x:${ct.x.toFixed(1)} y:${ct.y.toFixed(1)} z:${ct.z.toFixed(1)}<br>` +
+                                    `<b style="color:#198754">CAMERA:</b> x:${cp.x.toFixed(1)} y:${cp.y.toFixed(1)} z:${cp.z.toFixed(1)}`;
+            }
+            
             // 2. FORCE the camera to update its matrices immediately 
             // so the projection math uses current frame data
             camera.updateMatrixWorld();
