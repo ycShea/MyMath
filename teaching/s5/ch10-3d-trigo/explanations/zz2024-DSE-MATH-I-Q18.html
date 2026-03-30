@@ -240,7 +240,7 @@
                 if (Array.isArray(triangleKeys)) {
                     highlightTriangle(triangleKeys[currentStep]);
                 }
-                if (currentStep === 1) drawLineLabels(V.Q, V.S, "14.5");
+                if (containerId === "sol-aii") drawLineLabels(V.Q, V.S, "14.5");
                 
                 if (window.MathJax) MathJax.typesetPromise([steps[currentStep]]);
                 
