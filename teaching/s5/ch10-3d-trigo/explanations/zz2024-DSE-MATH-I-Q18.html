@@ -85,7 +85,7 @@
     <!--------------------------->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
-    <script src="https://unpkg.com/three@0.160.0/examples/js/controls/TrackballControls.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/TrackballControls.js"></script>
 </head>
 <body>
     
@@ -259,9 +259,12 @@
         }
         
         function highlightTriangle(type) {
-            // Clean up specifically the yellow highlights before adding a new one
             const toRemove = scene.children.filter(c => c.userData && c.userData.isStepHighlight);
-            toRemove.forEach(c => scene.remove(c));
+            toRemove.forEach(c => {
+                if (c.geometry) c.geometry.dispose();
+                if (c.material) c.material.dispose();
+                scene.remove(c);
+            });
             
             if (!type) return;
         
@@ -278,16 +281,19 @@
             geom.setIndex([0, 1, 2]);
             
             const mat = new THREE.MeshBasicMaterial({ 
-                color: 0xffeb3b, // Bright Yellow for the current step focus
+                color: 0xffeb3b, 
                 side: THREE.DoubleSide,
                 transparent: true,
                 opacity: 0.6,
-                depthTest: false // Ensures highlight is visible over base colors
+                // FIX: Remove depthTest: false. Use these 3 lines instead:
+                polygonOffset: true,
+                polygonOffsetFactor: -1,
+                polygonOffsetUnits: -1
             });
         
             const mesh = new THREE.Mesh(geom, mat);
             mesh.userData.isStepHighlight = true;
-            mesh.renderOrder = 999; // Ensure it draws last (on top)
+            mesh.renderOrder = 999; 
             scene.add(mesh);
         }
         
@@ -548,11 +554,7 @@
         function setCameraPartB() {
             camera.up.set(0, 0, -1);
             camera.position.set(15, -15, 10);
-            // controls.target.set(4, 3, 0);
-            // camera.position.set(0, 0, 20);
-            
-            // camera.position.set(15, -10, 12); // Low and to the right
-            // controls.target.set(4, 3, 0);   // Looking at the fold line
+            controls.target.set(6, 4, 0); // Centers the view on the fold area
             controls.update();
         }
 
@@ -756,12 +758,10 @@
         }
         
         function clearScene() {
-            // 1. Remove 3D Objects (Lines, Meshes, etc.)
-            // We loop backwards to avoid index shifting issues during removal
             for (let i = scene.children.length - 1; i >= 0; i--) {
                 const obj = scene.children[i];
                 if (obj.type !== 'AmbientLight' && obj.type !== 'DirectionalLight') {
-                    // Dispose of resources to prevent memory leaks
+                    // 2. Explicitly dispose of geometry and material here too
                     if (obj.geometry) obj.geometry.dispose();
                     if (obj.material) {
                         if (Array.isArray(obj.material)) {
@@ -774,14 +774,12 @@
                 }
             }
         
-            // 2. Remove HTML Labels from the DOM
             Object.values(activeLabels).forEach(l => {
                 if (l && l.parentNode) {
                     l.parentNode.removeChild(l);
                 }
             });
         
-            // 3. Reset the label tracking object
             activeLabels = {};
         }
         
