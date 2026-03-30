@@ -197,13 +197,20 @@
             const btn = document.getElementById(buttonId);
             let currentStep = parseInt(container.getAttribute('data-current-step'));
         
-            // Handle "Hide" logic
+            // --- MODIFIED HIDE LOGIC ---
             if (currentStep === steps.length && btn.textContent === "Hide Solution") {
                 container.style.display = 'none';
                 container.setAttribute('data-current-step', '0');
                 btn.textContent = "Show Step";
                 for (let s of steps) s.style.display = 'none';
-                clearHighlights();
+                
+                // Instead of just clearing, redraw the original figure state
+                clearScene(); 
+                if (currentFigure === 'A') {
+                    drawFigureA();
+                } else if (currentFigure === 'B') {
+                    drawFigureB();
+                }
                 return;
             }
         
@@ -231,34 +238,35 @@
         }
         
         function highlightTriangle(type) {
-            // 1. Remove ONLY existing highlights
-            scene.children.filter(c => c.userData.isHighlight).forEach(c => scene.remove(c));
+            // 1. Remove only previous STEP highlights (keep the base figure)
+            scene.children.filter(c => c.userData.isStepHighlight).forEach(c => scene.remove(c));
         
             if (!type) return;
         
-            // 2. Define the triangle vertices
+            // 2. Define vertices
             let pts;
             if (type === 'PQR') pts = [V.P, V.Q, V.R];
             else if (type === 'QRS') pts = [V.Q, V.R, V.S];
             else if (type === 'PRS') pts = [V.P, V.R, V.S];
             else if (type === 'PQS') pts = [V.P, V.Q, V.S];
+            else if (type === 'RQS') pts = [V.R, V.Q, V.S];
         
             if (!pts || !pts[0]) return;
         
-            // 3. Create the Highlight Mesh
+            // 3. Create Highlight Mesh
             const geom = new THREE.BufferGeometry().setFromPoints(pts);
             geom.setIndex([0, 1, 2]);
             const mat = new THREE.MeshBasicMaterial({ 
-                color: type === 'PQR' ? 0xffeb3b : (type === 'QRS' ? 0x4caf50 : 0xf44336),
+                color: 0xffeb3b, // Bright Yellow for active steps
                 side: THREE.DoubleSide,
                 transparent: true,
-                opacity: 0.5,
-                depthTest: true
+                opacity: 0.6,
+                depthTest: false // Ensures it shows over the base blue/green
             });
         
             const mesh = new THREE.Mesh(geom, mat);
-            mesh.userData.isHighlight = true;
-            mesh.position.z += 0.1; // Offset to prevent flickering (Z-fighting)
+            mesh.userData.isStepHighlight = true; // Mark this as a temporary highlight
+            mesh.renderOrder = 2; // Render on top of base figure
             scene.add(mesh);
         }
             
