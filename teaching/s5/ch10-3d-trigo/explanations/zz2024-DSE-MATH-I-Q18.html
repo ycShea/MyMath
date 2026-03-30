@@ -561,6 +561,9 @@
             camera.up.set(0, 0, -1);
             camera.position.set(15, -15, 10);
             controls.target.set(6, 4, 0); // Centers the view on the fold area
+            // Unlock for 3D exploration
+            controls.noRotate = false;
+            controls.noPan = false;
             controls.update();
         }
 
@@ -791,31 +794,41 @@
         
         function animate() {
             requestAnimationFrame(animate);
+            
+            // 1. Update the controls
             controls.update();
             
-            const debugBox = document.getElementById('debug-info');
-            if (debugBox) {
-                const cp = camera.position, ct = controls.target;
-                debugBox.innerHTML = `<b style="color:#0d6efd">TARGET:</b> x:${ct.x.toFixed(1)} y:${ct.y.toFixed(1)} z:${ct.z.toFixed(1)}<br>` +
-                                    `<b style="color:#198754">CAMERA:</b> x:${cp.x.toFixed(1)} y:${cp.y.toFixed(1)} z:${cp.z.toFixed(1)}`;
-            }
-            
-            // Update labels
+            // 2. FORCE the camera to update its matrices immediately 
+            // so the projection math uses current frame data
+            camera.updateMatrixWorld();
+            camera.matrixWorldInverse.copy(camera.matrixWorld).invert();
+            camera.projectionMatrixInverse.copy(camera.projectionMatrix).invert();
+        
+            // 3. Label Projection Logic
             const widthHalf = container.clientWidth / 2;
             const heightHalf = container.clientHeight / 2;
+            
             for (let key in activeLabels) {
                 let pos = V[key];
-                if (!pos) continue; // Skip if no position vector found
+                if (!pos) continue;
                 
+                // Use the updated camera state
                 const vector = pos.clone().project(camera);
+                
                 if (vector.z < 1) {
                     const x = (vector.x * widthHalf) + widthHalf;
                     const y = -(vector.y * heightHalf) + heightHalf;
+                    
                     activeLabels[key].style.display = 'block';
-                    activeLabels[key].style.left = `${Math.round(x)}px`;
-                    activeLabels[key].style.top = `${Math.round(y)}px`;
-                } else { activeLabels[key].style.display = 'none'; }
+                    // Use transform: translate for smoother movement than top/left
+                    activeLabels[key].style.transform = `translate(-50%, -50%)`;
+                    activeLabels[key].style.left = `${x}px`;
+                    activeLabels[key].style.top = `${y}px`;
+                } else { 
+                    activeLabels[key].style.display = 'none'; 
+                }
             }
+            
             renderer.render(scene, camera);
         }
 
