@@ -539,8 +539,7 @@
         
         // The "3D Perspective" View for Part B (Matching your image)
         function setCameraPartB() {
-            const centroid = P.clone().add(Q).add(S).divideScalar(3);
-            controls.target.copy(centroid);
+            controls.target.set(4, 3, 0);
             camera.position.set(0, 0, 20);
             // camera.position.set(15, -10, 12); // Low and to the right
             // controls.target.set(4, 3, 0);   // Looking at the fold line
