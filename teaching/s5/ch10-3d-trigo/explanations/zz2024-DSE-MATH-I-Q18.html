@@ -5,7 +5,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>2024 DSE Paper I Q18 Solution</title>                                                <!-- (UpdateForNewExercise) Questions -->
-
     <!-------------------------->
     <!-- CSS at the beginning -->
     <!-------------------------->
@@ -25,7 +24,6 @@
             background: #fd7e14; color: white; border: none; padding: 8px; 
             width: 100%; border-radius: 4px; cursor: pointer; font-weight: bold; margin-top: 10px; 
         }
-
         .label {
             position: absolute; background: transparent; color: #000; font-weight: bold;
             font-size: 26px; pointer-events: none; z-index: 100;
@@ -33,7 +31,6 @@
             transform: translate(-50%, -50%);
             display: none; 
         }
-
         .question-summary { 
             background: #eef6ff; 
             padding: 15px; 
@@ -43,14 +40,12 @@
             margin-bottom: 20px; 
             border: 1px dashed #007bff;
         }
-        
         .final-ans {
             font-weight: bold;
             border-left: 3px solid #007bff;
             padding-left: 10px;
             margin-top: 10px;
         }
-        
         .full-question-popup {
             display: none; 
             background: white; 
@@ -63,14 +58,12 @@
             width: 100%;       /* Match the parent container width */
             box-sizing: border-box; /* Include padding in the width calculation */
         }
-        
         .full-question-popup img {
             display: block; 
             width: 100%;       /* Force image to fill the popup width */
             height: auto;      /* Maintain aspect ratio */
             border-radius: 4px;
         }
-
         .part-container { margin-bottom: 15px; border: 1px solid #eee; border-radius: 8px; overflow: hidden; }
         .part-header { display: flex; justify-content: space-between; align-items: center; padding: 12px 20px; background: #fafafa; }
         .solution-content { display: none; padding: 20px; background: #fff; border-top: 1px solid #eee; }
@@ -108,23 +101,25 @@
         <div class="content-side">
             <a href="index.html" style="text-decoration: none; color: #007bff;">← Back to List</a>
             <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
-                <h1>2024 DSE Paper I Q18</h1>                                                          <!-- (UpdateForNewExercise) Questions -->
+                <h1>2024 DSE Paper I Q18</h1>                                                             <!-- (UpdateForNewExercise) Questions Number -->
                 <button id="btn-view-q" class="btn-show" onclick="toggleQuestion('full-q-popup', 'btn-view-q')">View Full Question 📄</button>
             </div>
             <div id="full-q-popup" class="full-question-popup">
-                <img src="questions-images/2024 DSE-MATH-I Q18.png" alt="2024 DSE Q18 Diagram">        <!-- (UpdateForNewExercise) Questions Image -->
+                <img src="questions-images/2024 DSE-MATH-I Q18.png" alt="2024 DSE Q18 Diagram">           <!-- (UpdateForNewExercise) Questions Image -->
             </div>
             <!-------------------------->
             <!-- Question of part (a) -->
             <!-------------------------->
-            <div class="question-summary">
-                <p class="dev-marker">Question Summary 1/2 (UpdateForNewExercise) Delete this before released.</p>
+            <div class="question-summary">                                                                <!-- (UpdateForNewExercise) Questions part a -->
                 <strong>PQRS a quadrilateral, where $PQ = 12\text{ cm}$, $PS = 10\text{ cm}$, $QR = 13\text{ cm}$, $\angle QPS = 82^\circ$ and $\angle QRS = 65^\circ$.</strong>
-                <div style="margin-top: 10px; display: flex; align-items: center; gap: 15px;">
-                    <button id="btn-figA" class="btn-show" onclick="handleToggle('A')">Show Figure</button>
-                    <div id="part-a-footer" style="display: none; background: #fff3cd; padding: 5px 12px; border-radius: 5px; border: 1px solid #ffeeba; font-size: 0.9rem;">
-                        <strong>Note:</strong> You are viewing the 2D layout.
+                <div style="margin-top: 10px; display: flex; align-items: center; justify-content: space-between; gap: 15px;">
+                    <div style="display: flex; align-items: center; gap: 15px;">
+                        <button id="btn-figA" class="btn-show" onclick="handleToggle('A')">Show Figure</button>
+                        <div id="part-a-footer" style="display: none; background: #fff3cd; padding: 5px 12px; border-radius: 5px; border: 1px solid #ffeeba; font-size: 0.9rem; white-space: nowrap;">
+                            <strong>Note:</strong> You are viewing the 2D layout.
+                        </div>
                     </div>
+                    <button class="btn-show" style="background: #6c757d;" onclick="showAnswersOnly()">Show Answers Only</button>
                 </div>
             </div>
 
@@ -711,6 +706,40 @@
             scene.add(mesh);
         }
 
+        function showAnswersOnly() {
+            // 1. Find all solution containers
+            const containers = document.querySelectorAll('.solution-content');
+            
+            containers.forEach(container => {
+                // Ensure the container itself is visible
+                container.style.display = 'block';
+                
+                // 2. Find all steps within this container
+                const steps = container.getElementsByClassName('step');
+                
+                for (let s of steps) {
+                    if (s.classList.contains('final-ans')) {
+                        s.style.display = 'block'; // Show the answer
+                    } else {
+                        s.style.display = 'none';  // Hide the calculation step
+                    }
+                }
+                
+                // 3. Update the "Show Step" button text if it exists
+                const btnId = container.id.replace('sol-', 'btn-');
+                const btn = document.getElementById(btnId);
+                if (btn) {
+                    btn.textContent = "Show Step";
+                    btn.disabled = false;
+                    btn.style.opacity = "1";
+                    container.setAttribute('data-current-step', '0');
+                }
+            });
+        
+            // 4. Trigger MathJax to ensure formulas are rendered
+            if (window.MathJax) MathJax.typeset();
+        }
+        
         function clearScene() {
             // scene.children.filter(c => c.type === "Mesh" || c.type === "Line").forEach(c => scene.remove(c));
             Object.values(activeLabels).forEach(l => l.remove());
