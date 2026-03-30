@@ -49,8 +49,18 @@
             padding-left: 10px;
             margin-top: 10px;
         }
-        .question-summary:hover .full-question-popup { display: block; }
-        .full-question-popup img { display: block; max-width: 100%; height: auto; margin: 15px 0; border: 1px solid #ddd; border-radius: 4px; }
+        
+        /* Update this class */
+        .full-question-popup {
+            display: none; 
+            background: white; 
+            border: 1px solid #ccc; 
+            padding: 20px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2); 
+            z-index: 100; 
+            border-radius: 8px;
+            margin-bottom: 20px; /* Add space below the image */
+        }
 
         .part-container { margin-bottom: 15px; border: 1px solid #eee; border-radius: 8px; overflow: hidden; }
         .part-header { display: flex; justify-content: space-between; align-items: center; padding: 12px 20px; background: #fafafa; }
@@ -88,7 +98,13 @@
         <!-- This section contains the scrollable problem text, interactive solution toggles, and MathJax-rendered (渲染) formulas. -->
         <div class="content-side">
             <a href="index.html" style="text-decoration: none; color: #007bff;">← Back to List</a>
-            <h1>2024 DSE Paper I Q18</h1>
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+                <h1>2024 DSE Paper I Q18</h1>                                        <!-- (UpdateForNewExercise) Questions part ai -->
+                <button class="btn-show" onclick="toggle('full-q-image')">View Full Question 🖼️</button>
+            </div>
+            <div id="full-q-image" style="display:none; margin-bottom: 20px;">
+                <img src="questions-images/2024 DSE-MATH-I Q18.png" style="width:100%; border: 1px solid #ddd; border-radius: 8px;">
+            </div>
 
             <!-------------------------->
             <!-- Question of part (a) -->
@@ -96,9 +112,6 @@
             <div class="question-summary">
                 <p class="dev-marker">Question Summary 1/2 (UpdateForNewExercise) Delete this before released.</p>
                 <strong>PQRS a quadrilateral, where $PQ = 12\text{ cm}$, $PS = 10\text{ cm}$, $QR = 13\text{ cm}$, $\angle QPS = 82^\circ$ and $\angle QRS = 65^\circ$.</strong>
-                <div class="full-question-popup">
-                    <img src="questions-images/2024 DSE-MATH-I Q18.png" alt="2024 DSE Q18 Diagram">
-                </div>
                 <div style="margin-top:10px;">
                     <button id="btn-figA" class="btn-show" onclick="handleToggle('A')">Show Figure</button>
                 </div>
@@ -155,9 +168,6 @@
             <div class="question-summary">
                 <p class="dev-marker">Question Summary 2/2 (UpdateForNewExercise) Delete this before released.</p>
                 <strong>The metal sheet $PQRS$ is now folded along $QS$. It is given that the angle between plane $PQS$ and plane $QRS$ is $80^\circ$.</strong>
-                <div class="full-question-popup">
-                    <img src="questions-images/2024 DSE-MATH-I Q18.png" alt="2024 DSE Q18 Diagram">
-                </div>
                 <div style="margin-top:10px;">
                     <button id="btn-figB" class="btn-show" onclick="handleToggle('B')">Show Figure</button>
                 </div>
