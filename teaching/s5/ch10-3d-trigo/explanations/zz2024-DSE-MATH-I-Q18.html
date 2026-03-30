@@ -240,9 +240,12 @@
                     const currentKey = triangleKeys[currentStep];
                     highlightTriangle(currentKey);
                 
-                    // Specific logic for Part Aii, Step 2 (showing label 14.5)
                     if (containerId === 'sol-aii' && currentStep === 1 && currentKey === 'RQS') {
-                        drawLineLabels(V.Q, V.S, "14.5");
+                        // Give it a unique 'stepLabel_' prefix so highlightTriangle can find and kill it later
+                        const midPoint = new THREE.Vector3().addVectors(V.Q, V.S).multiplyScalar(0.5);
+                        const labelKey = "stepLabel_QS"; 
+                        V[labelKey] = midPoint;
+                        activeLabels[labelKey] = makeLabel("14.5");
                     }
                 }
                 
@@ -265,12 +268,24 @@
         }
         
         function highlightTriangle(type) {
-            const toRemove = scene.children.filter(c => c.userData && c.userData.isStepHighlight);
-            toRemove.forEach(c => {
-                if (c.geometry) c.geometry.dispose();
-                if (c.material) c.material.dispose();
-                scene.remove(c);
-            });
+            // SAFE REMOVAL: Use reverse loop to prevent skipping objects
+            for (let i = scene.children.length - 1; i >= 0; i--) {
+                const obj = scene.children[i];
+                if (obj.userData && obj.userData.isStepHighlight) {
+                    if (obj.geometry) obj.geometry.dispose();
+                    if (obj.material) obj.material.dispose();
+                    scene.remove(obj);
+                }
+            }
+            
+            // ALSO CLEAR LABELS tagged as highlights
+            for (let key in activeLabels) {
+                if (key.startsWith("stepLabel_")) {
+                    const label = activeLabels[key];
+                    if (label && label.parentNode) label.parentNode.removeChild(label);
+                    delete activeLabels[key];
+                }
+            }
             
             if (!type) return;
         
@@ -291,9 +306,8 @@
                 side: THREE.DoubleSide,
                 transparent: true,
                 opacity: 0.6,
-                // FIX: Remove depthTest: false. Use these 3 lines instead:
                 polygonOffset: true,
-                polygonOffsetFactor: -4,
+                polygonOffsetFactor: -4, // -4 is safer than -1 to prevent flicker
                 polygonOffsetUnits: -4
             });
         
