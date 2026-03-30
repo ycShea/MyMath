@@ -92,13 +92,9 @@
     <div class="split-container">
         <!-- This container holds the 3D scene and an interactive UI overlay for camera tracking and resetting. -->
         <div class="canvas-side" id="threejs-container">
-            <div id="ui-overlay" style="position: absolute; z-index: 100; pointer-events: none; width: 100%; height: 100%;">
-                <div id="debug-info" style="position: absolute; top: 10px; left: 10px; background: rgba(255,255,255,0.8); padding: 10px; border-radius: 5px; font-family: monospace; pointer-events: none; color: #333; line-height: 1.4; border: 1px solid #ccc;">
-                    Loading coordinates...
-                </div>
-                <button id="reset-cam-btn" onclick="resetCamera()" style="position: absolute; bottom: 10px; right: 10px; pointer-events: auto;">
-                    Reset Camera 🎥
-                </button>
+            <div id="ui-overlay">
+                <div id="debug-info"></div>
+                <button id="reset-cam-btn" onclick="resetCamera()">Reset Camera 🎥</button>
             </div>
         </div>
 
@@ -798,30 +794,41 @@
         
         function animate() {
             requestAnimationFrame(animate);
+            
+            // 1. Update the controls
             controls.update();
             
-            const debugBox = document.getElementById('debug-info');
-            if (debugBox) {
-                // Use the actual camera and controls objects directly to avoid scope issues
-                const cp = camera.position;
-                const ct = controls.target;
+            // 2. FORCE the camera to update its matrices immediately 
+            // so the projection math uses current frame data
+            camera.updateMatrixWorld();
+            camera.matrixWorldInverse.copy(camera.matrixWorld).invert();
+            camera.projectionMatrixInverse.copy(camera.projectionMatrix).invert();
+        
+            // 3. Label Projection Logic
+            const widthHalf = container.clientWidth / 2;
+            const heightHalf = container.clientHeight / 2;
+            
+            for (let key in activeLabels) {
+                let pos = V[key];
+                if (!pos) continue;
                 
-                debugBox.innerHTML = `
-                    <div style="margin-bottom: 5px;">
-                        <b style="color:#0d6efd">TARGET:</b> 
-                        X: ${ct.x.toFixed(2)} | Y: ${ct.y.toFixed(2)} | Z: ${ct.z.toFixed(2)}
-                    </div>
-                    <div>
-                        <b style="color:#198754">CAMERA:</b> 
-                        X: ${cp.x.toFixed(2)} | Y: ${cp.y.toFixed(2)} | Z: ${cp.z.toFixed(2)}
-                    </div>
-                    <div style="margin-top: 5px; font-size: 0.8em; color: #666;">
-                        Figure: ${currentFigure || 'None'}
-                    </div>
-                `;
+                // Use the updated camera state
+                const vector = pos.clone().project(camera);
+                
+                if (vector.z < 1) {
+                    const x = (vector.x * widthHalf) + widthHalf;
+                    const y = -(vector.y * heightHalf) + heightHalf;
+                    
+                    activeLabels[key].style.display = 'block';
+                    // Use transform: translate for smoother movement than top/left
+                    activeLabels[key].style.transform = `translate(-50%, -50%)`;
+                    activeLabels[key].style.left = `${x}px`;
+                    activeLabels[key].style.top = `${y}px`;
+                } else { 
+                    activeLabels[key].style.display = 'none'; 
+                }
             }
             
-            // ... rest of your label and render logic ...
             renderer.render(scene, camera);
         }
 
