@@ -427,30 +427,27 @@
         // DEFINITION OF POINTS AND OBJECTS (UpdateForNewExercise)
         // ==========================================
         // Definition of points 
-        const scale = 0.6; 
-        const rad82 = 82 * Math.PI / 180;
-        const rad80 = 80 * Math.PI / 180;
-
+        const scale = 0.6;
+        const degToRad = (deg) => deg * Math.PI / 180;
+        
+        const rad82 = degToRad(82);
+        const rad80 = degToRad(80);
+        const rad84 = degToRad(84);
+        
         // Vertices for Part A
         const V = {
             P: new THREE.Vector3(0, 0, 0),
-            S: new THREE.Vector3(10 * scale, 0, 0),
-            Q: new THREE.Vector3(12 * scale * Math.cos(rad82), 12 * scale * Math.sin(rad82), 0)
+            Q: new THREE.Vector3(12 * scale, 0, 0),
+            S: new THREE.Vector3(10 * scale * Math.cos(rad82), 10 * scale * Math.sin(rad82), 0)
         };
         // R for Part A (Flat)
-        V.Ra = new THREE.Vector3(16 * scale, 5 * scale, 0);
+        V.Ra = V.Q.clone().add(new THREE.Vector3(13 * scale * Math.cos(rad84), 13 * scale * Math.sin(rad84), 0));
 
         // R for Part B (Folded 80 deg)
-        // Calculating R' such that the angle between PQS and QRS is 80
-        const h_r = 11.3406 * scale; 
-        const dist_q_foot = 6.4 * scale; 
-        const dirQS = new THREE.Vector3().subVectors(V.S, V.Q).normalize();
-        const foot = new THREE.Vector3().addVectors(V.Q, dirQS.clone().multiplyScalar(dist_q_foot));
-        const normalPQS = new THREE.Vector3(0,0,1);
-        const perpInPlane = new THREE.Vector3().crossVectors(dirQS, normalPQS).normalize();
-        V.Rb = new THREE.Vector3().add(foot)
-            .add(perpInPlane.clone().multiplyScalar(h_r * Math.cos(rad80)))
-            .add(normalPQS.clone().multiplyScalar(h_r * Math.sin(rad80)));
+        // Get the direction of the hinge (the folding line QS)
+        const axis = new THREE.Vector3().subVectors(V.S, V.Q).normalize();
+        // Rotate flat-plane vertex Ra around hinge axis QS by 80° to define the folded 3D position.
+        V.Rb = V.Ra.clone().sub(V.Q).applyAxisAngle(axis, rad80).add(V.Q);
 
         let activeLabels = {};
 
