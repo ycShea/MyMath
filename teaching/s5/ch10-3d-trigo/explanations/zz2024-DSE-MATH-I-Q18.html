@@ -364,12 +364,13 @@
             } else {
                 // SHOW the figure
                 clearScene();
+                currentFigure = type; // Set this BEFORE calling setup functions
                 if (type === 'A') {
                     setCameraPartA();
                     // FIX CAMERA for Part A
                     controls.enableRotate = false;
                     controls.enablePan = false;
-                    controls.enableZoom = true;
+                    controls.staticMoving = true;
                     controls.minDistance = 15; // Prevent zooming inside the shape
                     controls.maxDistance = 30; // Prevent zooming out into space
                     drawFigureA(); 
