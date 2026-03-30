@@ -111,7 +111,7 @@
                 <div class="part-header">
                     <p class="dev-marker">Solution 1/4 (UpdateForNewExercise) Delete this before released.</p>
                     <span><strong>(a)(i) </strong>Find the length of $QS$.</span>
-                    <button id="btn-ai" class="btn-show" onclick="revealStep('sol-ai', 'btn-ai')">Show Step</button>
+                    <button id="btn-ai" class="btn-show" onclick="revealStep('sol-ai', 'btn-ai', 'PQS')">Show Step</button>
                 </div>
                 <div id="sol-ai" class="solution-content" data-current-step="0">
                     <p class="step" style="display:none;">Using Cosine Rule in $\triangle PQS$:</p>
@@ -123,7 +123,7 @@
                 <div class="part-header">
                     <p class="dev-marker">Solution 2/4 (UpdateForNewExercise) Delete this before released.</p>
                     <span><strong>(a)(ii) </strong>Find the length of $QS$.</span>
-                    <button id="btn-aii" class="btn-show" onclick="revealStep('sol-aii', 'btn-aii')">Show Step</button>
+                    <button id="btn-aii" class="btn-show" onclick="revealStep('sol-aii', 'btn-aii', 'PRS')">Show Step</button>
                 </div>
                 <div id="sol-aii" class="solution-content" data-current-step="0">
                     <p class="step" style="display:none;">Using Cosine Rule in $\triangle PQS$:</p>
@@ -135,7 +135,7 @@
                 <div class="part-header">
                     <p class="dev-marker">Solution 3/4 (UpdateForNewExercise) Delete this before released.</p>
                     <span><strong>(a)(iii)</strong> Find $\angle RQS$.</span>
-                    <button id="btn-aiii" class="btn-show" onclick="revealStep('sol-aiii', 'btn-aiii')">Show Step</button>
+                    <button id="btn-aiii" class="btn-show" onclick="revealStep('sol-aiii', 'btn-aiii', 'RQS')">Show Step</button>
                 </div>
                 <div id="sol-aiii" class="solution-content" data-current-step="0">
                     <p class="step" style="display:none;">Using Sine Rule in $\triangle QRS$:</p>
@@ -226,20 +226,46 @@
         
         // Visual highlighting logic
         function highlightTriangle(type) {
-            // Clear existing meshes first so highlights don't stack
-            scene.children.filter(c => c.type === "Mesh").forEach(c => scene.remove(c));
+            // 1. ONLY remove previous highlights (tagged 'highlight')
+            const toRemove = scene.children.filter(c => c.userData.isHighlight === true);
+            toRemove.forEach(c => scene.remove(c));
         
-            switch(type) {
-                case 'PQS':
-                    createPolygon([V.P, V.Q, V.S], 0xffeb3b); // Bright yellow highlight
-                    break;
-                case 'QRS':
-                    createPolygon([V.Q, V.R, V.S], 0x4caf50); // Green highlight
-                    break;
-                case 'PRS':
-                    createPolygon([V.P, V.R, V.S], 0xf44336); // Red highlight
-                    break;
-            }
+            // 2. Ensure vertices exist (default to Ra if not set)
+            const points = {
+                'PQS': [V.P, V.Q, V.S],
+                'QRS': [V.Q, V.R, V.S],
+                'PRS': [V.P, V.R, V.S]
+            };
+        
+            const targetPoints = points[type];
+            if (!targetPoints || !targetPoints[0]) return;
+        
+            // 3. Create the highlight mesh
+            const geom = new THREE.BufferGeometry().setFromPoints(targetPoints);
+            geom.setIndex([0, 1, 2]);
+            
+            const mat = new THREE.MeshBasicMaterial({ 
+                color: type === 'PQS' ? 0xffeb3b : (type === 'QRS' ? 0x4caf50 : 0xf44336), 
+                side: THREE.DoubleSide, 
+                transparent: true, 
+                opacity: 0.6, // Higher opacity to stand out
+                depthTest: true 
+            });
+        
+            const mesh = new THREE.Mesh(geom, mat);
+            
+            // 4. IMPORTANT: Tag this mesh so we can find it later
+            mesh.userData.isHighlight = true;
+            
+            // 5. Offset it slightly forward so it sits on top of the base figure
+            mesh.position.z += 0.05; 
+            
+            scene.add(mesh);
+        }
+        
+        function clearHighlights() {
+            const toRemove = scene.children.filter(c => c.userData.isHighlight === true);
+            toRemove.forEach(c => scene.remove(c));
         }
         
         function clearHighlights() {
