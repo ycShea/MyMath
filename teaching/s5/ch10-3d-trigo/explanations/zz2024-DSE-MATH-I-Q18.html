@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>2024 DSE Paper I Q18 Solution</title>
+    <title>2024 DSE Paper I Q18 Solution</title>                                                <!-- (UpdateForNewExercise) Questions -->
 
     <!-------------------------->
     <!-- CSS at the beginning -->
@@ -38,11 +38,6 @@
             background: #eef6ff; padding: 15px; border-radius: 8px; cursor: help; 
             position: relative; margin-bottom: 20px; border: 1px dashed #007bff;
         }
-        .full-question-popup {
-            display: none; position: absolute; top: 100%; left: 0; right: 0;
-            background: white; border: 1px solid #ccc; padding: 20px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.2); z-index: 100; border-radius: 8px;
-        }
         .final-ans {
             font-weight: bold;
             border-left: 3px solid #007bff;
@@ -50,16 +45,15 @@
             margin-top: 10px;
         }
         
-        /* Update this class */
         .full-question-popup {
             display: none; 
             background: white; 
             border: 1px solid #ccc; 
-            padding: 20px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.2); 
+            padding: 15px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1); 
             z-index: 100; 
             border-radius: 8px;
-            margin-bottom: 20px; /* Add space below the image */
+            margin-bottom: 20px;
         }
 
         .part-container { margin-bottom: 15px; border: 1px solid #eee; border-radius: 8px; overflow: hidden; }
@@ -98,14 +92,13 @@
         <!-- This section contains the scrollable problem text, interactive solution toggles, and MathJax-rendered (渲染) formulas. -->
         <div class="content-side">
             <a href="index.html" style="text-decoration: none; color: #007bff;">← Back to List</a>
-            <div style="display: flex; justify-content: space-between; align-items: center;">
-                <h1>2024 DSE Paper I Q18</h1>                                        <!-- (UpdateForNewExercise) Questions part ai -->
-                <button class="btn-show" onclick="toggle('full-q-image')">View Full Question 🖼️</button>
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+                <h1>2024 DSE Paper I Q18</h1>                                                          <!-- (UpdateForNewExercise) Questions -->
+                <button id="btn-view-q" class="btn-show" onclick="toggleQuestion('full-q-popup', 'btn-view-q')">View Full Question 📄</button>
             </div>
-            <div id="full-q-image" style="display:none; margin-bottom: 20px;">
-                <img src="questions-images/2024 DSE-MATH-I Q18.png" style="width:100%; border: 1px solid #ddd; border-radius: 8px;">
+            <div id="full-q-popup" class="full-question-popup">
+                <img src="questions-images/2024 DSE-MATH-I Q18.png" alt="2024 DSE Q18 Diagram">        <!-- (UpdateForNewExercise) Questions Image -->
             </div>
-
             <!-------------------------->
             <!-- Question of part (a) -->
             <!-------------------------->
@@ -329,8 +322,8 @@
                     controls.enableRotate = false;
                     controls.enablePan = false;
                     controls.enableZoom = true;
-                    controls.minDistance = 10; // Prevent zooming inside the shape
-                    controls.maxDistance = 40; // Prevent zooming out into space
+                    controls.minDistance = 15; // Prevent zooming inside the shape
+                    controls.maxDistance = 30; // Prevent zooming out into space
                     drawFigureA();
                     btnA.textContent = "Hide Figure";
                     btnB.textContent = "Show Figure";
@@ -347,6 +340,24 @@
             }
         }
 
+        function toggleQuestion(divId, btnId) {
+            const el = document.getElementById(divId);
+            const btn = document.getElementById(btnId);
+            
+            // Check if currently hidden or not set
+            const isHidden = (el.style.display === 'none' || el.style.display === '');
+            
+            if (isHidden) {
+                el.style.display = 'block';
+                btn.textContent = "Hide Full Question ✖";
+                btn.style.background = "#6c757d"; // Optional: change color when "Hide" is active
+            } else {
+                el.style.display = 'none';
+                btn.textContent = "View Full Question 📄";
+                btn.style.background = "#007bff"; // Reset to original blue
+            }
+        }
+        
         // ==========================================
         // INITIALIZATION
         // ==========================================
