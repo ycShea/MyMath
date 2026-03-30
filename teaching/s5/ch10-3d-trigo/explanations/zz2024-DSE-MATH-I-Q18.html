@@ -240,7 +240,7 @@
                 if (Array.isArray(triangleKeys)) {
                     highlightTriangle(triangleKeys[currentStep]);
                 }
-                if (containerId === "sol-aii") drawLineLabels(V.Q, V.S, "14.5");
+                if (containerId === "sol-aii") drawLineLabels(V.Q, V.S, "14.5", "#d63384");
                 
                 if (window.MathJax) MathJax.typesetPromise([steps[currentStep]]);
                 
@@ -605,9 +605,10 @@
             });
         }
 
-        function drawLineLabels(p1, p2, labelText = "") {
+        function drawLineLabels(p1, p2, labelText = "", color = "black") {
             const midPoint = new THREE.Vector3().addVectors(p1, p2).multiplyScalar(0.5);
             const labelDiv = makeLabel(labelText);
+            labelDiv.style.color = color;
             
             const labelKey = "lineLabel_" + Math.random().toString(36).substr(2, 9);
             V[labelKey] = midPoint;
