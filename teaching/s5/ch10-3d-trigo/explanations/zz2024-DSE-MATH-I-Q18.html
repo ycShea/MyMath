@@ -250,9 +250,10 @@
         }
         
         function highlightTriangle(type) {
-            // Remove only previous step-specific highlights, not the whole scene
-            scene.children.filter(c => c.userData.isStepHighlight).forEach(c => scene.remove(c));
-        
+            // Clean up specifically the yellow highlights before adding a new one
+            const toRemove = scene.children.filter(c => c.userData && c.userData.isStepHighlight);
+            toRemove.forEach(c => scene.remove(c));
+            
             if (!type) return;
         
             let pts;
@@ -748,8 +749,24 @@
         }
         
         function clearScene() {
-            // scene.children.filter(c => c.type === "Mesh" || c.type === "Line").forEach(c => scene.remove(c));
-            Object.values(activeLabels).forEach(l => l.remove());
+            // 1. Remove 3D Objects (Lines, Meshes, etc.)
+            // We loop backwards to avoid index shifting issues during removal
+            for (let i = scene.children.length - 1; i >= 0; i--) {
+                const obj = scene.children[i];
+                // Don't remove the lights, or the scene will go black
+                if (obj.type !== 'AmbientLight' && obj.type !== 'DirectionalLight') {
+                    scene.remove(obj);
+                }
+            }
+        
+            // 2. Remove HTML Labels from the DOM
+            Object.values(activeLabels).forEach(l => {
+                if (l && l.parentNode) {
+                    l.parentNode.removeChild(l);
+                }
+            });
+        
+            // 3. Reset the label tracking object
             activeLabels = {};
         }
         
