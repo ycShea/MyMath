@@ -421,6 +421,12 @@
         const controls = new THREE.OrbitControls(camera, renderer.domElement);
         controls.enableRotate = false; // Disable rotation as requested
 
+        // --- INSERT YOUR NEW CODES HERE ---
+        controls.minPolarAngle = Math.PI / 10;   // Prevents "jamming" at the top pole
+        controls.maxPolarAngle = Math.PI / 2.1;  // Prevents looking under the floor
+        controls.enableDamping = true;           // Makes rotation feel smooth and "heavy"
+        controls.dampingFactor = 0.05;
+        
         scene.add(new THREE.AmbientLight(0xffffff, 1.0));
 
         // ==========================================
@@ -515,7 +521,7 @@
         // createTriangle(p1, p2, p3, color = 0x0d6efd)
         // handleToggle(type)
         // clearScene()
-        // animate()
+        // ()
         // ==========================================
         
         // Camera setting (UpdateForNewExercise)
@@ -618,7 +624,7 @@
                 // Create the label element
                 const labelDiv = makeLabel(labelText);
                 
-                // Assign a unique key so the animate() loop can track this 3D position
+                // Assign a unique key so the () loop can track this 3D position
                 const labelKey = "label_" + Math.random().toString(36).substr(2, 9);
                 V[labelKey] = midPoint; 
                 activeLabels[labelKey] = labelDiv;
@@ -653,7 +659,7 @@
                 // 1. Create the DOM element and store in activeLabels
                 activeLabels[name] = makeLabel(name);
                 
-                // 2. Map the coordinate for the animate() loop projection
+                // 2. Map the coordinate for the () loop projection
                 V[name] = positionVec;
             }
         }
@@ -772,7 +778,8 @@
         
         function animate() {
             requestAnimationFrame(animate);
-            controls.update(); 
+            controls.update();
+            
             const debugBox = document.getElementById('debug-info');
             if (debugBox) {
                 const cp = camera.position, ct = controls.target;
