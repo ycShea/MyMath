@@ -189,46 +189,62 @@
         let currentFigure = null;
 
 
-
-        function revealStep(containerId, buttonId) {
+        
+        function revealStep(containerId, buttonId, triangleKey) {
             const container = document.getElementById(containerId);
             const steps = container.getElementsByClassName('step');
             const btn = document.getElementById(buttonId);
-            
-            // Get current progress
             let currentStep = parseInt(container.getAttribute('data-current-step'));
         
-            // If the solution is already complete, this click should "Hide" it
+            // Handle "Hide Solution" click
             if (currentStep === steps.length && btn.textContent === "Hide Solution") {
                 container.style.display = 'none';
-                container.setAttribute('data-current-step', '0'); // Reset progress
-                btn.textContent = "Show Step"; // Reset button text
-                // Hide all steps for the next time it opens
-                for (let s of steps) { s.style.display = 'none'; }
+                container.setAttribute('data-current-step', '0');
+                btn.textContent = "Show Step";
+                for (let s of steps) s.style.display = 'none';
+                clearHighlights(); // Clear visual highlight when hiding
                 return;
             }
         
             if (currentStep < steps.length) {
-                if (currentStep === 0) container.style.display = 'block';
+                if (currentStep === 0) {
+                    container.style.display = 'block';
+                    // Highlight the specific triangle when the first step is revealed
+                    highlightTriangle(triangleKey);
+                }
                 
                 steps[currentStep].style.display = 'block';
-                
-                if (window.MathJax) { MathJax.typesetPromise([steps[currentStep]]); }
+                if (window.MathJax) MathJax.typesetPromise([steps[currentStep]]);
                 
                 currentStep++;
                 container.setAttribute('data-current-step', currentStep);
-        
-                if (currentStep === steps.length) {
-                    btn.textContent = "Hide Solution";
-                    // Remove the 'disabled' logic so the user can actually click to hide
-                    btn.disabled = false; 
-                    btn.style.opacity = "1";
-                } else {
-                    btn.textContent = "Next Step";
-                }
+                btn.textContent = (currentStep === steps.length) ? "Hide Solution" : "Next Step";
                 
                 collapseOtherParts(containerId);
             }
+        }
+        
+        // Visual highlighting logic
+        function highlightTriangle(type) {
+            // Clear existing meshes first so highlights don't stack
+            scene.children.filter(c => c.type === "Mesh").forEach(c => scene.remove(c));
+        
+            switch(type) {
+                case 'PQS':
+                    createPolygon([V.P, V.Q, V.S], 0xffeb3b); // Bright yellow highlight
+                    break;
+                case 'QRS':
+                    createPolygon([V.Q, V.R, V.S], 0x4caf50); // Green highlight
+                    break;
+                case 'PRS':
+                    createPolygon([V.P, V.R, V.S], 0xf44336); // Red highlight
+                    break;
+            }
+        }
+        
+        function clearHighlights() {
+            // Return to default figure drawing if needed, or just clear meshes
+            scene.children.filter(c => c.type === "Mesh").forEach(c => scene.remove(c));
         }
 
         function collapseOtherParts(activeId) {
