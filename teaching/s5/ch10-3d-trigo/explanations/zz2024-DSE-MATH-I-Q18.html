@@ -119,7 +119,7 @@
                             <strong>Note:</strong> You are viewing the 2D layout.
                         </div>
                     </div>
-                    <button class="btn-show" style="background: #6c757d;" onclick="showAnswersOnly()">Show Answers Only</button>
+                    <button id="btn-toggle-answers" class="btn-show" style="background: #6c757d;" onclick="toggleAnswersOnly()">Show Answers Only</button>
                 </div>
             </div>
 
@@ -706,37 +706,46 @@
             scene.add(mesh);
         }
 
-        function showAnswersOnly() {
-            // 1. Find all solution containers
+        function toggleAnswersOnly() {
+            const mainBtn = document.getElementById('btn-toggle-answers');
             const containers = document.querySelectorAll('.solution-content');
-            
+            const isShowing = mainBtn.textContent === "Hide Answers";
+        
             containers.forEach(container => {
-                // Ensure the container itself is visible
-                container.style.display = 'block';
-                
-                // 2. Find all steps within this container
                 const steps = container.getElementsByClassName('step');
-                
-                for (let s of steps) {
-                    if (s.classList.contains('final-ans')) {
-                        s.style.display = 'block'; // Show the answer
-                    } else {
-                        s.style.display = 'none';  // Hide the calculation step
-                    }
-                }
-                
-                // 3. Update the "Show Step" button text if it exists
                 const btnId = container.id.replace('sol-', 'btn-');
-                const btn = document.getElementById(btnId);
-                if (btn) {
-                    btn.textContent = "Show Step";
-                    btn.disabled = false;
-                    btn.style.opacity = "1";
+                const stepBtn = document.getElementById(btnId);
+        
+                if (isShowing) {
+                    // ACTION: HIDE ANSWERS (Return to initial state)
+                    container.style.display = 'none';
+                    for (let s of steps) { s.style.display = 'none'; }
+                    
+                    if (stepBtn) {
+                        stepBtn.textContent = "Show Step";
+                        stepBtn.disabled = false;
+                        stepBtn.style.opacity = "1";
+                    }
                     container.setAttribute('data-current-step', '0');
+                    mainBtn.textContent = "Show Answers Only";
+                } else {
+                    // ACTION: SHOW ANSWERS ONLY
+                    container.style.display = 'block';
+                    for (let s of steps) {
+                        s.style.display = s.classList.contains('final-ans') ? 'block' : 'none';
+                    }
+                    
+                    // We keep the "Show Step" button active in case they want to see the working
+                    if (stepBtn) {
+                        stepBtn.textContent = "Show Step";
+                        stepBtn.disabled = false;
+                        stepBtn.style.opacity = "1";
+                    }
+                    container.setAttribute('data-current-step', '0');
+                    mainBtn.textContent = "Hide Answers";
                 }
             });
         
-            // 4. Trigger MathJax to ensure formulas are rendered
             if (window.MathJax) MathJax.typeset();
         }
         
