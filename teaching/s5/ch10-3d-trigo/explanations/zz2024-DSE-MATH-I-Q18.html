@@ -214,43 +214,33 @@
             const btn = document.getElementById(buttonId);
             let currentStep = parseInt(container.getAttribute('data-current-step'));
             
-            // 1. AUTO-SHOW FIGURE A if nothing is showing
             if (currentStep === 0 && currentFigure === null) {
                 handleToggle('A');
             }
             
-            // 2. HANDLE "HIDE" LOGIC (Reset to original colors)
-            if (currentStep === steps.length && btn.textContent === "Hide Solution") {
-                container.style.display = 'none';
-                container.setAttribute('data-current-step', '0');
-                btn.textContent = "Show Step";
-                for (let s of steps) s.style.display = 'none';
-                
-                // Reset the scene to the base figure (removes yellow highlights)
-                clearScene();
-                if (currentFigure === 'A') drawFigureA();
-                else if (currentFigure === 'B') drawFigureB();
-                return;
-            }
-            
-            // 3. SHOW NEXT STEP & APPLY HIGHLIGHT
             if (currentStep < steps.length) {
                 if (currentStep === 0) container.style.display = 'block';
                 
                 steps[currentStep].style.display = 'block';
                 
-                // Apply the highlight for the current step
                 if (Array.isArray(triangleKeys)) {
                     highlightTriangle(triangleKeys[currentStep]);
-                } else {
-                    highlightTriangle(triangleKeys);
                 }
-            
+                
                 if (window.MathJax) MathJax.typesetPromise([steps[currentStep]]);
                 
                 currentStep++;
                 container.setAttribute('data-current-step', currentStep);
-                btn.textContent = (currentStep === steps.length) ? "Hide Solution" : "Next Step";
+                
+                // CHANGE HERE: Do not change to "Hide Solution"
+                if (currentStep === steps.length) {
+                    btn.textContent = "Completed";
+                    btn.disabled = true; // Optional: disable button when done
+                    btn.style.opacity = "0.5";
+                } else {
+                    btn.textContent = "Next Step";
+                }
+                
                 collapseOtherParts(containerId);
             }
         }
@@ -287,7 +277,35 @@
             scene.add(mesh);
         }
         
-
+        function hideAllPartASteps() {
+            // Select all solution containers in Part A
+            const containers = ['sol-ai', 'sol-aii'];
+            
+            containers.forEach(id => {
+                const container = document.getElementById(id);
+                const steps = container.getElementsByClassName('step');
+                const btnId = id.replace('sol-', 'btn-');
+                const btn = document.getElementById(btnId);
+        
+                for (let s of steps) {
+                    // Only hide if it's NOT the final answer
+                    if (!s.classList.contains('final-ans')) {
+                        s.style.display = 'none';
+                    }
+                }
+                
+                // Reset the button state so user can restart the steps if they want
+                container.setAttribute('data-current-step', '0');
+                btn.textContent = "Show Step";
+                btn.disabled = false;
+                btn.style.opacity = "1";
+            });
+        
+            // Clear highlights from the 3D scene
+            clearScene();
+            if (currentFigure === 'A') drawFigureA();
+        }
+        
         function collapseOtherParts(activeId) {
             const allContainers = document.querySelectorAll('.solution-content');
             
@@ -320,12 +338,14 @@
         function handleToggle(type) {
             const btnA = document.getElementById('btn-figA');
             const btnB = document.getElementById('btn-figB');
+            const footerA = document.getElementById('part-a-footer');
 
             if (currentFigure === type) {
                 clearScene();
                 currentFigure = null;
                 btnA.textContent = "Show Figure";
                 btnB.textContent = "Show Figure";
+                footerA.style.display = 'none';
             } else {
                 clearScene();
                 if (type === 'A') {
@@ -339,6 +359,7 @@
                     drawFigureA();
                     btnA.textContent = "Hide Figure";
                     btnB.textContent = "Show Figure";
+                    footerA.style.display = 'block'; // Show the special footer
                 } else {
                    setCameraPartB();
                     // ALLOW ROTATION for Part B
@@ -347,6 +368,7 @@
                     drawFigureB();
                     btnB.textContent = "Hide Figure";
                     btnA.textContent = "Show Figure";
+                    footerA.style.display = 'none'; // Hide it for Part B
                 }
                 currentFigure = type;
             }
