@@ -191,45 +191,44 @@
     <script>
         let currentFigure = null;
 
-
-        
         function revealStep(containerId, buttonId, triangleKeys) {
             const container = document.getElementById(containerId);
             const steps = container.getElementsByClassName('step');
             const btn = document.getElementById(buttonId);
             let currentStep = parseInt(container.getAttribute('data-current-step'));
-        
-            // --- MODIFIED HIDE LOGIC ---
+            
+            // 1. AUTO-SHOW FIGURE A if nothing is showing
+            if (currentStep === 0 && currentFigure === null) {
+                handleToggle('A');
+            }
+            
+            // 2. HANDLE "HIDE" LOGIC (Reset to original colors)
             if (currentStep === steps.length && btn.textContent === "Hide Solution") {
                 container.style.display = 'none';
                 container.setAttribute('data-current-step', '0');
                 btn.textContent = "Show Step";
                 for (let s of steps) s.style.display = 'none';
                 
-                // Instead of just clearing, redraw the original figure state
-                clearScene(); 
-                if (currentFigure === 'A') {
-                    drawFigureA();
-                } else if (currentFigure === 'B') {
-                    drawFigureB();
-                }
+                // Reset the scene to the base figure (removes yellow highlights)
+                clearScene();
+                if (currentFigure === 'A') drawFigureA();
+                else if (currentFigure === 'B') drawFigureB();
                 return;
             }
-        
+            
+            // 3. SHOW NEXT STEP & APPLY HIGHLIGHT
             if (currentStep < steps.length) {
                 if (currentStep === 0) container.style.display = 'block';
                 
                 steps[currentStep].style.display = 'block';
                 
-                // HIGHLIGHT LOGIC:
-                // If triangleKeys is an array, pick the key for the current step.
-                // Otherwise, use the single string provided.
+                // Apply the highlight for the current step
                 if (Array.isArray(triangleKeys)) {
                     highlightTriangle(triangleKeys[currentStep]);
                 } else {
                     highlightTriangle(triangleKeys);
                 }
-        
+            
                 if (window.MathJax) MathJax.typesetPromise([steps[currentStep]]);
                 
                 currentStep++;
@@ -240,12 +239,11 @@
         }
         
         function highlightTriangle(type) {
-            // 1. Remove only previous STEP highlights (keep the base figure)
+            // Remove only previous step-specific highlights, not the whole scene
             scene.children.filter(c => c.userData.isStepHighlight).forEach(c => scene.remove(c));
         
             if (!type) return;
         
-            // 2. Define vertices
             let pts;
             if (type === 'PQR') pts = [V.P, V.Q, V.R];
             else if (type === 'QRS') pts = [V.Q, V.R, V.S];
@@ -255,27 +253,23 @@
         
             if (!pts || !pts[0]) return;
         
-            // 3. Create Highlight Mesh
             const geom = new THREE.BufferGeometry().setFromPoints(pts);
             geom.setIndex([0, 1, 2]);
+            
             const mat = new THREE.MeshBasicMaterial({ 
-                color: 0xffeb3b, // Bright Yellow for active steps
+                color: 0xffeb3b, // Bright Yellow for the current step focus
                 side: THREE.DoubleSide,
                 transparent: true,
                 opacity: 0.6,
-                depthTest: false // Ensures it shows over the base blue/green
+                depthTest: false // Ensures highlight is visible over base colors
             });
         
             const mesh = new THREE.Mesh(geom, mat);
-            mesh.userData.isStepHighlight = true; // Mark this as a temporary highlight
-            mesh.renderOrder = 2; // Render on top of base figure
+            mesh.userData.isStepHighlight = true;
+            mesh.renderOrder = 999; // Ensure it draws last (on top)
             scene.add(mesh);
         }
-            
-        function clearHighlights() {
-            // Return to default figure drawing if needed, or just clear meshes
-            scene.children.filter(c => c.type === "Mesh").forEach(c => scene.remove(c));
-        }
+        
 
         function collapseOtherParts(activeId) {
             const allContainers = document.querySelectorAll('.solution-content');
