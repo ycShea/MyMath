@@ -358,7 +358,8 @@
                 }
                 currentFigure = type;
                 btn.textContent = "Hide Figure";
-                
+
+                resetCamera();
                 // Reset the other button text if it exists
                 const otherType = (type === 'A') ? 'B' : 'A';
                 const otherBtn = document.getElementById('btn-fig' + otherType);
@@ -606,33 +607,6 @@
             }
         }
 
-        /* 2D version
-        function drawAngleArc(p1, vertex, p2, radius = 2, color = 0xff0000) {
-            // 1. Get directions from vertex to points p1 and p2
-            const vec1 = new THREE.Vector3().subVectors(p1, vertex).normalize();
-            const vec2 = new THREE.Vector3().subVectors(p2, vertex).normalize();
-        
-            // 2. Calculate the start and end angles in radians
-            const startAngle = Math.atan2(vec1.y, vec1.x);
-            let endAngle = Math.atan2(vec2.y, vec2.x);
-        
-            // 3. Create the curve
-            const curve = new THREE.EllipseCurve(
-                vertex.x, vertex.y,   // Center of the arc (Vertex Q)
-                radius, radius,       // X and Y radius
-                startAngle, endAngle, // Start and end rotation
-                false,                // Clockwise
-                0                     // Rotation of the ellipse itself
-            );
-        
-            const points = curve.getPoints(50);
-            const geometry = new THREE.BufferGeometry().setFromPoints(points);
-            const material = new THREE.LineBasicMaterial({ color: color });
-            const arcLine = new THREE.Line(geometry, material);
-            
-            scene.add(arcLine);
-        }*/
-
         function drawRightAngle(p1, vertex, p2, size = 1.0) {
             const d1 = new THREE.Vector3().subVectors(p1, vertex).normalize().multiplyScalar(size);
             const d2 = new THREE.Vector3().subVectors(p2, vertex).normalize().multiplyScalar(size);
@@ -753,8 +727,16 @@
             // We loop backwards to avoid index shifting issues during removal
             for (let i = scene.children.length - 1; i >= 0; i--) {
                 const obj = scene.children[i];
-                // Don't remove the lights, or the scene will go black
                 if (obj.type !== 'AmbientLight' && obj.type !== 'DirectionalLight') {
+                    // Dispose of resources to prevent memory leaks
+                    if (obj.geometry) obj.geometry.dispose();
+                    if (obj.material) {
+                        if (Array.isArray(obj.material)) {
+                            obj.material.forEach(m => m.dispose());
+                        } else {
+                            obj.material.dispose();
+                        }
+                    }
                     scene.remove(obj);
                 }
             }
