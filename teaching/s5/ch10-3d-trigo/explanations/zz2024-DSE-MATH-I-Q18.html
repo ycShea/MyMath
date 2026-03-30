@@ -43,6 +43,12 @@
             background: white; border: 1px solid #ccc; padding: 20px;
             box-shadow: 0 4px 15px rgba(0,0,0,0.2); z-index: 100; border-radius: 8px;
         }
+        .final-ans {
+            font-weight: bold;
+            border-left: 3px solid #007bff;
+            padding-left: 10px;
+            margin-top: 10px;
+        }
         .question-summary:hover .full-question-popup { display: block; }
         .full-question-popup img { display: block; max-width: 100%; height: auto; margin: 15px 0; border: 1px solid #ddd; border-radius: 4px; }
 
@@ -84,6 +90,9 @@
             <a href="index.html" style="text-decoration: none; color: #007bff;">← Back to List</a>
             <h1>2024 DSE Paper I Q18</h1>
 
+            <!-------------------------->
+            <!-- Question of part (a) -->
+            <!-------------------------->
             <div class="question-summary">
                 <p class="dev-marker">Question Summary 1/2 (UpdateForNewExercise) Delete this before released.</p>
                 <strong>PQRS a quadrilateral, where $PQ = 12\text{ cm}$, $PS = 10\text{ cm}$, $QR = 13\text{ cm}$, $\angle QPS = 82^\circ$ and $\angle QRS = 65^\circ$.</strong>
@@ -95,17 +104,21 @@
                 </div>
             </div>
 
+            <!-------------------------->
+            <!-- Solution of part (a) -->
+            <!-------------------------->
             <div class="part-container">
                 <div class="part-header">
                     <p class="dev-marker">Solution 1/4 (UpdateForNewExercise) Delete this before released.</p>
                     <span><strong>(a)(i) </strong>Find the length of $QS$.</span>
-                    <button class="btn-show" onclick="toggle('sol-ai')">Show Solution</button>
+                    <button id="btn-ai" class="btn-show" onclick="revealStep('sol-ai', 'btn-ai')">Show Step</button>
                 </div>
-                <div id="sol-ai" class="solution-content">
-                    <p class="math-block">$QS = \sqrt{12^2 + 10^2 - 2(12)(10)\cos(82^\circ)} \approx 14.5126 \text{ cm}$</p>
+                <div id="sol-ai" class="solution-content" data-current-step="0">
+                    <p class="step" style="display:none;">Using Cosine Rule in $\triangle PQS$:</p>
+                    <p class="step" style="display:none;">$QS = \sqrt{12^2 + 10^2 - 2(12)(10)\cos(82^\circ)}$</p>
+                    <p class="step final-ans" style="display:none;">$QS \approx 14.5126 \text{ cm}$</p>
                 </div>
             </div>
-
             <div class="part-container">
                 <div class="part-header">
                     <p class="dev-marker">Solution 2/4 (UpdateForNewExercise) Delete this before released.</p>
@@ -160,10 +173,62 @@
     <script>
         let currentFigure = null;
 
+
+
+        function revealStep(containerId, buttonId) {
+            const container = document.getElementById(containerId);
+            const steps = container.getElementsByClassName('step');
+            const btn = document.getElementById(buttonId);
+            
+            // Get current progress
+            let currentStep = parseInt(container.getAttribute('data-current-step'));
+        
+            if (currentStep < steps.length) {
+                // Show the container if it's the first click
+                if (currentStep === 0) container.style.display = 'block';
+                
+                // Show the specific step
+                steps[currentStep].style.display = 'block';
+                
+                // Render MathJax for the new content
+                if (window.MathJax) { MathJax.typesetPromise([steps[currentStep]]); }
+                
+                currentStep++;
+                container.setAttribute('data-current-step', currentStep);
+        
+                // Update button text
+                if (currentStep === steps.length) {
+                    btn.textContent = "Solution Complete";
+                    btn.disabled = true;
+                    btn.style.opacity = "0.5";
+                } else {
+                    btn.textContent = "Next Step";
+                }
+                
+                // Logic to hide other parts' intermediate steps
+                collapseOtherParts(containerId);
+            }
+        }
+
+        function collapseOtherParts(activeId) {
+            const allContainers = document.querySelectorAll('.solution-content');
+            
+            allContainers.forEach(container => {
+                if (container.id !== activeId && container.style.display === 'block') {
+                    const steps = container.getElementsByClassName('step');
+                    for (let i = 0; i < steps.length; i++) {
+                        // Hide everything except the one marked 'final-ans'
+                        if (!steps[i].classList.contains('final-ans')) {
+                            steps[i].style.display = 'none';
+                        }
+                    }
+                }
+            });
+        }
+        
         // ==========================================
         // TOGGLES BEWTEEN PARTS A AND B
         // ==========================================
-        
         // This function toggles (切換) the visibility of solution elements and triggers MathJax to render any LaTeX formulas when they are revealed.
         function toggle(id) {
             const el = document.getElementById(id);
