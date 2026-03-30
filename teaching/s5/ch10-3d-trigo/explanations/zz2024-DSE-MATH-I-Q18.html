@@ -213,6 +213,14 @@
         let currentFigure = null;
 
         function revealStep(containerId, buttonId, triangleKeys) {
+            // 1. Identify if the current solution belongs to Part A
+            const isPartA = containerId.startsWith('sol-a');
+            
+            // 2. If it is Part A and Figure A isn't showing, switch to it
+            if (isPartA && currentFigure !== 'A') {
+                handleToggle('A');
+            }
+            
             const container = document.getElementById(containerId);
             const steps = container.getElementsByClassName('step');
             const btn = document.getElementById(buttonId);
