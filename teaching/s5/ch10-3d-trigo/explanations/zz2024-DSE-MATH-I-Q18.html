@@ -421,11 +421,8 @@
         const controls = new THREE.OrbitControls(camera, renderer.domElement);
         controls.enableRotate = false; // Disable rotation as requested
 
-        // --- INSERT YOUR NEW CODES HERE ---
-        controls.minPolarAngle = Math.PI / 10;   // Prevents "jamming" at the top pole
-        controls.maxPolarAngle = Math.PI / 2.1;  // Prevents looking under the floor
         controls.enableDamping = true;           // Makes rotation feel smooth and "heavy"
-        controls.dampingFactor = 0.05;
+        controls.dampingFactor = 0.01;
         
         scene.add(new THREE.AmbientLight(0xffffff, 1.0));
 
