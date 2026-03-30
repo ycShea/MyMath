@@ -152,7 +152,7 @@
             <div class="part-container">
                 <div class="part-header">
                     <span><strong>(a)(ii) </strong>Find $\angle RQS$.</span>            <!-- (UpdateForNewExercise) Questions part aii -->
-                    <button id="btn-aii" class="btn-show" onclick="('sol-aii', 'btn-aii', ['QRS', 'QRS', 'QRS', 'QRS', 'QRS', 'QRS'])">Show Step</button>
+                    <button id="btn-aii" class="btn-show" onclick="revealStep('sol-aii', 'btn-aii', ['QRS', 'QRS', 'QRS', 'QRS', 'QRS', 'QRS'])">Show Step</button>
                 </div>
                 <div id="sol-aii" class="solution-content" data-current-step="0">
                     <p class="step" style="display:none;">                              <!-- (UpdateForNewExercise) Steps -->
@@ -213,6 +213,7 @@
     <script>
         let currentFigure = null;
 
+        // This function orchestrates the progressive reveal of solution steps by synchronizing the visibility of HTML text, MathJax formula rendering, and the corresponding 3D triangle highlights in the Three.js scene.
         function revealStep(containerId, buttonId, triangleKeys) {
             // 1. Identify if the current solution belongs to Part A
             const isPartA = containerId.startsWith('sol-a');
@@ -237,17 +238,9 @@
                 steps[currentStep].style.display = 'block';
                 
                 if (Array.isArray(triangleKeys)) {
-                    const currentKey = triangleKeys[currentStep];
-                    highlightTriangle(currentKey);
-                
-                    if (containerId === 'sol-aii' && currentStep === 1 && currentKey === 'RQS') {
-                        // Give it a unique 'stepLabel_' prefix so highlightTriangle can find and kill it later
-                        const midPoint = new THREE.Vector3().addVectors(V.Q, V.S).multiplyScalar(0.5);
-                        const labelKey = "stepLabel_QS"; 
-                        V[labelKey] = midPoint;
-                        activeLabels[labelKey] = makeLabel("14.5");
-                    }
+                    highlightTriangle(triangleKeys[currentStep]);
                 }
+                if (currentStep === 1) drawLineLabels(V.Q, V.S, "14.5");
                 
                 if (window.MathJax) MathJax.typesetPromise([steps[currentStep]]);
                 
@@ -268,24 +261,12 @@
         }
         
         function highlightTriangle(type) {
-            // SAFE REMOVAL: Use reverse loop to prevent skipping objects
-            for (let i = scene.children.length - 1; i >= 0; i--) {
-                const obj = scene.children[i];
-                if (obj.userData && obj.userData.isStepHighlight) {
-                    if (obj.geometry) obj.geometry.dispose();
-                    if (obj.material) obj.material.dispose();
-                    scene.remove(obj);
-                }
-            }
-            
-            // ALSO CLEAR LABELS tagged as highlights
-            for (let key in activeLabels) {
-                if (key.startsWith("stepLabel_")) {
-                    const label = activeLabels[key];
-                    if (label && label.parentNode) label.parentNode.removeChild(label);
-                    delete activeLabels[key];
-                }
-            }
+            const toRemove = scene.children.filter(c => c.userData && c.userData.isStepHighlight);
+            toRemove.forEach(c => {
+                if (c.geometry) c.geometry.dispose();
+                if (c.material) c.material.dispose();
+                scene.remove(c);
+            });
             
             if (!type) return;
         
@@ -306,8 +287,9 @@
                 side: THREE.DoubleSide,
                 transparent: true,
                 opacity: 0.6,
+                // FIX: Remove depthTest: false. Use these 3 lines instead:
                 polygonOffset: true,
-                polygonOffsetFactor: -4, // -4 is safer than -1 to prevent flicker
+                polygonOffsetFactor: -4,
                 polygonOffsetUnits: -4
             });
         
@@ -497,9 +479,6 @@
             const lines = [[V.P, V.Q], [V.Q, V.R], [V.R, V.S], [V.S, V.P]];
             const matLine = new THREE.LineBasicMaterial({ color: 0x333333, linewidth: 2 });
             createPolygon([V.P, V.Q, V.R, V.S], 0x0d6efd);
-            drawLineLabels(V.P, V.Q, "12");
-            drawLineLabels(V.P, V.S, "10");
-            drawLineLabels(V.Q, V.R, "13");
             // replace createTriangle(V.P, V.S, V.Q, 0x0d6efd);
             // replace createTriangle(V.S, V.Ra, V.Q, 0x0d6efd);
 
@@ -509,12 +488,7 @@
             const angleQRS = drawAngleArc(V.Q, V.R, V.S, "65°", 1.0)
 
             // Corrected Label Assignment for Part a
-            setupLabels({
-                "P": V.P,
-                "Q": V.Q,
-                "R": V.R,
-                "S": V.S
-            });
+            setupLabels({ "P": V.P, "Q": V.Q, "R": V.R, "S": V.S });
         }
 
         function drawFigureB() {
@@ -531,12 +505,7 @@
             drawLines(lines);
             
             // Corrected Label Assignment for Part b
-            setupLabels({
-                "P": V.P,
-                "Q": V.Q,
-                "R": V.R,
-                "S": V.S
-            });
+            setupLabels({ "P": V.P, "Q": V.Q, "R": V.R, "S": V.S });
         }
 
         // ==========================================
