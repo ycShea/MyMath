@@ -183,29 +183,35 @@
             // Get current progress
             let currentStep = parseInt(container.getAttribute('data-current-step'));
         
+            // If the solution is already complete, this click should "Hide" it
+            if (currentStep === steps.length && btn.textContent === "Hide Solution") {
+                container.style.display = 'none';
+                container.setAttribute('data-current-step', '0'); // Reset progress
+                btn.textContent = "Show Step"; // Reset button text
+                // Hide all steps for the next time it opens
+                for (let s of steps) { s.style.display = 'none'; }
+                return;
+            }
+        
             if (currentStep < steps.length) {
-                // Show the container if it's the first click
                 if (currentStep === 0) container.style.display = 'block';
                 
-                // Show the specific step
                 steps[currentStep].style.display = 'block';
                 
-                // Render MathJax for the new content
                 if (window.MathJax) { MathJax.typesetPromise([steps[currentStep]]); }
                 
                 currentStep++;
                 container.setAttribute('data-current-step', currentStep);
         
-                // Update button text
                 if (currentStep === steps.length) {
-                    btn.textContent = "Solution Complete";
-                    btn.disabled = true;
-                    btn.style.opacity = "0.5";
+                    btn.textContent = "Hide Solution";
+                    // Remove the 'disabled' logic so the user can actually click to hide
+                    btn.disabled = false; 
+                    btn.style.opacity = "1";
                 } else {
                     btn.textContent = "Next Step";
                 }
                 
-                // Logic to hide other parts' intermediate steps
                 collapseOtherParts(containerId);
             }
         }
