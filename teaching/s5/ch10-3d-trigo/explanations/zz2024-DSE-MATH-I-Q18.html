@@ -324,15 +324,18 @@
             } else {
                 clearScene();
                 if (type === 'A') {
-                    resetCamera();
+                    setCameraPartA();
                     // FIX CAMERA for Part A
                     controls.enableRotate = false;
                     controls.enablePan = false;
+                    controls.enableZoom = true;
+                    controls.minDistance = 10; // Prevent zooming inside the shape
+                    controls.maxDistance = 40; // Prevent zooming out into space
                     drawFigureA();
                     btnA.textContent = "Hide Figure";
                     btnB.textContent = "Show Figure";
                 } else {
-                    resetCamera();
+                   setCameraPartB();
                     // ALLOW ROTATION for Part B
                     controls.enableRotate = true;
                     controls.enablePan = true;
@@ -445,6 +448,8 @@
         // toggle(id)
         // handleToggle(type)
         // resetCamera()
+        // setCameraPartA()
+        // setCameraPartB()
         // drawLines(linePairs, isSolid = true, color = 0x333333)
         // drawLineLabels(p1, p2, labelText = "")
         // drawAngleArc(p1, vertex, p2, labelText = "", radius = 2, color = 0xff0000)
@@ -459,8 +464,24 @@
         
         // Camera setting (UpdateForNewExercise)
         function resetCamera() {
-            camera.position.set(0, 0, 20);
-            controls.target.set(5, 4, -3);
+            if (currentFigure === 'B') {
+                setCameraPartB();
+            } else {
+                setCameraPartA();
+            }
+        }
+
+        // The "Original" Flat View for Part A
+        function setCameraPartA() {
+            camera.position.set(0, 0, 20); // Straight on
+            controls.target.set(5, 4, 0);  // Centered on the flat shape
+            controls.update();
+        }
+        
+        // The "3D Perspective" View for Part B (Matching your image)
+        function setCameraPartB() {
+            camera.position.set(12, 6, 18); // Low and to the right
+            controls.target.set(4, 2, 0);   // Looking at the fold line
             controls.update();
         }
 
