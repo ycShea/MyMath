@@ -358,9 +358,22 @@
                 // SHOW the figure
                 clearScene();
                 if (type === 'A') {
+                    setCameraPartA();
+                    // FIX CAMERA for Part A
+                    controls.enableRotate = false;
+                    controls.enablePan = false;
+                    controls.enableZoom = true;
+                    controls.minDistance = 15; // Prevent zooming inside the shape
+                    controls.maxDistance = 30; // Prevent zooming out into space
                     drawFigureA(); 
                     footerA.style.display = 'inline-block';
                 } else {
+                    setCameraPartB();
+                    // ALLOW ROTATION for Part B
+                    controls.enableRotate = true;
+                    controls.enablePan = true;
+                    controls.minDistance = 15; // Prevent zooming inside the shape
+                    controls.maxDistance = 30; // Prevent zooming out into space
                     drawFigureB();
                     if (footerA) footerA.style.display = 'none';
                 }
