@@ -152,7 +152,7 @@
             <div class="part-container">
                 <div class="part-header">
                     <span><strong>(a)(ii) </strong>Find $\angle RQS$.</span>            <!-- (UpdateForNewExercise) Questions part aii -->
-                    <button id="btn-aii" class="btn-show" onclick="revealStep('sol-aii', 'btn-aii', ['QRS', 'QRS', 'QRS', 'QRS', 'QRS', 'QRS'])">Show Step</button>
+                    <button id="btn-aii" class="btn-show" onclick="('sol-aii', 'btn-aii', ['QRS', 'QRS', 'QRS', 'QRS', 'QRS', 'QRS'])">Show Step</button>
                 </div>
                 <div id="sol-aii" class="solution-content" data-current-step="0">
                     <p class="step" style="display:none;">                              <!-- (UpdateForNewExercise) Steps -->
@@ -237,7 +237,13 @@
                 steps[currentStep].style.display = 'block';
                 
                 if (Array.isArray(triangleKeys)) {
-                    highlightTriangle(triangleKeys[currentStep]);
+                    const currentKey = triangleKeys[currentStep];
+                    highlightTriangle(currentKey);
+                
+                    // Specific logic for Part Aii, Step 2 (showing label 14.5)
+                    if (containerId === 'sol-aii' && currentStep === 1 && currentKey === 'RQS') {
+                        drawLineLabels(V.Q, V.S, "14.5");
+                    }
                 }
                 
                 if (window.MathJax) MathJax.typesetPromise([steps[currentStep]]);
@@ -287,8 +293,8 @@
                 opacity: 0.6,
                 // FIX: Remove depthTest: false. Use these 3 lines instead:
                 polygonOffset: true,
-                polygonOffsetFactor: -1,
-                polygonOffsetUnits: -1
+                polygonOffsetFactor: -4,
+                polygonOffsetUnits: -4
             });
         
             const mesh = new THREE.Mesh(geom, mat);
