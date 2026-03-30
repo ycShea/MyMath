@@ -336,41 +336,32 @@
         // This function switches between parts a and b by clearing the scene, toggling button text, and adjusting camera controls based on the selected part.
         // (UpdateForNewExercise)
         function handleToggle(type) {
-            const btnA = document.getElementById('btn-figA');
-            const btnB = document.getElementById('btn-figB');
+            const btn = document.getElementById('btn-fig' + type);
             const footerA = document.getElementById('part-a-footer');
-
+        
             if (currentFigure === type) {
+                // If already showing this figure, HIDE IT
                 clearScene();
                 currentFigure = null;
-                btnA.textContent = "Show Figure";
-                btnB.textContent = "Show Figure";
-                footerA.style.display = 'none';
+                btn.textContent = "Show Figure";
+                if (type === 'A') footerA.style.display = 'none';
             } else {
+                // SHOW the figure
                 clearScene();
                 if (type === 'A') {
-                    setCameraPartA();
-                    // FIX CAMERA for Part A
-                    controls.enableRotate = false;
-                    controls.enablePan = false;
-                    controls.enableZoom = true;
-                    controls.minDistance = 15; // Prevent zooming inside the shape
-                    controls.maxDistance = 30; // Prevent zooming out into space
-                    drawFigureA();
-                    btnA.textContent = "Hide Figure";
-                    btnB.textContent = "Show Figure";
-                    footerA.style.display = 'block'; // Show the special footer
+                    drawFigureA(); 
+                    footerA.style.display = 'inline-block';
                 } else {
-                   setCameraPartB();
-                    // ALLOW ROTATION for Part B
-                    controls.enableRotate = true;
-                    controls.enablePan = true;
                     drawFigureB();
-                    btnB.textContent = "Hide Figure";
-                    btnA.textContent = "Show Figure";
-                    footerA.style.display = 'none'; // Hide it for Part B
+                    if (footerA) footerA.style.display = 'none';
                 }
                 currentFigure = type;
+                btn.textContent = "Hide Figure";
+                
+                // Reset the other button text if it exists
+                const otherType = (type === 'A') ? 'B' : 'A';
+                const otherBtn = document.getElementById('btn-fig' + otherType);
+                if (otherBtn) otherBtn.textContent = "Show Figure";
             }
         }
 
@@ -717,7 +708,7 @@
                 const stepBtn = document.getElementById(btnId);
         
                 if (isShowing) {
-                    // ACTION: HIDE ANSWERS (Return to initial state)
+                    // --- ACTION: HIDE EVERYTHING ---
                     container.style.display = 'none';
                     for (let s of steps) { s.style.display = 'none'; }
                     
@@ -727,21 +718,28 @@
                         stepBtn.style.opacity = "1";
                     }
                     container.setAttribute('data-current-step', '0');
+                    
+                    // RESET 3D SCENE
+                    clearScene();
+                    currentFigure = null;
+                    
+                    // Reset Figure Buttons Text
+                    document.getElementById('btn-figA').textContent = "Show Figure";
+                    document.getElementById('part-a-footer').style.display = 'none';
+                    
                     mainBtn.textContent = "Show Answers Only";
                 } else {
-                    // ACTION: SHOW ANSWERS ONLY
+                    // --- ACTION: SHOW ANSWERS ONLY ---
                     container.style.display = 'block';
                     for (let s of steps) {
                         s.style.display = s.classList.contains('final-ans') ? 'block' : 'none';
                     }
                     
-                    // We keep the "Show Step" button active in case they want to see the working
-                    if (stepBtn) {
-                        stepBtn.textContent = "Show Step";
-                        stepBtn.disabled = false;
-                        stepBtn.style.opacity = "1";
+                    // Ensure Figure A is shown when answers are revealed
+                    if (currentFigure !== 'A') {
+                        handleToggle('A');
                     }
-                    container.setAttribute('data-current-step', '0');
+                    
                     mainBtn.textContent = "Hide Answers";
                 }
             });
