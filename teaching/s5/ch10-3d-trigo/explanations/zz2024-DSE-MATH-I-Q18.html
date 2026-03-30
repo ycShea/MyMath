@@ -529,6 +529,7 @@
 
         // The "Original" Flat View for Part A
         function setCameraPartA() {
+            camera.up.set(0, 1, 0);
             camera.position.set(0, 0, 20); // Straight on
             controls.target.set(5, 4, 0);  // Centered on the flat shape
             controls.update();
