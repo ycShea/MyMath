@@ -111,7 +111,7 @@
                 <div class="part-header">
                     <p class="dev-marker">Solution 1/4 (UpdateForNewExercise) Delete this before released.</p>
                     <span><strong>(a)(i) </strong>Find the length of $QS$.</span>
-                    <button id="btn-ai" class="btn-show" onclick="revealStep('sol-ai', 'btn-ai', 'PQS')">Show Step</button>
+                    <button id="btn-ai" class="btn-show" onclick="revealStep('sol-ai', 'btn-ai', ['PQR', 'QRS', 'PRS'])">Show Step</button>
                 </div>
                 <div id="sol-ai" class="solution-content" data-current-step="0">
                     <p class="step" style="display:none;">Using Cosine Rule in $\triangle PQS$:</p>
@@ -119,6 +119,7 @@
                     <p class="step final-ans" style="display:none;">$QS \approx 14.5126 \text{ cm}$</p>
                 </div>
             </div>
+
             <div class="part-container">
                 <div class="part-header">
                     <p class="dev-marker">Solution 2/4 (UpdateForNewExercise) Delete this before released.</p>
@@ -190,84 +191,77 @@
 
 
         
-        function revealStep(containerId, buttonId, triangleKey) {
+        function revealStep(containerId, buttonId, triangleKeys) {
             const container = document.getElementById(containerId);
             const steps = container.getElementsByClassName('step');
             const btn = document.getElementById(buttonId);
             let currentStep = parseInt(container.getAttribute('data-current-step'));
         
-            // Handle "Hide Solution" click
+            // Handle "Hide" logic
             if (currentStep === steps.length && btn.textContent === "Hide Solution") {
                 container.style.display = 'none';
                 container.setAttribute('data-current-step', '0');
                 btn.textContent = "Show Step";
                 for (let s of steps) s.style.display = 'none';
-                clearHighlights(); // Clear visual highlight when hiding
+                clearHighlights();
                 return;
             }
         
             if (currentStep < steps.length) {
-                if (currentStep === 0) {
-                    container.style.display = 'block';
-                    // Highlight the specific triangle when the first step is revealed
-                    highlightTriangle(triangleKey);
-                }
+                if (currentStep === 0) container.style.display = 'block';
                 
                 steps[currentStep].style.display = 'block';
+                
+                // HIGHLIGHT LOGIC:
+                // If triangleKeys is an array, pick the key for the current step.
+                // Otherwise, use the single string provided.
+                if (Array.isArray(triangleKeys)) {
+                    highlightTriangle(triangleKeys[currentStep]);
+                } else {
+                    highlightTriangle(triangleKeys);
+                }
+        
                 if (window.MathJax) MathJax.typesetPromise([steps[currentStep]]);
                 
                 currentStep++;
                 container.setAttribute('data-current-step', currentStep);
                 btn.textContent = (currentStep === steps.length) ? "Hide Solution" : "Next Step";
-                
                 collapseOtherParts(containerId);
             }
         }
         
-        // Visual highlighting logic
         function highlightTriangle(type) {
-            // 1. ONLY remove previous highlights (tagged 'highlight')
-            const toRemove = scene.children.filter(c => c.userData.isHighlight === true);
-            toRemove.forEach(c => scene.remove(c));
+            // 1. Remove ONLY existing highlights
+            scene.children.filter(c => c.userData.isHighlight).forEach(c => scene.remove(c));
         
-            // 2. Ensure vertices exist (default to Ra if not set)
-            const points = {
-                'PQS': [V.P, V.Q, V.S],
-                'QRS': [V.Q, V.R, V.S],
-                'PRS': [V.P, V.R, V.S]
-            };
+            if (!type) return;
         
-            const targetPoints = points[type];
-            if (!targetPoints || !targetPoints[0]) return;
+            // 2. Define the triangle vertices
+            let pts;
+            if (type === 'PQR') pts = [V.P, V.Q, V.R];
+            else if (type === 'QRS') pts = [V.Q, V.R, V.S];
+            else if (type === 'PRS') pts = [V.P, V.R, V.S];
+            else if (type === 'PQS') pts = [V.P, V.Q, V.S];
         
-            // 3. Create the highlight mesh
-            const geom = new THREE.BufferGeometry().setFromPoints(targetPoints);
+            if (!pts || !pts[0]) return;
+        
+            // 3. Create the Highlight Mesh
+            const geom = new THREE.BufferGeometry().setFromPoints(pts);
             geom.setIndex([0, 1, 2]);
-            
             const mat = new THREE.MeshBasicMaterial({ 
-                color: type === 'PQS' ? 0xffeb3b : (type === 'QRS' ? 0x4caf50 : 0xf44336), 
-                side: THREE.DoubleSide, 
-                transparent: true, 
-                opacity: 0.6, // Higher opacity to stand out
-                depthTest: true 
+                color: type === 'PQR' ? 0xffeb3b : (type === 'QRS' ? 0x4caf50 : 0xf44336),
+                side: THREE.DoubleSide,
+                transparent: true,
+                opacity: 0.5,
+                depthTest: true
             });
         
             const mesh = new THREE.Mesh(geom, mat);
-            
-            // 4. IMPORTANT: Tag this mesh so we can find it later
             mesh.userData.isHighlight = true;
-            
-            // 5. Offset it slightly forward so it sits on top of the base figure
-            mesh.position.z += 0.05; 
-            
+            mesh.position.z += 0.1; // Offset to prevent flickering (Z-fighting)
             scene.add(mesh);
         }
-        
-        function clearHighlights() {
-            const toRemove = scene.children.filter(c => c.userData.isHighlight === true);
-            toRemove.forEach(c => scene.remove(c));
-        }
-        
+            
         function clearHighlights() {
             // Return to default figure drawing if needed, or just clear meshes
             scene.children.filter(c => c.type === "Mesh").forEach(c => scene.remove(c));
