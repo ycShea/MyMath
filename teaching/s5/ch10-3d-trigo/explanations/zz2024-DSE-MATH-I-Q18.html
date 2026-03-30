@@ -319,14 +319,10 @@
             const allContainers = document.querySelectorAll('.solution-content');
             
             allContainers.forEach(container => {
-                if (container.id !== activeId && container.style.display === 'block') {
-                    const steps = container.getElementsByClassName('step');
-                    for (let i = 0; i < steps.length; i++) {
-                        // Hide everything except the one marked 'final-ans'
-                        if (!steps[i].classList.contains('final-ans')) {
-                            steps[i].style.display = 'none';
-                        }
-                    }
+                // If the container is NOT the one we just clicked, 
+                // we simply skip it. This keeps previously opened steps visible.
+                if (container.id !== activeId) {
+                    return; 
                 }
             });
         }
@@ -716,7 +712,7 @@
         }
 
         function clearScene() {
-            scene.children.filter(c => c.type === "Mesh" || c.type === "Line").forEach(c => scene.remove(c));
+            // scene.children.filter(c => c.type === "Mesh" || c.type === "Line").forEach(c => scene.remove(c));
             Object.values(activeLabels).forEach(l => l.remove());
             activeLabels = {};
         }
