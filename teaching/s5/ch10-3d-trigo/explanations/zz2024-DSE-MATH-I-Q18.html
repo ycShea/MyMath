@@ -120,7 +120,7 @@
                             <strong>Note:</strong> You are viewing the 2D layout.
                         </div>
                     </div>
-                    <button id="btn-toggle-answers" class="btn-show" style="background: #6c757d;" onclick="toggleAnswersOnly()">Show Answers Only</button>
+                    <button id="btn-toggle-answers" class="btn-show" style="background: #6c757d;" onclick="toggleAnswersOnly('A')">Show Answers Only</button>
                 </div>
             </div>
 
@@ -190,31 +190,41 @@
                             <strong>Note:</strong> You are viewing the 2D layout.
                         </div>
                     </div>
-                    <button id="btn-toggle-answers" class="btn-show" style="background: #6c757d;" onclick="toggleAnswersOnly()">Show Answers Only</button>
+                    <button id="btn-toggle-answers" class="btn-show" style="background: #6c757d;" onclick="toggleAnswersOnly('B')">Show Answers Only</button>
                 </div>
             </div>
             <div class="part-container">
                 <div class="part-header">
                     <p class="dev-marker">Solution 3/4 (UpdateForNewExercise) Delete this before released.</p>
                     <span><strong>(b)(i)</strong> Find the shortest distance from $R$ to the plane $PQS$.</span>
-                    <button class="btn-show" onclick="toggle('sol-bi')">Show Solution</button>
+                    <button id="btn-bi" class="btn-show" onclick="revealStep('sol-bi', 'btn-bi', ['PRS'], ['PRS'], ['PRS'])">Show Step</button>        <!-- (UpdateForNewExercise) Questions part b -->
                 </div>
-                <div id="sol-bi" class="solution-content">
-                    <p>Let $h$ be the perpendicular height from $R$ to $QS$:</p>
-                    <p class="math-block">$h = 13 \sin(60.7^\circ) \approx 11.3406 \text{ cm}$</p>
-                    <p>Shortest distance = $h \sin(80^\circ) \approx 11.2 \text{ cm}$</p>
+                <div id="sol-bi" class="solution-content" data-current-step="0">
+                    <p class="step" style="display:none;">                              <!-- (UpdateForNewExercise) Part bi Step 0-->
+                        Using Cosine Rule in 3D...
+                    </p>
+                    <p class="step" style="display:none;">                              <!-- (UpdateForNewExercise) Part bi Step 1-->
+                        $PR \approx 15.2 \text{ cm}$
+                    </p>
+                    <p class="step final-ans" style="display:none;">                    <!-- (UpdateForNewExercise) Part bi Step 2 Final answers -->
+                        Shortest distance = $h \sin(80^\circ) \approx 11.2 \text{ cm}$
+                    </p>
                 </div>
             </div>
-
-            <div class="part-container">
                 <div class="part-header">
-                    <p class="dev-marker">Solution 4/4 (UpdateForNewExercise) Delete this before released.</p>
-                    <span><strong>(b)(ii)</strong> Claim: distance between $P$ and $X$ exceeds $8\text{ cm}$. Is it correct?</span>
-                    <button class="btn-show" onclick="toggle('sol-bii')">Show Solution</button>
+                    <span><strong>(b)(ii)</strong>Claim: distance between $P$ and $X$ exceeds $8\text{ cm}$. Is it correct?</span>
+                    <button id="btn-bii" class="btn-show" onclick="revealStep('sol-bii', 'btn-bii', ['PRS'], ['PRS'], ['PRS'])">Show Step</button>        <!-- (UpdateForNewExercise) Questions part b -->
                 </div>
-                <div id="sol-bii" class="solution-content">
-                    <p class="math-block">$PX_{\text{min}} = 12 \sin(\angle PQS) \sin(80^\circ) \approx 8.0643 \text{ cm}$</p>
-                    <p>Since $8.06 > 8$, the claim is **Correct**.</p>
+                <div id="sol-bii" class="solution-content" data-current-step="0">
+                    <p class="step" style="display:none;">                              <!-- (UpdateForNewExercise) Part bii Step 0-->
+                        $PX_{\text{min}} = 12 \sin(\angle PQS) \sin(80^\circ) \approx 8.0643 \text{ cm}$
+                    </p>
+                    <p class="step" style="display:none;">                              <!-- (UpdateForNewExercise) Part bii Step 1-->
+                        $PR \approx 15.2 \text{ cm}$
+                    </p>
+                    <p class="step final-ans" style="display:none;">                    <!-- (UpdateForNewExercise) Part bii Step 2 Final answers -->
+                        The claim is **Correct**.
+                    </p>
                 </div>
             </div>
         </div>
@@ -742,9 +752,12 @@
             scene.add(mesh);
         }
 
-        function toggleAnswersOnly() {
+        function toggleAnswersOnly(scope = 'all') {
             const mainBtn = document.getElementById('btn-toggle-answers');
-            const containers = document.querySelectorAll('.solution-content');
+            let selector = '.solution-content';
+            if (scope === 'A') selector = '[id^="sol-a"]'; // IDs starting with sol-a
+            if (scope === 'B') selector = '[id^="sol-b"]'; // IDs starting with sol-b
+            const containers = document.querySelectorAll(selector);
             const isShowing = mainBtn.textContent === "Hide Answers";
         
             containers.forEach(container => {
@@ -753,42 +766,25 @@
                 const stepBtn = document.getElementById(btnId);
         
                 if (isShowing) {
-                    // --- ACTION: HIDE EVERYTHING ---
+                    // --- HIDE LOGIC ---
                     container.style.display = 'none';
                     for (let s of steps) { s.style.display = 'none'; }
-                    
                     if (stepBtn) {
                         stepBtn.textContent = "Show Step";
                         stepBtn.disabled = false;
                         stepBtn.style.opacity = "1";
                     }
                     container.setAttribute('data-current-step', '0');
-                    
-                    // RESET 3D SCENE
-                    clearScene();
-                    currentFigure = null;
-                    
-                    // Reset Figure Buttons Text
-                    document.getElementById('btn-figA').textContent = "Show Figure";
-                    document.getElementById('part-a-footer').style.display = 'none';
-                    
                     mainBtn.textContent = "Show Answers Only";
                 } else {
-                    // --- ACTION: SHOW ANSWERS ONLY ---
+                    // --- SHOW LOGIC ---
                     container.style.display = 'block';
                     for (let s of steps) {
                         s.style.display = s.classList.contains('final-ans') ? 'block' : 'none';
                     }
-                    
-                    // Ensure Figure A is shown when answers are revealed
-                    if (currentFigure !== 'A') {
-                        handleToggle('A');
-                    }
-                    
                     mainBtn.textContent = "Hide Answers";
                 }
             });
-        
             if (window.MathJax) MathJax.typeset();
         }
         
