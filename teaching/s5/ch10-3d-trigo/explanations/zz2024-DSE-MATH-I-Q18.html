@@ -111,12 +111,12 @@
             <!-------------------------->
             <!-- Question of part (a) -->
             <!-------------------------->
-            <div class="question-summary">                                                                <!-- (UpdateForNewExercise) Questions part a -->
-                <strong>PQRS a quadrilateral, where $PQ = 12\text{ cm}$, $PS = 10\text{ cm}$, $QR = 13\text{ cm}$, $\angle QPS = 82^\circ$ and $\angle QRS = 65^\circ$.</strong>
+            <div class="question-summary">
+                <strong>PQRS a quadrilateral, where $PQ = 12\text{ cm}$, $PS = 10\text{ cm}$, $QR = 13\text{ cm}$, $\angle QPS = 82^\circ$ and $\angle QRS = 65^\circ$.</strong>                          <!-- (UpdateForNewExercise) Questions part a -->
                 <div style="margin-top: 10px; display: flex; align-items: center; justify-content: space-between; gap: 15px;">
                     <div style="display: flex; align-items: center; gap: 15px;">
-                        <button id="btn-figA" class="btn-show" onclick="handleToggle('A')">Show Figure</button>
-                        <div id="part-a-footer" style="display: none; background: #fff3cd; padding: 5px 12px; border-radius: 5px; border: 1px solid #ffeeba; font-size: 0.9rem; white-space: nowrap;">
+                        <button id="btn-figA" class="btn-show" onclick="handleToggle('A')">Show Figure</button>                                                                                           <!-- (UpdateForNewExercise) Button in part a -->
+                        <div id="part-a-footer" style="display: none; background: #fff3cd; padding: 5px 12px; border-radius: 5px; border: 1px solid #ffeeba; font-size: 0.9rem; white-space: nowrap;">    <!-- (UpdateForNewExercise) Button in part a -->
                             <strong>Note:</strong> You are viewing the 2D layout.
                         </div>
                     </div>
@@ -178,14 +178,21 @@
 
             <!-- <hr style="margin: 30px 0; border: 0; border-top: 1px solid #ddd;"> -->
 
-            <div class="question-summary">
-                <p class="dev-marker">Question Summary 2/2 (UpdateForNewExercise) Delete this before released.</p>
-                <strong>The metal sheet $PQRS$ is now folded along $QS$. It is given that the angle between plane $PQS$ and plane $QRS$ is $80^\circ$.</strong>
-                <div style="margin-top:10px;">
-                    <button id="btn-figB" class="btn-show" onclick="handleToggle('B')">Show Figure</button>
+            <!-------------------------->
+            <!-- Question of part (b) -->
+            <!-------------------------->
+            <div class="question-summary">                                                                
+                <strong>The metal sheet $PQRS$ is now folded along $QS$. It is given that the angle between plane $PQS$ and plane $QRS$ is $80^\circ$.</strong>                                           <!-- (UpdateForNewExercise) Questions part b -->
+                <div style="margin-top: 10px; display: flex; align-items: center; justify-content: space-between; gap: 15px;">
+                    <div style="display: flex; align-items: center; gap: 15px;">
+                        <button id="btn-figB" class="btn-show" onclick="handleToggle('B')">Show Figure</button>                                                                                           <!-- (UpdateForNewExercise) Button in part b -->
+                        <div id="part-b-footer" style="display: none; background: #fff3cd; padding: 5px 12px; border-radius: 5px; border: 1px solid #ffeeba; font-size: 0.9rem; white-space: nowrap;">    <!-- (UpdateForNewExercise) Button in part b -->
+                            <strong>Note:</strong> You are viewing the 2D layout.
+                        </div>
+                    </div>
+                    <button id="btn-toggle-answers" class="btn-show" style="background: #6c757d;" onclick="toggleAnswersOnly()">Show Answers Only</button>
                 </div>
             </div>
-
             <div class="part-container">
                 <div class="part-header">
                     <p class="dev-marker">Solution 3/4 (UpdateForNewExercise) Delete this before released.</p>
@@ -649,7 +656,7 @@
         
             // 3. Create the geometry and line
             const geometry = new THREE.BufferGeometry().setFromPoints(points);
-            const material = new THREE.LineBasicMaterial({ color: color, linewidth: 2 });
+            const material = new THREE.LineBasicMaterial({ color: color, linewidth: 2, depthTest: false });
             const arcLine = new THREE.Line(geometry, material);
             arcLine.userData.isStepHighlight = true;
             scene.add(arcLine);
