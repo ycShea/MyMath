@@ -212,7 +212,6 @@
                 </div>
             </div>
                 <div class="part-header">
-                    <span><strong>(b)(ii)</strong>Claim: distance between $P$ and $X$ exceeds $8\text{ cm}$. Is it correct?</span>
                     <button id="btn-bii" class="btn-show" onclick="revealStep('sol-bii', 'btn-bii', ['PRS'], ['PRS'], ['PRS'])">Show Step</button>        <!-- (UpdateForNewExercise) Questions part b -->
                 </div>
                 <div id="sol-bii" class="solution-content" data-current-step="0">
@@ -484,28 +483,29 @@
         // ==========================================
         // DEFINITION OF POINTS AND OBJECTS (UpdateForNewExercise)
         // ==========================================
-        // Definition of points 
+        // Definition of points
+        const pq = 12; ps = 10; qr = 13;
         const scale = 0.6;
         const degToRad = (deg) => deg * Math.PI / 180;
         
-        const rad82 = degToRad(82);
-        const rad80 = degToRad(80);
-        const rad84 = degToRad(84);
+        const angle_qps = degToRad(82);
+        const angle_qrs = degToRad(65);
+        const angle_rotate = degToRad(180 - 80);
         
         // Vertices for Part A
         const V = {
             P: new THREE.Vector3(0, 0, 0),
-            Q: new THREE.Vector3(12 * scale, 0, 0),
-            S: new THREE.Vector3(10 * scale * Math.cos(rad82), 10 * scale * Math.sin(rad82), 0)
+            Q: new THREE.Vector3(pq * scale, 0, 0),
+            S: new THREE.Vector3(ps * scale * Math.cos(angle_qps), ps * scale * Math.sin(angle_qps), 0)
         };
         // R for Part A (Flat)
-        V.Ra = V.Q.clone().add(new THREE.Vector3(13 * scale * Math.cos(rad84), 13 * scale * Math.sin(rad84), 0));
+        V.Ra = V.Q.clone().add(new THREE.Vector3(qr * scale * Math.cos(angle_qrs), qr * scale * Math.sin(angle_qrs), 0));
 
-        // R for Part B (Folded 80 deg)
+        // R for Part B (Folded (180 - 80) deg)
         // Get the direction of the hinge (the folding line QS)
         const axis = new THREE.Vector3().subVectors(V.S, V.Q).normalize();
-        // Rotate flat-plane vertex Ra around hinge axis QS by 80° to define the folded 3D position.
-        V.Rb = V.Ra.clone().sub(V.Q).applyAxisAngle(axis, rad80).add(V.Q);
+        // Rotate flat-plane vertex Ra around hinge axis QS by 100° to define the folded 3D position.
+        V.Rb = V.Ra.clone().sub(V.Q).applyAxisAngle(axis, angle_rotate).add(V.Q);
 
         let activeLabels = {};
 
