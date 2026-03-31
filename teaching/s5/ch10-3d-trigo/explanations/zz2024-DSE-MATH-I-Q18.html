@@ -133,17 +133,17 @@
                     <button id="btn-ai" class="btn-show" onclick="revealStep('sol-ai', 'btn-ai', ['PQS', 'PQS', 'PQS', 'PQS'])">Show Step</button>
                 </div>
                 <div id="sol-ai" class="solution-content" data-current-step="0">
-                    <p class="step" style="display:none;">                              <!-- (UpdateForNewExercise) Steps -->
+                    <p class="step" style="display:none;">                              <!-- (UpdateForNewExercise) Part ai Step 0-->
                         Using Cosine Rule in $\triangle PQS$:<br>
                         $QS^2 = {PQ^2 + PS^2 - 2(PQ)(PS)\cos(\angle QPS)}$<br>
                     </p>
-                    <p class="step" style="display:none;">                              <!-- (UpdateForNewExercise) Steps -->
+                    <p class="step" style="display:none;">                              <!-- (UpdateForNewExercise) Part ai Step 1 -->
                         $QS^2 = {12^2 + 10^2 - 2(12)(10)\cos(82^\circ)}$<br>
                     </p>
-                    <p class="step" style="display:none;">                              <!-- (UpdateForNewExercise) Steps -->
-                        $QS = \sqrt{{12^2 + 10^2 - 2(12)(10)\cos(82^\circ)}}\text{ cm} \approx 14.5126 \text{ cm} $<br>
+                    <p class="step" style="display:none;">                              <!-- (UpdateForNewExercise) Part ai Step 2 -->
+                        $QS = \sqrt{{12^2 + 10^2 - 2(12)(10)\cos(82^\circ)}}\text{ cm} \approx 14.513 \text{ cm} $<br>
                     </p>
-                    <p class="step final-ans" style="display:none;">                    <!-- (UpdateForNewExercise) Final answers -->
+                    <p class="step final-ans" style="display:none;">                    <!-- (UpdateForNewExercise) Part ai Step 3 -->
                         $QS \approx 14.5 \text{ cm}$
                     </p>
                 </div>
@@ -155,19 +155,22 @@
                     <button id="btn-aii" class="btn-show" onclick="revealStep('sol-aii', 'btn-aii', ['QRS', 'QRS', 'QRS', 'QRS'])">Show Step</button>
                 </div>
                 <div id="sol-aii" class="solution-content" data-current-step="0">
-                    <p class="step" style="display:none;">                              <!-- (UpdateForNewExercise) Steps -->
+                    <p class="step" style="display:none;">                              <!-- (UpdateForNewExercise) Part aii Step 0-->
                         Using Sine Rule in $\triangle QRS$:<br>
                         $$ \frac{QR}{\sin(\angle QSR)} = \frac{QS}{\sin(\angle QRS)} \implies
-                        \frac{13}{\sin(\angle QSR)} = \frac{14.5126}{\sin(65^\circ)}$$<br>
+                        \frac{13}{\sin(\angle QSR)} = \frac{14.513}{\sin(65^\circ)}$$<br>
                     </p>
-                    <p class="step" style="display:none;">                              <!-- (UpdateForNewExercise) Steps -->
-                        $\angle QSR \approx 54.280^\circ$
+                    <p class="step" style="display:none;">                              <!-- (UpdateForNewExercise) Part aii Step 1-->
+                        $sin \angle QSR \approx 0.811878935$
                     </p>
-                    <p class="step" style="display:none;">                              <!-- (UpdateForNewExercise) Steps -->
+                    <p class="step" style="display:none;">                              <!-- (UpdateForNewExercise) Part aii Step 2-->
+                        $\angle QSR \approx 54.280^\circ\text{ or }\angle QSR \approx 125.72^\circ\text{ rejected}$
+                    </p>
+                    <p class="step" style="display:none;">                              <!-- (UpdateForNewExercise) Part aii Step 3-->
                         $\angle RQS = 180^\circ - \angle QRS - \angle QSR
                         \approx 180^\circ - 65^\circ - 54.280^\circ$<br>
                     </p>
-                    <p class="step final-ans" style="display:none;">                    <!-- (UpdateForNewExercise) Final answers -->
+                    <p class="step final-ans" style="display:none;">                    <!-- (UpdateForNewExercise) Part aii Step 4 Final answers -->
                         $\angle RQS \approx 60.7^\circ$<br>
                     </p>
                 </div>
@@ -240,11 +243,11 @@
                 if (Array.isArray(triangleKeys)) {
                     highlightTriangle(triangleKeys[currentStep]);
                 }
-                if ((containerId === "sol-ai") && (currentStep === 3)) drawLineLabels(V.Q, V.S, "14.5", "#00bbbb", "stepai3_lineQS");                                        // (UpdateForNewExercise) Customize the steps, final steps
-                if ((containerId === "sol-aii") && (currentStep === 0)) drawLineLabels(V.Q, V.S, "14.5", "#d63384", "stepaii_lineQS");                                       // (UpdateForNewExercise) Customize the steps, result from part (a)(i)
-                if ((containerId === "sol-aii") && (currentStep === 1)) drawAngleArc(V.Q, V.S, V.R, "54.280°", 1.0, "#00bbbb", "stepaii1_angleQSR");                         // (UpdateForNewExercise) Customize the steps
-                if ((containerId === "sol-aii") && (currentStep === 2 || currentStep === 3)) drawAngleArc(V.Q, V.S, V.R, "54.280°", 1.0, "#d63384", "stepaii2_angleQSR");    // (UpdateForNewExercise) Customize the steps
-                if ((containerId === "sol-aii") && (currentStep === 3)) drawAngleArc(V.R, V.Q, V.S, "60.7°", 1.0, "#00bbbb", "stepaii3_angleRQS");                           // (UpdateForNewExercise) Customize the steps, final steps
+                if ((containerId === "sol-ai") && (currentStep === 3)) drawLineLabels(V.Q, V.S, "14.5", "#00bbbb", "stepai3_lineQS");                                        // (UpdateForNewExercise) Customize the steps, answer
+                if ((containerId === "sol-aii") && (currentStep === 0)) drawLineLabels(V.Q, V.S, "14.513", "#d63384", "stepaii_lineQS");                                     // (UpdateForNewExercise) Customize the steps, result from part (a)(i)
+                if ((containerId === "sol-aii") && (currentStep === 2)) drawAngleArc(V.Q, V.S, V.R, "54.280°", 1.0, "#00bbbb", "stepaii1_angleQSR");                         // (UpdateForNewExercise) Customize the steps, answer
+                if ((containerId === "sol-aii") && (currentStep === 3 || currentStep === 4)) drawAngleArc(V.Q, V.S, V.R, "54.280°", 1.0, "#d63384", "stepaii2_angleQSR");    // (UpdateForNewExercise) Customize the steps, result from part (a)(ii)
+                if ((containerId === "sol-aii") && (currentStep === 4)) drawAngleArc(V.R, V.Q, V.S, "60.7°", 1.0, "#00bbbb", "stepaii3_angleRQS");                           // (UpdateForNewExercise) Customize the steps, answer
                 
                 if (window.MathJax) MathJax.typesetPromise([steps[currentStep]]);
                 
