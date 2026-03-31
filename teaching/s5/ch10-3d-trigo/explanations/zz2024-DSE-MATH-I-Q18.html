@@ -242,7 +242,7 @@
                 }
                 if ((containerId === "sol-ai") && (currentStep === 3)) drawLineLabels(V.Q, V.S, "14.5", "#00bbbb");                  // (UpdateForNewExercise) Customize the steps
                 if (containerId === "sol-aii") drawLineLabels(V.Q, V.S, "14.5", "#d63384");                                          // (UpdateForNewExercise) Customize the steps
-                if ((containerId === "sol-aii") && (currentStep === 1)) drawAngleArc(V.Q, V.S, V.S, "54.280°", "#00bbbb");           // (UpdateForNewExercise) Customize the steps
+                if ((containerId === "sol-aii") && (currentStep === 1)) drawAngleArc(V.Q, V.S, V.S, "54.280°", 1.0, "#00bbbb");      // (UpdateForNewExercise) Customize the steps
                 
                 if (window.MathJax) MathJax.typesetPromise([steps[currentStep]]);
                 
@@ -521,7 +521,7 @@
         // setCameraPartB()
         // drawLines(linePairs, isSolid = true, color = 0x333333)
         // drawLineLabels(p1, p2, labelText = "")
-        // drawAngleArc(p1, vertex, p2, labelText = "", radius = 2, color = 0xff0000)
+        // drawAngleArc(p1, vertex, p2, labelText = "", radius = 1, color = 0x000000)
         // drawRightAngle(p1, vertex, p2, size = 1.0)
         // setupLabels(labelMap)
         // createPolygon(points, color = 0x0d6efd)
@@ -619,7 +619,7 @@
         }
         
         // 3D version of drawing arcs
-        function drawAngleArc(p1, vertex, p2, labelText = "", radius = 2, color = 0xff0000) {
+        function drawAngleArc(p1, vertex, p2, labelText = "", radius = 12, color = 0x000000) {
             // 1. Initialize our custom 3D curve
             const arcCurve = new Arc3D(p1, vertex, p2, radius);
         
