@@ -203,12 +203,12 @@
                 </div>
                 <div id="sol-bi" class="solution-content" data-current-step="0">
                     <p class="step" style="display:none;">                              <!-- (UpdateForNewExercise) Part bi Step 0-->
-                        Consider $\triangle QRS$. Let $T$ be a point on $RS$ such that $RT \perp QS$.<br>
+                        Consider $\triangle QRS$.<br>
+                        Let $T$ be a point on $QS$ such that $RT \perp QS$.<br>
                     </p>
                     <p class="step" style="display:none;">                              <!-- (UpdateForNewExercise) Part bi Step 1-->
-                        In right-angled $\triangle RTQ$, $RT = QR\sin\angle RQS$<br>
-                        $RT \approx 13\sin\angle 54.280\circ$<br>
-                        $RT \approx 13.340\text{ cm}$<br>
+                        In right-angled $\triangle RTQ$,<br>
+                        $RT = QR\sin\angle RQS \approx 13\sin\angle 54.280^\circ \approx 13.340\text{ cm}$<br>
                     </p>
                     <p class="step" style="display:none;">                              <!-- (UpdateForNewExercise) Part bi Step 1-->
                         Let the shortest distance be $h$<br>
@@ -323,6 +323,7 @@
             else if (type === 'PRS') pts = [V.P, V.R, V.S];
             else if (type === 'PQS') pts = [V.P, V.Q, V.S];
             else if (type === 'RQS') pts = [V.R, V.Q, V.S];
+            else if (type === 'QRT') pts = [V.R, V.Q, V.T];
         
             if (!pts || !pts[0]) return;
         
@@ -573,7 +574,8 @@
             
             drawLines(lines);
             const dashLines = [ [V.R, V.T] ];
-            drawLines(dashLines);
+            drawLines(dashLines, false);
+            drawRightAngle(V.Q, V.T, V.R, 1.0);
             
             // Corrected Label Assignment for Part b
             setupLabels({ "P": V.P, "Q": V.Q, "R": V.R, "S": V.S, "T": V.T });
