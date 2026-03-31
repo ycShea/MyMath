@@ -112,7 +112,7 @@
             <!-- Question of part (a) -->
             <!-------------------------->
             <div class="question-summary">
-                <strong>PQRS a quadrilateral, where $PQ = 12\text{ cm}$, $PS = 10\text{ cm}$, $QR = 13\text{ cm}$, $\angle QPS = 82^\circ$ and $\angle QRS = 65^\circ$.</strong>                          <!-- (UpdateForNewExercise) Questions part a -->
+                <strong>Part (a)</strong>PQRS a quadrilateral, where $PQ = 12\text{ cm}$, $PS = 10\text{ cm}$, $QR = 13\text{ cm}$, $\angle QPS = 82^\circ$ and $\angle QRS = 65^\circ$.                  <!-- (UpdateForNewExercise) Questions part a -->
                 <div style="margin-top: 10px; display: flex; align-items: center; justify-content: space-between; gap: 15px;">
                     <div style="display: flex; align-items: center; gap: 15px;">
                         <button id="btn-figA" class="btn-show" onclick="handleToggle('A')">Show Figure</button>                                                                                           <!-- (UpdateForNewExercise) Button in part a -->
@@ -120,7 +120,7 @@
                             <strong>Note:</strong> You are viewing the 2D layout.
                         </div>
                     </div>
-                    <button id="btn-toggle-answers" class="btn-show" style="background: #6c757d;" onclick="toggleAnswersOnly('sol-a')">Show Answers Only</button>
+                    <button id="btn-toggle-answers" class="btn-show" style="background: #6c757d;" onclick="toggleAnswersOnly('sol-a', this)">Show Answers Only</button>
                 </div>
             </div>
 
@@ -182,7 +182,7 @@
             <!-- Question of part (b) -->
             <!-------------------------->
             <div class="question-summary">                                                                
-                <strong>The metal sheet $PQRS$ is now folded along $QS$. It is given that the angle between plane $PQS$ and plane $QRS$ is $80^\circ$.</strong>                                           <!-- (UpdateForNewExercise) Questions part b -->
+                <strong>Part (b)</strong>The metal sheet $PQRS$ is now folded along $QS$. It is given that the angle between plane $PQS$ and plane $QRS$ is $80^\circ$.                                   <!-- (UpdateForNewExercise) Questions part b -->
                 <div style="margin-top: 10px; display: flex; align-items: center; justify-content: space-between; gap: 15px;">
                     <div style="display: flex; align-items: center; gap: 15px;">
                         <button id="btn-figB" class="btn-show" onclick="handleToggle('B')">Show Figure</button>                                                                                           <!-- (UpdateForNewExercise) Button in part b -->
@@ -190,7 +190,7 @@
                             <strong>Note:</strong> You are viewing the 2D layout.
                         </div>
                     </div>
-                    <button id="btn-toggle-answers" class="btn-show" style="background: #6c757d;" onclick="toggleAnswersOnly('sol-b')">Show Answers Only</button>
+                    <button id="btn-toggle-answers" class="btn-show" style="background: #6c757d;" onclick="toggleAnswersOnly('sol-b', this)">Show Answers Only</button>
                 </div>
             </div>
             <!-------------------------->
@@ -769,13 +769,12 @@
             scene.add(mesh);
         }
 
-        function toggleAnswersOnly(prefix) {
-            const mainBtn = document.getElementById('btn-toggle-answers');
+        function toggleAnswersOnly(prefix, btn) {
             // Targets only IDs starting with the specific prefix (e.g., 'sol-b')
             const containers = document.querySelectorAll(`[id^="${prefix}"]`);
             
             // Check current state based on button text
-            const isShowing = mainBtn.textContent === "Hide Answers";
+            const isShowing = btn.textContent === "Hide Answers";
         
             containers.forEach(container => {
                 const steps = container.getElementsByClassName('step');
@@ -801,7 +800,7 @@
                     }
                 }
             });
-            mainBtn.textContent = isShowing ? "Show Answers Only" : "Hide Answers";
+            btn.textContent = isShowing ? "Show Answers Only" : "Hide Answers";
             if (window.MathJax) MathJax.typeset();
         }
         
