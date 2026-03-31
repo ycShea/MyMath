@@ -152,7 +152,7 @@
             <div class="part-container">
                 <div class="part-header">
                     <span><strong>(a)(ii) </strong>Find $\angle RQS$.</span>            <!-- (UpdateForNewExercise) Questions part aii -->
-                    <button id="btn-aii" class="btn-show" onclick="revealStep('sol-aii', 'btn-aii', ['QRS', 'QRS', 'QRS', 'QRS', 'QRS', 'QRS'])">Show Step</button>
+                    <button id="btn-aii" class="btn-show" onclick="revealStep('sol-aii', 'btn-aii', ['QRS', 'QRS', 'QRS', 'QRS'])">Show Step</button>
                 </div>
                 <div id="sol-aii" class="solution-content" data-current-step="0">
                     <p class="step" style="display:none;">                              <!-- (UpdateForNewExercise) Steps -->
@@ -240,10 +240,10 @@
                 if (Array.isArray(triangleKeys)) {
                     highlightTriangle(triangleKeys[currentStep]);
                 }
-                if ((containerId === "sol-ai") && (currentStep === 3)) drawLineLabels(V.Q, V.S, "14.5", "#00bbbb");                  // (UpdateForNewExercise) Customize the steps, final steps
-                if (containerId === "sol-aii") drawLineLabels(V.Q, V.S, "14.5", "#d63384");                                          // (UpdateForNewExercise) Customize the steps, result from part (a)(i)
-                if ((containerId === "sol-aii") && (currentStep === 1)) drawAngleArc(V.Q, V.S, V.R, "54.280°", 1.0, "#00bbbb");      // (UpdateForNewExercise) Customize the steps
-                if ((containerId === "sol-aii") && (currentStep === 3)) drawAngleArc(V.R, V.Q, V.S, "60.7°", 1.0, "#00bbbb");        // (UpdateForNewExercise) Customize the steps, final steps
+                if ((containerId === "sol-ai") && (currentStep === 3)) drawLineLabels(V.Q, V.S, "14.5", "#00bbbb", "stepai3_lineQS");                  // (UpdateForNewExercise) Customize the steps, final steps
+                if (containerId === "sol-aii") drawLineLabels(V.Q, V.S, "14.5", "#d63384", "stepaii_lineQS");                                          // (UpdateForNewExercise) Customize the steps, result from part (a)(i)
+                if ((containerId === "sol-aii") && (currentStep === 1)) drawAngleArc(V.Q, V.S, V.R, "54.280°", 1.0, "#00bbbb", "stepaii1_angleQSR");   // (UpdateForNewExercise) Customize the steps
+                if ((containerId === "sol-aii") && (currentStep === 3)) drawAngleArc(V.R, V.Q, V.S, "60.7°", 1.0, "#00bbbb", "stepaii3_angleRQS");     // (UpdateForNewExercise) Customize the steps, final steps
                 
                 if (window.MathJax) MathJax.typesetPromise([steps[currentStep]]);
                 
@@ -482,14 +482,14 @@
             const lines = [[V.P, V.Q], [V.Q, V.R], [V.R, V.S], [V.S, V.P]];
             const matLine = new THREE.LineBasicMaterial({ color: 0x333333, linewidth: 2 });
             createPolygon([V.P, V.Q, V.R, V.S], 0x0d6efd);
-            drawLineLabels(V.P, V.Q, "12");
-            drawLineLabels(V.P, V.S, "10");
-            drawLineLabels(V.Q, V.R, "13");
+            drawLineLabels(V.P, V.Q, "12", "black", "static_PQ");
+            drawLineLabels(V.P, V.S, "10", "black", "static_PS");
+            drawLineLabels(V.Q, V.R, "13", "black", "static_QR");
 
             drawLines(lines);
 
-            const angleQPS = drawAngleArc(V.Q, V.P, V.S, "82°", 1.0)
-            const angleQRS = drawAngleArc(V.Q, V.R, V.S, "65°", 1.0)
+            const angleQPS = drawAngleArc(V.Q, V.P, V.S, "82°", 1.0, "static_angleQPS")
+            const angleQRS = drawAngleArc(V.Q, V.R, V.S, "65°", 1.0, "static_angleQRS")
 
             // Corrected Label Assignment for Part a
             setupLabels({ "P": V.P, "Q": V.Q, "R": V.R, "S": V.S });
@@ -521,8 +521,8 @@
         // setCameraPartA()
         // setCameraPartB()
         // drawLines(linePairs, isSolid = true, color = 0x333333)
-        // drawLineLabels(p1, p2, labelText = "")
-        // drawAngleArc(p1, vertex, p2, labelText = "", radius = 1, color = 0x000000)
+        // drawLineLabels(p1, p2, labelText = "", color = 0x000000, labelKey = null)
+        // drawAngleArc(p1, vertex, p2, labelText = "", radius = 1, color = 0x000000, labelKey = null)
         // drawRightAngle(p1, vertex, p2, size = 1.0)
         // setupLabels(labelMap)
         // createPolygon(points, color = 0x0d6efd)
@@ -609,18 +609,20 @@
             });
         }
 
-        function drawLineLabels(p1, p2, labelText = "", color = "black") {
+        function drawLineLabels(p1, p2, labelText = "", color = 0x000000, labelKey = null) {
             const midPoint = new THREE.Vector3().addVectors(p1, p2).multiplyScalar(0.5);
             const labelDiv = makeLabel(labelText);
             labelDiv.style.color = color;
             
-            const labelKey = "lineLabel_" + Math.random().toString(36).substr(2, 9);
+            // If no key is provided, generate a random one (for static labels)
+            // If a key is provided (e.g., "stepLabel_QS"), use it for tracking/deletion
+            const key = labelKey || "lineLabel_" + Math.random().toString(36).substr(2, 9);
             V[labelKey] = midPoint;
             activeLabels[labelKey] = labelDiv;
         }
         
         // 3D version of drawing arcs
-        function drawAngleArc(p1, vertex, p2, labelText = "", radius = 12, color = 0x000000) {
+        function drawAngleArc(p1, vertex, p2, labelText = "", radius = 1.0, color = 0x000000, labelKey = null) {
             // 1. Initialize our custom 3D curve
             const arcCurve = new Arc3D(p1, vertex, p2, radius);
         
@@ -631,6 +633,7 @@
             const geometry = new THREE.BufferGeometry().setFromPoints(points);
             const material = new THREE.LineBasicMaterial({ color: color, linewidth: 2 });
             const arcLine = new THREE.Line(geometry, material);
+            arcLine.userData.isStepHighlight = true;
             scene.add(arcLine);
         
             // 4. Add the Label at the midpoint
@@ -640,9 +643,10 @@
                 
                 // Create the label element
                 const labelDiv = makeLabel(labelText);
+                labelDiv.style.color = color; // Match label color to arc color
                 
                 // Assign a unique key so the () loop can track this 3D position
-                const labelKey = "label_" + Math.random().toString(36).substr(2, 9);
+                const key = labelKey || "angleLabel_" + Math.random().toString(36).substr(2, 9);
                 V[labelKey] = midPoint; 
                 activeLabels[labelKey] = labelDiv;
             }
