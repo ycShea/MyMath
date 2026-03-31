@@ -215,7 +215,7 @@
             </div>
             <div class="part-container">
                 <div class="part-header">
-                    <span><strong>(b)(ii)</strong> Claim: distance between $P$ and $X$ exceeds $8\text{ cm}$. Is it correct?</span>
+                    <span><strong>(b)(i)</strong> Claim: distance between $P$ and $X$ exceeds $8\text{ cm}$. Is it correct?</span>
                     <button id="btn-bii" class="btn-show" onclick="revealStep('sol-bii', 'btn-bii', ['PRS'], ['PRS'], ['PRS'])">Show Step</button>        <!-- (UpdateForNewExercise) Questions part b -->
                 </div>
                 <div id="sol-bii" class="solution-content" data-current-step="0">
@@ -235,8 +235,7 @@
 
     <script>
         let currentFigure = null;
-        let activeLabels = {};
-        
+
         // This function orchestrates the progressive reveal of solution steps by synchronizing the visibility of HTML text, MathJax formula rendering, and the corresponding 3D triangle highlights in the Three.js scene.
         function revealStep(containerId, buttonId, triangleKeys) {
             // 1. Identify if the current solution belongs to Part A
@@ -492,18 +491,10 @@
         const pq = 12; ps = 10; qr = 13;
         const scale = 0.6;
         const degToRad = (deg) => deg * Math.PI / 180;
-        const cosineSide = (b, c, angleArad) => Math.sqrt(b*b + c*c - 2*b*c*Math.cos(angleArad));           // a = cosineSide(b, c, angleArad)
-        const cosineAngle = (a, b, c) => Math.acos((b*b + c*c - a*a) / (2*b*c));                            // A = cosineAngle(a, b, c)
-        const sineSide = (b, angleArad, angleBrad) => b * Math.sin(angleArad) / Math.sin(angleBrad);        // a = sineSide(b, angleArad, angleBrad)
-        const sineAngle = (a, b, angleBrad) => Math.asin(a * Math.sin(angleBrad) / b);                      // A = sineAngle(a, b, angleBrad)
-
+        
         const angle_qps = degToRad(82);
         const angle_qrs = degToRad(65);
-        const angle_rotate = degToRad(100); // 180 - 80 degrees
-        const qs = cosineSide(pq, ps, angle_qps);
-        const angle_pqs = sineAngle(ps, qs, angle_qps);
-        const angle_qsr = sineAngle(qr, qs, angle_qrs);
-        const angle_rqs = Math.PI - angle_qrs - angle_qsr;
+        const angle_rotate = degToRad(180 - 80);
         
         // Vertices for Part A
         const V = {
@@ -512,7 +503,7 @@
             S: new THREE.Vector3(ps * scale * Math.cos(angle_qps), ps * scale * Math.sin(angle_qps), 0)
         };
         // R for Part A (Flat)
-        V.Ra = V.Q.clone().add(new THREE.Vector3(qr * scale * Math.cos(angle_rqs), qr * scale * Math.sin(angle_rqs), 0));
+        V.Ra = V.Q.clone().add(new THREE.Vector3(qr * scale * Math.cos(angle_qrs), qr * scale * Math.sin(angle_qrs), 0));
 
         // R for Part B (Folded (180 - 80) deg)
         // Get the direction of the hinge (the folding line QS)
