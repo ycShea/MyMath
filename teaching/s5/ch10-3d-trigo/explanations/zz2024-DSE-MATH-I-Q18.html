@@ -199,17 +199,23 @@
             <div class="part-container">
                 <div class="part-header">
                     <span><strong>(b)(i)</strong> Find the shortest distance from $R$ to the plane $PQS$.</span>
-                    <button id="btn-bi" class="btn-show" onclick="revealStep('sol-bi', 'btn-bi', ['PRS'], ['PRS'], ['PRS'])">Show Step</button>        <!-- (UpdateForNewExercise) Questions part b -->
+                    <button id="btn-bi" class="btn-show" onclick="revealStep('sol-bi', 'btn-bi', ['QRS'], ['QRS'], ['QRS'], ['QRS'])">Show Step</button>        <!-- (UpdateForNewExercise) Questions part b -->
                 </div>
                 <div id="sol-bi" class="solution-content" data-current-step="0">
                     <p class="step" style="display:none;">                              <!-- (UpdateForNewExercise) Part bi Step 0-->
-                        Using Cosine Rule in 3D...
+                        Consider $\triangle QRS$. Let $T$ be a point on $RS$ such that $RT \perp QS$.<br>
                     </p>
                     <p class="step" style="display:none;">                              <!-- (UpdateForNewExercise) Part bi Step 1-->
-                        $PR \approx 15.2 \text{ cm}$
+                        In right-angled $\triangle RTQ$, $RT = QR\sin\angle RQS$<br>
+                        $RT \approx 13\sin\angle 54.280\circ$<br>
+                        $RT \approx 13.340\text{ cm}$<br>
+                    </p>
+                    <p class="step" style="display:none;">                              <!-- (UpdateForNewExercise) Part bi Step 1-->
+                        Let the shortest distance be $h$<br>
+                        $h = RT\sin(80^\circ) \approx 11.168 \text{ cm}$<br>
                     </p>
                     <p class="step final-ans" style="display:none;">                    <!-- (UpdateForNewExercise) Part bi Step 2 Final answers -->
-                        Shortest distance = $h \sin(80^\circ) \approx 11.2 \text{ cm}$
+                        $h \approx 11.2 \text{ cm}$
                     </p>
                 </div>
             </div>
@@ -524,6 +530,13 @@
         // Rotate flat-plane vertex Ra around hinge axis QS by 100° to define the folded 3D position.
         V.Rb = V.Ra.clone().sub(V.Q).applyAxisAngle(axis, angle_rotate).add(V.Q);
 
+        // Calculate T as the projection of Ra onto the line segment QS
+        V.T = new THREE.Vector3().subVectors(V.S, V.Q).normalize()
+            .multiplyScalar(new THREE.Vector3().subVectors(V.Ra, V.Q).dot(
+                new THREE.Vector3().subVectors(V.S, V.Q).normalize()
+            ))
+            .add(V.Q);
+        
         let activeLabels = {};
 
         // Draw figures in parts A and B (UpdateForNewExercise)
@@ -552,16 +565,18 @@
             // Set R specifically for Part b
             V.R = V.Rb;
             
-            const lines = [[V.P, V.Q], [V.Q, V.R], [V.R, V.S], [V.S, V.P], [V.Q, V.S]];
+            const lines = [ [V.P, V.Q], [V.Q, V.R], [V.R, V.S], [V.S, V.P], [V.Q, V.S] ];
             const matLine = new THREE.LineBasicMaterial({ color: 0x333333, linewidth: 2 });
             createPolygon([V.P, V.S, V.Q], 0x0d6efd); // replace: createTriangle(V.P, V.S, V.Q, 0x0d6efd);
             // Different color for folded part
             createPolygon([V.S, V.R, V.Q], 0x28a745); // replace: createTriangle(V.S, V.Rb, V.Q, 0x28a745);
             
             drawLines(lines);
+            const dashLines = [ [V.R, V.T] ];
+            drawLines(dashLines);
             
             // Corrected Label Assignment for Part b
-            setupLabels({ "P": V.P, "Q": V.Q, "R": V.R, "S": V.S });
+            setupLabels({ "P": V.P, "Q": V.Q, "R": V.R, "S": V.S, "T": V.T });
         }
 
         // ==========================================
