@@ -152,7 +152,7 @@
             <div class="part-container">
                 <div class="part-header">
                     <span><strong>(a)(ii) </strong>Find $\angle RQS$.</span>            <!-- (UpdateForNewExercise) Questions part aii -->
-                    <button id="btn-aii" class="btn-show" onclick="revealStep('sol-aii', 'btn-aii', ['QRS', 'QRS', 'QRS', 'QRS', 'QRS'])">Show Step</button>
+                    <button id="btn-aii" class="btn-show" onclick="revealStep('sol-aii', 'btn-aii', ['QRS', 'QRS', 'QRS', 'QRS', 'QRS', 'QRS'])">Show Step</button>
                 </div>
                 <div id="sol-aii" class="solution-content" data-current-step="0">
                     <p class="step" style="display:none;">                              <!-- (UpdateForNewExercise) Part aii Step 0-->
@@ -245,8 +245,8 @@
                 }
                 if ((containerId === "sol-ai") && (currentStep < 3)) drawLineLabels(V.Q, V.S, "?", "#d63384", "stepai0_lineQS");                                             // (UpdateForNewExercise) Customize the steps, unknown
                 if ((containerId === "sol-ai") && (currentStep === 3)) drawLineLabels(V.Q, V.S, "14.5", "#00bbbb", "stepai3_lineQS");                                        // (UpdateForNewExercise) Customize the steps, answer
-                if ((containerId === "sol-aii") && (currentStep < 1)) drawAngleArc(V.Q, V.S, V.R, "?", 1.0, "#d63384", "stepaii0_angleQSR");                                 // (UpdateForNewExercise) Customize the steps, unknown
-                if ((containerId === "sol-aii") && (currentStep < 1)) drawLineLabels(V.Q, V.S, "14.513", "#d63384", "stepaii0_lineQS");                                      // (UpdateForNewExercise) Customize the steps, result from part (a)(i)
+                if ((containerId === "sol-aii") && (currentStep < 2)) drawAngleArc(V.Q, V.S, V.R, "?", 1.0, "#d63384", "stepaii0_angleQSR");                                 // (UpdateForNewExercise) Customize the steps, unknown
+                if ((containerId === "sol-aii") && (currentStep < 2)) drawLineLabels(V.Q, V.S, "14.513", "#d63384", "stepaii0_lineQS");                                      // (UpdateForNewExercise) Customize the steps, result from part (a)(i)
                 if ((containerId === "sol-aii") && (currentStep === 2)) drawAngleArc(V.Q, V.S, V.R, "54.280°", 1.0, "#00bbbb", "stepaii2_angleQSR");                         // (UpdateForNewExercise) Customize the steps, answer
                 if ((containerId === "sol-aii") && (currentStep === 3 || currentStep === 4)) drawAngleArc(V.Q, V.S, V.R, "54.280°", 1.0, "#d63384", "stepaii3_angleQSR");    // (UpdateForNewExercise) Customize the steps, result from part (a)(ii)
                 if ((containerId === "sol-aii") && (currentStep === 3)) drawAngleArc(V.R, V.Q, V.S, "?", 1.0, "#d63384", "stepaii0_angleQSR");                               // (UpdateForNewExercise) Customize the steps, unknown
