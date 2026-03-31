@@ -615,10 +615,10 @@
             labelDiv.style.color = color;
             
             // If no key is provided, generate a random one (for static labels)
-            // If a key is provided (e.g., "stepLabel_QS"), use it for tracking/deletion
+            // If a key is provided (e.g., "lineLabel_aii_QS"), use it for tracking/deletion
             const key = labelKey || "lineLabel_" + Math.random().toString(36).substr(2, 9);
-            V[labelKey] = midPoint;
-            activeLabels[labelKey] = labelDiv;
+            V[key] = midPoint;
+            activeLabels[key] = labelDiv;
         }
         
         // 3D version of drawing arcs
@@ -647,8 +647,8 @@
                 
                 // Assign a unique key so the () loop can track this 3D position
                 const key = labelKey || "angleLabel_" + Math.random().toString(36).substr(2, 9);
-                V[labelKey] = midPoint; 
-                activeLabels[labelKey] = labelDiv;
+                V[key] = midPoint; 
+                activeLabels[key] = labelDiv;
             }
         }
 
