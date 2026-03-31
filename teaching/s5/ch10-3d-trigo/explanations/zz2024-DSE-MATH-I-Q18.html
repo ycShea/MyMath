@@ -244,12 +244,17 @@
 
         // This function orchestrates the progressive reveal of solution steps by synchronizing the visibility of HTML text, MathJax formula rendering, and the corresponding 3D triangle highlights in the Three.js scene.
         function revealStep(containerId, buttonId, triangleKeys) {
-            // 1. Identify if the current solution belongs to Part A
+            // 1. Detect which part we are in
             const isPartA = containerId.startsWith('sol-a');
+            const isPartB = containerId.startsWith('sol-b');
             
-            // 2. If it is Part A and Figure A isn't showing, switch to it
+            // 2. Switch to Figure A if solving Part A
             if (isPartA && currentFigure !== 'A') {
                 handleToggle('A');
+            } 
+            // 3. Switch to Figure B if solving Part B (This is what was missing)
+            else if (isPartB && currentFigure !== 'B') {
+                handleToggle('B');
             }
             
             const container = document.getElementById(containerId);
@@ -257,8 +262,9 @@
             const btn = document.getElementById(buttonId);
             let currentStep = parseInt(container.getAttribute('data-current-step'));
             
+            // 4. Update the "currentFigure === null" check to be dynamic
             if (currentStep === 0 && currentFigure === null) {
-                handleToggle('A');
+                handleToggle(isPartA ? 'A' : 'B');
             }
             
             if (currentStep < steps.length) {
