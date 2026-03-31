@@ -495,7 +495,7 @@
         const cosineSide = (b, c, angleArad) => Math.sqrt(b*b + c*c - 2*b*c*Math.cos(angleArad));           // a = cosineSide(b, c, angleArad)
         const cosineAngle = (a, b, c) => Math.acos((b*b + c*c - a*a) / (2*b*c));                            // A = cosineAngle(a, b, c)
         const sineSide = (b, angleArad, angleBrad) => b * Math.sin(angleArad) / Math.sin(angleBrad);        // a = sineSide(b, angleArad, angleBrad)
-        const sineAngle = (a, b, angleBrad) => Math.asin(a * Math.sin(degToRad(angleBrad)) / b);            // A = sineAngle(a, b, angleBrad)
+        const sineAngle = (a, b, angleBrad) => Math.asin(a * Math.sin(angleBrad) / b);                      // A = sineAngle(a, b, angleBrad)
 
         const angle_qps = degToRad(82);
         const angle_qrs = degToRad(65);
