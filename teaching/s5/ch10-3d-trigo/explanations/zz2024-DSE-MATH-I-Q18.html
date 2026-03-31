@@ -270,7 +270,18 @@
                 if (c.material) c.material.dispose();
                 scene.remove(c);
             });
-            
+            // Clear HTML Labels
+            for (let key in activeLabels) {
+                // If the key starts with "step", remove it from the screen
+                if (key.startsWith("step")) { 
+                    const labelDiv = activeLabels[key];
+                    if (labelDiv && labelDiv.parentNode) {
+                        labelDiv.parentNode.removeChild(labelDiv);
+                    }
+                    delete activeLabels[key]; // Remove from tracking object
+                    delete V[key];            // Remove from coordinate object
+                }
+            }
             if (!type) return;
         
             let pts;
