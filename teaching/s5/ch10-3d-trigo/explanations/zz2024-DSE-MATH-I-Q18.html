@@ -240,9 +240,9 @@
                 if (Array.isArray(triangleKeys)) {
                     highlightTriangle(triangleKeys[currentStep]);
                 }
-                if ((containerId === "sol-ai") && currentStep === 4) drawLineLabels(V.Q, V.S, "14.5", "#00bbbb");                  // (UpdateForNewExercise) Customize the steps
-                if ((containerId === "sol-aii") && currentStep === 1) drawAngleArc(V.Q, V.S, V.S, "54.280°", "#00bbbb");           // (UpdateForNewExercise) Customize the steps
-                if (containerId === "sol-aii") drawLineLabels(V.Q, V.S, "14.5", "#d63384");                                        // (UpdateForNewExercise) Customize the steps
+                if ((containerId === "sol-ai") && (currentStep === 3)) drawLineLabels(V.Q, V.S, "14.5", "#00bbbb");                  // (UpdateForNewExercise) Customize the steps
+                if (containerId === "sol-aii") drawLineLabels(V.Q, V.S, "14.5", "#d63384");                                          // (UpdateForNewExercise) Customize the steps
+                if ((containerId === "sol-aii") && (currentStep === 1)) drawAngleArc(V.Q, V.S, V.S, "54.280°", "#00bbbb");           // (UpdateForNewExercise) Customize the steps
                 
                 if (window.MathJax) MathJax.typesetPromise([steps[currentStep]]);
                 
