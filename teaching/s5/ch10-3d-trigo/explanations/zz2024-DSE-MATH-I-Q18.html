@@ -501,7 +501,7 @@
         const angle_qrs = degToRad(65);
         const angle_rotate = degToRad(100); // 180 - 80 degrees
         const qs = cosineSide(pq, ps, angle_qps);
-        const angle_pqs = sineAngle(pq, qs, angle_qps);
+        const angle_pqs = sineAngle(ps, qs, angle_qps);
         const angle_qsr = sineAngle(qr, qs, angle_qrs);
         const angle_rqs = Math.PI - angle_qrs - angle_qsr;
         
