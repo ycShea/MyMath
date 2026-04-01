@@ -776,7 +776,13 @@
                 this.v2 = new THREE.Vector3().subVectors(p2, vertex).normalize();
         
                 // The 'axis' is the normal to the plane formed by p1, vertex, p2
-                this.axis = new THREE.Vector3().crossVectors(this.v1, this.v2).normalize();
+                this.axis = new THREE.Vector3().crossVectors(this.v1, this.v2);
+
+                if (this.axis.length() < 1e-6) {
+                    this.axis.set(0, 0, 1);   // fallback axis
+                }
+                
+                this.axis.normalize();
                 
                 // Total interior angle
                 this.totalAngle = this.v1.angleTo(this.v2);
@@ -834,6 +840,7 @@
             const geometry = new THREE.BufferGeometry().setFromPoints(points);
             const material = new THREE.LineBasicMaterial({ color: color, linewidth: 2, depthTest: false });
             const arcLine = new THREE.Line(geometry, material);
+            arcLine.renderOrder = 1000;
             arcLine.userData.isStepHighlight = true;
             scene.add(arcLine);
         
