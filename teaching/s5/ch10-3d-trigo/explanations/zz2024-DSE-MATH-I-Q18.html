@@ -872,8 +872,11 @@
             const corner3 = vertex.clone().add(d2);
             
             const geom = new THREE.BufferGeometry().setFromPoints([corner1, corner2, corner3]);
-            const line = new THREE.Line(geom, new THREE.LineBasicMaterial({ color: 0x000000 }));
-            line.visible = false;
+            const line = new THREE.Line(geom, new THREE.LineBasicMaterial({ color: 0x000000, linewidth: 2, depthTest: false }));
+            line.visible = true;
+            // 4. Tag it so your clearScene() or highlight functions can find/remove it
+            line.userData.isStepHighlight = true; 
+            line.renderOrder = 1000; // 5. Force it to the front layer
             scene.add(line);
             return line;
         }
