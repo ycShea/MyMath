@@ -316,6 +316,7 @@
             .add(V.Q);
         // The projection of the folded R onto the PQS plane (XY plane)
         V.N = new THREE.Vector3(V.Rb.x, V.Rb.y, 0);
+        V['N'] = V.N; // Ensure it's in the coordinate map
 
         let currentFigure = null;
         let activeLabels = {};
@@ -811,11 +812,11 @@ if  (currentStep === 3) drawAngleArc(V.P, V.R, V.S, "80°", 1.0, "#00ff00", "ste
                 // The 'axis' is the normal to the plane formed by p1, vertex, p2
                 this.axis = new THREE.Vector3().crossVectors(this.v1, this.v2);
 
-                if (this.axis.length() < 1e-6) {
-                    this.axis.set(0, 0, 1);   // fallback axis
+                if (this.axis.length() < 0.0001) {
+                    this.axis = new THREE.Vector3(0, 0, 1); 
+                } else {
+                    this.axis.normalize();
                 }
-                
-                this.axis.normalize();
                 
                 // Total interior angle
                 this.totalAngle = this.v1.angleTo(this.v2);
