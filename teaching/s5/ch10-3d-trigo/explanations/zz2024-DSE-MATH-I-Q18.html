@@ -398,15 +398,42 @@
         // The function is triggered when the button is pressed
         // For example: <button id="btn-bii" class="btn-show" onclick="revealStep('sol-bii', 'btn-bii', ['PRS', 'PRS', 'PRS'])">Show Step</button>
         function revealStep(containerId, buttonId, triangleKeys) {
+            // =============================================================
+            // 0. CLEAR STEP-SPECIFIC OBJECTS (Labels, Arcs, Extra Lines)
+            // =============================================================
+            // This loop finds every key in activeLabels. If it starts with "step",
+            // it removes it from the DOM and deletes it from the tracking object.
+            Object.keys(activeLabels).forEach(key => {
+                if (key.startsWith("step")) {
+                    const element = activeLabels[key];
+                    if (element && element.parentNode) {
+                        element.parentNode.removeChild(element);
+                    }
+                    delete activeLabels[key];
+                }
+            });
+            // Also clear specific 3D objects added to the scene that start with "step"
+            for (let i = scene.children.length - 1; i >= 0; i--) {
+                const obj = scene.children[i];
+                if (obj.name && obj.name.startsWith("step")) {
+                    if (obj.geometry) obj.geometry.dispose();
+                    if (obj.material) {
+                        if (Array.isArray(obj.material)) obj.material.forEach(m => m.dispose());
+                        else obj.material.dispose();
+                    }
+                    scene.remove(obj);
+                }
+            }
+            // =============================================================
+            
             // 1. Detect which part we are in
             const isPartA = containerId.startsWith('sol-a');
             const isPartB = containerId.startsWith('sol-b');
             
-            // 2. Switch to Figure A if solving Part A
+            // 2. Switch to Figure A if solving Part A and Switch to Figure B if solving Part B (This is what was missing)
             if (isPartA && currentFigure !== 'A') {
                 handleToggle('A');
-            } 
-            // 3. Switch to Figure B if solving Part B (This is what was missing)
+            }
             else if (isPartB && currentFigure !== 'B') {
                 handleToggle('B');
             }
@@ -416,7 +443,7 @@
             const btn = document.getElementById(buttonId);
             let currentStep = parseInt(container.getAttribute('data-current-step'));
             
-            // 4. Update the "currentFigure === null" check to be dynamic
+            // 3. Update the "currentFigure === null" check to be dynamic
             if (currentStep === 0 && currentFigure === null) {
                 handleToggle(isPartA ? 'A' : 'B');
             }
@@ -429,9 +456,12 @@
                 if (Array.isArray(triangleKeys)) {
                     highlightTriangle(triangleKeys[currentStep]);
                 }
+                // 5. DRAWING LOGIC (Now always starts with a clean slate)
+                // Part (a)(i)
                 if ((containerId === "sol-ai") && (currentStep < 3)) drawLineLabels(V.Q, V.S, "?", "#d63384", "stepai0_lineQS_Label");                                       // (UpdateForNewExercise) Customize the steps, unknown
                 if ((containerId === "sol-ai") && (currentStep === 3)) drawLineLabels(V.Q, V.S, "14.5", "#00bbbb", "stepai3_lineQS_Label");                                  // (UpdateForNewExercise) Customize the steps, answer
-                
+
+                // Part (a)(ii)
                 if ((containerId === "sol-aii") && (currentStep < 2)) drawAngleArc(V.Q, V.S, V.R, "?", 1.0, "#d63384", "stepaii0_angleQSR");                                 // (UpdateForNewExercise) Customize the steps, unknown
                 if ((containerId === "sol-aii") && (currentStep < 2)) drawLineLabels(V.Q, V.S, "14.513", "#d63384", "stepaii0_lineQS_Label");                                // (UpdateForNewExercise) Customize the steps, result from part (a)(i)
                 if ((containerId === "sol-aii") && (currentStep === 2)) drawAngleArc(V.Q, V.S, V.R, "54.280°", 1.0, "#00bbbb", "stepaii2_angleQSR");                         // (UpdateForNewExercise) Customize the steps, answer
@@ -439,8 +469,9 @@
                 if ((containerId === "sol-aii") && (currentStep === 3)) drawAngleArc(V.R, V.Q, V.S, "?", 1.0, "#d63384", "stepaii0_angleQSR");                               // (UpdateForNewExercise) Customize the steps, unknown
                 if ((containerId === "sol-aii") && (currentStep === 4)) drawAngleArc(V.R, V.Q, V.S, "60.7°", 1.0, "#00bbbb", "stepaii4_angleRQS");                           // (UpdateForNewExercise) Customize the steps, answer
 
-                if ((containerId === "sol-bi") && (currentStep === 0)) drawRightAngle(V.Q, V.T, V.R);                                                                       // (UpdateForNewExercise) ??
-                if ((containerId === "sol-bi") && (currentStep === 1)) drawLineLabels(V.Q, V.R, "13", "#000000", "stepbi2_lineQR_Label");                                     // (UpdateForNewExercise) Customize the steps, given
+                // Part (b)(i)
+                if ((containerId === "sol-bi") && (currentStep === 0)) drawRightAngle(V.Q, V.T, V.R);                                                                        // (UpdateForNewExercise) ??
+                if ((containerId === "sol-bi") && (currentStep === 1)) drawLineLabels(V.Q, V.R, "13", "#000000", "stepbi2_lineQR_Label");                                    // (UpdateForNewExercise) Customize the steps, given
                 if ((containerId === "sol-bi") && (currentStep === 1)) drawAngleArc(V.R, V.Q, V.T, "60.720°", "#d63384", "stepbi1_angleRQT");                                // (UpdateForNewExercise) Customize the steps, result from part (a)(i)
                 if ((containerId === "sol-bi") && (currentStep === 1)) drawLineLabels(V.R, V.T, "?", "#d63384", "stepbi1_lineRT_Label");                                     // (UpdateForNewExercise) Customize the steps, unknown
                 if ((containerId === "sol-bi") && (currentStep === 2)) drawLineLabels(V.R, V.T, "13.340", "#d63384", "stepbi2_lineRT_Label");                                // (UpdateForNewExercise) Customize the steps, result from part (b)(i)
@@ -450,7 +481,6 @@
                 if ((containerId === "sol-bi") && (currentStep === 3)) drawLineLabels(V.N, V.R, "11.2", "#00bbbb", "stepbi3_lineNR_Label");                                  // (UpdateForNewExercise) Customize the steps, answer
                 if ((containerId === "sol-bi") && (currentStep === 3)) highlightTriangle('NRT');
 
-                
                 if (window.MathJax) MathJax.typesetPromise([steps[currentStep]]);
 
                 currentStep++;
