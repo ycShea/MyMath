@@ -478,7 +478,7 @@
                 if ((containerId === "sol-bi") && (currentStep === 2)) drawLines([[V.R, V.N]], false, "#d63384", "stepbi2_lineNR");                                          // (UpdateForNewExercise) Customize the steps, unknown
                 if ((containerId === "sol-bi") && (currentStep === 2)) drawLineLabels(V.N, V.R, "?", "#d63384", "stepbi2_lineNR_Label");                                     // (UpdateForNewExercise) Customize the steps, unknown
                 // if ((containerId === "sol-bi") && (currentStep === 2)) highlightTriangle('PQS');
-                if ((containerId === "sol-bi") && (currentStep === 3)) drawAngleArc(V.Rb, V.T, V.N, "80°", 1.0, "#000000", "stepbi3_angleNTR");                                // (UpdateForNewExercise) Customize the steps, given
+                if ((containerId === "sol-bi") && (currentStep === 3)) drawAngleArc(V.R, V.T, V.N, "80°", 1.0, "#000000", "stepbi3_angleNTR");                                // (UpdateForNewExercise) Customize the steps, given
                 if ((containerId === "sol-bi") && (currentStep === 3)) drawLineLabels(V.N, V.R, "11.2", "#00bbbb", "stepbi3_lineNR_Label");                                  // (UpdateForNewExercise) Customize the steps, answer
                 if ((containerId === "sol-bi") && (currentStep === 3)) highlightTriangle('NRT');
 
@@ -760,9 +760,34 @@
             setupLabels({ "P": V.P, "Q": V.Q, "R": V.R, "S": V.S, "T": V.T });
         }
 
+        function drawLines(linePairs, isSolid = true, color = 0x333333, name ="") {
+            const material = isSolid 
+                ? new THREE.LineBasicMaterial({ color: color, linewidth: 2 })
+                : new THREE.LineDashedMaterial({ color: color, dashSize: 0.5, gapSize: 0.2, linewidth: 2 });
+        
+            linePairs.forEach(pair => {
+                const geometry = new THREE.BufferGeometry().setFromPoints(pair);
+                const line = new THREE.Line(geometry, material);
+                
+                if (!isSolid) {
+                    line.computeLineDistances();
+                }
+                line.name = name; // This is the crucial line for deletion logic
+                scene.add(line);
+            });
+        }
 
-
-
+        function drawLineLabels(p1, p2, labelText = "", color = 0x000000, labelKey = null) {
+            const midPoint = new THREE.Vector3().addVectors(p1, p2).multiplyScalar(0.5);
+            const labelDiv = makeLabel(labelText);
+            labelDiv.style.color = color;
+            
+            // If no key is provided, generate a random one (for static labels)
+            // If a key is provided (e.g., "lineLabel_aii_QS"), use it for tracking/deletion
+            const key = labelKey || "lineLabel_" + Math.random().toString(36).substr(2, 9);
+            V[key] = midPoint;
+            activeLabels[key] = labelDiv;
+        }
 
         // used in 3D version of drawAngleArc() 
         class Arc3D extends THREE.Curve {
@@ -797,35 +822,6 @@
                     .multiplyScalar(this.radius)
                     .add(this.vertex);
             }
-        }
-
-        function drawLines(linePairs, isSolid = true, color = 0x333333, name ="") {
-            const material = isSolid 
-                ? new THREE.LineBasicMaterial({ color: color, linewidth: 2 })
-                : new THREE.LineDashedMaterial({ color: color, dashSize: 0.5, gapSize: 0.2, linewidth: 2 });
-        
-            linePairs.forEach(pair => {
-                const geometry = new THREE.BufferGeometry().setFromPoints(pair);
-                const line = new THREE.Line(geometry, material);
-                
-                if (!isSolid) {
-                    line.computeLineDistances();
-                }
-                line.name = name; // This is the crucial line for deletion logic
-                scene.add(line);
-            });
-        }
-
-        function drawLineLabels(p1, p2, labelText = "", color = 0x000000, labelKey = null) {
-            const midPoint = new THREE.Vector3().addVectors(p1, p2).multiplyScalar(0.5);
-            const labelDiv = makeLabel(labelText);
-            labelDiv.style.color = color;
-            
-            // If no key is provided, generate a random one (for static labels)
-            // If a key is provided (e.g., "lineLabel_aii_QS"), use it for tracking/deletion
-            const key = labelKey || "lineLabel_" + Math.random().toString(36).substr(2, 9);
-            V[key] = midPoint;
-            activeLabels[key] = labelDiv;
         }
         
         // 3D version of drawing arcs
