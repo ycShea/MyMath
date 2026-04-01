@@ -277,7 +277,7 @@
         const sineAngle = (a, b, angleBrad) => Math.asin(a * Math.sin(angleBrad) / b);                      // A = sineAngle(a, b, angleBrad)
 
         // Definition of data
-        const pq = 12; ps = 10; qr = 13;
+        const pq = 12, ps = 10, qr = 13;
         const scale = 0.6;
         const angle_qps = degToRad(82);
         const angle_qrs = degToRad(65);
@@ -696,8 +696,8 @@
 
             drawLines(lines);
 
-            const angleQPS = drawAngleArc(V.Q, V.P, V.S, "82°", 1.0, "static_angleQPS")
-            const angleQRS = drawAngleArc(V.Q, V.R, V.S, "65°", 1.0, "static_angleQRS")
+            const angleQPS = drawAngleArc(V.Q, V.P, V.S, "82°", 1.0, "#000000", "static_angleQPS")
+            const angleQRS = drawAngleArc(V.Q, V.R, V.S, "65°", 1.0, "#000000", "static_angleQRS")
 
             // Corrected Label Assignment for Part a
             setupLabels({ "P": V.P, "Q": V.Q, "R": V.R, "S": V.S });
@@ -939,7 +939,6 @@
                 }
                 delete activeLabels[key];
             });
-        }
         
             Object.values(activeLabels).forEach(l => {
                 if (l && l.parentNode) {
@@ -949,9 +948,6 @@
         
             activeLabels = {};
         }
-        
-
-
     </script>
 </body>
 </html>
