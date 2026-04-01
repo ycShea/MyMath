@@ -240,9 +240,163 @@
     </div>
 
     <script>
-        let currentFigure = null;
+        
+        // ==========================================
+        // INITIALIZATION
+        // ==========================================
+        // This block initializes the Three.js scene, camera, renderer, and orbit controls to set up the 3D environment.
+        const container = document.getElementById('threejs-container');
+        const scene = new THREE.Scene();
+        scene.background = new THREE.Color(0xf0f2f5); // light-grey background
+        const camera = new THREE.PerspectiveCamera(45, container.clientWidth/container.clientHeight, 0.1, 1000);
+        const renderer = new THREE.WebGLRenderer({ antialias: true, logarithmicDepthBuffer: true });
+        renderer.setSize(container.clientWidth, container.clientHeight);
+        container.appendChild(renderer.domElement);
+        
+        // const controls = new THREE.OrbitControls(camera, renderer.domElement);
+        // Replace OrbitControls with TrackballControls
+        const controls = new THREE.TrackballControls(camera, renderer.domElement);
+        
+        // Settings for a "Clean" feel (no damping/sliding)
+        controls.rotateSpeed = 4.0;
+        controls.zoomSpeed = 1.2;
+        controls.panSpeed = 0.8;
+        controls.staticMoving = true; // This disables the "sliding/damping" feel
+        // controls.enableRotate = false; // Disable rotation as requested
+        
+        scene.add(new THREE.AmbientLight(0xffffff, 1.0));
 
+        // ==========================================
+        // DEFINITION OF POINTS AND OBJECTS (UpdateForNewExercise)
+        // ==========================================
+        // Math tools
+        const degToRad = (deg) => deg * Math.PI / 180;
+        const cosineSide = (b, c, angleArad) => Math.sqrt(b*b + c*c - 2*b*c*Math.cos(angleArad));           // a = cosineSide(b, c, angleArad)
+        const cosineAngle = (a, b, c) => Math.acos((b*b + c*c - a*a) / (2*b*c));                            // A = cosineAngle(a, b, c)
+        const sineSide = (b, angleArad, angleBrad) => b * Math.sin(angleArad) / Math.sin(angleBrad);        // a = sineSide(b, angleArad, angleBrad)
+        const sineAngle = (a, b, angleBrad) => Math.asin(a * Math.sin(angleBrad) / b);                      // A = sineAngle(a, b, angleBrad)
+
+        // Definition of data
+        const pq = 12; ps = 10; qr = 13;
+        const scale = 0.6;
+        const angle_qps = degToRad(82);
+        const angle_qrs = degToRad(65);
+        const angle_rotate = degToRad(100); // 180 - 80 degrees
+
+        // Used only for calculation of R
+        const qs = cosineSide(pq, ps, angle_qps);
+        const angle_pqs = sineAngle(ps, qs, angle_qps);
+        const angle_qsr = sineAngle(qr, qs, angle_qrs);
+        const angle_rqs = Math.PI - angle_qrs - angle_qsr;
+        const angle_exterior_q = Math.PI - angle_pqs - angle_rqs;
+
+        // Definition of points
+        // Vertices for Part A
+        const V = {
+            P: new THREE.Vector3(0, 0, 0),
+            Q: new THREE.Vector3(pq * scale, 0, 0),
+            S: new THREE.Vector3(ps * scale * Math.cos(angle_qps), ps * scale * Math.sin(angle_qps), 0)
+        };
+        // R for Part A (Flat)
+        V.Ra = V.Q.clone().add(new THREE.Vector3(qr * scale * Math.cos(angle_exterior_q), qr * scale * Math.sin(angle_exterior_q), 0));
+        // angle_exterior_q appromixately = 84 degree
+        // V.Ra = V.Q.clone().add(new THREE.Vector3(13 * scale * Math.cos(degToRad(84)), 13 * scale * Math.sin(degToRad(84)), 0));
+
+        // R for Part B (Folded (180 - 80) deg)
+        // Get the direction of the hinge (the folding line QS)
+        const axis = new THREE.Vector3().subVectors(V.S, V.Q).normalize();
+        // Rotate flat-plane vertex Ra around hinge axis QS by 100° to define the folded 3D position.
+        V.Rb = V.Ra.clone().sub(V.Q).applyAxisAngle(axis, angle_rotate).add(V.Q);
+
+        // Calculate T as the projection of Ra onto the line segment QS
+        V.T = new THREE.Vector3().subVectors(V.S, V.Q).normalize()
+            .multiplyScalar(new THREE.Vector3().subVectors(V.Ra, V.Q).dot(
+                new THREE.Vector3().subVectors(V.S, V.Q).normalize()
+            ))
+            .add(V.Q);
+        // The projection of the folded R onto the PQS plane (XY plane)
+        V.N = new THREE.Vector3(V.Rb.x, V.Rb.y, 0);
+
+        let currentFigure = null;
+        let activeLabels = {};
+
+        resetCamera();
+        animate();
+        window.addEventListener('resize', () => {
+            camera.aspect = container.clientWidth / container.clientHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(container.clientWidth, container.clientHeight);
+        });
+
+        // ==========================================
+        // USER INTERACTION LOGIC
+        // ==========================================
+        // 1. Wait for User Clicks: The functions handleToggle() and revealStep() 
+        //    do not run until a user clicks a button on the webpage.
+        // 
+        // 2. Logic Flow upon Interaction:
+        //    - User Click: Triggers revealStep() or a toggle button.
+        //    - Logic Check: The function evaluates the state of 'currentFigure'.
+        //    - Drawing Trigger: If it's the first click, it calls handleToggle('A').
+        //    - Scene Update: handleToggle() calls drawFigureA() (or B), 
+        //      which uses scene.add() to inject geometric objects into the 3D space.
+        //    - Visual Change: On the very next frame of the animate() loop 
+        //      (within 16ms), the renderer draws the new objects for the user.
+        
+        // ==========================================
+        // HELPER FUNCTIONS
+        // ==========================================
+        // resetCamera()
+        // setCameraPartA()
+        // setCameraPartB()
+        // animate()
+        // toggle(id)
+        // handleToggle(type)
+        // drawLines(linePairs, isSolid = true, color = 0x333333)
+        // drawLineLabels(p1, p2, labelText = "", color = 0x000000, labelKey = null)
+        // drawAngleArc(p1, vertex, p2, labelText = "", radius = 1, color = 0x000000, labelKey = null)
+        // drawRightAngle(p1, vertex, p2, size = 1.0)
+        // setupLabels(labelMap)
+        // createPolygon(points, color = 0x0d6efd)
+        // createTriangle(p1, p2, p3, color = 0x0d6efd)
+        // handleToggle(type)
+        // clearScene()
+        // ==========================================
+        
+        // Camera setting (UpdateForNewExercise)
+        function resetCamera() {
+            if (currentFigure === 'B') {
+                setCameraPartB();
+            } else {
+                setCameraPartA();    // This covers both Figure A and the initial 'null' state
+            }
+        }
+        
+        // The "Original" Flat View for Part A
+        function setCameraPartA() {
+            camera.up.set(0, 1, 0);
+            camera.position.set(0, 0, 20); // Straight on
+            controls.target.set(5, 4, 0);  // Centered on the flat shape
+            // Ensure rotation is disabled whenever Part A camera is set
+            controls.noRotate = true; 
+            controls.noPan = true;
+            controls.update();
+        }
+        
+        // The "3D Perspective" View for Part B (Matching your image)
+        function setCameraPartB() {
+            camera.up.set(0, 0, -1);
+            camera.position.set(-2, 24, -5);
+            controls.target.set(3, 2, -2); // Centers the view on the fold area
+            // Unlock for 3D exploration
+            controls.noRotate = false;
+            controls.noPan = false;
+            controls.update();
+        }
+        
         // This function orchestrates the progressive reveal of solution steps by synchronizing the visibility of HTML text, MathJax formula rendering, and the corresponding 3D triangle highlights in the Three.js scene.
+        // The function is triggered when the button is pressed
+        // For example: <button id="btn-bii" class="btn-show" onclick="revealStep('sol-bii', 'btn-bii', ['PRS', 'PRS', 'PRS'])">Show Step</button>
         function revealStep(containerId, buttonId, triangleKeys) {
             // 1. Detect which part we are in
             const isPartA = containerId.startsWith('sol-a');
@@ -288,17 +442,14 @@
                 if ((containerId === "sol-bi") && (currentStep === 2)) {
                     drawLines([[V.R, V.N]], false, "#d63384", "stepbi2_lineRN");                                                                                             // (UpdateForNewExercise) Customize the steps, unknown
                     drawLineLabels(V.R, V.N, "?", "#d63384", "stepbi2_lineNR_Label");                                                                                        // (UpdateForNewExercise) Customize the steps, unknown
-                    highlightTriangle('PQS');
+                    // highlightTriangle('PQS');
                 }
                 
-                
                 if (window.MathJax) MathJax.typesetPromise([steps[currentStep]]);
-                
-                
+
                 currentStep++;
                 container.setAttribute('data-current-step', currentStep);
                 
-                // CHANGE HERE: Do not change to "Hide Solution"
                 if (currentStep === steps.length) {
                     btn.textContent = "Completed";
                     btn.disabled = true; // Optional: disable button when done
@@ -309,6 +460,53 @@
                 
                 collapseOtherParts(containerId);
             }
+        }
+
+        function animate() { // It tells the browser to run the animate function approximately 60 times per second.
+            requestAnimationFrame(animate);
+            
+            // 1. Update the controls
+            controls.update();
+            
+            const debugBox = document.getElementById('debug-info');
+            if (debugBox) {
+                const cp = camera.position, ct = controls.target;
+                debugBox.innerHTML = `<b style="color:#0d6efd">TARGET:</b> x:${ct.x.toFixed(1)} y:${ct.y.toFixed(1)} z:${ct.z.toFixed(1)}<br>` +
+                                    `<b style="color:#198754">CAMERA:</b> x:${cp.x.toFixed(1)} y:${cp.y.toFixed(1)} z:${cp.z.toFixed(1)}`;
+            }
+            
+            // 2. FORCE the camera to update its matrices immediately 
+            // so the projection math uses current frame data
+            camera.updateMatrixWorld();
+            camera.matrixWorldInverse.copy(camera.matrixWorld).invert();
+            camera.projectionMatrixInverse.copy(camera.projectionMatrix).invert();
+        
+            // 3. Label Projection Logic
+            const widthHalf = container.clientWidth / 2;
+            const heightHalf = container.clientHeight / 2;
+            
+            for (let key in activeLabels) {
+                let pos = V[key];
+                if (!pos) continue;
+                
+                // Use the updated camera state
+                const vector = pos.clone().project(camera);
+                
+                if (vector.z < 1) {
+                    const x = (vector.x * widthHalf) + widthHalf;
+                    const y = -(vector.y * heightHalf) + heightHalf;
+                    
+                    activeLabels[key].style.display = 'block';
+                    // Use transform: translate for smoother movement than top/left
+                    activeLabels[key].style.transform = `translate(-50%, -50%)`;
+                    activeLabels[key].style.left = `${x}px`;
+                    activeLabels[key].style.top = `${y}px`;
+                } else { 
+                    activeLabels[key].style.display = 'none'; 
+                }
+            }
+            
+            renderer.render(scene, camera);
         }
         
         function highlightTriangle(type) {
@@ -482,82 +680,8 @@
             }
         }
         
-        // ==========================================
-        // INITIALIZATION
-        // ==========================================
-        // This block initializes the Three.js scene, camera, renderer, and orbit controls to set up the 3D environment.
-        const container = document.getElementById('threejs-container');
-        const scene = new THREE.Scene();
-        scene.background = new THREE.Color(0xf0f2f5);
-        const camera = new THREE.PerspectiveCamera(45, container.clientWidth/container.clientHeight, 0.1, 1000);
-        const renderer = new THREE.WebGLRenderer({ antialias: true, logarithmicDepthBuffer: true });
-        renderer.setSize(container.clientWidth, container.clientHeight);
-        container.appendChild(renderer.domElement);
-        
-        // const controls = new THREE.OrbitControls(camera, renderer.domElement);
-        // Replace OrbitControls with TrackballControls
-        const controls = new THREE.TrackballControls(camera, renderer.domElement);
-        
-        // Settings for a "Clean" feel (no damping/sliding)
-        controls.rotateSpeed = 4.0;
-        controls.zoomSpeed = 1.2;
-        controls.panSpeed = 0.8;
-        controls.staticMoving = true; // This disables the "sliding/damping" feel
-        // controls.enableRotate = false; // Disable rotation as requested
-        
-        scene.add(new THREE.AmbientLight(0xffffff, 1.0));
 
-        // ==========================================
-        // DEFINITION OF POINTS AND OBJECTS (UpdateForNewExercise)
-        // ==========================================
-        // Definition of points
-        const degToRad = (deg) => deg * Math.PI / 180;
-        const cosineSide = (b, c, angleArad) => Math.sqrt(b*b + c*c - 2*b*c*Math.cos(angleArad));           // a = cosineSide(b, c, angleArad)
-        const cosineAngle = (a, b, c) => Math.acos((b*b + c*c - a*a) / (2*b*c));                            // A = cosineAngle(a, b, c)
-        const sineSide = (b, angleArad, angleBrad) => b * Math.sin(angleArad) / Math.sin(angleBrad);        // a = sineSide(b, angleArad, angleBrad)
-        const sineAngle = (a, b, angleBrad) => Math.asin(a * Math.sin(angleBrad) / b);                      // A = sineAngle(a, b, angleBrad)
         
-        const pq = 12; ps = 10; qr = 13;
-        const scale = 0.6;
-        const angle_qps = degToRad(82);
-        const angle_qrs = degToRad(65);
-        const angle_rotate = degToRad(100); // 180 - 80 degrees
-        
-        // Used only for calculation of R
-        const qs = cosineSide(pq, ps, angle_qps);
-        const angle_pqs = sineAngle(ps, qs, angle_qps);
-        const angle_qsr = sineAngle(qr, qs, angle_qrs);
-        const angle_rqs = Math.PI - angle_qrs - angle_qsr;
-        const angle_exterior_q = Math.PI - angle_pqs - angle_rqs;
-        
-        // Vertices for Part A
-        const V = {
-            P: new THREE.Vector3(0, 0, 0),
-            Q: new THREE.Vector3(pq * scale, 0, 0),
-            S: new THREE.Vector3(ps * scale * Math.cos(angle_qps), ps * scale * Math.sin(angle_qps), 0)
-        };
-        // R for Part A (Flat)
-        V.Ra = V.Q.clone().add(new THREE.Vector3(qr * scale * Math.cos(angle_exterior_q), qr * scale * Math.sin(angle_exterior_q), 0));
-        // angle_exterior_q appromixately = 84 degree
-        // V.Ra = V.Q.clone().add(new THREE.Vector3(13 * scale * Math.cos(degToRad(84)), 13 * scale * Math.sin(degToRad(84)), 0));
-
-        // R for Part B (Folded (180 - 80) deg)
-        // Get the direction of the hinge (the folding line QS)
-        const axis = new THREE.Vector3().subVectors(V.S, V.Q).normalize();
-        // Rotate flat-plane vertex Ra around hinge axis QS by 100° to define the folded 3D position.
-        V.Rb = V.Ra.clone().sub(V.Q).applyAxisAngle(axis, angle_rotate).add(V.Q);
-
-        // Calculate T as the projection of Ra onto the line segment QS
-        V.T = new THREE.Vector3().subVectors(V.S, V.Q).normalize()
-            .multiplyScalar(new THREE.Vector3().subVectors(V.Ra, V.Q).dot(
-                new THREE.Vector3().subVectors(V.S, V.Q).normalize()
-            ))
-            .add(V.Q);
-        // The projection of the folded R onto the PQS plane (XY plane)
-        V.N = new THREE.Vector3(V.Rb.x, V.Rb.y, 0);
-        
-        let activeLabels = {};
-
         // Draw figures in parts A and B (UpdateForNewExercise)
         function drawFigureA() {
             // Set R specifically for Part a
@@ -598,56 +722,9 @@
             setupLabels({ "P": V.P, "Q": V.Q, "R": V.R, "S": V.S, "T": V.T });
         }
 
-        // ==========================================
-        // HELPER FUNCTIONS
-        // ==========================================
-        // toggle(id)
-        // handleToggle(type)
-        // resetCamera()
-        // setCameraPartA()
-        // setCameraPartB()
-        // drawLines(linePairs, isSolid = true, color = 0x333333)
-        // drawLineLabels(p1, p2, labelText = "", color = 0x000000, labelKey = null)
-        // drawAngleArc(p1, vertex, p2, labelText = "", radius = 1, color = 0x000000, labelKey = null)
-        // drawRightAngle(p1, vertex, p2, size = 1.0)
-        // setupLabels(labelMap)
-        // createPolygon(points, color = 0x0d6efd)
-        // createTriangle(p1, p2, p3, color = 0x0d6efd)
-        // handleToggle(type)
-        // clearScene()
-        // ()
-        // ==========================================
-        
-        // Camera setting (UpdateForNewExercise)
-        function resetCamera() {
-            if (currentFigure === 'B') {
-                setCameraPartB();
-            } else {
-                setCameraPartA();
-            }
-        }
 
-        // The "Original" Flat View for Part A
-        function setCameraPartA() {
-            camera.up.set(0, 1, 0);
-            camera.position.set(0, 0, 20); // Straight on
-            controls.target.set(5, 4, 0);  // Centered on the flat shape
-            // Ensure rotation is disabled whenever Part A camera is set
-            controls.noRotate = true; 
-            controls.noPan = true;
-            controls.update();
-        }
-        
-        // The "3D Perspective" View for Part B (Matching your image)
-        function setCameraPartB() {
-            camera.up.set(0, 0, -1);
-            camera.position.set(-2, 24, -5);
-            controls.target.set(3, 2, -2); // Centers the view on the fold area
-            // Unlock for 3D exploration
-            controls.noRotate = false;
-            controls.noPan = false;
-            controls.update();
-        }
+
+
 
         // used in 3D version of drawAngleArc() 
         class Arc3D extends THREE.Curve {
@@ -842,9 +919,9 @@
             for (let i = scene.children.length - 1; i >= 0; i--) {
                 const obj = scene.children[i];
                 if (obj.type !== 'AmbientLight' && obj.type !== 'DirectionalLight') {
-                    // 2. Explicitly dispose of geometry and material here too
                     if (obj.geometry) obj.geometry.dispose();
                     if (obj.material) {
+                        // Handle arrays of materials or single materials
                         if (Array.isArray(obj.material)) {
                             obj.material.forEach(m => m.dispose());
                         } else {
@@ -854,6 +931,15 @@
                     scene.remove(obj);
                 }
             }
+            // Clear DOM labels correctly
+            Object.keys(activeLabels).forEach(key => {
+                const l = activeLabels[key];
+                if (l && l.parentNode) {
+                    l.parentNode.removeChild(l);
+                }
+                delete activeLabels[key];
+            });
+        }
         
             Object.values(activeLabels).forEach(l => {
                 if (l && l.parentNode) {
@@ -864,60 +950,8 @@
             activeLabels = {};
         }
         
-        function animate() {
-            requestAnimationFrame(animate);
-            
-            // 1. Update the controls
-            controls.update();
-            
-            const debugBox = document.getElementById('debug-info');
-            if (debugBox) {
-                const cp = camera.position, ct = controls.target;
-                debugBox.innerHTML = `<b style="color:#0d6efd">TARGET:</b> x:${ct.x.toFixed(1)} y:${ct.y.toFixed(1)} z:${ct.z.toFixed(1)}<br>` +
-                                    `<b style="color:#198754">CAMERA:</b> x:${cp.x.toFixed(1)} y:${cp.y.toFixed(1)} z:${cp.z.toFixed(1)}`;
-            }
-            
-            // 2. FORCE the camera to update its matrices immediately 
-            // so the projection math uses current frame data
-            camera.updateMatrixWorld();
-            camera.matrixWorldInverse.copy(camera.matrixWorld).invert();
-            camera.projectionMatrixInverse.copy(camera.projectionMatrix).invert();
-        
-            // 3. Label Projection Logic
-            const widthHalf = container.clientWidth / 2;
-            const heightHalf = container.clientHeight / 2;
-            
-            for (let key in activeLabels) {
-                let pos = V[key];
-                if (!pos) continue;
-                
-                // Use the updated camera state
-                const vector = pos.clone().project(camera);
-                
-                if (vector.z < 1) {
-                    const x = (vector.x * widthHalf) + widthHalf;
-                    const y = -(vector.y * heightHalf) + heightHalf;
-                    
-                    activeLabels[key].style.display = 'block';
-                    // Use transform: translate for smoother movement than top/left
-                    activeLabels[key].style.transform = `translate(-50%, -50%)`;
-                    activeLabels[key].style.left = `${x}px`;
-                    activeLabels[key].style.top = `${y}px`;
-                } else { 
-                    activeLabels[key].style.display = 'none'; 
-                }
-            }
-            
-            renderer.render(scene, camera);
-        }
 
-        resetCamera();
-        animate();
-        window.addEventListener('resize', () => {
-            camera.aspect = container.clientWidth / container.clientHeight;
-            camera.updateProjectionMatrix();
-            renderer.setSize(container.clientWidth, container.clientHeight);
-        });
+
     </script>
 </body>
 </html>
