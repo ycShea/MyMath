@@ -458,34 +458,39 @@
                 }
                 // 5. DRAWING LOGIC (Now always starts with a clean slate)
                 // Part (a)(i)
-                if ((containerId === "sol-ai") && (currentStep < 3)) drawLineLabels(V.Q, V.S, "?", "#d63384", "stepai0_lineQS_Label");                                       // (UpdateForNewExercise) Customize the steps, unknown
-                if ((containerId === "sol-ai") && (currentStep === 3)) drawLineLabels(V.Q, V.S, "14.5", "#00bbbb", "stepai3_lineQS_Label");                                  // (UpdateForNewExercise) Customize the steps, answer
-
-                // Part (a)(ii)
-                if ((containerId === "sol-aii") && (currentStep < 2)) drawAngleArc(V.Q, V.S, V.R, "?", 1.0, "#d63384", "stepaii0_angleQSR");                                 // (UpdateForNewExercise) Customize the steps, unknown
-                if ((containerId === "sol-aii") && (currentStep < 2)) drawLineLabels(V.Q, V.S, "14.513", "#d63384", "stepaii0_lineQS_Label");                                // (UpdateForNewExercise) Customize the steps, result from part (a)(i)
-                if ((containerId === "sol-aii") && (currentStep === 2)) drawAngleArc(V.Q, V.S, V.R, "54.280°", 1.0, "#00bbbb", "stepaii2_angleQSR");                         // (UpdateForNewExercise) Customize the steps, answer
-                if ((containerId === "sol-aii") && (currentStep === 3 || currentStep === 4)) drawAngleArc(V.Q, V.S, V.R, "54.280°", 1.0, "#d63384", "stepaii3_angleQSR");    // (UpdateForNewExercise) Customize the steps, result from part (a)(ii)
-                if ((containerId === "sol-aii") && (currentStep === 3)) drawAngleArc(V.R, V.Q, V.S, "?", 1.0, "#d63384", "stepaii0_angleQSR");                               // (UpdateForNewExercise) Customize the steps, unknown
-                if ((containerId === "sol-aii") && (currentStep === 4)) drawAngleArc(V.R, V.Q, V.S, "60.7°", 1.0, "#00bbbb", "stepaii4_angleRQS");                           // (UpdateForNewExercise) Customize the steps, answer
-
-                // Part (b)(i)
-                if ((containerId === "sol-bi") && (currentStep === 0)) drawRightAngle(V.Q, V.T, V.R);                                                                        // (UpdateForNewExercise) ??
-                if ((containerId === "sol-bi") && (currentStep === 1)) drawLineLabels(V.Q, V.R, "13", "#000000", "stepbi2_lineQR_Label");                                    // (UpdateForNewExercise) Customize the steps, given
-                if ((containerId === "sol-bi") && (currentStep === 1)) drawAngleArc(V.R, V.Q, V.T, "60.720°", 1.0, "#d63384", "stepbi1_angleRQT");                           // (UpdateForNewExercise) Customize the steps, result from part (a)(i)
-                if ((containerId === "sol-bi") && (currentStep === 1)) drawLineLabels(V.R, V.T, "?", "#d63384", "stepbi1_lineRT_Label");                                     // (UpdateForNewExercise) Customize the steps, unknown
-                if ((containerId === "sol-bi") && (currentStep === 2)) drawLineLabels(V.R, V.T, "13.340", "#d63384", "stepbi2_lineRT_Label");                                // (UpdateForNewExercise) Customize the steps, result from part (b)(i)
-                if ((containerId === "sol-bi") && (currentStep === 2)) drawLines([[V.R, V.N]], false, "#d63384", "stepbi2_lineNR");                                          // (UpdateForNewExercise) Customize the steps, unknown
-                if ((containerId === "sol-bi") && (currentStep === 2)) drawLineLabels(V.N, V.R, "?", "#d63384", "stepbi2_lineNR_Label");                                     // (UpdateForNewExercise) Customize the steps, unknown
-                // if ((containerId === "sol-bi") && (currentStep === 2)) highlightTriangle('PQS');
-                if ((containerId === "sol-bi") && (currentStep === 3)) drawAngleArc(V.R, V.T, V.N, "80°", 1.0, "#000000", "stepbi3_angleNTR");                                // (UpdateForNewExercise) Customize the steps, given
-                if ((containerId === "sol-bi") && (currentStep === 3)) drawLineLabels(V.N, V.R, "11.2", "#00bbbb", "stepbi3_lineNR_Label");                                  // (UpdateForNewExercise) Customize the steps, answer
-                if ((containerId === "sol-bi") && (currentStep === 3)) highlightTriangle('NRT');
-
-if ((containerId === "sol-bi") && (currentStep === 1)) drawAngleArc(V.R, V.S, V.P, "80°", 1.0, "#ff0000", "stepbi3_angleRSP");                                // (UpdateForNewExercise) Customize the steps, given
-if ((containerId === "sol-bi") && (currentStep === 2)) drawAngleArc(V.R, V.P, V.S, "80°", 1.0, "#00ff00", "stepbi3_angleRPS");                                // (UpdateForNewExercise) Customize the steps, given
-if ((containerId === "sol-bi") && (currentStep === 3)) drawAngleArc(V.P, V.R, V.S, "80°", 1.0, "#00ff00", "stepbi3_anglePRS");                                // (UpdateForNewExercise) Customize the steps, given
+                if (containerId === "sol-ai") {
+                    if (currentStep < 3) drawLineLabels(V.Q, V.S, "?", "#d63384", "stepai0_lineQS_Label");                                       // (UpdateForNewExercise) Customize the steps, unknown
+                    if (currentStep === 3) drawLineLabels(V.Q, V.S, "14.5", "#00bbbb", "stepai3_lineQS_Label");                                  // (UpdateForNewExercise) Customize the steps, answer
+                }
                 
+                // Part (a)(ii)
+                if (containerId === "sol-aii") {
+                    if (currentStep < 2) drawAngleArc(V.Q, V.S, V.R, "?", 1.0, "#d63384", "stepaii0_angleQSR");                                 // (UpdateForNewExercise) Customize the steps, unknown
+                    if (currentStep < 2) drawLineLabels(V.Q, V.S, "14.513", "#d63384", "stepaii0_lineQS_Label");                                // (UpdateForNewExercise) Customize the steps, result from part (a)(i)
+                    if (currentStep === 2) drawAngleArc(V.Q, V.S, V.R, "54.280°", 1.0, "#00bbbb", "stepaii2_angleQSR");                         // (UpdateForNewExercise) Customize the steps, answer
+                    if (currentStep === 3 || currentStep === 4) drawAngleArc(V.Q, V.S, V.R, "54.280°", 1.0, "#d63384", "stepaii3_angleQSR");    // (UpdateForNewExercise) Customize the steps, result from part (a)(ii)
+                    if (currentStep === 3) drawAngleArc(V.R, V.Q, V.S, "?", 1.0, "#d63384", "stepaii0_angleQSR");                               // (UpdateForNewExercise) Customize the steps, unknown
+                    if (currentStep === 4) drawAngleArc(V.R, V.Q, V.S, "60.7°", 1.0, "#00bbbb", "stepaii4_angleRQS");                           // (UpdateForNewExercise) Customize the steps, answer
+                }
+                
+                // Part (b)(i)
+                if (containerId === "sol-bi") {
+                    if (currentStep === 0) drawRightAngle(V.Q, V.T, V.R);                                                                        // (UpdateForNewExercise) ??
+                    if (currentStep === 1) drawLineLabels(V.Q, V.R, "13", "#000000", "stepbi2_lineQR_Label");                                    // (UpdateForNewExercise) Customize the steps, given
+                    if (currentStep === 1) drawAngleArc(V.R, V.Q, V.T, "60.720°", 1.0, "#d63384", "stepbi1_angleRQT");                           // (UpdateForNewExercise) Customize the steps, result from part (a)(i)
+                    if (currentStep === 1) drawLineLabels(V.R, V.T, "?", "#d63384", "stepbi1_lineRT_Label");                                     // (UpdateForNewExercise) Customize the steps, unknown
+                    if (currentStep === 2) drawLineLabels(V.R, V.T, "13.340", "#d63384", "stepbi2_lineRT_Label");                                // (UpdateForNewExercise) Customize the steps, result from part (b)(i)
+                    if (currentStep === 2) drawLines([[V.R, V.N]], false, "#d63384", "stepbi2_lineNR");                                          // (UpdateForNewExercise) Customize the steps, unknown
+                    if (currentStep === 2) drawLineLabels(V.N, V.R, "?", "#d63384", "stepbi2_lineNR_Label");                                     // (UpdateForNewExercise) Customize the steps, unknown
+                    // if (currentStep === 2) highlightTriangle('PQS');
+                    if (currentStep === 3) drawAngleArc(V.R, V.T, V.N, "80°", 1.0, "#000000", "stepbi3_angleNTR");                                // (UpdateForNewExercise) Customize the steps, given
+                    if (currentStep === 3) drawLineLabels(V.N, V.R, "11.2", "#00bbbb", "stepbi3_lineNR_Label");                                  // (UpdateForNewExercise) Customize the steps, answer
+                    if (currentStep === 3) highlightTriangle('NRT');
+
+if  (currentStep === 1) drawAngleArc(V.R, V.S, V.P, "80°", 1.0, "#ff0000", "stepbi3_angleRSP");                                // (UpdateForNewExercise) Customize the steps, given
+if  (currentStep === 2) drawAngleArc(V.R, V.P, V.S, "80°", 1.0, "#00ff00", "stepbi3_angleRPS");                                // (UpdateForNewExercise) Customize the steps, given
+if  (currentStep === 3) drawAngleArc(V.P, V.R, V.S, "80°", 1.0, "#00ff00", "stepbi3_anglePRS");                                // (UpdateForNewExercise) Customize the steps, given
+                }
                 if (window.MathJax) MathJax.typesetPromise([steps[currentStep]]);
 
                 currentStep++;
@@ -752,7 +757,6 @@ if ((containerId === "sol-bi") && (currentStep === 3)) drawAngleArc(V.P, V.R, V.
             const lines = [ [V.P, V.Q], [V.Q, V.R], [V.R, V.S], [V.S, V.P], [V.Q, V.S] ];
             const matLine = new THREE.LineBasicMaterial({ color: 0x333333, linewidth: 2 });
             createPolygon([V.P, V.S, V.Q], 0x0d6efd); // replace: createTriangle(V.P, V.S, V.Q, 0x0d6efd);
-            // Different color for folded part
             createPolygon([V.S, V.R, V.Q], 0x0d6efd); // replace: createTriangle(V.S, V.Rb, V.Q, 0x0d6efd);
             // createPolygon([V.S, V.R, V.Q], 0x28a745); // replace: createTriangle(V.S, V.Rb, V.Q, 0x28a745);
             
