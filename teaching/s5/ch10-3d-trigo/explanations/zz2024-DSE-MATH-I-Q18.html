@@ -316,7 +316,7 @@
             .add(V.Q);
         // The projection of the folded R onto the PQS plane (XY plane)
         // V.N = new THREE.Vector3(V.Rb.x, V.Rb.y, 0);
-        V.N = V.P.clone();
+        V.N = V.P.clone().sub(V.Q);
 
         let currentFigure = null;
         let activeLabels = {};
@@ -488,9 +488,9 @@
                     if (currentStep === 3) drawLineLabels(V.N, V.R, "11.2", "#00bbbb", "stepbi3_lineNR_Label");                                  // (UpdateForNewExercise) Customize the steps, answer
                     if (currentStep === 3) highlightTriangle('NRT');
 
-if  (currentStep === 1) drawAngleArc(V.R, V.S, V.P, "80°", 1.0, "#ff0000", "stepbi3_angleRSP");                                // (UpdateForNewExercise) Customize the steps, given
-if  (currentStep === 2) drawAngleArc(V.R, V.P, V.S, "80°", 1.0, "#00ff00", "stepbi3_angleRPS");                                // (UpdateForNewExercise) Customize the steps, given
-if  (currentStep === 3) drawAngleArc(V.P, V.R, V.S, "80°", 1.0, "#00ff00", "stepbi3_anglePRS");                                // (UpdateForNewExercise) Customize the steps, given
+if  (currentStep === 1) drawAngleArc(V.R, V.T, V.P, "80°", 1.0, "#0000ff", "stepbi3_angleRSP");                                // (UpdateForNewExercise) Customize the steps, given
+if  (currentStep === 2) drawAngleArc(V.R, V.T, V.S, "80°", 1.0, "#0000ff", "stepbi3_angleRPS");                                // (UpdateForNewExercise) Customize the steps, given
+if  (currentStep === 3) drawAngleArc(V.R, V.T, V.Q, "80°", 1.0, "#0000ff", "stepbi3_anglePRS");                                // (UpdateForNewExercise) Customize the steps, given
                 }
                 if (window.MathJax) MathJax.typesetPromise([steps[currentStep]]);
 
@@ -763,6 +763,7 @@ if  (currentStep === 3) drawAngleArc(V.P, V.R, V.S, "80°", 1.0, "#00ff00", "ste
             
             drawLines(lines);
             drawLines([ [V.R, V.T] ], false);
+            drawLines([ [V.R, V.N] ], false);
             drawRightAngle(V.Q, V.T, V.R, 1.0);
             
             // Corrected Label Assignment for Part b
