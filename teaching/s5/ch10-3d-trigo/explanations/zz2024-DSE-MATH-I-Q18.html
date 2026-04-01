@@ -478,15 +478,16 @@
                 if (containerId === "sol-bi") {
                     // CANNOT use highlightTriangle() here
                     // if (currentStep === 2) highlightTriangle('PQS');                                                                          // CANNOT use highlightTriangle() here
-                    if (currentStep === 0) drawRightAngle(V.Q, V.T, V.R);                                                                        // (UpdateForNewExercise) ??
+                    if (currentStep <= 1) drawRightAngle(V.Q, V.T, V.R, 0.5);                                                                    // (UpdateForNewExercise) ??
                     if (currentStep === 1) drawLineLabels(V.Q, V.R, "13", "#000000", "stepbi2_lineQR_Label");                                    // (UpdateForNewExercise) Customize the steps, given
                     if (currentStep === 1) drawAngleArc(V.R, V.Q, V.T, "60.720°", 1.0, "#d63384", "stepbi1_angleRQT");                           // (UpdateForNewExercise) Customize the steps, result from part (a)(i)
                     if (currentStep === 1) drawLineLabels(V.R, V.T, "?", "#d63384", "stepbi1_lineRT_Label");                                     // (UpdateForNewExercise) Customize the steps, unknown
+                    if (currentStep >= 2) drawRightAngle(V.R, V.N, V.T, 0.5);                                                                    // (UpdateForNewExercise) ??
                     if (currentStep === 2) drawLineLabels(V.R, V.T, "13.340", "#d63384", "stepbi2_lineRT_Label");                                // (UpdateForNewExercise) Customize the steps, result from part (b)(i)
                     if (currentStep === 2) drawLines([[V.R, V.N]], false, "#d63384", "stepbi2_lineNR_Drawing");                                  // (UpdateForNewExercise) Customize the steps, unknown
                     // if (currentStep === 2) drawLineLabels(V.N, V.R, "?", "#d63384", "stepbi2_lineNR_Label");                                  // (UpdateForNewExercise) Customize the steps, unknown, no good since overlapping
                     if (currentStep === 2) drawAngleArc(V.R, V.T, V.N, "80°", 1.0, "#000000", "stepbi2_angleRTN");                               // (UpdateForNewExercise) Customize the steps, given
-                    if (currentStep === 3) drawLineLabels(V.N, V.R, "h≈11.2", "#00bbbb", "stepbi3_lineNR_Label");                                  // (UpdateForNewExercise) Customize the steps, answer
+                    if (currentStep === 3) drawLineLabels(V.N, V.R, "h≈11.2", "#00bbbb", "stepbi3_lineNR_Label");                                // (UpdateForNewExercise) Customize the steps, answer
                 }
                 if (window.MathJax) MathJax.typesetPromise([steps[currentStep]]);
 
