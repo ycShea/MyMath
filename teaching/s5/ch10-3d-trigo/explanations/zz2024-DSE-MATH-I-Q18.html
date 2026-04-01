@@ -285,7 +285,10 @@
                 if ((containerId === "sol-aii") && (currentStep === 3)) drawAngleArc(V.R, V.Q, V.S, "?", 1.0, "#d63384", "stepaii0_angleQSR");                               // (UpdateForNewExercise) Customize the steps, unknown
                 if ((containerId === "sol-aii") && (currentStep === 4)) drawAngleArc(V.R, V.Q, V.S, "60.7°", 1.0, "#00bbbb", "stepaii4_angleRQS");                           // (UpdateForNewExercise) Customize the steps, answer
 
-                if ((containerId === "sol-bi") && (currentStep === 2)) drawLines([ [V.R, V.N] ], false);;                                             // (UpdateForNewExercise) Customize the steps, unknown
+                if ((containerId === "sol-bi") && (currentStep === 2)) {
+                    drawLines([ [V.R, V.N] ], false);;                                                                             // (UpdateForNewExercise) Customize the steps, unknown
+                    highlightTriangle('NRT');
+                }
                 if ((containerId === "sol-bi") && (currentStep === 2)) drawLineLabels(V.R, V.N, "", "#d63384", "stepbi2_lineNR");                                             // (UpdateForNewExercise) Customize the steps, unknown
                 
                 if (window.MathJax) MathJax.typesetPromise([steps[currentStep]]);
