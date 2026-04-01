@@ -440,9 +440,10 @@
                 if ((containerId === "sol-aii") && (currentStep === 4)) drawAngleArc(V.R, V.Q, V.S, "60.7°", 1.0, "#00bbbb", "stepaii4_angleRQS");                           // (UpdateForNewExercise) Customize the steps, answer
 
                 if ((containerId === "sol-bi") && (currentStep === 0)) drawRightAngle(V.Q, V.T, V.R);                                                                       // (UpdateForNewExercise) ??
-                if ((containerId === "sol-bi") && (currentStep === 1)) drawLineLabels(V.Q, V.R, "?", "#000000", "stepbi2_lineQR_Label");                                     // (UpdateForNewExercise) Customize the steps, given
+                if ((containerId === "sol-bi") && (currentStep === 1)) drawLineLabels(V.Q, V.R, "13", "#000000", "stepbi2_lineQR_Label");                                     // (UpdateForNewExercise) Customize the steps, given
                 if ((containerId === "sol-bi") && (currentStep === 1)) drawAngleArc(V.R, V.Q, V.T, "60.720°", "#d63384", "stepbi1_angleRQT");                                // (UpdateForNewExercise) Customize the steps, result from part (a)(i)
-                if ((containerId === "sol-bi") && (currentStep === 1)) drawLineLabels(V.R, V.T, "?", "#d63384", "stepbi2_lineRT_Label");                                     // (UpdateForNewExercise) Customize the steps, unknown
+                if ((containerId === "sol-bi") && (currentStep === 1)) drawLineLabels(V.R, V.T, "?", "#d63384", "stepbi1_lineRT_Label");                                     // (UpdateForNewExercise) Customize the steps, unknown
+                if ((containerId === "sol-bi") && (currentStep === 2)) drawLineLabels(V.R, V.T, "13.340", "#d63384", "stepbi2_lineRT_Label");                                // (UpdateForNewExercise) Customize the steps, result from part (b)(i)
                 if ((containerId === "sol-bi") && (currentStep === 2)) drawLines([[V.R, V.N]], false, "#d63384", "stepbi2_lineNR");                                          // (UpdateForNewExercise) Customize the steps, unknown
                 if ((containerId === "sol-bi") && (currentStep === 2)) drawLineLabels(V.N, V.R, "?", "#d63384", "stepbi2_lineNR_Label");                                     // (UpdateForNewExercise) Customize the steps, unknown
                 // if ((containerId === "sol-bi") && (currentStep === 2)) highlightTriangle('PQS');
