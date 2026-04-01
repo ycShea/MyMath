@@ -485,7 +485,10 @@
                     if (currentStep === 1) drawLineLabels(V.R, V.T, "?", "#d63384", "stepbi1_lineRT_Label");                                     // (UpdateForNewExercise) Customize the steps, unknown
                     if (currentStep >= 2) drawThickRightAngle(V.R, V.N, V.T, 0.4);                                                               // (UpdateForNewExercise) ??
                     if (currentStep === 2) drawLineLabels(V.R, V.T, "13.340", "#00bbbb", "stepbi2_lineRT_Label");                                // (UpdateForNewExercise) Customize the steps, result from part (b)(i)
-                    if (currentStep === 2) drawLines([[V.R, V.N]], false, "#d63384", "stepbi2_lineNR_Drawing");                                  // (UpdateForNewExercise) Customize the steps, unknown
+                    // if (currentStep === 2) drawLines([[V.R, V.N]], false, "#d63384", "stepbi2_lineNR_Drawing");                                  // (UpdateForNewExercise) Customize the steps, unknown
+                    if (currentStep === 2) drawThickLine(V.R, V.N, false, "#000000", "stepbi2_lineNR_Drawing");                                  // (UpdateForNewExercise) Customize the steps, unknown
+                    if (currentStep === 2) drawThickLine(V.R, V.T, false, "#000000", "stepbi2_lineRT_Drawing");                                  // (UpdateForNewExercise) Customize the steps, unknown
+                    if (currentStep === 2) drawThickLine(V.N, V.T, false, "#000000", "stepbi2_lineNT_Drawing");                                  // (UpdateForNewExercise) Customize the steps, unknown
                     if (currentStep === 2) drawLineLabels(V.N, V.M, "?", "#d63384", "stepbi2_lineMN_Label");                                     // (UpdateForNewExercise) Customize the steps, unknown, no good since overlapping
                     if (currentStep === 2) drawAngleArc(V.R, V.T, V.N, "80°", 0.5, "#000000", "stepbi2_angleRTN");                               // (UpdateForNewExercise) Customize the steps, given
                     if (currentStep === 3) drawLineLabels(V.N, V.M, "h≈11.2", "#00bbbb", "stepbi3_lineNR_Label");                                // (UpdateForNewExercise) Customize the steps, answer
@@ -786,6 +789,61 @@
             });
         }
 
+        function drawThickLine(p1, p2, isSolid = true, color = 0x000000, name = "") {
+            // 1. Create the base geometry from the two points
+            const points = [p1, p2];
+            const geometry = new THREE.BufferGeometry().setFromPoints(points);
+        
+            // 2. Define the material (Solid or Dashed)
+            const material = isSolid 
+                ? new THREE.LineBasicMaterial({ 
+                    color: color, 
+                    depthTest: false 
+                  })
+                : new THREE.LineDashedMaterial({ 
+                    color: color, 
+                    dashSize: 0.5, 
+                    gapSize: 0.2, 
+                    depthTest: false 
+                  });
+        
+            // 3. Create a Group to hold the "bold" layers
+            const thickLineGroup = new THREE.Group();
+            thickLineGroup.name = name; // For your deletion logic
+        
+            // 4. Define offsets (Original + 6 directions) to simulate thickness
+            const offsets = [
+                [0, 0, 0],
+                [0.01, 0, 0], [-0.01, 0, 0],
+                [0, 0.01, 0], [0, -0.01, 0],
+                [0, 0, 0.01], [0, 0, -0.01]
+            ];
+        
+            offsets.forEach(offset => {
+                const line = new THREE.Line(geometry, material);
+                
+                // Position each layer slightly differently
+                line.position.set(offset[0], offset[1], offset[2]);
+        
+                // If dashed, we must compute distances for each instance
+                if (!isSolid) {
+                    line.computeLineDistances();
+                }
+        
+                // Tagging for your existing cleanup logic (isStepHighlight)
+                line.userData.isStepHighlight = true;
+                line.renderOrder = 1000;
+        
+                thickLineGroup.add(line);
+            });
+        
+            // Tag the group so it's caught by your scene cleanup
+            thickLineGroup.userData.isStepHighlight = true;
+            
+            scene.add(thickLineGroup);
+            return thickLineGroup;
+        }
+        
         function drawLineLabels(p1, p2, labelText = "", color = 0x000000, labelKey = null) {
             const midPoint = new THREE.Vector3().addVectors(p1, p2).multiplyScalar(0.5);
             const labelDiv = makeLabel(labelText);
