@@ -479,6 +479,7 @@
                     // CANNOT use highlightTriangle() here
                     // if (currentStep === 2) highlightTriangle('PQS');                                                                          // CANNOT use highlightTriangle() here
                     if (currentStep <= 1) drawRightAngle(V.Q, V.T, V.R, 0.5);                                                                    // (UpdateForNewExercise) ??
+                    if (currentStep <= 1) drawThickRightAngle(V.Q, V.T, V.R, 2);                                                                 // (UpdateForNewExercise) ??
                     if (currentStep === 1) drawLineLabels(V.Q, V.R, "13", "#000000", "stepbi2_lineQR_Label");                                    // (UpdateForNewExercise) Customize the steps, given
                     if (currentStep === 1) drawAngleArc(V.R, V.Q, V.T, "60.720°", 1.0, "#d63384", "stepbi1_angleRQT");                           // (UpdateForNewExercise) Customize the steps, result from part (a)(i)
                     if (currentStep === 1) drawLineLabels(V.R, V.T, "?", "#d63384", "stepbi1_lineRT_Label");                                     // (UpdateForNewExercise) Customize the steps, unknown
@@ -487,7 +488,7 @@
                     if (currentStep === 2) drawLines([[V.R, V.N]], false, "#d63384", "stepbi2_lineNR_Drawing");                                  // (UpdateForNewExercise) Customize the steps, unknown
                     if (currentStep === 2) drawLineLabels(V.N, V.M, "?", "#d63384", "stepbi2_lineMN_Label");                                     // (UpdateForNewExercise) Customize the steps, unknown, no good since overlapping
                     if (currentStep === 2) drawAngleArc(V.R, V.T, V.N, "80°", 0.5, "#000000", "stepbi2_angleRTN");                               // (UpdateForNewExercise) Customize the steps, given
-                    if (currentStep === 3) drawLineLabels(V.N, V.R, "h≈11.2", "#00bbbb", "stepbi3_lineNR_Label");                                // (UpdateForNewExercise) Customize the steps, answer
+                    if (currentStep === 3) drawLineLabels(V.N, V.M, "h≈11.2", "#00bbbb", "stepbi3_lineNR_Label");                                // (UpdateForNewExercise) Customize the steps, answer
                 }
                 if (window.MathJax) MathJax.typesetPromise([steps[currentStep]]);
 
@@ -864,7 +865,7 @@
             }
         }
 
-        function drawRightAngle(p1, vertex, p2, size = 1.0) {
+        function drawRightAngle(p1, vertex, p2, size = 1.0, color = 0x000000) {
             const d1 = new THREE.Vector3().subVectors(p1, vertex).normalize().multiplyScalar(size);
             const d2 = new THREE.Vector3().subVectors(p2, vertex).normalize().multiplyScalar(size);
             
@@ -873,13 +874,65 @@
             const corner3 = vertex.clone().add(d2);
             
             const geom = new THREE.BufferGeometry().setFromPoints([corner1, corner2, corner3]);
-            const line = new THREE.Line(geom, new THREE.LineBasicMaterial({ color: 0x000000, linewidth: 10, depthTest: false }));
+            const line = new THREE.Line(geom, new THREE.LineBasicMaterial({ color: color, linewidth: 1, depthTest: false }));
             line.visible = true;
             // 4. Tag it so your clearScene() or highlight functions can find/remove it
             line.userData.isStepHighlight = true; 
             line.renderOrder = 1000; // 5. Force it to the front layer
             scene.add(line);
             return line;
+        }
+        
+        function drawThickRightAngle(p1, vertex, p2, size = 1.0, color = 0x000000) {
+            // 1. Calculate the corners for the square symbol
+            const d1 = new THREE.Vector3().subVectors(p1, vertex).normalize().multiplyScalar(size);
+            const d2 = new THREE.Vector3().subVectors(p2, vertex).normalize().multiplyScalar(size);
+            
+            const corner1 = vertex.clone().add(d1);
+            const corner2 = vertex.clone().add(d1).add(d2);
+            const corner3 = vertex.clone().add(d2);
+            
+            const points = [corner1, corner2, corner3];
+            const geom = new THREE.BufferGeometry().setFromPoints(points);
+            
+            // 2. Create a Group to hold the "bold" layers
+            const thickLineGroup = new THREE.Group();
+            
+            const mat = new THREE.LineBasicMaterial({ 
+                color: color, 
+                depthTest: false,
+                transparent: true,
+                opacity: 0.9 
+            });
+        
+            // 3. Create multiple lines with tiny offsets to simulate thickness
+            // We offset slightly in X, Y, and Z to ensure thickness from all camera angles
+            const offsets = [
+                [0, 0, 0],       // Original
+                [0.01, 0, 0],    // Shift Right
+                [-0.01, 0, 0],   // Shift Left
+                [0, 0.01, 0],    // Shift Up
+                [0, -0.01, 0],   // Shift Down
+                [0, 0, 0.01],    // Shift Forward
+                [0, 0, -0.01]    // Shift Backward
+            ];
+        
+            offsets.forEach(offset => {
+                const line = new THREE.Line(geom, mat);
+                line.position.set(offset[0], offset[1], offset[2]);
+                
+                // Tagging each sub-line for cleanup
+                line.userData.isStepHighlight = true;
+                line.renderOrder = 1000;
+                
+                thickLineGroup.add(line);
+            });
+        
+            // Tag the group itself just in case
+            thickLineGroup.userData.isStepHighlight = true;
+            
+            scene.add(thickLineGroup);
+            return thickLineGroup;
         }
         
         function makeLabel(text) {
