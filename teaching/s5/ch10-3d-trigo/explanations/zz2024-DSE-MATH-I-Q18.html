@@ -287,7 +287,6 @@
 
                 if ((containerId === "sol-bi") && (currentStep === 2)) {
                     drawLines([ [V.R, V.N] ], false);;                                                                             // (UpdateForNewExercise) Customize the steps, unknown
-                    highlightTriangle('NRT');
                 }
                 if ((containerId === "sol-bi") && (currentStep === 2)) drawLineLabels(V.R, V.N, "", "#d63384", "stepbi2_lineNR");                                             // (UpdateForNewExercise) Customize the steps, unknown
                 
@@ -337,8 +336,8 @@
             else if (type === 'PRS') pts = [V.P, V.R, V.S];
             else if (type === 'PQS') pts = [V.P, V.Q, V.S];
             else if (type === 'RQS') pts = [V.R, V.Q, V.S];
-            else if (type === 'QRT') pts = [V.R, V.Q, V.T];
-            else if (type === 'NRT') pts = [V.N, V.R, V.T];
+            else if (type === 'QRT') pts = [V.Rb, V.Q, V.T];
+            else if (type === 'NRT') pts = [V.N, V.Rb, V.T];
         
             if (!pts || !pts[0]) return;
         
