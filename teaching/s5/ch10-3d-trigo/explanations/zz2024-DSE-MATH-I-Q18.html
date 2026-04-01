@@ -316,7 +316,7 @@
             .add(V.Q);
         // The projection of the folded R onto the PQS plane (XY plane)
         V.N = new THREE.Vector3(V.Rb.x, V.Rb.y, 0);
-        // V.N = V.P.clone().sub(V.Q);
+        V.M = new THREE.Vector3().addVectors(V.N, V.Rb).multiplyScalar(0.5);
 
         let currentFigure = null;
         let activeLabels = {};
@@ -482,11 +482,11 @@
                     if (currentStep === 1) drawLineLabels(V.Q, V.R, "13", "#000000", "stepbi2_lineQR_Label");                                    // (UpdateForNewExercise) Customize the steps, given
                     if (currentStep === 1) drawAngleArc(V.R, V.Q, V.T, "60.720°", 1.0, "#d63384", "stepbi1_angleRQT");                           // (UpdateForNewExercise) Customize the steps, result from part (a)(i)
                     if (currentStep === 1) drawLineLabels(V.R, V.T, "?", "#d63384", "stepbi1_lineRT_Label");                                     // (UpdateForNewExercise) Customize the steps, unknown
-                    if (currentStep >= 2) drawRightAngle(V.R, V.N, V.T, 0.5);                                                                    // (UpdateForNewExercise) ??
+                    if (currentStep >= 2) drawRightAngle(V.R, V.N, V.T, 0.4);                                                                    // (UpdateForNewExercise) ??
                     if (currentStep === 2) drawLineLabels(V.R, V.T, "13.340", "#d63384", "stepbi2_lineRT_Label");                                // (UpdateForNewExercise) Customize the steps, result from part (b)(i)
                     if (currentStep === 2) drawLines([[V.R, V.N]], false, "#d63384", "stepbi2_lineNR_Drawing");                                  // (UpdateForNewExercise) Customize the steps, unknown
-                    // if (currentStep === 2) drawLineLabels(V.N, V.R, "?", "#d63384", "stepbi2_lineNR_Label");                                  // (UpdateForNewExercise) Customize the steps, unknown, no good since overlapping
-                    if (currentStep === 2) drawAngleArc(V.R, V.T, V.N, "80°", 1.0, "#000000", "stepbi2_angleRTN");                               // (UpdateForNewExercise) Customize the steps, given
+                    if (currentStep === 2) drawLineLabels(V.N, V.M, "?", "#d63384", "stepbi2_lineMN_Label");                                     // (UpdateForNewExercise) Customize the steps, unknown, no good since overlapping
+                    if (currentStep === 2) drawAngleArc(V.R, V.T, V.N, "80°", 0.5, "#000000", "stepbi2_angleRTN");                               // (UpdateForNewExercise) Customize the steps, given
                     if (currentStep === 3) drawLineLabels(V.N, V.R, "h≈11.2", "#00bbbb", "stepbi3_lineNR_Label");                                // (UpdateForNewExercise) Customize the steps, answer
                 }
                 if (window.MathJax) MathJax.typesetPromise([steps[currentStep]]);
@@ -761,7 +761,7 @@
             drawLines(lines);
             drawLines([ [V.R, V.T] ], false);
             // drawLines([ [V.R, V.N] ], false);
-            drawRightAngle(V.Q, V.T, V.R, 1.0);
+            // drawRightAngle(V.Q, V.T, V.R, 1.0);
             
             // Corrected Label Assignment for Part b
             // setupLabels({ "P": V.P, "Q": V.Q, "R": V.R, "S": V.S, "T": V.T, "N": V.N });
@@ -873,7 +873,7 @@
             const corner3 = vertex.clone().add(d2);
             
             const geom = new THREE.BufferGeometry().setFromPoints([corner1, corner2, corner3]);
-            const line = new THREE.Line(geom, new THREE.LineBasicMaterial({ color: 0x000000, linewidth: 2, depthTest: false }));
+            const line = new THREE.Line(geom, new THREE.LineBasicMaterial({ color: 0x000000, linewidth: 10, depthTest: false }));
             line.visible = true;
             // 4. Tag it so your clearScene() or highlight functions can find/remove it
             line.userData.isStepHighlight = true; 
