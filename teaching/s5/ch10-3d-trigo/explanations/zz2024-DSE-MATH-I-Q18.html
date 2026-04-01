@@ -766,11 +766,12 @@
             
             drawLines(lines);
             drawLines([ [V.R, V.T] ], false);
-            drawLines([ [V.R, V.N] ], false);
+            // drawLines([ [V.R, V.N] ], false);
             drawRightAngle(V.Q, V.T, V.R, 1.0);
             
             // Corrected Label Assignment for Part b
-            setupLabels({ "P": V.P, "Q": V.Q, "R": V.R, "S": V.S, "T": V.T, "N": V.N });
+            // setupLabels({ "P": V.P, "Q": V.Q, "R": V.R, "S": V.S, "T": V.T, "N": V.N });
+            setupLabels({ "P": V.P, "Q": V.Q, "R": V.R, "S": V.S, "T": V.T });
         }
 
         function drawLines(linePairs, isSolid = true, color = 0x333333, name ="") {
