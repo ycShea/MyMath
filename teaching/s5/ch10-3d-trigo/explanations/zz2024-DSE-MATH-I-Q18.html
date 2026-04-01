@@ -199,7 +199,7 @@
             <div class="part-container">
                 <div class="part-header">
                     <span><strong>(b)(i)</strong> Find the shortest distance from $R$ to the plane $PQS$.</span>
-                    <button id="btn-bi" class="btn-show" onclick="revealStep('sol-bi', 'btn-bi', ['QRS'], ['QRT'], ['NRT'], ['QRS'])">Show Step</button>        <!-- (UpdateForNewExercise) Questions part b -->
+                    <button id="btn-bi" class="btn-show" onclick="revealStep('sol-bi', 'btn-bi', ['QRS', 'QRT', 'NRT', 'QRS'])">Show Step</button>        <!-- (UpdateForNewExercise) Questions part b -->
                 </div>
                 <div id="sol-bi" class="solution-content" data-current-step="0">
                     <p class="step" style="display:none;">                              <!-- (UpdateForNewExercise) Part bi Step 0-->
@@ -222,7 +222,7 @@
             <div class="part-container">
                 <div class="part-header">
                     <span><strong>(b)(i)</strong> Claim: distance between $P$ and $X$ exceeds $8\text{ cm}$. Is it correct?</span>
-                    <button id="btn-bii" class="btn-show" onclick="revealStep('sol-bii', 'btn-bii', ['PRS'], ['PRS'], ['PRS'])">Show Step</button>        <!-- (UpdateForNewExercise) Questions part b -->
+                    <button id="btn-bii" class="btn-show" onclick="revealStep('sol-bii', 'btn-bii', ['PRS', 'PRS', 'PRS'])">Show Step</button>        <!-- (UpdateForNewExercise) Questions part b -->
                 </div>
                 <div id="sol-bii" class="solution-content" data-current-step="0">
                     <p class="step" style="display:none;">                              <!-- (UpdateForNewExercise) Part bii Step 0-->
@@ -287,6 +287,7 @@
 
                 if ((containerId === "sol-bi") && (currentStep === 2)) {
                     drawLines([ [V.R, V.N] ], false);;                                                                             // (UpdateForNewExercise) Customize the steps, unknown
+                    highlightTriangle('RNS');
                 }
                 if ((containerId === "sol-bi") && (currentStep === 2)) drawLineLabels(V.R, V.N, "", "#d63384", "stepbi2_lineNR");                                             // (UpdateForNewExercise) Customize the steps, unknown
                 
