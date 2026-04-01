@@ -316,7 +316,7 @@
             .add(V.Q);
         // The projection of the folded R onto the PQS plane (XY plane)
         // V.N = new THREE.Vector3(V.Rb.x, V.Rb.y, 0);
-        V.N = new THREE.Vector3(V.Rb.x + 0.1, V.Rb.y + 0.1, 0);
+        V.N = V.P.clone();
 
         let currentFigure = null;
         let activeLabels = {};
