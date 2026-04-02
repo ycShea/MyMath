@@ -303,9 +303,9 @@
         // V.Ra = V.Q.clone().add(new THREE.Vector3(13 * scale * Math.cos(degToRad(84)), 13 * scale * Math.sin(degToRad(84)), 0));
 
         // R for Part B (Folded (180 - 80) deg)
-        // Get the direction of the hinge (the folding line QS)
-        const axis = new THREE.Vector3().subVectors(V.S, V.Q).normalize();
-        // Rotate flat-plane vertex Ra around hinge axis QS by 100° to define the folded 3D position.
+        // Get the direction of the hinge (the folding line SQ, rotate along the vector SQ using right-hand rule)
+        const axis = new THREE.Vector3().subVectors(V.Q, V.S).normalize();
+        // Rotate flat-plane vertex Ra around hinge axis SQ by 100° to define the folded 3D position.
         V.Rb = V.Ra.clone().sub(V.Q).applyAxisAngle(axis, angle_rotate).add(V.Q);
 
         // Calculate T as the projection of Ra onto the line segment QS
@@ -752,8 +752,6 @@
                 btn.style.background = "#007bff"; // Reset to original blue
             }
         }
-        
-
         
         // Draw figures in parts A and B (UpdateForNewExercise)
         function drawFigureA() {
