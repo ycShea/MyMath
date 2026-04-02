@@ -511,9 +511,9 @@
                 // Part (b)(ii)
                 if (containerId === "sol-bii") {
                     // 1. Calculate the Centroid of the base PQR
-                    const target = new THREE.Vector3().add(V.P).add(V.Q).add(V.R).divideScalar(3);
-                    // Position the camera "above" S. We take S and add a vertical offset (e.g., 10 units) to look down at the whole structure
-                    const cameraPos = V.S.clone().add(new THREE.Vector3(0, 0, 10));
+                    const target = new THREE.Vector3().add(V.R).add(V.Q).add(V.R).divideScalar(3);
+                    // Position the camera "above" S. We take S and add a vertical offset (e.g., 20 units) to look down at the whole structure
+                    const cameraPos = V.P.clone().add(new THREE.Vector3(0, 0, 10));
                     // Apply to your function
                     setCameraPartB(cameraPos, target); // setCameraPartB(cameraVector = null, targetVector = null)
                     shadeTetrahedron([V.P, V.Q, V.R, V.S]);
