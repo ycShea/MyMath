@@ -383,7 +383,7 @@
             controls.noPan = true;
             controls.update();
         }
-        
+        /*
         // The "3D Perspective" View for Part B (Matching your image)
         function setCameraPartB() {
             camera.up.set(0, 0, -1);
@@ -392,6 +392,33 @@
             // Unlock for 3D exploration
             controls.noRotate = false;
             controls.noPan = false;
+            controls.update();
+        }*/
+        
+        function setCameraPartB(cameraVector = null, targetVector = null) {
+            // Set the orientation (Z-up or Y-up depending on your coordinate system)
+            // Most of your code uses Z=0 as the floor, so we keep Z as the vertical axis
+            camera.up.set(0, 0, -1);
+        
+            // Handle Camera Position
+            if (cameraVector) {
+                camera.position.copy(cameraVector);
+            } else {
+                // Default Part B "Overview" Position
+                camera.position.set(-2, 24, -5);
+            }
+        
+            // Handle Target (What the camera is looking at)
+            if (targetVector) {
+                controls.target.copy(targetVector);
+            } else {
+                // Default Part B Center (near the fold)
+                controls.target.set(3, 2, -2);
+            }
+            // Unlock for 3D exploration
+            controls.noRotate = false;
+            controls.noPan = false;
+            // Required for OrbitControls to recognize the manual changes
             controls.update();
         }
         
@@ -491,6 +518,13 @@
                     if (currentStep === 2) drawAngleArc(V.R, V.T, V.N, "80°", 0.5, "#000000", "stepbi2_angleRTN");                               // (UpdateForNewExercise) Customize the steps, given
                     if (currentStep === 3) drawLineLabels(V.N, V.M, "h≈11.2", "#00bbbb", "stepbi3_lineNR_Label");                                // (UpdateForNewExercise) Customize the steps, answer
                 }
+                
+                // Part (b)(ii)
+                if (containerId === "sol-bii") {
+                    setCameraPartB(V.P, V.Q);
+                    shadeTetrahedron([V.P, V.Q, V.R, V.S]);
+                }
+
                 if (window.MathJax) MathJax.typesetPromise([steps[currentStep]]);
 
                 currentStep++;
@@ -1039,6 +1073,47 @@
             scene.add(mesh);
         }
 
+        function shadeTetrahedron(points, color = 0x0d6efd, opacity = 0.2) {
+            if (points.length !== 4) {
+                console.error("shadeTetrahedron requires exactly 4 points.");
+                return;
+            }
+        
+            const [P1, P2, P3, P4] = points;
+        
+            // Define the 4 triangular faces of a tetrahedron
+            const faces = [
+                [P1, P2, P3],
+                [P1, P2, P4],
+                [P1, P3, P4],
+                [P2, P3, P4]
+            ];
+        
+            faces.forEach(facePoints => {
+                const geom = new THREE.BufferGeometry().setFromPoints(facePoints);
+                geom.setIndex([0, 1, 2]); // Define the triangle via indices
+                
+                const mat = new THREE.MeshBasicMaterial({ 
+                    color: color, 
+                    side: THREE.DoubleSide, 
+                    transparent: true, 
+                    opacity: opacity,
+                    // polygonOffset helps prevent the shading from "flickering" 
+                    // against the wireframe lines
+                    polygonOffset: true,
+                    polygonOffsetFactor: 1,
+                    polygonOffsetUnits: 1
+                });
+        
+                const mesh = new THREE.Mesh(geom, mat);
+                
+                // Tagging for your existing cleanup/step logic
+                mesh.userData.isStepHighlight = true;
+                
+                scene.add(mesh);
+            });
+        }
+        
         function toggleAnswersOnly(prefix, btn) {
             // Targets only IDs starting with the specific prefix (e.g., 'sol-b')
             const containers = document.querySelectorAll(`[id^="${prefix}"]`);
