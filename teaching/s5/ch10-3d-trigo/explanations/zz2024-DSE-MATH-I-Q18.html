@@ -387,16 +387,8 @@
         function setCameraPartB(cameraVector = null, targetVector = null) {
             // Set the orientation (Z-up or Y-up depending on your coordinate system)
             // Most of your code uses Z=0 as the floor, so we keep Z as the vertical axis
-            camera.up.set(0, 0, -1);
-        
-            // Handle Camera Position
-            if (cameraVector) {
-                camera.position.copy(cameraVector);
-            } else {
-                // Default Part B "Overview" Position
-                camera.position.set(22, -7, 4);
-            }
-        
+            camera.up.set(0, 0, 1);
+            
             // Handle Target (What the camera is looking at)
             if (targetVector) {
                 controls.target.copy(targetVector);
@@ -404,6 +396,15 @@
                 // Default Part B Center (near the fold)
                 controls.target.set(4, 1.6, 1.6);
             }
+            
+            // Handle Camera Position
+            if (cameraVector) {
+                camera.position.copy(cameraVector);
+            } else {
+                // Default Part B "Overview" Position
+                camera.position.set(23, -3, 5);
+            }
+        
             // Unlock for 3D exploration
             controls.noRotate = false;
             controls.noPan = false;
