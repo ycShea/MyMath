@@ -495,7 +495,7 @@
                 if (containerId === "sol-bi") {
                     // CANNOT use highlightTriangle() here
                     // if (currentStep === 2) highlightTriangle('PQS');                                                                          // CANNOT use highlightTriangle() here
-                    setupLabels({ "T": V.T });
+                    stickTempPointLabel(V.T, "T", "#d63384", "stepbi0_pointT");
                     if (currentStep >= 0) drawThickLine(V.R, V.T, false, "#000000", "stepbi0_lineRT_Drawing");                                   // (UpdateForNewExercise) Customize the steps, given thick line
                     if (currentStep <= 1) drawThickRightAngle(V.Q, V.T, V.R, 0.5);                                                               // (UpdateForNewExercise) Customize the steps, given
                     if (currentStep === 1) drawLineLabels(V.Q, V.R, "13", "#000000", "stepbi2_lineQR_Label");                                    // (UpdateForNewExercise) Customize the steps, given
@@ -1034,6 +1034,22 @@
             }
         }
 
+        function stickTempPointLabel(point, text = "", color = "#d63384", labelKey = null) {
+            // 1. Create the HTML element using your existing makeLabel
+            const labelDiv = makeLabel(text);
+            labelDiv.style.color = color;
+            labelDiv.style.fontWeight = "bold"; // Optional: makes it stand out as a point label
+            
+            // 2. Generate a key for tracking (just like in drawLineLabels)
+            // If no labelKey is provided, it creates a random one so it doesn't overwrite others.
+            const key = labelKey || "tempPointLabel_" + Math.random().toString(36).substr(2, 9);
+            
+            // 3. Map the coordinate and the element
+            // This allows your existing animation loop to project the 3D point to the screen.
+            V[key] = point; 
+            activeLabels[key] = labelDiv;
+        }
+        
         // A newer function than createTriangle()
         function createPolygon(points, color = 0x0d6efd) {
             const geom = new THREE.BufferGeometry().setFromPoints(points);
