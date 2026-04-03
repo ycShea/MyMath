@@ -335,12 +335,13 @@
         const n = new THREE.Vector3().crossVectors(new THREE.Vector3().subVectors(V.Q, V.S), new THREE.Vector3().subVectors(V.Rb, V.S)).normalize();
         // Project P onto the plane. Formula: X = P + ((AnyPointOnPlane - P) ⋅ n) * n
         const dist = new THREE.Vector3().subVectors(V.Q, V.P).dot(n); 
-        V.X = V.P.clone().add(n.clone().multiplyScalar(distFromPlane));
+        V.X = V.P.clone().add(n.clone().multiplyScalar(dist));
         
         // Verify against your 8.0641 calculation
         Object.entries(V).forEach(([name, point]) => {
             console.log(name + "=", point);
         });
+        console.table(V);
         console.log("(a)(i)  QS:", V.Q.distanceTo(V.S));
         console.log("(a)(ii) angle RQS:", radToDeg(angle_rqs));
         console.log("(b)(i)  Distance h:", V.Rb.distanceTo(V.N));
