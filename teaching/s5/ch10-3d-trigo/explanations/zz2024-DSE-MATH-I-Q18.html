@@ -331,7 +331,19 @@
         // The projection of the folded R onto the PQS plane (XY plane)
         V.N = new THREE.Vector3(V.Rb.x, V.Rb.y, 0);
         V.M = new THREE.Vector3().addVectors(V.N, V.Rb).multiplyScalar(0.5);
-
+        
+        // Get the direction (Normal) of plane QRS (vector SQ cross vector SR)
+        const n = new THREE.Vector3().crossVectors(new THREE.Vector3().subVectors(V.Q, V.S), new THREE.Vector3().subVectors(V.Rb, V.S)).normalize();
+        // Project P onto the plane. Formula: X = P + ((AnyPointOnPlane - P) ⋅ n) * n
+        const dist = new THREE.Vector3().subVectors(V.Q, V.P).dot(n); 
+        V.X = V.P.clone().add(n.multiplyScalar(dist));
+        
+        // Verify against your 8.0641 calculation
+        console.log("(a)(i)  QS:", V.Q.distanceTo(V.S));
+        console.log("(a)(ii) angle RQS:", radToDeg(angle_rqs));
+        console.log("(b)(i)  Distance h:", V.R.distanceTo(V.N));
+        console.log("(b)(ii) Distance d:", V.P.distanceTo(V.X));
+        
         let currentFigure = null;
         let activeLabels = {};
 
