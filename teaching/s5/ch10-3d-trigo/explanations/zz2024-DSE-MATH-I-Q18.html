@@ -578,6 +578,8 @@
                     if ((currentStep === 2) || (currentStep === 2)) drawAngleArc(V.Q, V.P, V.S, "82°", 1.0, "#ff0000", "stepbii2_angleQPS");                           // (UpdateForNewExercise) Customize the steps, same group as h
 
                     if ((currentStep === 3)) drawLineLabels(V.P, V.X, "d=8.0641", "#00bbbb", "stepbii0_linePX_Label");           // (UpdateForNewExercise) Customize the steps, answer
+                    if ((currentStep === 3)) drawThickLine(V.P, V.X, false, "#00bbbb", "stepbii3_linePX_Drawing");       // (UpdateForNewExercise) Customize the steps, given thick line
+                    if ((currentStep === 3)) drawThickRightAngle(V.P, V.X, V.R, 0.5);                                                              // (UpdateForNewExercise) Customize t
                 }
 
                 if (window.MathJax) MathJax.typesetPromise([steps[currentStep]]);
