@@ -595,8 +595,9 @@
                     );
                     */
                     setCameraPartB(
-                        new THREE.Vector3(10, -16, 6),         // cameraVector
-                        V.N          // targetVector
+                        V.N,          // targetVector
+                        new THREE.Vector3(10, -16, 6),         // cameraVector
+                        
                     );
                     // shadeTetrahedron([V.P, V.Q, V.R, V.S]);
                     switch (currentStep) {
