@@ -222,7 +222,7 @@
             <div class="part-container">
                 <div class="part-header">
                     <span><strong>(b)(i)</strong> $X$ is a point lying on the plane $QRS$. Claim: distance between $P$ and $X$ exceeds $8\text{ cm}$. Is it correct?</span>
-                    <button id="btn-bii" class="btn-show" onclick="revealStep('sol-bii', 'btn-bii', [])">Show Step</button>        <!-- (UpdateForNewExercise) Questions part b -->
+                    <button id="btn-bii" class="btn-show" onclick="revealStep('sol-bii', 'btn-bii', ['PQS', 'QRS'])">Show Step</button>        <!-- (UpdateForNewExercise) Questions part b -->
                 </div>
                 <div id="sol-bii" class="solution-content" data-current-step="0">
                     <p class="step" style="display:none;">                              <!-- (UpdateForNewExercise) Part bii Step 0-->
@@ -401,33 +401,45 @@
                 setCameraPartA();    // This covers both Figure A and the initial 'null' state
             }
         }
-        
         // The "Original" Flat View for Part A
-        function setCameraPartA() {
+        function setCameraPartA(cameraVector = null, targetVector = null) {                                                                                    // Camera setting (UpdateForNewExercise)
+            // Set the orientation (Z-up or Y-up depending on your coordinate system)
+            // Most of your code uses Z=0 as the floor, so we keep Z as the vertical axis
             camera.up.set(0, 1, 0);
-            camera.position.set(0, 0, 20); // Straight on
-            controls.target.set(5, 4, 0);  // Centered on the flat shape
+            
+            if (targetVector) { // Handle Target (What the camera is looking at)
+                controls.target.copy(targetVector);
+            } else {
+                // Default Part B Center (near the fold)
+                controls.target.set(5, 4, 0);    // Centered on the flat shape
+            }
+            
+            if (cameraVector) { // Handle Camera Position
+                camera.position.copy(cameraVector);
+            } else {
+                // Default Part B "Overview" Position
+                camera.position.set(0, 0, 20);    // Straight on
+            }
+            
             // Ensure rotation is disabled whenever Part A camera is set
             controls.noRotate = true; 
             controls.noPan = true;
             controls.update();
         }
         // The "3D Perspective" View for Part B (Matching your image)
-        function setCameraPartB(cameraVector = null, targetVector = null) {
+        function setCameraPartB(cameraVector = null, targetVector = null) {                                            // Camera setting (UpdateForNewExercise)
             // Set the orientation (Z-up or Y-up depending on your coordinate system)
             // Most of your code uses Z=0 as the floor, so we keep Z as the vertical axis
             camera.up.set(0, 0, 1);
             
-            // Handle Target (What the camera is looking at)
-            if (targetVector) {
+            if (targetVector) { // Handle Target (What the camera is looking at)
                 controls.target.copy(targetVector);
             } else {
                 // Default Part B Center (near the fold)
                 controls.target.set(4, 1.6, 1.6);
             }
             
-            // Handle Camera Position
-            if (cameraVector) {
+            if (cameraVector) { // Handle Camera Position
                 camera.position.copy(cameraVector);
             } else {
                 // Default Part B "Overview" Position
@@ -541,12 +553,16 @@
                 
                 // Part (b)(ii)
                 if (containerId === "sol-bii") {
+                    /*
                     // setCameraPartB(V.P.clone().add(new THREE.Vector3(0, 0, 10)), new THREE.Vector3().add(V.R).add(V.Q).add(V.R).divideScalar(3)); // setCameraPartB(cameraVector = null, targetVector = null)
                     setCameraPartB(
                         new THREE.Vector3(13, -12.5, 4.5),     // cameraVector
                         new THREE.Vector3(0.5, 4, 1)           // targetVector
                     );
-                    shadeTetrahedron([V.P, V.Q, V.R, V.S]);
+                    */
+                    // shadeTetrahedron([V.P, V.Q, V.R, V.S]);
+                    if (currentStep === 0) drawThickLine(V.R, V.N, false, "#000000", "stepbii0_lineNR_Drawing");                                 // (UpdateForNewExercise) Customize the steps, given thick line
+                    if (currentStep === 1) drawThickLine(V.P, V.X, false, "#000000", "stepbii1_linePX_Drawing");                                 // (UpdateForNewExercise) Customize the steps, given thick line
                 }
 
                 if (window.MathJax) MathJax.typesetPromise([steps[currentStep]]);
@@ -642,7 +658,8 @@
             else if (type === 'RQS') pts = [V.R, V.Q, V.S];
             else if (type === 'QRT') pts = [V.Rb, V.Q, V.T];
             else if (type === 'NRT') pts = [V.N, V.Rb, V.T];
-        
+            else if (type === 'QRS') pts = [V.Q, V.Rb, V.S];
+                    
             if (!pts || !pts[0]) return;
         
             const geom = new THREE.BufferGeometry().setFromPoints(pts);
