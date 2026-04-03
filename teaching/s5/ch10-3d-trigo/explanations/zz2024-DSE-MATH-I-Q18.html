@@ -338,9 +338,7 @@
         V.X = V.P.clone().add(n.clone().multiplyScalar(dist));
         
         // Verify against your 8.0641 calculation
-        Object.entries(V).forEach(([name, point]) => {
-            console.log(name + "=", point);
-        });
+        // Object.entries(V).forEach(([name, point]) => { console.log(name + "=", point); });
         console.table(V);
         console.log("(a)(i)  QS:", V.Q.distanceTo(V.S));
         console.log("(a)(ii) angle RQS:", radToDeg(angle_rqs));
