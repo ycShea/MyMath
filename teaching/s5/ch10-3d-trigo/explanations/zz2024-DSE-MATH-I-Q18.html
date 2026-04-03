@@ -623,6 +623,7 @@
                             drawLineLabels(V.P, V.S, "10",              "#ff0000", stepId + "_" + currentStep + "_linePS_Label");    // (UpdateForNewExercise) Customize the steps, same group as h
                             drawLineLabels(V.P, V.Q, "12",              "#ff0000", stepId + "_" + currentStep + "_linePQ_Label");    // (UpdateForNewExercise) Customize the steps, same group as h
                             drawAngleArc(V.Q, V.P, V.S, "82°", 1.0,     "#ff0000", stepId + "_" + currentStep + "_angleQPS");        // (UpdateForNewExercise) Customize the steps, same group as h
+                            createPolygon([V.P, V.Q, V.S], 0xff0000);
                             break;
                         case 3: case 4: case 5:
                             drawThickLine(V.P, V.X, false,         "#000000", stepId + "_" + currentStep + "_linePX_Drawing");       // (UpdateForNewExercise) Customize the steps, black given thick line
