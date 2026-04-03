@@ -554,15 +554,18 @@
                 // Part (b)(ii)
                 if (containerId === "sol-bii") {
                     /*
-                    // setCameraPartB(V.P.clone().add(new THREE.Vector3(0, 0, 10)), new THREE.Vector3().add(V.R).add(V.Q).add(V.R).divideScalar(3)); // setCameraPartB(cameraVector = null, targetVector = null)
                     setCameraPartB(
-                        new THREE.Vector3(13, -12.5, 4.5),     // cameraVector
-                        new THREE.Vector3(0.5, 4, 1)           // targetVector
+                        new THREE.Vector3(4.2, 1.6, 1.1),         // cameraVector
+                        new THREE.Vector3(2.5, -18, 3.6)          // targetVector
                     );
                     */
                     // shadeTetrahedron([V.P, V.Q, V.R, V.S]);
-                    if (currentStep === 0) drawThickLine(V.R, V.N, false, "#000000", "stepbii0_lineNR_Drawing");                                 // (UpdateForNewExercise) Customize the steps, given thick line
+                    if ((currentStep === 0) || (currentStep === 2)) drawThickLine(V.R, V.N, false, "#000000", "stepbii0_lineNR_Drawing");        // (UpdateForNewExercise) Customize the steps, given thick line
+                    if ((currentStep === 0) || (currentStep === 2)) drawThickRightAngle(V.R, V.N, V.T, 0.5);                                     // (UpdateForNewExercise) Customize the steps, given
+                    if ((currentStep === 0) || (currentStep === 2)) drawLineLabels(V.R, V.N, "h≈11.2", "#00bbbb", "stepbii0_lineNR_Label");      // (UpdateForNewExercise) Customize the steps, answer
                     if (currentStep === 1) drawThickLine(V.P, V.X, false, "#000000", "stepbii1_linePX_Drawing");                                 // (UpdateForNewExercise) Customize the steps, given thick line
+                    if (currentStep === 1) drawThickRightAngle(V.P, V.X, V.R, 0.5);                                                              // (UpdateForNewExercise) Customize the steps, given
+                    if (currentStep === 1) drawLineLabels(V.P, V.X, "d", "#d63384", "stepbii0_lineNR_Label");                                    // (UpdateForNewExercise) Customize the steps, unknown
                 }
 
                 if (window.MathJax) MathJax.typesetPromise([steps[currentStep]]);
