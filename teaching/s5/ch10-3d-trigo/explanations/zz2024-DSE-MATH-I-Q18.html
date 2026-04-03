@@ -623,7 +623,7 @@
                             drawLineLabels(V.P, V.S, "10",              "#ff0000", stepId + "_" + currentStep + "_linePS_Label");    // (UpdateForNewExercise) Customize the steps, same group as h
                             drawLineLabels(V.P, V.Q, "12",              "#ff0000", stepId + "_" + currentStep + "_linePQ_Label");    // (UpdateForNewExercise) Customize the steps, same group as h
                             drawAngleArc(V.Q, V.P, V.S, "82°", 1.0,     "#ff0000", stepId + "_" + currentStep + "_angleQPS");        // (UpdateForNewExercise) Customize the steps, same group as h
-                            createPolygon([V.P, V.Q, V.S], 0xff0000);
+                            highlightPolygon([V.P, V.Q, V.S],           "#ff0000", stepId + "_" + currentStep + "_triangleQPS")
                             break;
                         case 3: case 4: case 5:
                             drawThickLine(V.P, V.X, false,         "#000000", stepId + "_" + currentStep + "_linePX_Drawing");       // (UpdateForNewExercise) Customize the steps, black given thick line
@@ -1147,6 +1147,48 @@
             }
         }
 
+        /**
+         * highlightPolygon
+         * Creates a semi-transparent mesh for a triangle (3 points) or quadrilateral (4 points).
+         * @param {THREE.Vector3[]} points - Array of 3 or 4 Vector3 points.
+         * @param {string} color - Hex color string (e.g., "#0d6efd").
+         * @param {string} id - Unique identifier for cleanup (e.g., stepId + "_" + currentStep + "_poly").
+         */
+        function highlightPolygon(points, color = "#0d6efd", id = null) {
+            const geom = new THREE.BufferGeometry().setFromPoints(points);
+            
+            // Define indices: 3 points = 1 triangle, 4 points = 2 triangles
+            const indices = points.length === 4 ? [0, 1, 2, 0, 2, 3] : [0, 1, 2];
+            geom.setIndex(indices);
+            
+            // Compute normals so lighting (if any) works, though BasicMaterial doesn't need it
+            geom.computeVertexNormals();
+        
+            const mesh = new THREE.Mesh(
+                geom, 
+                new THREE.MeshBasicMaterial({ 
+                    color: color, 
+                    side: THREE.DoubleSide, 
+                    transparent: true, 
+                    opacity: 0.3,           // Muted opacity so labels remain readable
+                    depthWrite: false,      // Prevents the "box" from blocking lines behind it
+                    polygonOffset: true,
+                    polygonOffsetFactor: 1,
+                    polygonOffsetUnits: 1
+                })
+            );
+        
+            // If you have a tracking system like your other functions:
+            if (id) {
+                mesh.name = id;
+                // Assuming you have an array or group to track objects for the current step
+                // activeStepObjects.push(mesh); 
+            }
+        
+            scene.add(mesh);
+            return mesh; // Return in case you need to modify it later
+        }
+        
         function stickTempPointLabel(point, text = "", color = "#d63384", labelKey = null) {
             // 1. Create the HTML element using your existing makeLabel
             const labelDiv = makeLabel(text);
