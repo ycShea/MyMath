@@ -521,30 +521,33 @@
                 }
                 // 5. DRAWING LOGIC (Now always starts with a clean slate)
                 // Part (a)(i)
-                const stepPrefix = "step" + containerId.split('-')[1];
-                if (containerId === "sol-ai") {
-                    if (currentStep <= 2) drawLineLabels(V.Q, V.S, "?", "#d63384", "stepai0_lineQS_Label");                                      // (UpdateForNewExercise) Customize the steps, unknown
-                    if (currentStep === 3) drawLineLabels(V.Q, V.S, "14.5", "#00bbbb", "stepai3_lineQS_Label");                                  // (UpdateForNewExercise) Customize the steps, answer
+                if (stepId === "step-ai") {
+                    switch (currentStep) {
+                        case 0: case 1: case 2:
+                            drawLineLabels(V.Q, V.S, "?", "#d63384", stepId + "_" + currentStep + "_lineQS_Label");           // (UpdateForNewExercise) Customize the steps, unknown
+                            break;
+                        case 3:
+                            drawLineLabels(V.Q, V.S, "14.5", "#00bbbb", stepId + "_" + currentStep + "_lineQS_Label");        // (UpdateForNewExercise) Customize the steps, answer
+                            break;
+                    }
                 }
-                
                 // Part (a)(ii)
                 if (stepId === "step-aii") {
                     switch (currentStep) {
-                        case 0:
-                        case 1:
-                            drawAngleArc(V.Q, V.S, V.R, "?", 1.0, "#d63384", stepId + currentStep + "_angleQSR");              // (UpdateForNewExercise) Customize the steps, unknown
-                            drawLineLabels(V.Q, V.S, "14.513", "#d63384", stepId + currentStep + "_lineQS_Label");           // (UpdateForNewExercise) Customize the steps, unknown from part (a)(i)
+                        case 0: case 1:
+                            drawAngleArc(V.Q, V.S, V.R, "?", 1.0, "#d63384", stepId + "_" + currentStep + "_angleQSR");              // (UpdateForNewExercise) Customize the steps, unknown
+                            drawLineLabels(V.Q, V.S, "14.513", "#d63384", stepId + "_" + currentStep + "_lineQS_Label");           // (UpdateForNewExercise) Customize the steps, unknown from part (a)(i)
                             break;                    
                         case 2:
-                            drawAngleArc(V.Q, V.S, V.R, "54.280°", 1.0, "#00bbbb", stepId + currentStep + "_angleQSR");       // (UpdateForNewExercise) Customize the steps, answer
+                            drawAngleArc(V.Q, V.S, V.R, "54.280°", 1.0, "#00bbbb", stepId + "_" + currentStep + "_angleQSR");       // (UpdateForNewExercise) Customize the steps, answer
                             break;
                         case 3:
-                            drawAngleArc(V.Q, V.S, V.R, "54.280°", 1.0, "#d63384", stepId + currentStep + "_angleQSR");       // (UpdateForNewExercise) Customize the steps, unknown from part (a)(ii)
-                            drawAngleArc(V.R, V.Q, V.S, "?", 1.0, "#d63384", stepId + currentStep + "_angleRQS");              // (UpdateForNewExercise) Customize the steps, unknown
+                            drawAngleArc(V.Q, V.S, V.R, "54.280°", 1.0, "#d63384", stepId + "_" + currentStep + "_angleQSR");       // (UpdateForNewExercise) Customize the steps, unknown from part (a)(ii)
+                            drawAngleArc(V.R, V.Q, V.S, "?", 1.0, "#d63384", stepId + "_" + currentStep + "_angleRQS");              // (UpdateForNewExercise) Customize the steps, unknown
                             break;
                         case 4:
-                            drawAngleArc(V.Q, V.S, V.R, "54.280°", 1.0, "#d63384", stepId + currentStep + "_angleQSR");       // (UpdateForNewExercise) Customize the steps, unknown from part (a)(ii)
-                            drawAngleArc(V.R, V.Q, V.S, "60.7°", 1.0, "#00bbbb", stepId + currentStep + "_angleRQS");          // (UpdateForNewExercise) Customize the steps, answer
+                            drawAngleArc(V.Q, V.S, V.R, "54.280°", 1.0, "#d63384", stepId + "_" + currentStep + "_angleQSR");       // (UpdateForNewExercise) Customize the steps, unknown from part (a)(ii)
+                            drawAngleArc(V.R, V.Q, V.S, "60.7°", 1.0, "#00bbbb", stepId + "_" + currentStep + "_angleRQS");          // (UpdateForNewExercise) Customize the steps, answer
                             break;
                     }
                 }
