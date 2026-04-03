@@ -226,12 +226,12 @@
                 </div>
                 <div id="sol-bii" class="solution-content" data-current-step="0">
                     <p class="step" style="display:none;">                              <!-- (UpdateForNewExercise) Part bii Step 0-->
-                        Consider the volume of tetrahedron $PQRS$.
-                        $$ \text{Volume} = \frac{1}{3}(\text{Area of } \triangle PQS)h $$
+                        Consider the volume of tetrahedron $PQRS$.<br>
+                        $\text{Volume}=  \frac{1}{3}(\text{Area of }\triangle PQS)h$$
                     </p>
                     <p class="step" style="display:none;">                              <!-- (UpdateForNewExercise) Part bii Step 1-->
-                        On the other hand, let $d$ cm be the shortest distance from $P$ to the plane $QRS$.
-                        $$ \text{Volume} = \frac{1}{3}(\text{Area of } \triangle QRS)d $$
+                        On the other hand, let $d$ cm be the shortest distance from $P$ to the plane $QRS$.<br>
+                        $\text{Volume} = \frac{1}{3}(\text{Area of } \triangle QRS)d$
                     </p>
                     <p class="step" style="display:none;">                              <!-- (UpdateForNewExercise) Part bii Step 2-->
                         $$ \frac{1}{2}(PQ)(PS)(\sin\angle QPS)(h) = \frac{1}{2}(QR)(QS)(\sin\angle RQS)(d)$$
@@ -285,7 +285,6 @@
         // ==========================================
         // Math tools
         const degToRad = (deg) => deg * Math.PI / 180;
-        const radToDeg = (rad) => rad * 180 / Math.PI;
         const cosineSide = (b, c, angleArad) => Math.sqrt(b*b + c*c - 2*b*c*Math.cos(angleArad));           // a = cosineSide(b, c, angleArad)
         const cosineAngle = (a, b, c) => Math.acos((b*b + c*c - a*a) / (2*b*c));                            // A = cosineAngle(a, b, c)
         const sineSide = (b, angleArad, angleBrad) => b * Math.sin(angleArad) / Math.sin(angleBrad);        // a = sineSide(b, angleArad, angleBrad)
@@ -333,22 +332,6 @@
         V.N = new THREE.Vector3(V.Rb.x, V.Rb.y, 0);
         V.M = new THREE.Vector3().addVectors(V.N, V.Rb).multiplyScalar(0.5);
 
-        // Get the direction (Normal) of plane QRS (vector SQ cross vector SR)
-        const n = new THREE.Vector3().crossVectors(new THREE.Vector3().subVectors(V.Q, V.S), new THREE.Vector3().subVectors(V.Rb, V.S)).normalize();
-        // Project P onto the plane. Formula: X = P + ((AnyPointOnPlane - P) ⋅ n) * n
-        const dist = new THREE.Vector3().subVectors(V.Q, V.P).dot(n); 
-        V.X = V.P.clone().add(n.multiplyScalar(dist));
-        
-        // Verify against your 8.0641 calculation
-        console.log("(a)(i)  QS:", V.Q.distanceTo(V.S));
-        console.log("(a)(ii) angle RQS:", radToDeg(angle_rqs));
-        console.log("(b)(i)  Distance h:", V.R.distanceTo(V.N));
-        console.log("(b)(ii) Distance d:", V.P.distanceTo(V.X));
-        
-        // ==========================================
-        // DEFINITION OF POINTS AND OBJECTS (UpdateForNewExercise)
-        // ==========================================
-        
         let currentFigure = null;
         let activeLabels = {};
 
