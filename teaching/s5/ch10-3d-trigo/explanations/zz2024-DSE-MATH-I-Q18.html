@@ -562,16 +562,21 @@
                     // shadeTetrahedron([V.P, V.Q, V.R, V.S]);
                     if ((currentStep === 0) || (currentStep === 2)) drawThickLine(V.R, V.N, false, "#000000", "stepbii0_lineNR_Drawing");        // (UpdateForNewExercise) Customize the steps, given thick line
                     if ((currentStep === 0) || (currentStep === 2)) drawThickRightAngle(V.R, V.N, V.T, 0.5);                                     // (UpdateForNewExercise) Customize the steps, given
-                    if ((currentStep === 0) || (currentStep === 2)) drawLineLabels(V.R, V.N, "h≈11.2", "#00bbbb", "stepbii0_lineNR_Label");      // (UpdateForNewExercise) Customize the steps, answer
+                    if ((currentStep === 0)) drawLineLabels(V.R, V.N, "h≈11.2", "#00bbbb", "stepbii0_lineNR_Label");      // (UpdateForNewExercise) Customize the steps, answer
                     if ((currentStep === 1) || (currentStep === 2)) drawThickLine(V.P, V.X, false, "#000000", "stepbii1_linePX_Drawing");       // (UpdateForNewExercise) Customize the steps, given thick line
                     if ((currentStep === 1) || (currentStep === 2)) drawThickRightAngle(V.P, V.X, V.R, 0.5);                                                              // (UpdateForNewExercise) Customize the steps, given
-                    if ((currentStep === 1) || (currentStep === 2)) drawLineLabels(V.P, V.X, "d=?", "#d63384", "stepbii0_lineNR_Label");           // (UpdateForNewExercise) Customize the steps, unknown
-                    if ((currentStep >= 2)) drawLineLabels(V.P, V.Q, "12", "#000000", "stepbii2_linePQ_Label");           // (UpdateForNewExercise) Customize the steps, given
-                    if ((currentStep >= 2)) drawLineLabels(V.P, V.S, "10", "#000000", "stepbii2_linePS_Label");           // (UpdateForNewExercise) Customize the steps, given
-                    if ((currentStep >= 2)) drawLineLabels(V.Q, V.R, "12", "#000000", "stepbii2_lineQR_Label");           // (UpdateForNewExercise) Customize the steps, given
-                    if ((currentStep >= 2)) drawLineLabels(V.Q, V.S, "14.5", "#d63384", "stepbii2_lineQS_Label");           // (UpdateForNewExercise) Customize the steps, unknown
-                    if (currentStep >= 2) drawAngleArc(V.R, V.Q, V.S, "60.720°", 1.0, "#d63384", "stepbii2_angleRQS");                           // (UpdateForNewExercise) Customize the steps, unknown from part (a)(i)
-                    if (currentStep >= 2) drawAngleArc(V.Q, V.P, V.S, "82°", 1.0, "#000000", "stepbii2_angleQPS");                           // (UpdateForNewExercise) Customize the steps, given
+                    if ((currentStep === 1)) drawLineLabels(V.P, V.X, "d=?", "#d63384", "stepbii0_linePX_Label");           // (UpdateForNewExercise) Customize the steps, unknown
+                    
+
+                    if ((currentStep === 2)) drawLineLabels(V.R, V.N, "h≈11.2", "#0000ee", "stepbii2_lineNR_Label");         // (UpdateForNewExercise) Customize the steps, same group as h
+                    if ((currentStep >= 2)) drawLineLabels(V.P, V.Q, "12", "#0000ee", "stepbii2_linePQ_Label");           // (UpdateForNewExercise) Customize the steps, same group as h
+                    if ((currentStep >= 2)) drawLineLabels(V.Q, V.S, "14.5", "#0000ee", "stepbii2_lineQS_Label");           // (UpdateForNewExercise) Customize the steps, same group as h
+                    if (currentStep >= 2) drawAngleArc(V.R, V.Q, V.S, "60.720°", 1.0, "#0000ee", "stepbii2_angleRQS");                           // (UpdateForNewExercise) Customize the steps, same group as h
+                    
+                    if ((currentStep >= 2)) drawLineLabels(V.P, V.X, "d=?", "#ff0000", "stepbii2_linePX_Label");           // (UpdateForNewExercise) Customize the steps, same group as d
+                    if ((currentStep >= 2)) drawLineLabels(V.P, V.S, "10", "#ff0000", "stepbii2_linePS_Label");           // (UpdateForNewExercise) Customize the steps, same group as d
+                    if ((currentStep >= 2)) drawLineLabels(V.Q, V.R, "12", "#ff0000", "stepbii2_lineQR_Label");           // (UpdateForNewExercise) Customize the steps, same group as d
+                    if (currentStep >= 2) drawAngleArc(V.Q, V.P, V.S, "82°", 1.0, "#ff0000", "stepbii2_angleQPS");                           // (UpdateForNewExercise) Customize the steps, same group as d
                 }
 
                 if (window.MathJax) MathJax.typesetPromise([steps[currentStep]]);
