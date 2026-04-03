@@ -226,15 +226,15 @@
                 </div>
                 <div id="sol-bii" class="solution-content" data-current-step="0">
                     <p class="step" style="display:none;">                              <!-- (UpdateForNewExercise) Part bii Step 0-->
-                        Consider the volume of tetrahedron $PQRS$, $ \text{volume} = \frac{1}{3}(\text{Area of }\triangle PQS)h = \frac{1}{3}\left(\frac{1}{2}(PQ)(PS)(\sin\angle QPS)\right)h$.
+                        Consider the volume of tetrahedron $PQRS$, $ \text{volume} = \frac{1}{3}(\text{Area of }\triangle PQS)h = \frac{1}{3}\left(\frac{1}{2}(PQ)(PS)\sin(\angle QPS)\right)h$.
                     </p>
                     <p class="step" style="display:none;">                              <!-- (UpdateForNewExercise) Part bii Step 1-->
                         On the other hand, let $d$ cm be the shortest distance from $P$ to the plane $QRS$.<br>
-                        $ \text{Volume} = \frac{1}{3}(\text{Area of } \triangle QRS)d = \frac{1}{3}\left(\frac{1}{2}(QR)(QS)(\sin\angle RQS)\right)d$
+                        $ \text{Volume} = \frac{1}{3}(\text{Area of } \triangle QRS)d = \frac{1}{3}\left(\frac{1}{2}(QR)(QS)\sin(\angle RQS)\right)d$
                     </p>
                     <p class="step" style="display:none;">                              <!-- (UpdateForNewExercise) Part bii Step 2-->
                         <!-- $$ \frac{1}{3}(\text{Area of }\triangle PQS)h = \frac{1}{3}(\text{Area of }\triangle QRS)d$$ -->
-                        $$ \frac{1}{3}\left(\frac{1}{2}(PQ)(PS)(\sin\angle QPS)\right)h = \frac{1}{3}\left(\frac{1}{2}(QR)(QS)(\sin\angle RQS)\right)d$$
+                        $$ \frac{1}{3}\left(\frac{1}{2}(PQ)(PS)\sin(\angle QPS)\right)h = \frac{1}{3}\left(\frac{1}{2}(QR)(QS)\sin(\angle RQS)\right)d$$
                     </p>
                     <p class="step" style="display:none;">                              <!-- (UpdateForNewExercise) Part bii Step 3-->
                         $$(12)(10)\sin(82^\circ)(11.168) \approx (13)(14.513)\sin(60.720^\circ)(d)$$
@@ -565,7 +565,13 @@
                     if ((currentStep === 0) || (currentStep === 2)) drawLineLabels(V.R, V.N, "h≈11.2", "#00bbbb", "stepbii0_lineNR_Label");      // (UpdateForNewExercise) Customize the steps, answer
                     if (currentStep === 1) drawThickLine(V.P, V.X, false, "#000000", "stepbii1_linePX_Drawing");                                 // (UpdateForNewExercise) Customize the steps, given thick line
                     if (currentStep === 1) drawThickRightAngle(V.P, V.X, V.R, 0.5);                                                              // (UpdateForNewExercise) Customize the steps, given
-                    if (currentStep === 1) drawLineLabels(V.P, V.X, "d", "#d63384", "stepbii0_lineNR_Label");                                    // (UpdateForNewExercise) Customize the steps, unknown
+                    if ((currentStep === 1) || (currentStep === 2)) drawLineLabels(V.P, V.X, "d", "#d63384", "stepbii0_lineNR_Label");           // (UpdateForNewExercise) Customize the steps, unknown
+                    if ((currentStep >= 2)) drawLineLabels(V.P, V.Q, "12", "#000000", "stepbii2_linePQ_Label");           // (UpdateForNewExercise) Customize the steps, given
+                    if ((currentStep >= 2)) drawLineLabels(V.P, V.S, "10", "#000000", "stepbii2_linePS_Label");           // (UpdateForNewExercise) Customize the steps, given
+                    if ((currentStep >= 2)) drawLineLabels(V.Q, V.R, "12", "#000000", "stepbii2_lineQR_Label");           // (UpdateForNewExercise) Customize the steps, given
+                    if ((currentStep >= 2)) drawLineLabels(V.Q, V.S, "14.5", "#d63384", "stepbii2_lineQS_Label");           // (UpdateForNewExercise) Customize the steps, unknown
+                    if (currentStep >= 2) drawAngleArc(V.R, V.Q, V.S, "60.720°", 1.0, "#d63384", "stepbii2_angleRQS");                           // (UpdateForNewExercise) Customize the steps, unknown from part (a)(i)
+                    if (currentStep >= 2) drawAngleArc(V.Q, V.P, V.S, "82°", 1.0, "#000000", "stepbii2_angleQPS");                           // (UpdateForNewExercise) Customize the steps, given
                 }
 
                 if (window.MathJax) MathJax.typesetPromise([steps[currentStep]]);
