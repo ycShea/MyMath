@@ -413,7 +413,7 @@
         // drawLineLabels()      // Projects a text label at the midpoint of a 3D line segment
         // stickTempPointLabel() // Places a temporary, bolded label at a specific 3D point
         // highlightPolygon()    // Adds a semi-transparent mesh to highlight specific areas
-        // highlightTriangle()   // Adds a semi-transparent colored mesh to a specific 3D triangle
+        // clearStepHighlights() // Adds a semi-transparent colored mesh to a specific 3D triangle
         // createPolygon()       // Renders a filled 3D mesh for 3-point or 4-point shapes
         // createTriangle()      // Legacy helper for rendering a single 3D triangle mesh
         // shadeTetrahedron()    // Renders all four faces of a 3D tetrahedron with opacity
@@ -562,12 +562,12 @@
                 
                 steps[currentStep].style.display = 'block';
 
-                console.log("Container:", containerId);
-                console.table(triangleKeys);
-                if (Array.isArray(triangleKeys)) {
-                    console.table("Inside if...");
-                    highlightTriangle(triangleKeys[currentStep]);
-                }
+                //console.log("Container:", containerId);
+                //console.table(triangleKeys);
+                //if (Array.isArray(triangleKeys)) {
+               //     console.table("Inside if...");
+                clearStepHighlights();
+                //}
                 // 5. DRAWING LOGIC (Now always starts with a clean slate)                                                                       // (UpdateForNewExercise) MAIN STEPS (SEARCH)
                 // Part (a)(i)
                 if (stepId === "step-ai") {
@@ -751,7 +751,7 @@
             renderer.render(scene, camera);
         }
         
-        function highlightTriangle(type) {
+        function clearStepHighlights() {
             const toRemove = scene.children.filter(c => c.userData && c.userData.isStepHighlight);
             toRemove.forEach(c => {
                 if (c.geometry) c.geometry.dispose();
@@ -770,7 +770,7 @@
                     delete V[key];            // Remove from coordinate object
                 }
             }
-            if (!type) return;
+//            if (!type) return;
         /*
             let pts;
             if (type === 'PQR') pts = [V.P, V.Q, V.R];                                                     // (UpdateForNewExercise) Triangles to be highlighted
