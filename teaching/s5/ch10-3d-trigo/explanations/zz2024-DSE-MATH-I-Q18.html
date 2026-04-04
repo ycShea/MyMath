@@ -130,7 +130,7 @@
             <div class="part-container">
                 <div class="part-header">
                     <span><strong>(a)(i) </strong>Find the length of $QS$.</span>       <!-- (UpdateForNewExercise) Questions part ai -->
-                    <button id="btn-ai" class="btn-show" onclick="revealStep('sol-ai', 'btn-ai', [])">Show Step</button>
+                    <button id="btn-ai" class="btn-show" onclick="revealStep('sol-ai', 'btn-ai')">Show Step</button>
                 </div>
                 <div id="sol-ai" class="solution-content" data-current-step="0">
                     <p class="step" style="display:none;">                              <!-- (UpdateForNewExercise) Part ai Step 0-->
@@ -152,7 +152,7 @@
             <div class="part-container">
                 <div class="part-header">
                     <span><strong>(a)(ii) </strong>Find $\angle RQS$.</span>            <!-- (UpdateForNewExercise) Questions part aii -->
-                    <button id="btn-aii" class="btn-show" onclick="revealStep('sol-aii', 'btn-aii', [])">Show Step</button>
+                    <button id="btn-aii" class="btn-show" onclick="revealStep('sol-aii', 'btn-aii')">Show Step</button>
                 </div>
                 <div id="sol-aii" class="solution-content" data-current-step="0">
                     <p class="step" style="display:none;">                              <!-- (UpdateForNewExercise) Part aii Step 0-->
@@ -199,7 +199,7 @@
             <div class="part-container">
                 <div class="part-header">
                     <span><strong>(b)(i)</strong> Find the shortest distance from $R$ to the plane $PQS$.</span>
-                    <button id="btn-bi" class="btn-show" onclick="revealStep('sol-bi', 'btn-bi', [])">Show Step</button>        <!-- (UpdateForNewExercise) Questions part b -->
+                    <button id="btn-bi" class="btn-show" onclick="revealStep('sol-bi', 'btn-bi')">Show Step</button>        <!-- (UpdateForNewExercise) Questions part b -->
                 </div>
                 <div id="sol-bi" class="solution-content" data-current-step="0">
                     <p class="step" style="display:none;">                              <!-- (UpdateForNewExercise) Part bi Step 0-->
@@ -222,7 +222,7 @@
             <div class="part-container">
                 <div class="part-header">
                     <span><strong>(b)(i)</strong> $X$ is a point lying on the plane $QRS$. Claim: distance between $P$ and $X$ exceeds $8\text{ cm}$. Is it correct?</span>
-                    <button id="btn-bii" class="btn-show" onclick="revealStep('sol-bii', 'btn-bii', [])">Show Step</button>                            <!-- (UpdateForNewExercise) Questions part b -->
+                    <button id="btn-bii" class="btn-show" onclick="revealStep('sol-bii', 'btn-bii')">Show Step</button>                            <!-- (UpdateForNewExercise) Questions part b -->
                 </div>
                 <div id="sol-bii" class="solution-content" data-current-step="0">
                     <p class="step" style="display:none;">                              <!-- (UpdateForNewExercise) Part bii Step 0-->
@@ -501,8 +501,8 @@
         
         // This function orchestrates the progressive reveal of solution steps by synchronizing the visibility of HTML text, MathJax formula rendering, and the corresponding 3D triangle highlights in the Three.js scene.
         // The function is triggered when the button is pressed
-        // For example: <button id="btn-bii" class="btn-show" onclick="revealStep('sol-bii', 'btn-bii', [])">Show Step</button>
-        function revealStep(containerId, buttonId, triangleKeys) {                                                                // revealStep (UpdateForNewExercise)
+        // For example: <button id="btn-bii" class="btn-show" onclick="revealStep('sol-bii', 'btn-bii')">Show Step</button>
+        function revealStep(containerId, buttonId) {                                                                // revealStep (UpdateForNewExercise)
             // =============================================================
             // 0. CLEAR STEP-SPECIFIC OBJECTS (Labels, Arcs, Extra Lines)
             // =============================================================
@@ -562,9 +562,9 @@
                 
                 steps[currentStep].style.display = 'block';
                 
-                if (Array.isArray(triangleKeys)) {
+/*                if (Array.isArray(triangleKeys)) {
                     highlightTriangle(triangleKeys[currentStep]);
-                }
+                }*/
                 // 5. DRAWING LOGIC (Now always starts with a clean slate)                                                                       // (UpdateForNewExercise) MAIN STEPS (SEARCH)
                 // Part (a)(i)
                 if (stepId === "step-ai") {
