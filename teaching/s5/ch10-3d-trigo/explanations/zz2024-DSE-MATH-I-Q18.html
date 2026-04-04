@@ -563,6 +563,8 @@
                 steps[currentStep].style.display = 'block';
                 
                 if (Array.isArray(triangleKeys)) {
+                    console.log("Container:", containerId);
+                    console.table(triangleKeys);
                     highlightTriangle(triangleKeys[currentStep]);
                 }
                 // 5. DRAWING LOGIC (Now always starts with a clean slate)                                                                       // (UpdateForNewExercise) MAIN STEPS (SEARCH)
