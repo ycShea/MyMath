@@ -1277,15 +1277,18 @@
         }
 
 function clearScene() {
-    // 1. Clean 3D Objects
+    // 1. Clean 3D Objects (Go backwards to avoid index shifting)
     for (let i = scene.children.length - 1; i >= 0; i--) {
         const obj = scene.children[i];
 
-        // Ensure we catch EVERYTHING tagged as temporary
-        if (obj.userData && obj.userData.isStepHighlight === true) {
+        // LOGIC: Catch if it's tagged OR if it has a temporary name (like 'poly')
+        const isTemporary = (obj.userData && obj.userData.isStepHighlight === true) || 
+                            (obj.name && obj.name.includes("poly"));
+
+        if (isTemporary) {
             
-            // Recursively clean groups (ThickRightAngle)
-            if (obj.isGroup || obj.children.length > 0) {
+            // Dispose children first (for Groups like ThickRightAngle)
+            if (obj.children && obj.children.length > 0) {
                 obj.children.forEach(child => {
                     if (child.geometry) child.geometry.dispose();
                     if (child.material) {
@@ -1295,28 +1298,36 @@ function clearScene() {
                 });
             }
 
-            // Clean standard objects (Arcs)
+            // Dispose the main object
             if (obj.geometry) obj.geometry.dispose();
             if (obj.material) {
                 const materials = Array.isArray(obj.material) ? obj.material : [obj.material];
                 materials.forEach(m => m.dispose());
             }
 
+            // Remove from the scene
             scene.remove(obj);
         }
     }
 
-    // 2. Clean HTML Labels and their coordinates
-    Object.keys(activeLabels).forEach(key => {
+    // 2. Clean HTML Labels AND their 3D coordinate references
+    // We use a copy of the keys to avoid mutation issues during deletion
+    const labelKeys = Object.keys(activeLabels);
+    labelKeys.forEach(key => {
         const l = activeLabels[key];
+        
+        // Remove from DOM
         if (l && l.parentNode) {
             l.parentNode.removeChild(l);
         }
-        // IMPORTANT: Clear the coordinate from V so animate() stops drawing it
+        
+        // REMOVE FROM MATH TRACKER (V)
+        // This is critical. If V[key] exists, animate() might try to draw it.
         delete V[key]; 
         delete activeLabels[key];
     });
 
+    // Final reset
     activeLabels = {};
 }
         
