@@ -6,8 +6,8 @@
     <title>Problem Explanations | MyMath</title>
     <link rel="stylesheet" href="../style.css">
     <style>
-        .container { max-width: 800px; margin: 0 auto; padding: 20px; font-family: sans-serif; }
-        .year-group { margin-top: 30px; border-bottom: 2px solid #007bff; padding-bottom: 5px; color: #007bff; }
+        .container { max-width: 800px; margin: 0 auto; padding: 20px; font-family: sans-serif; padding-top: 80px; }
+        .year-group { margin-top: 30px; border-bottom: 2px solid #007bff; padding-bottom: 5px; color: #007bff; scroll-margin-top: 80px; }
         .problem-link {
             display: flex; justify-content: space-between; align-items: center;
             padding: 15px; background: white; margin: 10px 0;
@@ -17,9 +17,30 @@
         .problem-link:hover { transform: translateX(10px); background: #eef6ff; }
         .tag { font-size: 0.8rem; padding: 4px 8px; background: #eee; border-radius: 4px; color: #666; }
         .loading { text-align: center; color: #999; margin-top: 50px; }
+
+        /* Shortcut Bar Styles */
+        #shortcut-bar {
+            position: fixed; top: 0; left: 0; width: 100%;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(5px);
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            z-index: 1000; padding: 10px 0;
+            display: flex; justify-content: center; gap: 10px;
+            transition: opacity 0.3s ease;
+        }
+        .btn-shortcut {
+            padding: 8px 16px; border: 1px solid #007bff;
+            background: white; color: #007bff; border-radius: 20px;
+            cursor: pointer; font-size: 0.9rem; text-decoration: none;
+        }
+        .btn-shortcut:hover { background: #007bff; color: white; }
+        .hidden { opacity: 0; pointer-events: none; }
     </style>
 </head>
 <body>
+
+<div id="shortcut-bar" class="hidden">
+    </div>
 
 <div class="container">
     <a href="../index.html" style="text-decoration: none;">← Back to Menu</a>
@@ -37,20 +58,16 @@
         try {
             const response = await fetch(csvUrl);
             const csvData = await response.text();
-            
-            // 1. Split by any newline (\n or \r\n)
             const rows = csvData.split(/\r?\n/).map(row => row.split(','));
-            
-            console.log("Data received:", rows); // Debugging: Press F12 to see this
 
-            rows.shift(); // Remove header
+            rows.shift(); 
 
             const contentArea = document.getElementById('content-area');
+            const shortcutBar = document.getElementById('shortcut-bar');
             contentArea.innerHTML = ""; 
 
             const categories = {};
             rows.forEach(row => {
-                // 2. Clean quotes and whitespace from each cell
                 const title = row[0]?.replace(/"/g, '').trim();
                 const category = row[1]?.replace(/"/g, '').trim();
                 const tag = row[2]?.replace(/"/g, '').trim();
@@ -69,9 +86,20 @@
                 return;
             }
 
+            // Create buttons and sections
             for (const category in categories) {
+                // Add Shortcut Button
+                const btn = document.createElement('button');
+                btn.className = "btn-shortcut";
+                btn.innerText = category;
+                const idSafe = category.replace(/\s+/g, '-');
+                btn.onclick = () => document.getElementById(idSafe).scrollIntoView({ behavior: 'smooth' });
+                shortcutBar.appendChild(btn);
+
+                // Add Section
                 const sectionHeader = document.createElement('h2');
                 sectionHeader.className = "year-group";
+                sectionHeader.id = idSafe;
                 sectionHeader.innerText = category;
                 contentArea.appendChild(sectionHeader);
 
@@ -86,6 +114,20 @@
                     contentArea.appendChild(link);
                 });
             }
+
+            // Visibility Logic: Show shortcuts only if headers are off-screen
+            window.onscroll = function() {
+                const rects = Array.from(document.querySelectorAll('.year-group'))
+                                   .map(h => h.getBoundingClientRect());
+                
+                // Show bar if the top of the first header is scrolled past
+                if (rects.length > 0 && rects[0].top < 70) {
+                    shortcutBar.classList.remove('hidden');
+                } else {
+                    shortcutBar.classList.add('hidden');
+                }
+            };
+
         } catch (error) {
             console.error("Fetch error:", error);
             document.getElementById('content-area').innerHTML = "<p>Error: " + error.message + "</p>";
