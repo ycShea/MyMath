@@ -1274,64 +1274,8 @@
             });
             btn.textContent = isShowing ? "Show Answers Only" : "Hide Answers";
             if (window.MathJax) MathJax.typeset();
-        }
-
-function clearScene() {
-    // 1. Clean 3D Objects (Go backwards to avoid index shifting)
-    for (let i = scene.children.length - 1; i >= 0; i--) {
-        const obj = scene.children[i];
-
-        // LOGIC: Catch if it's tagged OR if it has a temporary name (like 'poly')
-        const isTemporary = (obj.userData && obj.userData.isStepHighlight === true) || 
-                            (obj.name && obj.name.includes("poly"));
-
-        if (isTemporary) {
-            
-            // Dispose children first (for Groups like ThickRightAngle)
-            if (obj.children && obj.children.length > 0) {
-                obj.children.forEach(child => {
-                    if (child.geometry) child.geometry.dispose();
-                    if (child.material) {
-                        const mats = Array.isArray(child.material) ? child.material : [child.material];
-                        mats.forEach(m => m.dispose());
-                    }
-                });
-            }
-
-            // Dispose the main object
-            if (obj.geometry) obj.geometry.dispose();
-            if (obj.material) {
-                const materials = Array.isArray(obj.material) ? obj.material : [obj.material];
-                materials.forEach(m => m.dispose());
-            }
-
-            // Remove from the scene
-            scene.remove(obj);
-        }
-    }
-
-    // 2. Clean HTML Labels AND their 3D coordinate references
-    // We use a copy of the keys to avoid mutation issues during deletion
-    const labelKeys = Object.keys(activeLabels);
-    labelKeys.forEach(key => {
-        const l = activeLabels[key];
+        }      
         
-        // Remove from DOM
-        if (l && l.parentNode) {
-            l.parentNode.removeChild(l);
-        }
-        
-        // REMOVE FROM MATH TRACKER (V)
-        // This is critical. If V[key] exists, animate() might try to draw it.
-        delete V[key]; 
-        delete activeLabels[key];
-    });
-
-    // Final reset
-    activeLabels = {};
-}
-        
-        /*
         function clearScene() {
             for (let i = scene.children.length - 1; i >= 0; i--) {
                 const obj = scene.children[i];
@@ -1368,7 +1312,7 @@ function clearScene() {
         
             activeLabels = {};
         }
-        */
+        
     </script>
 </body>
 </html>
