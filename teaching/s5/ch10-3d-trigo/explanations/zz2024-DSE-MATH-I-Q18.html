@@ -565,7 +565,7 @@
                 if (Array.isArray(triangleKeys)) {
                     highlightTriangle(triangleKeys[currentStep]);
                 }
-                // 5. DRAWING LOGIC (Now always starts with a clean slate)
+                // 5. DRAWING LOGIC (Now always starts with a clean slate)                                                                       // (UpdateForNewExercise) MAIN STEPS (SEARCH)
                 // Part (a)(i)
                 if (stepId === "step-ai") {
                     switch (currentStep) {
@@ -646,6 +646,8 @@
                             drawThickLine(V.R, V.N, false,         "#000000", stepId + "_" + currentStep + "_lineNR_Drawing");       // (UpdateForNewExercise) Customize the steps, black given thick line
                             drawThickRightAngle(V.R, V.N, V.T, 0.5);                                                                 // (UpdateForNewExercise) Customize the steps, black given
                             drawLineLabels(V.R, V.N, "h≈11.2",     "#00bbbb", stepId + "_" + currentStep + "_lineNR_Label");         // (UpdateForNewExercise) Customize the steps, cyan answer
+                            highlightPolygon([V.P, V.Q, V.S],      "#ff0000", stepId + "_" + currentStep + "_triangleQPS");
+                            highlightPolygon([V.R, V.Q, V.S],      "#ffff00", stepId + "_" + currentStep + "_triangleQPS");
                             break;
                         case 1:
                             drawThickLine(V.P, V.X, false,         "#000000", stepId + "_" + currentStep + "_linePX_Drawing");       // (UpdateForNewExercise) Customize the steps, black given thick line
@@ -667,7 +669,7 @@
                             drawLineLabels(V.P, V.S, "10",              "#ff0000", stepId + "_" + currentStep + "_linePS_Label");    // (UpdateForNewExercise) Customize the steps, same group as h
                             drawLineLabels(V.P, V.Q, "12",              "#ff0000", stepId + "_" + currentStep + "_linePQ_Label");    // (UpdateForNewExercise) Customize the steps, same group as h
                             drawAngleArc(V.Q, V.P, V.S, "82°", 1.0,     "#ff0000", stepId + "_" + currentStep + "_angleQPS");        // (UpdateForNewExercise) Customize the steps, same group as h
-                            highlightPolygon([V.P, V.Q, V.S],           "#ff0000", stepId + "_" + currentStep + "_triangleQPS")
+                            highlightPolygon([V.P, V.Q, V.S],           "#ff0000", stepId + "_" + currentStep + "_triangleQPS");
                             break;
                         case 3: case 4: case 5:
                             drawThickLine(V.P, V.X, false,         "#000000", stepId + "_" + currentStep + "_linePX_Drawing");       // (UpdateForNewExercise) Customize the steps, black given thick line
