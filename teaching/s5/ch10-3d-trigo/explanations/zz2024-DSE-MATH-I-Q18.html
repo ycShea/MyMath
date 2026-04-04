@@ -398,7 +398,7 @@
         // Camera setting (UpdateForNewExercise)
         function resetCamera() {
             if (currentFigure === 'B') {
-                setCameraPartB();
+                setCameraPartB(null, null, true);
             } else {
                 setCameraPartA();    // This covers both Figure A and the initial 'null' state
             }
@@ -429,10 +429,18 @@
             controls.update();
         }
         // The "3D Perspective" View for Part B (Matching your image)
-        function setCameraPartB(cameraVector = null, targetVector = null) {                                            // Camera setting (UpdateForNewExercise)
+        function setCameraPartB(cameraVector = null, targetVector = null, lockHorizontal = false) {                                            // Camera setting (UpdateForNewExercise)
             // Set the orientation (Z-up or Y-up depending on your coordinate system)
             // Most of your code uses Z=0 as the floor, so we keep Z as the vertical axis
             camera.up.set(0, 0, 1);
+            if (lockHorizontal) {
+                controls.minPolarAngle = Math.PI / 2;
+                controls.maxPolarAngle = Math.PI / 2;
+            } else {
+                // Reset to default (allow full vertical rotation)
+                controls.minPolarAngle = 0;
+                controls.maxPolarAngle = Math.PI;
+            }
             
             if (targetVector) { // Handle Target (What the camera is looking at)
                 controls.target.copy(targetVector);
@@ -871,7 +879,7 @@
                     drawFigureA(); 
                     footerA.style.display = 'inline-block';
                 } else {                                                                                   // (UpdateForNewExercise) handleToggle, part b
-                    setCameraPartB();
+                    setCameraPartB(null, null, true);
                     // Re-enable for Part B
                     controls.noRotate = false;
                     controls.noPan = false;
