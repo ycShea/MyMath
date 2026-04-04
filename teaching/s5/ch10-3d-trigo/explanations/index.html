@@ -6,8 +6,8 @@
     <title>Problem Explanations | MyMath</title>
     <link rel="stylesheet" href="../style.css">
     <style>
-        .container { max-width: 800px; margin: 0 auto; padding: 20px; font-family: sans-serif; padding-top: 80px; }
-        .year-group { margin-top: 30px; border-bottom: 2px solid #007bff; padding-bottom: 5px; color: #007bff; scroll-margin-top: 80px; }
+        .container { max-width: 800px; margin: 0 auto; padding: 20px; font-family: sans-serif; }
+        .year-group { margin-top: 30px; border-bottom: 2px solid #007bff; padding-bottom: 5px; color: #007bff; }
         .problem-link {
             display: flex; justify-content: space-between; align-items: center;
             padding: 15px; background: white; margin: 10px 0;
@@ -18,29 +18,46 @@
         .tag { font-size: 0.8rem; padding: 4px 8px; background: #eee; border-radius: 4px; color: #666; }
         .loading { text-align: center; color: #999; margin-top: 50px; }
 
-        /* Shortcut Bar Styles */
-        #shortcut-bar {
-            position: fixed; top: 0; left: 0; width: 100%;
-            background: rgba(255, 255, 255, 0.95);
-            backdrop-filter: blur(5px);
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-            z-index: 1000; padding: 10px 0;
-            display: flex; justify-content: center; gap: 10px;
-            transition: opacity 0.3s ease;
+        /* Floating Nav Styles */
+        .floating-nav {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            z-index: 1000;
         }
-        .btn-shortcut {
-            padding: 8px 16px; border: 1px solid #007bff;
-            background: white; color: #007bff; border-radius: 20px;
-            cursor: pointer; font-size: 0.9rem; text-decoration: none;
+        .nav-btn {
+            padding: 12px 18px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+            font-weight: bold;
+            font-size: 0.9rem;
+            text-decoration: none;
+            transition: opacity 0.3s, transform 0.3s;
+            opacity: 0;
+            pointer-events: none;
+            transform: translateY(20px);
         }
-        .btn-shortcut:hover { background: #007bff; color: white; }
-        .hidden { opacity: 0; pointer-events: none; }
+        .nav-btn.visible {
+            opacity: 1;
+            pointer-events: auto;
+            transform: translateY(0);
+        }
+        .nav-btn:hover { background-color: #0056b3; }
     </style>
 </head>
 <body>
 
-<div id="shortcut-bar" class="hidden">
-    </div>
+<div class="floating-nav" id="floating-nav">
+    <button class="nav-btn" id="btn-public" onclick="scrollToHeading('Public Exams')">Jump to Public Exams</button>
+    <button class="nav-btn" id="btn-school" onclick="scrollToHeading('School Assessments')">Jump to School Assessments</button>
+</div>
 
 <div class="container">
     <a href="../index.html" style="text-decoration: none;">← Back to Menu</a>
@@ -53,17 +70,21 @@
 
 <script>
     const csvUrl = "https://docs.google.com/spreadsheets/d/e/2PACX-1vRSnkbeTpuYjuWRdy7IW9DZUI8tcwrl98OLKMe3nXNzKB1HBvpQzpmSqf9NlmX0b7RJ5y8AIK9GI8AL/pub?gid=0&single=true&output=csv";
+    const headingsMap = {};
+
+    function scrollToHeading(text) {
+        const el = headingsMap[text];
+        if (el) el.scrollIntoView({ behavior: 'smooth' });
+    }
 
     async function fetchData() {
         try {
             const response = await fetch(csvUrl);
             const csvData = await response.text();
             const rows = csvData.split(/\r?\n/).map(row => row.split(','));
-
             rows.shift(); 
 
             const contentArea = document.getElementById('content-area');
-            const shortcutBar = document.getElementById('shortcut-bar');
             contentArea.innerHTML = ""; 
 
             const categories = {};
@@ -86,22 +107,14 @@
                 return;
             }
 
-            // Create buttons and sections
             for (const category in categories) {
-                // Add Shortcut Button
-                const btn = document.createElement('button');
-                btn.className = "btn-shortcut";
-                btn.innerText = category;
-                const idSafe = category.replace(/\s+/g, '-');
-                btn.onclick = () => document.getElementById(idSafe).scrollIntoView({ behavior: 'smooth' });
-                shortcutBar.appendChild(btn);
-
-                // Add Section
                 const sectionHeader = document.createElement('h2');
                 sectionHeader.className = "year-group";
-                sectionHeader.id = idSafe;
                 sectionHeader.innerText = category;
                 contentArea.appendChild(sectionHeader);
+                
+                // Store reference for observer and scrolling
+                headingsMap[category] = sectionHeader;
 
                 categories[category].forEach(item => {
                     const link = document.createElement('a');
@@ -115,23 +128,40 @@
                 });
             }
 
-            // Visibility Logic: Show shortcuts only if headers are off-screen
-            window.onscroll = function() {
-                const rects = Array.from(document.querySelectorAll('.year-group'))
-                                   .map(h => h.getBoundingClientRect());
-                
-                // Show bar if the top of the first header is scrolled past
-                if (rects.length > 0 && rects[0].top < 70) {
-                    shortcutBar.classList.remove('hidden');
-                } else {
-                    shortcutBar.classList.add('hidden');
-                }
-            };
+            setupObserver();
 
         } catch (error) {
             console.error("Fetch error:", error);
             document.getElementById('content-area').innerHTML = "<p>Error: " + error.message + "</p>";
         }
+    }
+
+    function setupObserver() {
+        const btnPublic = document.getElementById('btn-public');
+        const btnSchool = document.getElementById('btn-school');
+
+        const observerOptions = {
+            root: null,
+            threshold: 0 // Trigger as soon as 1px is visible
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                const title = entry.target.innerText;
+                
+                if (title === "Public Exams") {
+                    // Show button ONLY if heading is NOT intersecting
+                    entry.isIntersecting ? btnPublic.classList.remove('visible') : btnPublic.classList.add('visible');
+                }
+                
+                if (title === "School Assessments") {
+                    entry.isIntersecting ? btnSchool.classList.remove('visible') : btnSchool.classList.add('visible');
+                }
+            });
+        }, observerOptions);
+
+        if (headingsMap["Public Exams"]) observer.observe(headingsMap["Public Exams"]);
+        if (headingsMap["School Assessments"]) observer.observe(headingsMap["School Assessments"]);
     }
 
     fetchData();
