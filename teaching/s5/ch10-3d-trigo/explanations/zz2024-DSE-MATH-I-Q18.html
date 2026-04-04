@@ -130,7 +130,7 @@
             <div class="part-container">
                 <div class="part-header">
                     <span><strong>(a)(i) </strong>Find the length of $QS$.</span>       <!-- (UpdateForNewExercise) Questions part ai -->
-                    <button id="btn-ai" class="btn-show" onclick="revealStep('sol-ai', 'btn-ai', ['PQS', 'PQS', 'PQS', 'PQS'])">Show Step</button>
+                    <button id="btn-ai" class="btn-show" onclick="revealStep('sol-ai', 'btn-ai', [])">Show Step</button>
                 </div>
                 <div id="sol-ai" class="solution-content" data-current-step="0">
                     <p class="step" style="display:none;">                              <!-- (UpdateForNewExercise) Part ai Step 0-->
@@ -152,7 +152,7 @@
             <div class="part-container">
                 <div class="part-header">
                     <span><strong>(a)(ii) </strong>Find $\angle RQS$.</span>            <!-- (UpdateForNewExercise) Questions part aii -->
-                    <button id="btn-aii" class="btn-show" onclick="revealStep('sol-aii', 'btn-aii', ['QRS', 'QRS', 'QRS', 'QRS', 'QRS', 'QRS'])">Show Step</button>
+                    <button id="btn-aii" class="btn-show" onclick="revealStep('sol-aii', 'btn-aii', [])">Show Step</button>
                 </div>
                 <div id="sol-aii" class="solution-content" data-current-step="0">
                     <p class="step" style="display:none;">                              <!-- (UpdateForNewExercise) Part aii Step 0-->
@@ -501,7 +501,7 @@
         
         // This function orchestrates the progressive reveal of solution steps by synchronizing the visibility of HTML text, MathJax formula rendering, and the corresponding 3D triangle highlights in the Three.js scene.
         // The function is triggered when the button is pressed
-        // For example: <button id="btn-bii" class="btn-show" onclick="revealStep('sol-bii', 'btn-bii', ['PRS', 'PRS', 'PRS'])">Show Step</button>
+        // For example: <button id="btn-bii" class="btn-show" onclick="revealStep('sol-bii', 'btn-bii', [])">Show Step</button>
         function revealStep(containerId, buttonId, triangleKeys) {                                                                // revealStep (UpdateForNewExercise)
             // =============================================================
             // 0. CLEAR STEP-SPECIFIC OBJECTS (Labels, Arcs, Extra Lines)
@@ -570,10 +570,12 @@
                 if (stepId === "step-ai") {
                     switch (currentStep) {
                         case 0: case 1: case 2:
-                            drawLineLabels(V.Q, V.S, "?",    "#d63384", stepId + "_" + currentStep + "_lineQS_Label");                           // (UpdateForNewExercise) Customize the steps, pink unknown
+                            drawLineLabels(V.Q, V.S, "?",     "#d63384", stepId + "_" + currentStep + "_lineQS_Label");                           // (UpdateForNewExercise) Customize the steps, pink unknown
+                            highlightPolygon([V.P, V.Q, V.S], "#bb0000", stepId + "_" + currentStep + "_trianglePQS");
                             break;
                         case 3:
-                            drawLineLabels(V.Q, V.S, "14.5", "#00bbbb", stepId + "_" + currentStep + "_lineQS_Label");                           // (UpdateForNewExercise) Customize the steps, cyan answer
+                            drawLineLabels(V.Q, V.S, "14.5",  "#00bbbb", stepId + "_" + currentStep + "_lineQS_Label");                           // (UpdateForNewExercise) Customize the steps, cyan answer
+                            highlightPolygon([V.P, V.Q, V.S], "#bb0000", stepId + "_" + currentStep + "_trianglePQS");
                             break;
                     }
                 }
@@ -583,56 +585,58 @@
                         case 0: case 1:
                             drawAngleArc(V.Q, V.S, V.R, "?", 1.0,       "#d63384", stepId + "_" + currentStep + "_angleQSR");                    // (UpdateForNewExercise) Customize the steps, pink unknown
                             drawLineLabels(V.Q, V.S, "14.513",          "#d63384", stepId + "_" + currentStep + "_lineQS_Label");                // (UpdateForNewExercise) Customize the steps, pink unknown from part (a)(i)
+                            highlightPolygon([V.Q, V.R, V.S],           "#bb0000", stepId + "_" + currentStep + "_triangleQRS");
                             break;                    
                         case 2:
                             drawAngleArc(V.Q, V.S, V.R, "54.280°", 1.0, "#00bbbb", stepId + "_" + currentStep + "_angleQSR");                    // (UpdateForNewExercise) Customize the steps, cyan answer
+                            highlightPolygon([V.Q, V.R, V.S],           "#bb0000", stepId + "_" + currentStep + "_triangleQRS");
                             break;
                         case 3:
                             drawAngleArc(V.Q, V.S, V.R, "54.280°", 1.0, "#d63384", stepId + "_" + currentStep + "_angleQSR");                    // (UpdateForNewExercise) Customize the steps, pink unknown from part (a)(ii)
                             drawAngleArc(V.R, V.Q, V.S, "?", 1.0,       "#d63384", stepId + "_" + currentStep + "_angleRQS");                    // (UpdateForNewExercise) Customize the steps, pink unknown
+                            highlightPolygon([V.Q, V.R, V.S],           "#bb0000", stepId + "_" + currentStep + "_triangleQRS");
                             break;
                         case 4:
                             drawAngleArc(V.Q, V.S, V.R, "54.280°", 1.0, "#d63384", stepId + "_" + currentStep + "_angleQSR");                    // (UpdateForNewExercise) Customize the steps, pink unknown from part (a)(ii)
                             drawAngleArc(V.R, V.Q, V.S, "60.7°", 1.0,   "#00bbbb", stepId + "_" + currentStep + "_angleRQS");                    // (UpdateForNewExercise) Customize the steps, cyan answer
+                            highlightPolygon([V.Q, V.R, V.S],           "#bb0000", stepId + "_" + currentStep + "_triangleQRS");
                             break;
                     }
                 }
                 // Part (b)(i)
                 if (stepId === "step-bi") {
-                    // CANNOT use highlightTriangle() here
-                    // if (currentStep === 2) highlightTriangle('PQS');                                                                            // CANNOT use highlightTriangle() here
                     stickTempPointLabel(V.T, "T", "#d63384", stepId + "_" + currentStep + "_pointT");
                     switch (currentStep) {
                         case 0:
-                            drawThickLine(V.R, V.T, false, "#000000", stepId + "_" + currentStep + "_lineRT_Drawing");     // (UpdateForNewExercise) Customize the steps, given thick line
-                            drawThickRightAngle(V.Q, V.T, V.R, 0.5);                                                        // (UpdateForNewExercise) Customize the steps, given
-                            highlightPolygon([V.Q, V.R, V.S],      "#ffeb3b", stepId + "_" + currentStep + "_triangleQRS");
+                            drawThickLine(V.R, V.T, false,              "#000000", stepId + "_" + currentStep + "_lineRT_Drawing");     // (UpdateForNewExercise) Customize the steps, given thick line
+                            drawThickRightAngle(V.Q, V.T, V.R, 0.5);                                                                    // (UpdateForNewExercise) Customize the steps, given
+                            highlightPolygon([V.Q, V.R, V.S],           "#ffeb3b", stepId + "_" + currentStep + "_triangleQRS");
                             break;
                         case 1:
-                            drawThickLine(V.R, V.T, false, "#000000", stepId + "_" + currentStep + "_lineRT_Drawing");     // (UpdateForNewExercise) Customize the steps, given thick line
-                            drawThickRightAngle(V.Q, V.T, V.R, 0.5);                                                        // (UpdateForNewExercise) Customize the steps, given
-                            drawLineLabels(V.Q, V.R, "13", "#000000", stepId + "_" + currentStep + "_lineQR_Label");                             // (UpdateForNewExercise) Customize the steps, given
-                            drawAngleArc(V.R, V.Q, V.T, "60.720°", 1.0, "#d63384", stepId + "_" + currentStep + "_angleRQT");                   // (UpdateForNewExercise) Customize the steps, unknown from part (a)(i)
-                            drawLineLabels(V.R, V.T, "?", "#d63384", stepId + "_" + currentStep + "_lineRT_Label");                              // (UpdateForNewExercise) Customize the steps, unknown
-                            highlightPolygon([V.Q, V.R, V.T],      "#ffeb3b", stepId + "_" + currentStep + "_triangleQRT");
+                            drawThickLine(V.R, V.T, false,              "#000000", stepId + "_" + currentStep + "_lineRT_Drawing");     // (UpdateForNewExercise) Customize the steps, given thick line
+                            drawThickRightAngle(V.Q, V.T, V.R, 0.5);                                                                    // (UpdateForNewExercise) Customize the steps, given
+                            drawLineLabels(V.Q, V.R, "13",              "#000000", stepId + "_" + currentStep + "_lineQR_Label");       // (UpdateForNewExercise) Customize the steps, given
+                            drawAngleArc(V.R, V.Q, V.T, "60.720°", 1.0, "#d63384", stepId + "_" + currentStep + "_angleRQT");           // (UpdateForNewExercise) Customize the steps, unknown from part (a)(i)
+                            drawLineLabels(V.R, V.T, "?",               "#d63384", stepId + "_" + currentStep + "_lineRT_Label");       // (UpdateForNewExercise) Customize the steps, unknown
+                            highlightPolygon([V.Q, V.R, V.T],           "#ffeb3b", stepId + "_" + currentStep + "_triangleQRT");
                             break;
                         case 2:
-                            drawThickLine(V.R, V.T, false, "#000000", stepId + "_" + currentStep + "_lineRT_Drawing");     // (UpdateForNewExercise) Customize the steps, given thick line
-                            drawThickRightAngle(V.R, V.N, V.T, 0.4);                                                                             // (UpdateForNewExercise) Customize the steps, given
-                            drawLineLabels(V.R, V.T, "13.340", "#00bbbb", stepId + "_" + currentStep + "_lineRT_Label");                         // (UpdateForNewExercise) Customize the steps, unknown from part (b)(i)
-                            drawThickLine(V.R, V.N, false, "#000000", stepId + "_" + currentStep + "_lineNR_Drawing");                           // (UpdateForNewExercise) Customize the steps, given thick line
-                            drawThickLine(V.N, V.T, false, "#000000", stepId + "_" + currentStep + "_lineNT_Drawing");                           // (UpdateForNewExercise) Customize the steps, given thick line
-                            drawLineLabels(V.N, V.M, "h=?", "#d63384", stepId + "_" + currentStep + "_lineMN_Label");                              // (UpdateForNewExercise) Customize the steps, unknown
-                            drawAngleArc(V.R, V.T, V.N, "80°", 0.5, "#000000", stepId + "_" + currentStep + "_angleRTN");                        // (UpdateForNewExercise) Customize the steps, given
-                            highlightPolygon([V.N, V.R, V.T],      "#ffeb3b", stepId + "_" + currentStep + "_triangleNRT");
+                            drawThickLine(V.R, V.T, false,              "#000000", stepId + "_" + currentStep + "_lineRT_Drawing");     // (UpdateForNewExercise) Customize the steps, given thick line
+                            drawThickRightAngle(V.R, V.N, V.T, 0.4);                                                                    // (UpdateForNewExercise) Customize the steps, given
+                            drawLineLabels(V.R, V.T, "13.340",          "#00bbbb", stepId + "_" + currentStep + "_lineRT_Label");       // (UpdateForNewExercise) Customize the steps, unknown from part (b)(i)
+                            drawThickLine(V.R, V.N, false,              "#000000", stepId + "_" + currentStep + "_lineNR_Drawing");     // (UpdateForNewExercise) Customize the steps, given thick line
+                            drawThickLine(V.N, V.T, false,              "#000000", stepId + "_" + currentStep + "_lineNT_Drawing");     // (UpdateForNewExercise) Customize the steps, given thick line
+                            drawLineLabels(V.N, V.M, "h=?",             "#d63384", stepId + "_" + currentStep + "_lineMN_Label");       // (UpdateForNewExercise) Customize the steps, unknown
+                            drawAngleArc(V.R, V.T, V.N, "80°", 0.5,     "#000000", stepId + "_" + currentStep + "_angleRTN");           // (UpdateForNewExercise) Customize the steps, given
+                            highlightPolygon([V.N, V.R, V.T],           "#ffeb3b", stepId + "_" + currentStep + "_triangleNRT");
                             break;
                         case 3:
-                            drawThickLine(V.R, V.T, false, "#000000", stepId + "_" + currentStep + "_lineRT_Drawing");     // (UpdateForNewExercise) Customize the steps, given thick line
-                            drawThickRightAngle(V.R, V.N, V.T, 0.4);                                                                             // (UpdateForNewExercise) Customize the steps, given
-                            drawThickLine(V.R, V.N, false, "#000000", stepId + "_" + currentStep + "_lineNR_Drawing");                           // (UpdateForNewExercise) Customize the steps, given thick line
-                            drawThickLine(V.N, V.T, false, "#000000", stepId + "_" + currentStep + "_lineNT_Drawing");                           // (UpdateForNewExercise) Customize the steps, given thick line
-                            drawLineLabels(V.N, V.M, "h≈11.2", "#00bbbb", stepId + "_" + currentStep + "_lineNR_Label");                         // (UpdateForNewExercise) Customize the steps, answer
-                            highlightPolygon([V.N, V.R, V.T],      "#ffeb3b", stepId + "_" + currentStep + "_triangleNRT");
+                            drawThickLine(V.R, V.T, false,              "#000000", stepId + "_" + currentStep + "_lineRT_Drawing");     // (UpdateForNewExercise) Customize the steps, given thick line
+                            drawThickRightAngle(V.R, V.N, V.T, 0.4);                                                                    // (UpdateForNewExercise) Customize the steps, given
+                            drawThickLine(V.R, V.N, false,              "#000000", stepId + "_" + currentStep + "_lineNR_Drawing");     // (UpdateForNewExercise) Customize the steps, given thick line
+                            drawThickLine(V.N, V.T, false,              "#000000", stepId + "_" + currentStep + "_lineNT_Drawing");     // (UpdateForNewExercise) Customize the steps, given thick line
+                            drawLineLabels(V.N, V.M, "h≈11.2",          "#00bbbb", stepId + "_" + currentStep + "_lineNR_Label");       // (UpdateForNewExercise) Customize the steps, answer
+                            highlightPolygon([V.N, V.R, V.T],           "#ffeb3b", stepId + "_" + currentStep + "_triangleNRT");
                             break;
                     }
                 }
@@ -647,21 +651,21 @@
                     // shadeTetrahedron([V.P, V.Q, V.R, V.S]);
                     switch (currentStep) {
                         case 0:
-                            drawThickLine(V.R, V.N, false,         "#000000", stepId + "_" + currentStep + "_lineNR_Drawing");       // (UpdateForNewExercise) Customize the steps, black given thick line
+                            drawThickLine(V.R, V.N, false,              "#000000", stepId + "_" + currentStep + "_lineNR_Drawing");  // (UpdateForNewExercise) Customize the steps, black given thick line
                             drawThickRightAngle(V.R, V.N, V.T, 0.5);                                                                 // (UpdateForNewExercise) Customize the steps, black given
-                            drawLineLabels(V.R, V.N, "h≈11.2",     "#00bbbb", stepId + "_" + currentStep + "_lineNR_Label");         // (UpdateForNewExercise) Customize the steps, cyan answer
-                            highlightPolygon([V.P, V.Q, V.S],      "#ffeb3b", stepId + "_" + currentStep + "_trianglePQS");
+                            drawLineLabels(V.R, V.N, "h≈11.2",          "#00bbbb", stepId + "_" + currentStep + "_lineNR_Label");    // (UpdateForNewExercise) Customize the steps, cyan answer
+                            highlightPolygon([V.P, V.Q, V.S],           "#ffeb3b", stepId + "_" + currentStep + "_trianglePQS");
                             break;
                         case 1:
-                            drawThickLine(V.P, V.X, false,         "#000000", stepId + "_" + currentStep + "_linePX_Drawing");       // (UpdateForNewExercise) Customize the steps, black given thick line
+                            drawThickLine(V.P, V.X, false,              "#000000", stepId + "_" + currentStep + "_linePX_Drawing");  // (UpdateForNewExercise) Customize the steps, black given thick line
                             drawThickRightAngle(V.P, V.X, V.R, 0.5);                                                                 // (UpdateForNewExercise) Customize the steps, black given
-                            drawLineLabels(V.P, V.X, "d=?",        "#d63384", stepId + "_" + currentStep + "_linePX_Label");         // (UpdateForNewExercise) Customize the steps, pink unknown
-                            highlightPolygon([V.Q, V.R, V.S],      "#ffeb3b", stepId + "_" + currentStep + "_triangleQRS");
+                            drawLineLabels(V.P, V.X, "d=?",             "#d63384", stepId + "_" + currentStep + "_linePX_Label");    // (UpdateForNewExercise) Customize the steps, pink unknown
+                            highlightPolygon([V.Q, V.R, V.S],           "#ffeb3b", stepId + "_" + currentStep + "_triangleQRS");
                             break;
                         case 2:
-                            drawThickLine(V.R, V.N, false,         "#000000", stepId + "_" + currentStep + "_lineNR_Drawing");       // (UpdateForNewExercise) Customize the steps, black given thick line
+                            drawThickLine(V.R, V.N, false,              "#000000", stepId + "_" + currentStep + "_lineNR_Drawing");  // (UpdateForNewExercise) Customize the steps, black given thick line
                             drawThickRightAngle(V.R, V.N, V.T, 0.5);                                                                 // (UpdateForNewExercise) Customize the steps, black given
-                            drawThickLine(V.P, V.X, false,         "#000000", stepId + "_" + currentStep + "_linePX_Drawing");       // (UpdateForNewExercise) Customize the steps, black given thick line
+                            drawThickLine(V.P, V.X, false,              "#000000", stepId + "_" + currentStep + "_linePX_Drawing");  // (UpdateForNewExercise) Customize the steps, black given thick line
                             drawThickRightAngle(V.P, V.X, V.R, 0.5);                                                                 // (UpdateForNewExercise) Customize the steps, black given
                             // Blue Group (Volume calculation factors for Base QRS)
                             drawLineLabels(V.P, V.X, "d=?",             "#0000ee", stepId + "_" + currentStep + "_linePX_Label");    // (UpdateForNewExercise) Customize the steps, same group as d
@@ -676,9 +680,9 @@
                             highlightPolygon([V.P, V.Q, V.S],           "#ff0000", stepId + "_" + currentStep + "_triangleQPS");
                             break;
                         case 3: case 4: case 5:
-                            drawThickLine(V.P, V.X, false,         "#000000", stepId + "_" + currentStep + "_linePX_Drawing");       // (UpdateForNewExercise) Customize the steps, black given thick line
+                            drawThickLine(V.P, V.X, false,              "#000000", stepId + "_" + currentStep + "_linePX_Drawing");  // (UpdateForNewExercise) Customize the steps, black given thick line
                             drawThickRightAngle(V.P, V.X, V.R, 0.5);                                                                 // (UpdateForNewExercise) Customize the steps, black given
-                            drawLineLabels(V.P, V.X, "d≈8.0641",   "#00bbbb", stepId + "_" + currentStep + "_linePX_Label");         // (UpdateForNewExercise) Customize the steps, answer
+                            drawLineLabels(V.P, V.X, "d≈8.0641",        "#00bbbb", stepId + "_" + currentStep + "_linePX_Label");    // (UpdateForNewExercise) Customize the steps, answer
                             break;
                     }
                 }
