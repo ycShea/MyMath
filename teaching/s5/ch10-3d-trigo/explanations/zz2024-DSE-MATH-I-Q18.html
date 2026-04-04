@@ -376,23 +376,47 @@
         //      (within 16ms), the renderer draws the new objects for the user.
         
         // ==========================================
-        // HELPER FUNCTIONS
+        // TOGGLES & UI CONTROLS
         // ==========================================
-        // resetCamera()
-        // setCameraPartA()
-        // setCameraPartB()
-        // animate()
-        // toggle(id)
-        // handleToggle(type)
-        // drawLines(linePairs, isSolid = true, color = 0x333333)
-        // drawLineLabels(p1, p2, labelText = "", color = 0x000000, labelKey = null)
-        // drawAngleArc(p1, vertex, p2, labelText = "", radius = 1, color = 0x000000, labelKey = null)
-        // drawRightAngle(p1, vertex, p2, size = 1.0)
-        // setupLabels(labelMap)
-        // createPolygon(points, color = 0x0d6efd)
-        // createTriangle(p1, p2, p3, color = 0x0d6efd)
-        // handleToggle(type)
-        // clearScene()
+        // toggle(id)            // Toggles visibility of HTML solution blocks and renders MathJax
+        // handleToggle(type)    // Switches entire scene state between 2D (Part A) and 3D (Part B)
+        // toggleQuestion()      // Switches visibility for the full question text container
+        // toggleAnswersOnly()   // Filters solution blocks to show only final answers/results
+        // revealStep()          // Progressively shows solution steps and triggers 3D highlights
+        
+        // ==========================================
+        // CAMERA & SCENE MANAGEMENT
+        // ==========================================
+        // resetCamera()         // Resets view based on the current active figure (A or B)
+        // setCameraPartA()      // Sets 2D top-down view and locks rotation for flat diagrams
+        // setCameraPartB()      // Sets 3D perspective and handles rotation for folded shapes
+        // animate()             // Main loop for rendering the scene and projecting HTML labels
+        // clearScene()          // Disposes of geometries and removes all objects/labels from scene
+        
+        // ==========================================
+        // 3D DRAWING & ANNOTATION
+        // ==========================================
+        // drawLines()           // Renders basic or dashed 3D lines between vertex pairs
+        // drawThickLine()       // Simulates line weight by layering multiple offset lines
+        // Arc3D (class)         // Custom Curve class for calculating 3D circular arc paths
+        // drawAngleArc()        // Renders a 3D arc and text label to denote specific angles
+        // drawRightAngle()      // Renders a basic 3D square symbol for orthogonal vertices
+        // drawThickRightAngle() // Creates a bold 3D right-angle symbol using offset layers
+        // drawFigureA()         // Initializes the 2D layout for Part A with lines and arcs
+        // drawFigureB()         // Initializes the 3D tetrahedron layout for Part B
+        
+        // ==========================================
+        // LABELS & HIGHLIGHTS
+        // ==========================================
+        // makeLabel()           // Utility to create and append a DOM element for 3D tracking
+        // setupLabels()         // Maps a collection of point names to their 3D coordinates
+        // drawLineLabels()      // Projects a text label at the midpoint of a 3D line segment
+        // stickTempPointLabel() // Places a temporary, bolded label at a specific 3D point
+        // highlightPolygon()    // Adds a semi-transparent mesh to highlight specific areas
+        // highlightTriangle()   // Adds a semi-transparent colored mesh to a specific 3D triangle
+        // createPolygon()       // Renders a filled 3D mesh for 3-point or 4-point shapes
+        // createTriangle()      // Legacy helper for rendering a single 3D triangle mesh
+        // shadeTetrahedron()    // Renders all four faces of a 3D tetrahedron with opacity
         // ==========================================
         
         // Camera setting (UpdateForNewExercise)
@@ -424,8 +448,14 @@
             }
             
             // Ensure rotation is disabled whenever Part A camera is set
+            // TrackballControls uses noRotate/noPan instead of enableRotate/enablePan
             controls.noRotate = true; 
             controls.noPan = true;
+            controls.noZoom = false; // Allow zoom if you want, or set to true to lock completely
+            
+            controls.staticMoving = true;
+            controls.minDistance = 15;
+            controls.maxDistance = 30;
             controls.update();
         }
         // The "3D Perspective" View for Part B (Matching your image)
@@ -864,15 +894,6 @@
                 currentFigure = type; // Set this BEFORE calling setup functions
                if (type === 'A') {                                                                                                       // (UpdateForNewExercise) handleToggle, part a
                     setCameraPartA();
-                    // TrackballControls uses noRotate/noPan instead of enableRotate/enablePan
-                    controls.noRotate = true; 
-                    controls.noPan = true;
-                    controls.noZoom = false; // Allow zoom if you want, or set to true to lock completely
-                    
-                    controls.staticMoving = true;
-                    controls.minDistance = 15;
-                    controls.maxDistance = 30;
-                    
                     drawFigureA(); 
                     footerA.style.display = 'inline-block';
                 } else {                                                                                                                 // (UpdateForNewExercise) handleToggle, part b
