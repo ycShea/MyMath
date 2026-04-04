@@ -413,7 +413,6 @@
         // drawLineLabels()      // Projects a text label at the midpoint of a 3D line segment
         // stickTempPointLabel() // Places a temporary, bolded label at a specific 3D point
         // highlightPolygon()    // Adds a semi-transparent mesh to highlight specific areas
-        // highlightTriangle()   // Adds a semi-transparent colored mesh to a specific 3D triangle
         // createPolygon()       // Renders a filled 3D mesh for 3-point or 4-point shapes
         // createTriangle()      // Legacy helper for rendering a single 3D triangle mesh
         // shadeTetrahedron()    // Renders all four faces of a 3D tetrahedron with opacity
@@ -559,12 +558,8 @@
             
             if (currentStep < steps.length) {
                 if (currentStep === 0) container.style.display = 'block';
-                
                 steps[currentStep].style.display = 'block';
                 
-                if (Array.isArray(triangleKeys)) {
-                    highlightTriangle(triangleKeys[currentStep]);
-                }
                 // 5. DRAWING LOGIC (Now always starts with a clean slate)                                                                       // (UpdateForNewExercise) MAIN STEPS (SEARCH)
                 // Part (a)(i)
                 if (stepId === "step-ai") {
@@ -599,8 +594,6 @@
                 }
                 // Part (b)(i)
                 if (stepId === "step-bi") {
-                    // CANNOT use highlightTriangle() here
-                    // if (currentStep === 2) highlightTriangle('PQS');                                                                            // CANNOT use highlightTriangle() here
                     stickTempPointLabel(V.T, "T", "#d63384", stepId + "_" + currentStep + "_pointT");
                     switch (currentStep) {
                         case 0:
@@ -738,59 +731,6 @@
                 }
             }
             renderer.render(scene, camera);
-        }
-        
-        function highlightTriangle(type) {
-            const toRemove = scene.children.filter(c => c.userData && c.userData.isStepHighlight);
-            toRemove.forEach(c => {
-                if (c.geometry) c.geometry.dispose();
-                if (c.material) c.material.dispose();
-                scene.remove(c);
-            });
-            // Clear HTML Labels
-            for (let key in activeLabels) {
-                // If the key starts with "step", remove it from the screen
-                if (key.startsWith("step")) { 
-                    const labelDiv = activeLabels[key];
-                    if (labelDiv && labelDiv.parentNode) {
-                        labelDiv.parentNode.removeChild(labelDiv);
-                    }
-                    delete activeLabels[key]; // Remove from tracking object
-                    delete V[key];            // Remove from coordinate object
-                }
-            }
-            if (!type) return;
-        
-            let pts;
-            if (type === 'PQR') pts = [V.P, V.Q, V.R];                                                     // (UpdateForNewExercise) Triangles to be highlighted
-            else if (type === 'QRS') pts = [V.Q, V.R, V.S];
-            else if (type === 'PRS') pts = [V.P, V.R, V.S];
-            else if (type === 'PQS') pts = [V.P, V.Q, V.S];
-            else if (type === 'RQS') pts = [V.R, V.Q, V.S];
-            else if (type === 'QRT') pts = [V.Rb, V.Q, V.T];
-            else if (type === 'NRT') pts = [V.N, V.Rb, V.T];
-            else if (type === 'QRS') pts = [V.Q, V.Rb, V.S];
-                    
-            if (!pts || !pts[0]) return;
-        
-            const geom = new THREE.BufferGeometry().setFromPoints(pts);
-            geom.setIndex([0, 1, 2]);
-            
-            const mat = new THREE.MeshBasicMaterial({ 
-                color: 0xffeb3b, 
-                side: THREE.DoubleSide,
-                transparent: true,
-                opacity: 0.6,
-                // FIX: Remove depthTest: false. Use these 3 lines instead:
-                polygonOffset: true,
-                polygonOffsetFactor: -4,
-                polygonOffsetUnits: -4
-            });
-        
-            const mesh = new THREE.Mesh(geom, mat);
-            mesh.userData.isStepHighlight = true;
-            mesh.renderOrder = 999; 
-            scene.add(mesh);
         }
         
         function hideAllPartASteps() {
