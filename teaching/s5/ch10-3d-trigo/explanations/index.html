@@ -55,7 +55,8 @@
 <body>
 
 <div class="floating-nav" id="floating-nav">
-    <button class="nav-btn" id="btn-public" onclick="scrollToHeading('Public Exams')">Jump to Public Exams</button>
+    <button class="nav-btn" id="btn-public" onclick="scrollToHeading('Public Exams (LQ)')">Jump to Public Exams (LQ)</button>
+    <button class="nav-btn" id="btn-public" onclick="scrollToHeading('Public Exams (MCQ)')">Jump to Public Exams (MCQ)</button>
     <button class="nav-btn" id="btn-school" onclick="scrollToHeading('School Assessments')">Jump to School Assessments</button>
 </div>
 
@@ -149,18 +150,22 @@
             entries.forEach(entry => {
                 const title = entry.target.innerText;
                 
-                if (title === "Public Exams") {
+                if (title === "Public Exams (LQ)") {
                     // Show button ONLY if heading is NOT intersecting
                     entry.isIntersecting ? btnPublic.classList.remove('visible') : btnPublic.classList.add('visible');
                 }
-                
+                if (title === "Public Exams (MCQ)") {
+                    // Show button ONLY if heading is NOT intersecting
+                    entry.isIntersecting ? btnPublic.classList.remove('visible') : btnPublic.classList.add('visible');
+                }
                 if (title === "School Assessments") {
                     entry.isIntersecting ? btnSchool.classList.remove('visible') : btnSchool.classList.add('visible');
                 }
             });
         }, observerOptions);
 
-        if (headingsMap["Public Exams"]) observer.observe(headingsMap["Public Exams"]);
+        if (headingsMap["Public Exams (LQ)"]) observer.observe(headingsMap["Public Exams (LQ)"]);
+        if (headingsMap["Public Exams (MCQ)"]) observer.observe(headingsMap["Public Exams (MCQ)"]);
         if (headingsMap["School Assessments"]) observer.observe(headingsMap["School Assessments"]);
     }
 
