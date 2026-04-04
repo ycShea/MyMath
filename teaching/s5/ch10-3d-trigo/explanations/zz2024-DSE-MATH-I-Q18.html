@@ -433,14 +433,6 @@
             // Set the orientation (Z-up or Y-up depending on your coordinate system)
             // Most of your code uses Z=0 as the floor, so we keep Z as the vertical axis
             camera.up.set(0, 0, 1);
-            if (lockHorizontal) {
-                controls.minPolarAngle = Math.PI / 2;
-                controls.maxPolarAngle = Math.PI / 2;
-            } else {
-                // Reset to default (allow full vertical rotation)
-                controls.minPolarAngle = 0;
-                controls.maxPolarAngle = Math.PI;
-            }
             
             if (targetVector) { // Handle Target (What the camera is looking at)
                 controls.target.copy(targetVector);
@@ -455,7 +447,14 @@
                 // Default Part B "Overview" Position
                 camera.position.set(23, -3, 5);
             }
-        
+            if (lockHorizontal) {
+                controls.minPolarAngle = Math.PI / 2;
+                controls.maxPolarAngle = Math.PI / 2;
+            } else {
+                // Reset to default (allow full vertical rotation)
+                controls.minPolarAngle = 0;
+                controls.maxPolarAngle = Math.PI;
+            }
             // Unlock for 3D exploration
             controls.noRotate = false;
             controls.noPan = false;
