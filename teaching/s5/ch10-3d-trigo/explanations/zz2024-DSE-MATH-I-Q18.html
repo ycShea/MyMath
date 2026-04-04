@@ -646,13 +646,13 @@
                             drawThickLine(V.R, V.N, false,         "#000000", stepId + "_" + currentStep + "_lineNR_Drawing");       // (UpdateForNewExercise) Customize the steps, black given thick line
                             drawThickRightAngle(V.R, V.N, V.T, 0.5);                                                                 // (UpdateForNewExercise) Customize the steps, black given
                             drawLineLabels(V.R, V.N, "h≈11.2",     "#00bbbb", stepId + "_" + currentStep + "_lineNR_Label");         // (UpdateForNewExercise) Customize the steps, cyan answer
-                            highlightPolygon([V.P, V.Q, V.S],      "#ff0000", stepId + "_" + currentStep + "_triangleQPS");
-                            highlightPolygon([V.R, V.Q, V.S],      "#ffff00", stepId + "_" + currentStep + "_triangleQPS");
+                            highlightPolygon([V.P, V.Q, V.S],      "#ffeb3b", stepId + "_" + currentStep + "_trianglePQS");
                             break;
                         case 1:
                             drawThickLine(V.P, V.X, false,         "#000000", stepId + "_" + currentStep + "_linePX_Drawing");       // (UpdateForNewExercise) Customize the steps, black given thick line
                             drawThickRightAngle(V.P, V.X, V.R, 0.5);                                                                 // (UpdateForNewExercise) Customize the steps, black given
                             drawLineLabels(V.P, V.X, "d=?",        "#d63384", stepId + "_" + currentStep + "_linePX_Label");         // (UpdateForNewExercise) Customize the steps, pink unknown
+                            highlightPolygon([V.Q, V.R, V.S],      "#ffeb3b", stepId + "_" + currentStep + "_triangleQRS");
                             break;
                         case 2:
                             drawThickLine(V.R, V.N, false,         "#000000", stepId + "_" + currentStep + "_lineNR_Drawing");       // (UpdateForNewExercise) Customize the steps, black given thick line
@@ -1337,48 +1337,39 @@
             if (window.MathJax) MathJax.typeset();
         }
         
-function clearScene() {
-    // 1. Iterate backwards through scene children to safely remove objects
-    for (let i = scene.children.length - 1; i >= 0; i--) {
-        const obj = scene.children[i];
-
-        // Skip lights so the scene doesn't go pitch black
-        if (obj.type === 'AmbientLight' || obj.type === 'DirectionalLight') continue;
-
-        // 2. Check if the object is a Mesh (Triangle/Polygon) or a Group (Thick Lines)
-        // We look for your custom tag 'isStepHighlight' or standard Mesh types
-        if (obj.userData.isStepHighlight || obj instanceof THREE.Mesh || obj instanceof THREE.Group) {
-            
-            // Recursive disposal function to handle Groups and nested meshes
-            obj.traverse((child) => {
-                if (child.geometry) {
-                    child.geometry.dispose();
-                }
-                if (child.material) {
-                    if (Array.isArray(child.material)) {
-                        child.material.forEach(m => m.dispose());
-                    } else {
-                        child.material.dispose();
+        function clearScene() {
+            for (let i = scene.children.length - 1; i >= 0; i--) {
+                const obj = scene.children[i];
+                if (obj.type !== 'AmbientLight' && obj.type !== 'DirectionalLight') {
+                    if (obj.geometry) obj.geometry.dispose();
+                    if (obj.material) {
+                        // Handle arrays of materials or single materials
+                        if (Array.isArray(obj.material)) {
+                            obj.material.forEach(m => m.dispose());
+                        } else {
+                            obj.material.dispose();
+                        }
                     }
+                    scene.remove(obj);
+                }
+            }
+            // Clear DOM labels correctly
+            Object.keys(activeLabels).forEach(key => {
+                const l = activeLabels[key];
+                if (l && l.parentNode) {
+                    l.parentNode.removeChild(l);
+                }
+                delete activeLabels[key];
+            });
+        
+            Object.values(activeLabels).forEach(l => {
+                if (l && l.parentNode) {
+                    l.parentNode.removeChild(l);
                 }
             });
-
-            scene.remove(obj);
+        
+            activeLabels = {};
         }
-    }
-
-    // 3. Clear DOM labels
-    Object.keys(activeLabels).forEach(key => {
-        const l = activeLabels[key];
-        if (l && l.parentNode) {
-            l.parentNode.removeChild(l);
-        }
-    });
-
-    // 4. Reset tracking objects
-    activeLabels = {};
-    V = {}; // Clear the coordinate mapping object
-}
     </script>
 </body>
 </html>
