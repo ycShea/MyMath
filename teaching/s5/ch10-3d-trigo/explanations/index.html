@@ -37,12 +37,13 @@
             cursor: pointer;
             box-shadow: 0 4px 12px rgba(0,0,0,0.2);
             font-weight: bold;
-            font-size: 0.9rem;
+            font-size: 0.85rem;
             text-decoration: none;
             transition: opacity 0.3s, transform 0.3s;
             opacity: 0;
             pointer-events: none;
             transform: translateY(20px);
+            text-align: right;
         }
         .nav-btn.visible {
             opacity: 1;
@@ -55,8 +56,8 @@
 <body>
 
 <div class="floating-nav" id="floating-nav">
-    <button class="nav-btn" id="btn-public" onclick="scrollToHeading('Public Exams (LQ)')">Jump to Public Exams (LQ)</button>
-    <button class="nav-btn" id="btn-public" onclick="scrollToHeading('Public Exams (MCQ)')">Jump to Public Exams (MCQ)</button>
+    <button class="nav-btn" id="btn-lq" onclick="scrollToHeading('Public Exams (LQ)')">Jump to Public Exams (LQ)</button>
+    <button class="nav-btn" id="btn-mcq" onclick="scrollToHeading('Public Exams (MCQ)')">Jump to Public Exams (MCQ)</button>
     <button class="nav-btn" id="btn-school" onclick="scrollToHeading('School Assessments')">Jump to School Assessments</button>
 </div>
 
@@ -103,18 +104,30 @@
                 categories[category].push({ title, tag, url });
             });
 
-            if (Object.keys(categories).length === 0) {
+            // Define custom sort order
+            const order = ["Public Exams (LQ)", "Public Exams (MCQ)", "School Assessments"];
+            
+            // Get all categories present in data, then sort them based on our order array
+            const sortedCategories = Object.keys(categories).sort((a, b) => {
+                let indexA = order.indexOf(a);
+                let indexB = order.indexOf(b);
+                // If category not in order list, push to the end
+                if (indexA === -1) indexA = 99;
+                if (indexB === -1) indexB = 99;
+                return indexA - indexB;
+            });
+
+            if (sortedCategories.length === 0) {
                 contentArea.innerHTML = "<p>No data found in the spreadsheet.</p>";
                 return;
             }
 
-            for (const category in categories) {
+            sortedCategories.forEach(category => {
                 const sectionHeader = document.createElement('h2');
                 sectionHeader.className = "year-group";
                 sectionHeader.innerText = category;
                 contentArea.appendChild(sectionHeader);
                 
-                // Store reference for observer and scrolling
                 headingsMap[category] = sectionHeader;
 
                 categories[category].forEach(item => {
@@ -127,7 +140,7 @@
                     `;
                     contentArea.appendChild(link);
                 });
-            }
+            });
 
             setupObserver();
 
@@ -138,25 +151,21 @@
     }
 
     function setupObserver() {
-        const btnPublic = document.getElementById('btn-public');
+        const btnLQ = document.getElementById('btn-lq');
+        const btnMCQ = document.getElementById('btn-mcq');
         const btnSchool = document.getElementById('btn-school');
 
-        const observerOptions = {
-            root: null,
-            threshold: 0 // Trigger as soon as 1px is visible
-        };
+        const observerOptions = { root: null, threshold: 0 };
 
         const observer = new IntersectionObserver((entries) => {
             entries.forEach(entry => {
                 const title = entry.target.innerText;
                 
                 if (title === "Public Exams (LQ)") {
-                    // Show button ONLY if heading is NOT intersecting
-                    entry.isIntersecting ? btnPublic.classList.remove('visible') : btnPublic.classList.add('visible');
+                    entry.isIntersecting ? btnLQ.classList.remove('visible') : btnLQ.classList.add('visible');
                 }
                 if (title === "Public Exams (MCQ)") {
-                    // Show button ONLY if heading is NOT intersecting
-                    entry.isIntersecting ? btnPublic.classList.remove('visible') : btnPublic.classList.add('visible');
+                    entry.isIntersecting ? btnMCQ.classList.remove('visible') : btnMCQ.classList.add('visible');
                 }
                 if (title === "School Assessments") {
                     entry.isIntersecting ? btnSchool.classList.remove('visible') : btnSchool.classList.add('visible');
