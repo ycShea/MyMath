@@ -1275,8 +1275,50 @@
             btn.textContent = isShowing ? "Show Answers Only" : "Hide Answers";
             if (window.MathJax) MathJax.typeset();
         }
-        
+
         function clearScene() {
+            for (let i = scene.children.length - 1; i >= 0; i--) {
+                const obj = scene.children[i];
+                
+                if (obj.userData.isStepHighlight === true || obj.name.includes("poly")) {
+                    
+                    // NEW: If it's a Group (ThickRightAngle), we must dispose its children
+                    if (obj.isGroup) {
+                        obj.children.forEach(child => {
+                            if (child.geometry) child.geometry.dispose();
+                            if (child.material) {
+                                const mats = Array.isArray(child.material) ? child.material : [child.material];
+                                mats.forEach(m => m.dispose());
+                            }
+                        });
+                    }
+        
+                    // Standard disposal for the object itself (Arcs/Lines)
+                    if (obj.geometry) obj.geometry.dispose();
+                    if (obj.material) {
+                        const materials = Array.isArray(obj.material) ? obj.material : [obj.material];
+                        materials.forEach(m => m.dispose());
+                    }
+                    
+                    scene.remove(obj);
+                }
+            }
+        
+            // Clear DOM labels correctly
+            Object.keys(activeLabels).forEach(key => {
+                const l = activeLabels[key];
+                if (l && l.parentNode) {
+                    l.parentNode.removeChild(l);
+                }
+                delete activeLabels[key];
+                // Ensure the coordinate mapping is also removed
+                if (V[key]) delete V[key];
+            });
+        
+            activeLabels = {};
+        }
+        
+/*        function clearScene() {
             for (let i = scene.children.length - 1; i >= 0; i--) {
                 const obj = scene.children[i];
                 if (obj.userData.isStepHighlight === true || obj.name.includes("poly")) {
@@ -1311,7 +1353,8 @@
             });
         
             activeLabels = {};
-        }
+        }*/
+        
     </script>
 </body>
 </html>
