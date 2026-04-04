@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>2024 DSE Paper I Q18 Solution</title>                                                <!-- (UpdateForNewExercise) Questions -->
+    <title>2024 DSE Paper I Q18 Solution</title>                                                                                    <!-- (UpdateForNewExercise) Questions -->
     <!-------------------------->
     <!-- CSS at the beginning -->
     <!-------------------------->
@@ -102,11 +102,11 @@
         <div class="content-side">
             <a href="index.html" style="text-decoration: none; color: #007bff;">← Back to List</a>
             <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
-                <h1>2024 DSE Paper I Q18</h1>                                                             <!-- (UpdateForNewExercise) Questions Number -->
+                <h1>2024 DSE Paper I Q18</h1>                                                                                         <!-- (UpdateForNewExercise) Questions Number -->
                 <button id="btn-view-q" class="btn-show" onclick="toggleQuestion('full-q-popup', 'btn-view-q')">View Full Question 📄</button>
             </div>
             <div id="full-q-popup" class="full-question-popup">
-                <img src="questions-images/2024 DSE-MATH-I Q18.png" alt="2024 DSE Q18 Diagram">           <!-- (UpdateForNewExercise) Questions Image -->
+                <img src="questions-images/2024 DSE-MATH-I Q18.png" alt="2024 DSE Q18 Diagram">                                       <!-- (UpdateForNewExercise) Questions Image -->
             </div>
             <!-------------------------->
             <!-- Question of part (a) -->
@@ -279,7 +279,7 @@
         scene.add(new THREE.AmbientLight(0xffffff, 1.0));
 
         // ==========================================
-        // DEFINITION OF POINTS AND OBJECTS (UpdateForNewExercise)
+        // DEFINITION OF PARAMETERS, TOOLS AND POINTS (UpdateForNewExercise)                                                    <-- (UpdateForNewExercise)
         // ==========================================
         // Math tools
         const degToRad = (deg) => deg * Math.PI / 180;
@@ -346,7 +346,7 @@
         console.log("(b)(ii) Distance d:", V.P.distanceTo(V.X));
         
         // ==========================================
-        // DEFINITION OF POINTS AND OBJECTS (UpdateForNewExercise)
+        // SETUP OF CAMERA (UpdateForNewExercise)                                                                    <-- (UpdateForNewExercise)
         // ==========================================
         
         let currentFigure = null;
@@ -404,7 +404,7 @@
             }
         }
         // The "Original" Flat View for Part A
-        function setCameraPartA(cameraVector = null, targetVector = null) {                                                                                    // Camera setting (UpdateForNewExercise)
+        function setCameraPartA(cameraVector = null, targetVector = null) {                                                                    // Camera setting (UpdateForNewExercise)
             // Set the orientation (Z-up or Y-up depending on your coordinate system)
             // Most of your code uses Z=0 as the floor, so we keep Z as the vertical axis
             camera.up.set(0, 1, 0);
@@ -433,6 +433,13 @@
             // Set the orientation (Z-up or Y-up depending on your coordinate system)
             // Most of your code uses Z=0 as the floor, so we keep Z as the vertical axis
             camera.up.set(0, 0, 1);
+            
+            // If we lock horizontal, we definitely want rotation enabled
+            //controls.noRotate = false;
+            //controls.noPan = false;
+            // ORBITCONTROLS PROPERTIES (Use these instead of noRotate/noPan)
+            controls.enableRotate = true;
+            controls.enablePan = true;
             
             if (targetVector) { // Handle Target (What the camera is looking at)
                 controls.target.copy(targetVector);
@@ -465,7 +472,7 @@
         // This function orchestrates the progressive reveal of solution steps by synchronizing the visibility of HTML text, MathJax formula rendering, and the corresponding 3D triangle highlights in the Three.js scene.
         // The function is triggered when the button is pressed
         // For example: <button id="btn-bii" class="btn-show" onclick="revealStep('sol-bii', 'btn-bii', ['PRS', 'PRS', 'PRS'])">Show Step</button>
-        function revealStep(containerId, buttonId, triangleKeys) {
+        function revealStep(containerId, buttonId, triangleKeys) {                                                                // revealStep (UpdateForNewExercise)
             // =============================================================
             // 0. CLEAR STEP-SPECIFIC OBJECTS (Labels, Arcs, Extra Lines)
             // =============================================================
@@ -495,10 +502,10 @@
             // =============================================================
             
             // 1. Detect which part we are in
-            const isPartA = containerId.startsWith('sol-a');
+            const isPartA = containerId.startsWith('sol-a');                                                                              // parts a and b (UpdateForNewExercise)
             const isPartB = containerId.startsWith('sol-b');
             
-            // 2. Switch to Figure A if solving Part A and Switch to Figure B if solving Part B (This is what was missing)
+            // 2. Switch to Figure A if solving Part A and Switch to Figure B if solving Part B (This is what was missing)                // handleToggle A and B (UpdateForNewExercise)
             if (isPartA && currentFigure !== 'A') {
                 handleToggle('A');
             }
@@ -516,7 +523,7 @@
             let currentStep = parseInt(container.getAttribute('data-current-step'));
             
             // 3. Update the "currentFigure === null" check to be dynamic
-            if (currentStep === 0 && currentFigure === null) {
+            if (currentStep === 0 && currentFigure === null) {                                                                             // handleToggle A and B (UpdateForNewExercise)
                 handleToggle(isPartA ? 'A' : 'B');
             }
             
@@ -651,7 +658,6 @@
                 } else {
                     btn.textContent = "Next Step";
                 }
-                
                 collapseOtherParts(containerId);
             }
         }
@@ -699,7 +705,6 @@
                     activeLabels[key].style.display = 'none'; 
                 }
             }
-            
             renderer.render(scene, camera);
         }
         
@@ -797,10 +802,8 @@
             });
         }
         
-        // Draw figures in parts A and B (UpdateForNewExercise)
-        function drawFigureA() {
-            // Set R specifically for Part a
-            V.R = V.Ra;
+        function drawFigureA() {                                                                                                    // Draw figure in part A (UpdateForNewExercise)
+            V.R = V.Ra;    // Set R specifically for Part a
             
             const lines = [[V.P, V.Q], [V.Q, V.R], [V.R, V.S], [V.S, V.P]];
             const matLine = new THREE.LineBasicMaterial({ color: 0x333333, linewidth: 2 });
@@ -818,10 +821,8 @@
             setupLabels({ "P": V.P, "Q": V.Q, "R": V.R, "S": V.S });
         }
 
-        function drawFigureB() {
-            // (UpdateForNewExercise) 
-            // Set R specifically for Part b
-            V.R = V.Rb;
+        function drawFigureB() {                                                                                                    // Draw figure in part B (UpdateForNewExercise)
+            V.R = V.Rb;    // Set R specifically for Part b
             
             const lines = [ [V.P, V.Q], [V.Q, V.R], [V.R, V.S], [V.S, V.P], [V.Q, V.S] ];
             const matLine = new THREE.LineBasicMaterial({ color: 0x333333, linewidth: 2 });
@@ -830,10 +831,8 @@
             // createPolygon([V.S, V.R, V.Q], 0x28a745); // replace: createTriangle(V.S, V.Rb, V.Q, 0x28a745);
             
             drawLines(lines);
-            // drawLines([ [V.R, V.T] ], false);
             
             // Corrected Label Assignment for Part b
-            // setupLabels({ "P": V.P, "Q": V.Q, "R": V.R, "S": V.S, "T": V.T, "N": V.N });
             setupLabels({ "P": V.P, "Q": V.Q, "R": V.R, "S": V.S });
         }
         
@@ -849,8 +848,7 @@
         }
 
         // This function switches between parts a and b by clearing the scene, toggling button text, and adjusting camera controls based on the selected part.
-        // (UpdateForNewExercise)
-        function handleToggle(type) {
+        function handleToggle(type) {                                                                                                    // Switches between parts a and b (UpdateForNewExercise)
             const btn = document.getElementById('btn-fig' + type);
             const footerA = document.getElementById('part-a-footer');
         
@@ -864,7 +862,7 @@
                 // SHOW the figure
                 clearScene();
                 currentFigure = type; // Set this BEFORE calling setup functions
-               if (type === 'A') {                                                                         // (UpdateForNewExercise) handleToggle, part a
+               if (type === 'A') {                                                                                                       // (UpdateForNewExercise) handleToggle, part a
                     setCameraPartA();
                     // TrackballControls uses noRotate/noPan instead of enableRotate/enablePan
                     controls.noRotate = true; 
@@ -877,12 +875,8 @@
                     
                     drawFigureA(); 
                     footerA.style.display = 'inline-block';
-                } else {                                                                                   // (UpdateForNewExercise) handleToggle, part b
-                    setCameraPartB(null, null, true);
-                    // Re-enable for Part B
-                    controls.noRotate = false;
-                    controls.noPan = false;
-                    
+                } else {                                                                                                                 // (UpdateForNewExercise) handleToggle, part b
+                    setCameraPartB(null, null, true);                    
                     drawFigureB();
                     if (footerA) footerA.style.display = 'none';
                 }
@@ -891,7 +885,7 @@
 
                 resetCamera();
                 // Reset the other button text if it exists
-                const otherType = (type === 'A') ? 'B' : 'A';
+                const otherType = (type === 'A') ? 'B' : 'A';                                                                            // (UpdateForNewExercise) types a and b
                 const otherBtn = document.getElementById('btn-fig' + otherType);
                 if (otherBtn) otherBtn.textContent = "Show Figure";
             }
