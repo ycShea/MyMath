@@ -378,11 +378,11 @@
         // ==========================================
         // TOGGLES & UI CONTROLS
         // ==========================================
-        // toggle(id)            // Toggles visibility of HTML solution blocks and renders MathJax
-        // handleToggle(type)    // Switches entire scene state between 2D (Part A) and 3D (Part B)
-        // toggleQuestion()      // Switches visibility for the full question text container
-        // toggleAnswersOnly()   // Filters solution blocks to show only final answers/results
-        // revealStep()          // Progressively shows solution steps and triggers 3D highlights
+        // toggle(id)                               // Toggles visibility of HTML solution blocks and renders MathJax
+        // handleToggle(type)                       // Switches entire scene state between 2D (Part A) and 3D (Part B)
+        // toggleQuestion(divId, btnId)             // Switches visibility for the full question text container
+        // toggleAnswersOnly(prefix, btn)           // Filters solution blocks to show only final answers/results
+        // revealStep(containerId, buttonId)        // Progressively shows solution steps and triggers 3D highlights
         
         // ==========================================
         // CAMERA & SCENE MANAGEMENT
@@ -396,27 +396,27 @@
         // ==========================================
         // 3D DRAWING & ANNOTATION
         // ==========================================
-        // drawLines()           // Renders basic or dashed 3D lines between vertex pairs
-        // drawThickLine()       // Simulates line weight by layering multiple offset lines
-        // Arc3D (class)         // Custom Curve class for calculating 3D circular arc paths
-        // drawAngleArc()        // Renders a 3D arc and text label to denote specific angles
-        // drawRightAngle()      // Renders a basic 3D square symbol for orthogonal vertices
-        // drawThickRightAngle() // Creates a bold 3D right-angle symbol using offset layers
-        // drawFigureA()         // Initializes the 2D layout for Part A with lines and arcs
-        // drawFigureB()         // Initializes the 3D tetrahedron layout for Part B
+        // drawLines(linePairs, isSolid = true, color = 0x333333, name ="")                                 // Renders basic or dashed 3D lines between vertex pairs
+        // drawThickLine(p1, p2, isSolid = true, color = 0x000000, name = "")                               // Simulates line weight by layering multiple offset lines
+        // Arc3D (class)                                                                                    // Custom Curve class for calculating 3D circular arc paths
+        // drawAngleArc(p1, vertex, p2, labelText = "", radius = 1.0, color = 0x000000, labelKey = null)    // Renders a 3D arc and text label to denote specific angles
+        // drawRightAngle(p1, vertex, p2, size = 1.0, color = 0x000000)                                     // Renders a basic 3D square symbol for orthogonal vertices
+        // drawThickRightAngle(p1, vertex, p2, size = 1.0, color = 0x000000)                                // Creates a bold 3D right-angle symbol using offset layers
+        // drawFigureA()                                                                                    // Initializes the 2D layout for Part A with lines and arcs
+        // drawFigureB()                                                                                    // Initializes the 3D tetrahedron layout for Part B
         
         // ==========================================
         // LABELS & HIGHLIGHTS
         // ==========================================
-        // makeLabel()           // Utility to create and append a DOM element for 3D tracking
-        // setupLabels()         // Maps a collection of point names to their 3D coordinates
-        // drawLineLabels()      // Projects a text label at the midpoint of a 3D line segment
-        // stickTempPointLabel() // Places a temporary, bolded label at a specific 3D point
-        // highlightPolygon()    // Adds a semi-transparent mesh to highlight specific areas
-        // clearStepHighlights() // Adds a semi-transparent colored mesh to a specific 3D triangle
-        // createPolygon()       // Renders a filled 3D mesh for 3-point or 4-point shapes
-        // createTriangle()      // Legacy helper for rendering a single 3D triangle mesh
-        // shadeTetrahedron()    // Renders all four faces of a 3D tetrahedron with opacity
+        // makeLabel(text)                                                                   // Utility to create and append a DOM element for 3D tracking
+        // setupLabels(labelMap)                                                             // Maps a collection of point names to their 3D coordinates
+        // drawLineLabels(p1, p2, labelText = "", color = 0x000000, labelKey = null)         // Projects a text label at the midpoint of a 3D line segment
+        // stickTempPointLabel(point, text = "", color = "#d63384", labelKey = null)         // Places a temporary, bolded label at a specific 3D point
+        // highlightPolygon(points, color = "#0d6efd", id = null)                            // Adds a semi-transparent mesh to highlight specific areas
+        // clearStepHighlights()                                                             // Adds a semi-transparent colored mesh to a specific 3D triangle
+        // createPolygon(points, color = 0x0d6efd)                                           // Renders a filled 3D mesh for 3-point or 4-point shapes
+        // createTriangle(p1, p2, p3, color = 0x0d6efd)                                      // Legacy helper for rendering a single 3D triangle mesh
+        // shadeTetrahedron(points, color = 0x0d6efd, opacity = 0.2)                         // Renders all four faces of a 3D tetrahedron with opacity
         // ==========================================
         
         // Camera setting (UpdateForNewExercise)
@@ -561,13 +561,7 @@
                 if (currentStep === 0) container.style.display = 'block';
                 
                 steps[currentStep].style.display = 'block';
-
-                //console.log("Container:", containerId);
-                //console.table(triangleKeys);
-                //if (Array.isArray(triangleKeys)) {
-               //     console.table("Inside if...");
                 clearStepHighlights();
-                //}
                 // 5. DRAWING LOGIC (Now always starts with a clean slate)                                                                       // (UpdateForNewExercise) MAIN STEPS (SEARCH)
                 // Part (a)(i)
                 if (stepId === "step-ai") {
@@ -770,39 +764,6 @@
                     delete V[key];            // Remove from coordinate object
                 }
             }
-//            if (!type) return;
-        /*
-            let pts;
-            if (type === 'PQR') pts = [V.P, V.Q, V.R];                                                     // (UpdateForNewExercise) Triangles to be highlighted
-            else if (type === 'QRS') pts = [V.Q, V.R, V.S];
-            else if (type === 'PRS') pts = [V.P, V.R, V.S];
-            else if (type === 'PQS') pts = [V.P, V.Q, V.S];
-            else if (type === 'RQS') pts = [V.R, V.Q, V.S];
-            else if (type === 'QRT') pts = [V.Rb, V.Q, V.T];
-            else if (type === 'NRT') pts = [V.N, V.Rb, V.T];
-            else if (type === 'QRS') pts = [V.Q, V.Rb, V.S];
-                    
-            if (!pts || !pts[0]) return;
-        
-            const geom = new THREE.BufferGeometry().setFromPoints(pts);
-            geom.setIndex([0, 1, 2]);
-            
-            const mat = new THREE.MeshBasicMaterial({ 
-                color: 0xffeb3b, 
-                side: THREE.DoubleSide,
-                transparent: true,
-                opacity: 0.6,
-                // FIX: Remove depthTest: false. Use these 3 lines instead:
-                polygonOffset: true,
-                polygonOffsetFactor: -4,
-                polygonOffsetUnits: -4
-            });
-        
-            const mesh = new THREE.Mesh(geom, mat);
-            mesh.userData.isStepHighlight = true;
-            mesh.renderOrder = 999; 
-            scene.add(mesh);
-            */
         }
         
         function hideAllPartASteps() {
