@@ -422,7 +422,47 @@
         // createTriangle(p1, p2, p3, color = 0x0d6efd)                                      // Legacy helper for rendering a single 3D triangle mesh
         // shadeTetrahedron(points, color = 0x0d6efd, opacity = 0.2)                         // Renders all four faces of a 3D tetrahedron with opacity
         // ==========================================
-        
+
+        // ==========================================
+        // DRAW FIGURES OF A AND B
+        // ==========================================
+        function drawFigureA() {                                                                                                    // Draw figure in part A (UpdateForNewExercise)
+            V.R = V.Ra;    // Set R specifically for Part a
+            
+            const lines = [[V.P, V.Q], [V.Q, V.R], [V.R, V.S], [V.S, V.P]];
+            const matLine = new THREE.LineBasicMaterial({ color: 0x333333, linewidth: 2 });
+            createPolygon([V.P, V.Q, V.R, V.S], 0x0d6efd);
+            drawLineLabels(V.P, V.Q, "12", "black", "static_PQ");
+            drawLineLabels(V.P, V.S, "10", "black", "static_PS");
+            drawLineLabels(V.Q, V.R, "13", "black", "static_QR");
+
+            drawLines(lines);
+
+            const angleQPS = drawAngleArc(V.Q, V.P, V.S, "82°", 1.0, "#000000", "static_angleQPS")
+            const angleQRS = drawAngleArc(V.Q, V.R, V.S, "65°", 1.0, "#000000", "static_angleQRS")
+
+            // Corrected Label Assignment for Part a
+            setupLabels({ "P": V.P, "Q": V.Q, "R": V.R, "S": V.S });
+        }
+
+        function drawFigureB() {                                                                                                    // Draw figure in part B (UpdateForNewExercise)
+            V.R = V.Rb;    // Set R specifically for Part b
+            
+            const lines = [ [V.P, V.Q], [V.Q, V.R], [V.R, V.S], [V.S, V.P], [V.Q, V.S] ];
+            const matLine = new THREE.LineBasicMaterial({ color: 0x333333, linewidth: 2 });
+            createPolygon([V.P, V.S, V.Q], 0x0d6efd); // replace: createTriangle(V.P, V.S, V.Q, 0x0d6efd);
+            createPolygon([V.S, V.R, V.Q], 0x0d6efd); // replace: createTriangle(V.S, V.Rb, V.Q, 0x0d6efd);
+            // createPolygon([V.S, V.R, V.Q], 0x28a745); // replace: createTriangle(V.S, V.Rb, V.Q, 0x28a745);
+            
+            drawLines(lines);
+            
+            // Corrected Label Assignment for Part b
+            setupLabels({ "P": V.P, "Q": V.Q, "R": V.R, "S": V.S });
+        }
+
+        // ==========================================
+        // CAMERA SETTING
+        // ==========================================
         // Camera setting (UpdateForNewExercise)
         function resetCamera() {
             if (currentFigure === 'B') {
@@ -810,41 +850,7 @@
                 }
             });
         }
-        
-        function drawFigureA() {                                                                                                    // Draw figure in part A (UpdateForNewExercise)
-            V.R = V.Ra;    // Set R specifically for Part a
-            
-            const lines = [[V.P, V.Q], [V.Q, V.R], [V.R, V.S], [V.S, V.P]];
-            const matLine = new THREE.LineBasicMaterial({ color: 0x333333, linewidth: 2 });
-            createPolygon([V.P, V.Q, V.R, V.S], 0x0d6efd);
-            drawLineLabels(V.P, V.Q, "12", "black", "static_PQ");
-            drawLineLabels(V.P, V.S, "10", "black", "static_PS");
-            drawLineLabels(V.Q, V.R, "13", "black", "static_QR");
-
-            drawLines(lines);
-
-            const angleQPS = drawAngleArc(V.Q, V.P, V.S, "82°", 1.0, "#000000", "static_angleQPS")
-            const angleQRS = drawAngleArc(V.Q, V.R, V.S, "65°", 1.0, "#000000", "static_angleQRS")
-
-            // Corrected Label Assignment for Part a
-            setupLabels({ "P": V.P, "Q": V.Q, "R": V.R, "S": V.S });
-        }
-
-        function drawFigureB() {                                                                                                    // Draw figure in part B (UpdateForNewExercise)
-            V.R = V.Rb;    // Set R specifically for Part b
-            
-            const lines = [ [V.P, V.Q], [V.Q, V.R], [V.R, V.S], [V.S, V.P], [V.Q, V.S] ];
-            const matLine = new THREE.LineBasicMaterial({ color: 0x333333, linewidth: 2 });
-            createPolygon([V.P, V.S, V.Q], 0x0d6efd); // replace: createTriangle(V.P, V.S, V.Q, 0x0d6efd);
-            createPolygon([V.S, V.R, V.Q], 0x0d6efd); // replace: createTriangle(V.S, V.Rb, V.Q, 0x0d6efd);
-            // createPolygon([V.S, V.R, V.Q], 0x28a745); // replace: createTriangle(V.S, V.Rb, V.Q, 0x28a745);
-            
-            drawLines(lines);
-            
-            // Corrected Label Assignment for Part b
-            setupLabels({ "P": V.P, "Q": V.Q, "R": V.R, "S": V.S });
-        }
-        
+             
         // ==========================================
         // TOGGLES BEWTEEN PARTS A AND B
         // ==========================================
