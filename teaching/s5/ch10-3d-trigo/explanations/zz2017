@@ -1,0 +1,1365 @@
+<!-- search (UpdateForNewExercise) for a exercise html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>2017 DSE Paper I Q19 Solution</title>                                                                                    <!-- (UpdateForNewExercise) Questions -->
+    <!-------------------------->
+    <!-- CSS at the beginning -->
+    <!-------------------------->
+    <style>
+        body, html { margin: 0; padding: 0; height: 100%; overflow: hidden; font-family: 'Segoe UI', sans-serif; }
+        .split-container { display: flex; height: 100vh; }
+        .canvas-side { flex: 1; background: #f0f2f5; position: relative; }
+        .content-side { flex: 1; padding: 30px; overflow-y: auto; background: white; border-left: 1px solid #ddd; }
+        
+        #ui-overlay {
+            position: absolute; top: 15px; right: 15px; background: rgba(255, 255, 255, 0.9);
+            padding: 12px; border-radius: 10px; font-family: monospace; font-size: 14px;
+            border: 1px solid #ccc; z-index: 20; box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            min-width: 180px;
+        }
+        #reset-cam-btn { 
+            background: #fd7e14; color: white; border: none; padding: 8px; 
+            width: 100%; border-radius: 4px; cursor: pointer; font-weight: bold; margin-top: 10px; 
+        }
+        .label {
+            position: absolute; background: transparent; color: #000; font-weight: bold;
+            font-size: 26px; pointer-events: none; z-index: 100;
+            text-shadow: 2px 2px 4px white, -2px -2px 4px white; 
+            transform: translate(-50%, -50%);
+            display: none; 
+        }
+        .question-summary { 
+            background: #eef6ff; 
+            padding: 15px; 
+            border-radius: 8px; 
+            cursor: default;
+            position: relative; 
+            margin-bottom: 20px; 
+            border: 1px dashed #007bff;
+        }
+        .final-ans {
+            font-weight: bold;
+            border-left: 3px solid #007bff;
+            padding-left: 10px;
+            margin-top: 10px;
+        }
+        .full-question-popup {
+            display: none; 
+            background: white; 
+            border: 1px solid #ccc; 
+            padding: 10px; /* Reduced padding to maximize image space */
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1); 
+            z-index: 100; 
+            border-radius: 8px;
+            margin-bottom: 20px;
+            width: 100%;       /* Match the parent container width */
+            box-sizing: border-box; /* Include padding in the width calculation */
+        }
+        .full-question-popup img {
+            display: block; 
+            width: 100%;       /* Force image to fill the popup width */
+            height: auto;      /* Maintain aspect ratio */
+            border-radius: 4px;
+        }
+        .part-container { margin-bottom: 15px; border: 1px solid #eee; border-radius: 8px; overflow: hidden; }
+        .part-header { display: flex; justify-content: space-between; align-items: center; padding: 12px 20px; background: #fafafa; }
+        .solution-content { display: none; padding: 20px; background: #fff; border-top: 1px solid #eee; }
+        .math-block { font-family: "Times New Roman", serif; font-size: 1.1rem; color: #d63384; margin: 10px 0; }
+        .btn-show { background: #007bff; color: white; border: none; padding: 8px 15px; border-radius: 4px; cursor: pointer; font-weight: bold; }
+        .dev-marker { color: #cc0000; font-size: 0.85rem; font-weight: bold; margin-bottom: 5px; display: block; }
+    </style>
+
+    <!-------------------------->
+    <!-- MathJax at beginning -->
+    <!-------------------------->
+    <script>
+        window.MathJax = { tex: { inlineMath: [['$', '$'], ['\\(', '\\)']], displayMath: [['$$', '$$']] } };
+    </script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
+    <!--------------------------->
+    <!-- three.js at beginning -->
+    <!--------------------------->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/TrackballControls.js"></script>
+</head>
+<body>
+    
+    <div class="split-container">
+        <!-- This container holds the 3D scene and an interactive UI overlay for camera tracking and resetting. -->
+        <div class="canvas-side" id="threejs-container">
+            <div id="ui-overlay">
+                <div id="debug-info"></div>
+                <button id="reset-cam-btn" onclick="resetCamera()">Reset Camera 🎥</button>
+            </div>
+        </div>
+
+        <!-- This section contains the scrollable problem text, interactive solution toggles, and MathJax-rendered (渲染) formulas. -->
+        <div class="content-side">
+            <a href="index.html" style="text-decoration: none; color: #007bff;">← Back to List</a>
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+                <h1>2017 DSE Paper I Q19</h1>                                                                                         <!-- (UpdateForNewExercise) Questions Number -->
+                <button id="btn-view-q" class="btn-show" onclick="toggleQuestion('full-q-popup', 'btn-view-q')">View Full Question 📄</button>
+            </div>
+            <div id="full-q-popup" class="full-question-popup">
+                <img src="questions-images/2017 DSE Paper I Q19.png" alt="2017 DSE Q19 Diagram">                                       <!-- (UpdateForNewExercise) Questions Image -->
+            </div>
+            <!-------------------------->
+            <!-- Question of part (a) -->
+            <!-------------------------->
+            <div class="question-summary">
+                <strong></strong> In triangle ABC, $BC = 24\text{ cm}$, $\angle BAC = 30^\circ$ and $\angle ACB = 42^\circ$.                  <!-- (UpdateForNewExercise) Questions part a -->
+                <div style="margin-top: 10px; display: flex; align-items: center; justify-content: space-between; gap: 15px;">
+                    <div style="display: flex; align-items: center; gap: 15px;">
+                        <button id="btn-figA" class="btn-show" onclick="handleToggle('A')">Show Figure</button>                                                                                           <!-- (UpdateForNewExercise) Button in part a -->
+                        <div id="part-a-footer" style="display: none; background: #fff3cd; padding: 5px 12px; border-radius: 5px; border: 1px solid #ffeeba; font-size: 0.9rem; white-space: nowrap;">    <!-- (UpdateForNewExercise) Button in part a -->
+                            <strong>Note:</strong> You are viewing the 2D layout.
+                        </div>
+                    </div>
+                    <button id="btn-toggle-answers" class="btn-show" style="background: #6c757d;" onclick="toggleAnswersOnly('sol-a', this)">Show Answers Only</button>
+                </div>
+            </div>
+
+            <!-------------------------->
+            <!-- Solution of part (a) -->
+            <!-------------------------->
+            <div class="part-container">
+                <div class="part-header">
+                    <span><strong>(a)</strong>Find the length of $AC$.</span>       <!-- (UpdateForNewExercise) Questions part ai -->
+                    <button id="btn-ai" class="btn-show" onclick="revealStep('sol-ai', 'btn-ai', [])">Show Step</button>
+                </div>
+
+                <div id="sol-ai" class="solution-content" data-current-step="0">
+                    <p class="step" style="display:none;">                              <!-- (UpdateForNewExercise) Part ai Step 0-->
+                        Find $\angle ABC$: $180^\circ - 30^\circ - 42^\circ = 108^\circ$
+                    </p>
+                    <p class="step" style="display:none;">                              <!-- (UpdateForNewExercise) Part ai Step 1 -->
+                        Using Sine Rule: $\frac{AC}{\sin 108^\circ} = \frac{24}{\sin 30^\circ}$
+                    </p>
+                    <p class="step final-ans" style="display:none;">                    <!-- (UpdateForNewExercise) Part ai Step 2 -->
+                        $AC = \frac{24 \sin 108^\circ}{\sin 30^\circ} \approx 45.7 \text{ cm}$
+                    </p>
+                </div>
+            </div>
+
+            <!-- <hr style="margin: 30px 0; border: 0; border-top: 1px solid #ddd;"> -->
+
+            <!-------------------------->
+            <!-- Question of part (b) -->
+            <!-------------------------->
+            <div class="question-summary">                                                                
+                <strong>Part (b)</strong> The metal sheet $PQRS$ is now folded along $QS$. It is given that the angle between plane $PQS$ and plane $QRS$ is $80^\circ$.                                   <!-- (UpdateForNewExercise) Questions part b -->
+                <div style="margin-top: 10px; display: flex; align-items: center; justify-content: space-between; gap: 15px;">
+                    <div style="display: flex; align-items: center; gap: 15px;">
+                        <button id="btn-figB" class="btn-show" onclick="handleToggle('B')">Show Figure</button>                                                                                           <!-- (UpdateForNewExercise) Button in part b -->
+                        <div id="part-b-footer" style="display: none; background: #fff3cd; padding: 5px 12px; border-radius: 5px; border: 1px solid #ffeeba; font-size: 0.9rem; white-space: nowrap;">    <!-- (UpdateForNewExercise) Button in part b -->
+                            <strong>Note:</strong> You are viewing the 2D layout.
+                        </div>
+                    </div>
+                    <button id="btn-toggle-answers" class="btn-show" style="background: #6c757d;" onclick="toggleAnswersOnly('sol-b', this)">Show Answers Only</button>
+                </div>
+            </div>
+            <!-------------------------->
+            <!-- Solution of part (b) -->
+            <!-------------------------->
+<div class="part-container">
+                <div class="part-header">
+                    <span><strong>(b)(i)</strong> Find the distance between $C$ and $F$.</span>
+                    <button id="btn-bi" class="btn-show" onclick="revealStep('sol-bi', 'btn-bi', [])">Show Step</button>        <!-- (UpdateForNewExercise) Questions part b -->
+                </div>
+                <div id="sol-bi" class="solution-content" data-current-step="0">
+                    <p class="step" style="display:none;">                              <!-- (UpdateForNewExercise) Part bi Step 0-->
+                        Consider $\triangle QRS$.<br>
+                        Let $T$ be a point on $QS$ such that $RT \perp QS$.<br>
+                    </p>
+                    <p class="step" style="display:none;">                              <!-- (UpdateForNewExercise) Part bi Step 1-->
+                        In right-angled $\triangle RTQ$,<br>
+                        $RT = QR\sin\angle RQS \approx 13\sin\angle 54.280^\circ \approx 13.340\text{ cm}$<br>
+                    </p>
+                    <p class="step" style="display:none;">                              <!-- (UpdateForNewExercise) Part bi Step 2-->
+                        Let the shortest distance be $h$<br>
+                        $h = RT\sin(80^\circ) \approx 11.168 \text{ cm}$<br>
+                    </p>
+                    <p class="step final-ans" style="display:none;">                    <!-- (UpdateForNewExercise) Part bi Step 3 Final answers -->
+                        $h \approx 11.2 \text{ cm}$
+                    </p>
+                </div>
+            </div>
+<div class="part-container">
+                <div class="part-header">
+                    <span><strong>(b)(ii)</strong> Find area of $\triangle ABC$.</span>
+                    <button id="btn-bii" class="btn-show" onclick="revealStep('sol-bii', 'btn-bii', [])">Show Step</button>                            <!-- (UpdateForNewExercise) Questions part b -->
+                </div>
+                <div id="sol-bii" class="solution-content" data-current-step="0">
+                    <p class="step" style="display:none;">                              <!-- (UpdateForNewExercise) Part bii Step 0-->
+                        Consider the volume of tetrahedron $PQRS$, $ \text{volume} = \frac{1}{3}(\text{Area of }\triangle PQS)h = \frac{1}{3}\left(\frac{1}{2}(PQ)(PS)\sin(\angle QPS)\right)h$.
+                    </p>
+                    <p class="step" style="display:none;">                              <!-- (UpdateForNewExercise) Part bii Step 1-->
+                        On the other hand, let $d$ cm be the shortest distance from $P$ to the plane $QRS$.<br>
+                        $ \text{Volume} = \frac{1}{3}(\text{Area of } \triangle QRS)d = \frac{1}{3}\left(\frac{1}{2}(QR)(QS)\sin(\angle RQS)\right)d$
+                    </p>
+                    <p class="step" style="display:none;">                              <!-- (UpdateForNewExercise) Part bii Step 2-->
+                        <!-- $$ \frac{1}{3}(\text{Area of }\triangle PQS)h = \frac{1}{3}(\text{Area of }\triangle QRS)d$$ -->
+                        $$ \frac{1}{3}\left(\frac{1}{2}(PQ)(PS)\sin(\angle QPS)\right)h = \frac{1}{3}\left(\frac{1}{2}(QR)(QS)\sin(\angle RQS)\right)d$$
+                    </p>
+                    <p class="step" style="display:none;">                              <!-- (UpdateForNewExercise) Part bii Step 3-->
+                        $$(12)(10)\sin(82^\circ)(11.168) \approx (13)(14.513)\sin(60.720^\circ)(d)$$
+                        $d \approx 8.0641$<br>
+                    </p>
+                    <p class="step" style="display:none;">                              <!-- (UpdateForNewExercise) Part bii Step 4-->
+                        $X$ is a point lying on the plane $QRS$, thus $PX \geq d$. i.e. The distance between $P$ and $X$ exceeds 8 cm.<br>
+                    </p>
+                    <p class="step final-ans" style="display:none;">                    <!-- (UpdateForNewExercise) Part bii Step 5 Final answers -->
+                        The claim is correct.<br>
+                    </p>
+                </div>
+            </div>
+<div class="part-container">
+                <div class="part-header">
+                    <span><strong>(b)(iii)</strong> Find inclination of $ABC$ to the horizontal ground.</span>
+                    <button id="btn-biii" class="btn-show" onclick="revealStep('sol-bi', 'btn-bi', [])">Show Step</button>        <!-- (UpdateForNewExercise) Questions part b -->
+                </div>
+                <div id="sol-bi" class="solution-content" data-current-step="0">
+                    <p class="step" style="display:none;">                              <!-- (UpdateForNewExercise) Part bi Step 0-->
+                        Consider $\triangle QRS$.<br>
+                        Let $T$ be a point on $QS$ such that $RT \perp QS$.<br>
+                    </p>
+                    <p class="step" style="display:none;">                              <!-- (UpdateForNewExercise) Part bi Step 1-->
+                        In right-angled $\triangle RTQ$,<br>
+                        $RT = QR\sin\angle RQS \approx 13\sin\angle 54.280^\circ \approx 13.340\text{ cm}$<br>
+                    </p>
+                    <p class="step" style="display:none;">                              <!-- (UpdateForNewExercise) Part bi Step 2-->
+                        Let the shortest distance be $h$<br>
+                        $h = RT\sin(80^\circ) \approx 11.168 \text{ cm}$<br>
+                    </p>
+                    <p class="step final-ans" style="display:none;">                    <!-- (UpdateForNewExercise) Part bi Step 3 Final answers -->
+                        $h \approx 11.2 \text{ cm}$
+                    </p>
+                </div>
+            </div>
+<div class="part-container">
+                <div class="part-header">
+                    <span><strong>(b)(iv)</strong> Claim: the area of $BDF$ is greater than $460\text{ cm^2}$. Do you agree?.</span>
+                    <button id="btn-biv" class="btn-show" onclick="revealStep('sol-bi', 'btn-bi', [])">Show Step</button>        <!-- (UpdateForNewExercise) Questions part b -->
+                </div>
+                <div id="sol-bi" class="solution-content" data-current-step="0">
+                    <p class="step" style="display:none;">                              <!-- (UpdateForNewExercise) Part bi Step 0-->
+                        Consider $\triangle QRS$.<br>
+                        Let $T$ be a point on $QS$ such that $RT \perp QS$.<br>
+                    </p>
+                    <p class="step" style="display:none;">                              <!-- (UpdateForNewExercise) Part bi Step 1-->
+                        In right-angled $\triangle RTQ$,<br>
+                        $RT = QR\sin\angle RQS \approx 13\sin\angle 54.280^\circ \approx 13.340\text{ cm}$<br>
+                    </p>
+                    <p class="step" style="display:none;">                              <!-- (UpdateForNewExercise) Part bi Step 2-->
+                        Let the shortest distance be $h$<br>
+                        $h = RT\sin(80^\circ) \approx 11.168 \text{ cm}$<br>
+                    </p>
+                    <p class="step final-ans" style="display:none;">                    <!-- (UpdateForNewExercise) Part bi Step 3 Final answers -->
+                        $h \approx 11.2 \text{ cm}$
+                    </p>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <script>
+        
+        // ==========================================
+        // INITIALIZATION
+        // ==========================================
+        // This block initializes the Three.js scene, camera, renderer, and orbit controls to set up the 3D environment.
+        const container = document.getElementById('threejs-container');
+        const scene = new THREE.Scene();
+        scene.background = new THREE.Color(0xf0f2f5); // light-grey background
+        const camera = new THREE.PerspectiveCamera(45, container.clientWidth/container.clientHeight, 0.1, 1000);
+        const renderer = new THREE.WebGLRenderer({ antialias: true, logarithmicDepthBuffer: true });
+        renderer.setSize(container.clientWidth, container.clientHeight);
+        container.appendChild(renderer.domElement);
+        
+        // const controls = new THREE.OrbitControls(camera, renderer.domElement);
+        // Replace OrbitControls with TrackballControls
+        const controls = new THREE.TrackballControls(camera, renderer.domElement);
+        
+        // Settings for a "Clean" feel (no damping/sliding)
+        controls.rotateSpeed = 4.0;
+        controls.zoomSpeed = 1.2;
+        controls.panSpeed = 0.8;
+        controls.staticMoving = true; // This disables the "sliding/damping" feel
+        // controls.enableRotate = false; // Disable rotation as requested
+        
+        scene.add(new THREE.AmbientLight(0xffffff, 1.0));
+
+        // ==========================================
+        // DEFINITION OF PARAMETERS, TOOLS AND POINTS (UpdateForNewExercise)                                                    <-- (UpdateForNewExercise)
+        // ==========================================
+        // Math tools
+        const degToRad = (deg) => deg * Math.PI / 180;
+        const radToDeg = (rad) => rad * 180 / Math.PI;
+        const cosineSide = (b, c, angleArad) => Math.sqrt(b*b + c*c - 2*b*c*Math.cos(angleArad));           // a = cosineSide(b, c, angleArad)
+        const cosineAngle = (a, b, c) => Math.acos((b*b + c*c - a*a) / (2*b*c));                            // A = cosineAngle(a, b, c)
+        const sineSide = (b, angleArad, angleBrad) => b * Math.sin(angleArad) / Math.sin(angleBrad);        // a = sineSide(b, angleArad, angleBrad)
+        const sineAngle = (a, b, angleBrad) => Math.asin(a * Math.sin(angleBrad) / b);                      // A = sineAngle(a, b, angleBrad)
+
+        // Definition of data
+        const pq = 12, ps = 10, qr = 13;
+        const scale = 0.6;
+        const angle_qps = degToRad(82);
+        const angle_qrs = degToRad(65);
+        const angle_rotate = degToRad(100); // 180 - 80 degrees
+
+        // Used only for calculation of R
+        const qs = cosineSide(pq, ps, angle_qps);
+        const angle_pqs = sineAngle(ps, qs, angle_qps);
+        const angle_qsr = sineAngle(qr, qs, angle_qrs);
+        const angle_rqs = Math.PI - angle_qrs - angle_qsr;
+        const angle_exterior_q = Math.PI - angle_pqs - angle_rqs;
+
+        // Definition of points
+        // Vertices for Part A
+        const V = {
+            P: new THREE.Vector3(0, 0, 0),
+            Q: new THREE.Vector3(pq * scale, 0, 0),
+            S: new THREE.Vector3(ps * scale * Math.cos(angle_qps), ps * scale * Math.sin(angle_qps), 0)
+        };
+        // R for Part A (Flat)
+        V.Ra = V.Q.clone().add(new THREE.Vector3(qr * scale * Math.cos(angle_exterior_q), qr * scale * Math.sin(angle_exterior_q), 0));
+        // angle_exterior_q appromixately = 84 degree
+        // V.Ra = V.Q.clone().add(new THREE.Vector3(13 * scale * Math.cos(degToRad(84)), 13 * scale * Math.sin(degToRad(84)), 0));
+
+        // R for Part B (Folded (180 - 80) deg)
+        // Get the direction of the hinge (the folding line SQ, rotate along the vector SQ using right-hand rule)
+        const axis = new THREE.Vector3().subVectors(V.Q, V.S).normalize();
+        // Rotate flat-plane vertex Ra around hinge axis SQ by 100° to define the folded 3D position.
+        V.Rb = V.Ra.clone().sub(V.Q).applyAxisAngle(axis, angle_rotate).add(V.Q);
+
+        // Calculate T as the projection of Ra onto the line segment QS
+        V.T = new THREE.Vector3().subVectors(V.S, V.Q).normalize()
+            .multiplyScalar(new THREE.Vector3().subVectors(V.Ra, V.Q).dot(
+                new THREE.Vector3().subVectors(V.S, V.Q).normalize()
+            ))
+            .add(V.Q);
+        // The projection of the folded R onto the PQS plane (XY plane)
+        V.N = new THREE.Vector3(V.Rb.x, V.Rb.y, 0);
+        V.M = new THREE.Vector3().addVectors(V.N, V.Rb).multiplyScalar(0.5);
+
+        // Get the direction (Normal) of plane QRS (vector SQ cross vector SR)
+        const n = new THREE.Vector3().crossVectors(new THREE.Vector3().subVectors(V.Q, V.S), new THREE.Vector3().subVectors(V.Rb, V.S)).normalize();
+        // Project P onto the plane. Formula: X = P + ((AnyPointOnPlane - P) ⋅ n) * n
+        const dist = new THREE.Vector3().subVectors(V.Q, V.P).dot(n); 
+        V.X = V.P.clone().add(n.clone().multiplyScalar(dist));
+        
+        // Verify against your 8.0641 calculation
+        // Object.entries(V).forEach(([name, point]) => { console.log(name + "=", point); });
+        console.table(V);
+        console.log("(a)(i)  QS:", V.Q.distanceTo(V.S));
+        console.log("(a)(ii) angle RQS:", radToDeg(angle_rqs));
+        console.log("(b)(i)  Distance h:", V.Rb.distanceTo(V.N));
+        console.log("(b)(ii) Distance d:", V.P.distanceTo(V.X));
+        
+        // ==========================================
+        // SETUP OF CAMERA (UpdateForNewExercise)                                                                    <-- (UpdateForNewExercise)
+        // ==========================================
+        
+        let currentFigure = null;
+        let activeLabels = {};
+
+        resetCamera();
+        animate();
+        window.addEventListener('resize', () => {
+            camera.aspect = container.clientWidth / container.clientHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(container.clientWidth, container.clientHeight);
+        });
+
+        // ==========================================
+        // USER INTERACTION LOGIC
+        // ==========================================
+        // 1. Wait for User Clicks: The functions handleToggle() and revealStep() 
+        //    do not run until a user clicks a button on the webpage.
+        // 
+        // 2. Logic Flow upon Interaction:
+        //    - User Click: Triggers revealStep() or a toggle button.
+        //    - Logic Check: The function evaluates the state of 'currentFigure'.
+        //    - Drawing Trigger: If it's the first click, it calls handleToggle('A').
+        //    - Scene Update: handleToggle() calls drawFigureA() (or B), 
+        //      which uses scene.add() to inject geometric objects into the 3D space.
+        //    - Visual Change: On the very next frame of the animate() loop 
+        //      (within 16ms), the renderer draws the new objects for the user.
+        
+        // ==========================================
+        // TOGGLES & UI CONTROLS
+        // ==========================================
+        // toggle(id)                               // Toggles visibility of HTML solution blocks and renders MathJax
+        // handleToggle(type)                       // Switches entire scene state between 2D (Part A) and 3D (Part B)
+        // toggleQuestion(divId, btnId)             // Switches visibility for the full question text container
+        // toggleAnswersOnly(prefix, btn)           // Filters solution blocks to show only final answers/results
+        // revealStep(containerId, buttonId)        // Progressively shows solution steps and triggers 3D highlights
+        
+        // ==========================================
+        // CAMERA & SCENE MANAGEMENT
+        // ==========================================
+        // resetCamera()         // Resets view based on the current active figure (A or B)
+        // setCameraPartA()      // Sets 2D top-down view and locks rotation for flat diagrams
+        // setCameraPartB()      // Sets 3D perspective and handles rotation for folded shapes
+        // animate()             // Main loop for rendering the scene and projecting HTML labels
+        // clearScene()          // Disposes of geometries and removes all objects/labels from scene
+        
+        // ==========================================
+        // 3D DRAWING & ANNOTATION
+        // ==========================================
+        // drawLines(linePairs, isSolid = true, color = 0x333333, name ="")                                 // Renders basic or dashed 3D lines between vertex pairs
+        // drawThickLine(p1, p2, isSolid = true, color = 0x000000, name = "")                               // Simulates line weight by layering multiple offset lines
+        // Arc3D (class)                                                                                    // Custom Curve class for calculating 3D circular arc paths
+        // drawAngleArc(p1, vertex, p2, labelText = "", radius = 1.0, color = 0x000000, labelKey = null)    // Renders a 3D arc and text label to denote specific angles
+        // drawRightAngle(p1, vertex, p2, size = 1.0, color = 0x000000)                                     // Renders a basic 3D square symbol for orthogonal vertices
+        // drawThickRightAngle(p1, vertex, p2, size = 1.0, color = 0x000000)                                // Creates a bold 3D right-angle symbol using offset layers
+        // drawFigureA()                                                                                    // Initializes the 2D layout for Part A with lines and arcs
+        // drawFigureB()                                                                                    // Initializes the 3D tetrahedron layout for Part B
+        
+        // ==========================================
+        // LABELS & HIGHLIGHTS
+        // ==========================================
+        // makeLabel(text)                                                                   // Utility to create and append a DOM element for 3D tracking
+        // setupLabels(labelMap)                                                             // Maps a collection of point names to their 3D coordinates
+        // drawLineLabels(p1, p2, labelText = "", color = 0x000000, labelKey = null)         // Projects a text label at the midpoint of a 3D line segment
+        // stickTempPointLabel(point, text = "", color = "#d63384", labelKey = null)         // Places a temporary, bolded label at a specific 3D point
+        // highlightPolygon(points, color = "#0d6efd", id = null)                            // Adds a semi-transparent mesh to highlight specific areas
+        // clearStepHighlights()                                                             // Adds a semi-transparent colored mesh to a specific 3D triangle
+        // createPolygon(points, color = 0x0d6efd)                                           // Renders a filled 3D mesh for 3-point or 4-point shapes
+        // createTriangle(p1, p2, p3, color = 0x0d6efd)                                      // Legacy helper for rendering a single 3D triangle mesh
+        // shadeTetrahedron(points, color = 0x0d6efd, opacity = 0.2)                         // Renders all four faces of a 3D tetrahedron with opacity
+        // ==========================================
+        
+        // Camera setting (UpdateForNewExercise)
+        function resetCamera() {
+            if (currentFigure === 'B') {
+                setCameraPartB(null, null, true);
+            } else {
+                setCameraPartA();    // This covers both Figure A and the initial 'null' state
+            }
+        }
+        // The "Original" Flat View for Part A
+        function setCameraPartA(cameraVector = null, targetVector = null) {                                                                    // Camera setting (UpdateForNewExercise)
+            // Set the orientation (Z-up or Y-up depending on your coordinate system)
+            // Most of your code uses Z=0 as the floor, so we keep Z as the vertical axis
+            camera.up.set(0, 1, 0);
+            
+            if (targetVector) { // Handle Target (What the camera is looking at)
+                controls.target.copy(targetVector);
+            } else {
+                // Default Part B Center (near the fold)
+                controls.target.set(5, 4, 0);    // Centered on the flat shape
+            }
+            
+            if (cameraVector) { // Handle Camera Position
+                camera.position.copy(cameraVector);
+            } else {
+                // Default Part B "Overview" Position
+                camera.position.set(0, 0, 20);    // Straight on
+            }
+            
+            // Ensure rotation is disabled whenever Part A camera is set
+            // TrackballControls uses noRotate/noPan instead of enableRotate/enablePan
+            controls.noRotate = true; 
+            controls.noPan = true;
+            controls.noZoom = false; // Allow zoom if you want, or set to true to lock completely
+            
+            controls.staticMoving = true;
+            controls.minDistance = 15;
+            controls.maxDistance = 30;
+            controls.update();
+        }
+        // The "3D Perspective" View for Part B (Matching your image)
+        function setCameraPartB(cameraVector = null, targetVector = null, lockHorizontal = false) {                                            // Camera setting (UpdateForNewExercise)
+            // Set the orientation (Z-up or Y-up depending on your coordinate system)
+            // Most of your code uses Z=0 as the floor, so we keep Z as the vertical axis
+            camera.up.set(0, 0, 1);
+            
+            // If we lock horizontal, we definitely want rotation enabled
+            //controls.noRotate = false;
+            //controls.noPan = false;
+            // ORBITCONTROLS PROPERTIES (Use these instead of noRotate/noPan)
+            controls.enableRotate = true;
+            controls.enablePan = true;
+            
+            if (targetVector) { // Handle Target (What the camera is looking at)
+                controls.target.copy(targetVector);
+            } else {
+                // Default Part B Center (near the fold)
+                controls.target.set(3.6, 1.7, 1.6); // coordinates of N
+            }
+            
+            if (cameraVector) { // Handle Camera Position
+                camera.position.copy(cameraVector);
+            } else {
+                // Default Part B "Overview" Position
+                camera.position.set(23, -3, 5);
+            }
+            if (lockHorizontal) {
+                controls.minPolarAngle = Math.PI / 2;
+                controls.maxPolarAngle = Math.PI / 2;
+            } else {
+                // Reset to default (allow full vertical rotation)
+                controls.minPolarAngle = 0;
+                controls.maxPolarAngle = Math.PI;
+            }
+            // Unlock for 3D exploration
+            controls.noRotate = false;
+            controls.noPan = false;
+            // Required for OrbitControls to recognize the manual changes
+            controls.update();
+        }
+        
+        // This function orchestrates the progressive reveal of solution steps by synchronizing the visibility of HTML text, MathJax formula rendering, and the corresponding 3D triangle highlights in the Three.js scene.
+        // The function is triggered when the button is pressed
+        // For example: <button id="btn-bii" class="btn-show" onclick="revealStep('sol-bii', 'btn-bii', [])">Show Step</button>
+        function revealStep(containerId, buttonId, triangleKeys) {                                                                // revealStep (UpdateForNewExercise)
+            // =============================================================
+            // 0. CLEAR STEP-SPECIFIC OBJECTS (Labels, Arcs, Extra Lines)
+            // =============================================================
+            // This loop finds every key in activeLabels. If it starts with "step",
+            // it removes it from the DOM and deletes it from the tracking object.
+            Object.keys(activeLabels).forEach(key => {
+                if (key.startsWith("step")) {
+                    const element = activeLabels[key];
+                    if (element && element.parentNode) {
+                        element.parentNode.removeChild(element);
+                    }
+                    delete activeLabels[key];
+                }
+            });
+            // Also clear specific 3D objects added to the scene that start with "step"
+            for (let i = scene.children.length - 1; i >= 0; i--) {
+                const obj = scene.children[i];
+                if (obj.name && obj.name.startsWith("step")) {
+                    if (obj.geometry) obj.geometry.dispose();
+                    if (obj.material) {
+                        if (Array.isArray(obj.material)) obj.material.forEach(m => m.dispose());
+                        else obj.material.dispose();
+                    }
+                    scene.remove(obj);
+                }
+            }
+            // =============================================================
+            
+            // 1. Detect which part we are in
+            const isPartA = containerId.startsWith('sol-a');                                                                              // parts a and b (UpdateForNewExercise)
+            const isPartB = containerId.startsWith('sol-b');
+            
+            // 2. Switch to Figure A if solving Part A and Switch to Figure B if solving Part B (This is what was missing)                // handleToggle A and B (UpdateForNewExercise)
+            if (isPartA && currentFigure !== 'A') {
+                handleToggle('A');
+            }
+            else if (isPartB && currentFigure !== 'B') {
+                handleToggle('B');
+            }
+
+            const container = document.getElementById(containerId);
+            // Collects all HTML elements with the class "step" within the specific solution container.
+            // This creates a live HTMLCollection (array-like list) used to reveal each line of the math solution one-by-one as the user clicks the "Show Step" button.
+            const steps = container.getElementsByClassName('step');
+            const btn = document.getElementById(buttonId);
+            
+            const stepId = containerId.replace('sol-', 'step-');
+            let currentStep = parseInt(container.getAttribute('data-current-step'));
+            
+            // 3. Update the "currentFigure === null" check to be dynamic
+            if (currentStep === 0 && currentFigure === null) {                                                                             // handleToggle A and B (UpdateForNewExercise)
+                handleToggle(isPartA ? 'A' : 'B');
+            }
+            
+            if (currentStep < steps.length) {
+                if (currentStep === 0) container.style.display = 'block';
+                
+                steps[currentStep].style.display = 'block';
+                clearStepHighlights();
+                // 5. DRAWING LOGIC (Now always starts with a clean slate)                                                                       // (UpdateForNewExercise) MAIN STEPS (SEARCH)
+                // Part (a)(i)
+                if (stepId === "step-ai") {
+                    switch (currentStep) {
+                        case 0: case 1: case 2:
+                            drawLineLabels(V.Q, V.S, "?",     "#d63384", stepId + "_" + currentStep + "_lineQS_Label");                           // (UpdateForNewExercise) Customize the steps, pink unknown
+                            highlightPolygon([V.P, V.Q, V.S], "#bb0000", stepId + "_" + currentStep + "_trianglePQS");
+                            break;
+                        case 3:
+                            drawLineLabels(V.Q, V.S, "14.5",  "#00bbbb", stepId + "_" + currentStep + "_lineQS_Label");                           // (UpdateForNewExercise) Customize the steps, cyan answer
+                            highlightPolygon([V.P, V.Q, V.S], "#bb0000", stepId + "_" + currentStep + "_trianglePQS");
+                            break;
+                    }
+                }
+                // Part (a)(ii)
+                if (stepId === "step-aii") {
+                    switch (currentStep) {
+                        case 0: case 1:
+                            drawAngleArc(V.Q, V.S, V.R, "?", 1.0,       "#d63384", stepId + "_" + currentStep + "_angleQSR");                    // (UpdateForNewExercise) Customize the steps, pink unknown
+                            drawLineLabels(V.Q, V.S, "14.513",          "#d63384", stepId + "_" + currentStep + "_lineQS_Label");                // (UpdateForNewExercise) Customize the steps, pink unknown from part (a)(i)
+                            highlightPolygon([V.Q, V.R, V.S],           "#bb0000", stepId + "_" + currentStep + "_triangleQRS");
+                            break;                    
+                        case 2:
+                            drawAngleArc(V.Q, V.S, V.R, "54.280°", 1.0, "#00bbbb", stepId + "_" + currentStep + "_angleQSR");                    // (UpdateForNewExercise) Customize the steps, cyan answer
+                            highlightPolygon([V.Q, V.R, V.S],           "#bb0000", stepId + "_" + currentStep + "_triangleQRS");
+                            break;
+                        case 3:
+                            drawAngleArc(V.Q, V.S, V.R, "54.280°", 1.0, "#d63384", stepId + "_" + currentStep + "_angleQSR");                    // (UpdateForNewExercise) Customize the steps, pink unknown from part (a)(ii)
+                            drawAngleArc(V.R, V.Q, V.S, "?", 1.0,       "#d63384", stepId + "_" + currentStep + "_angleRQS");                    // (UpdateForNewExercise) Customize the steps, pink unknown
+                            highlightPolygon([V.Q, V.R, V.S],           "#bb0000", stepId + "_" + currentStep + "_triangleQRS");
+                            break;
+                        case 4:
+                            drawAngleArc(V.Q, V.S, V.R, "54.280°", 1.0, "#d63384", stepId + "_" + currentStep + "_angleQSR");                    // (UpdateForNewExercise) Customize the steps, pink unknown from part (a)(ii)
+                            drawAngleArc(V.R, V.Q, V.S, "60.7°", 1.0,   "#00bbbb", stepId + "_" + currentStep + "_angleRQS");                    // (UpdateForNewExercise) Customize the steps, cyan answer
+                            highlightPolygon([V.Q, V.R, V.S],           "#bb0000", stepId + "_" + currentStep + "_triangleQRS");
+                            break;
+                    }
+                }
+                // Part (b)(i)
+                if (stepId === "step-bi") {
+                    stickTempPointLabel(V.T, "T", "#d63384", stepId + "_" + currentStep + "_pointT");
+                    switch (currentStep) {
+                        case 0:
+                            drawThickLine(V.R, V.T, false,              "#000000", stepId + "_" + currentStep + "_lineRT_Drawing");     // (UpdateForNewExercise) Customize the steps, given thick line
+                            drawThickRightAngle(V.Q, V.T, V.R, 0.5);                                                                    // (UpdateForNewExercise) Customize the steps, given
+                            highlightPolygon([V.Q, V.R, V.S],           "#ffeb3b", stepId + "_" + currentStep + "_triangleQRS");
+                            break;
+                        case 1:
+                            drawThickLine(V.R, V.T, false,              "#000000", stepId + "_" + currentStep + "_lineRT_Drawing");     // (UpdateForNewExercise) Customize the steps, given thick line
+                            drawThickRightAngle(V.Q, V.T, V.R, 0.5);                                                                    // (UpdateForNewExercise) Customize the steps, given
+                            drawLineLabels(V.Q, V.R, "13",              "#000000", stepId + "_" + currentStep + "_lineQR_Label");       // (UpdateForNewExercise) Customize the steps, given
+                            drawAngleArc(V.R, V.Q, V.T, "60.720°", 1.0, "#d63384", stepId + "_" + currentStep + "_angleRQT");           // (UpdateForNewExercise) Customize the steps, unknown from part (a)(i)
+                            drawLineLabels(V.R, V.T, "?",               "#d63384", stepId + "_" + currentStep + "_lineRT_Label");       // (UpdateForNewExercise) Customize the steps, unknown
+                            highlightPolygon([V.Q, V.R, V.T],           "#ffeb3b", stepId + "_" + currentStep + "_triangleQRT");
+                            break;
+                        case 2:
+                            drawThickLine(V.R, V.T, false,              "#000000", stepId + "_" + currentStep + "_lineRT_Drawing");     // (UpdateForNewExercise) Customize the steps, given thick line
+                            drawThickRightAngle(V.R, V.N, V.T, 0.4);                                                                    // (UpdateForNewExercise) Customize the steps, given
+                            drawLineLabels(V.R, V.T, "13.340",          "#00bbbb", stepId + "_" + currentStep + "_lineRT_Label");       // (UpdateForNewExercise) Customize the steps, unknown from part (b)(i)
+                            drawThickLine(V.R, V.N, false,              "#000000", stepId + "_" + currentStep + "_lineNR_Drawing");     // (UpdateForNewExercise) Customize the steps, given thick line
+                            drawThickLine(V.N, V.T, false,              "#000000", stepId + "_" + currentStep + "_lineNT_Drawing");     // (UpdateForNewExercise) Customize the steps, given thick line
+                            drawLineLabels(V.N, V.M, "h=?",             "#d63384", stepId + "_" + currentStep + "_lineMN_Label");       // (UpdateForNewExercise) Customize the steps, unknown
+                            drawAngleArc(V.R, V.T, V.N, "80°", 0.5,     "#000000", stepId + "_" + currentStep + "_angleRTN");           // (UpdateForNewExercise) Customize the steps, given
+                            highlightPolygon([V.N, V.R, V.T],           "#ffeb3b", stepId + "_" + currentStep + "_triangleNRT");
+                            break;
+                        case 3:
+                            drawThickLine(V.R, V.T, false,              "#000000", stepId + "_" + currentStep + "_lineRT_Drawing");     // (UpdateForNewExercise) Customize the steps, given thick line
+                            drawThickRightAngle(V.R, V.N, V.T, 0.4);                                                                    // (UpdateForNewExercise) Customize the steps, given
+                            drawThickLine(V.R, V.N, false,              "#000000", stepId + "_" + currentStep + "_lineNR_Drawing");     // (UpdateForNewExercise) Customize the steps, given thick line
+                            drawThickLine(V.N, V.T, false,              "#000000", stepId + "_" + currentStep + "_lineNT_Drawing");     // (UpdateForNewExercise) Customize the steps, given thick line
+                            drawLineLabels(V.N, V.M, "h≈11.2",          "#00bbbb", stepId + "_" + currentStep + "_lineNR_Label");       // (UpdateForNewExercise) Customize the steps, answer
+                            highlightPolygon([V.N, V.R, V.T],           "#ffeb3b", stepId + "_" + currentStep + "_triangleNRT");
+                            break;
+                    }
+                }
+                // Part (b)(ii)
+                if (stepId === "step-bii") {
+                    /*
+                    setCameraPartB(
+                        new THREE.Vector3(4.2, 1.6, 1.1),         // cameraVector
+                        new THREE.Vector3(2.5, -18, 3.6)          // targetVector
+                    );
+                    */
+                    // shadeTetrahedron([V.P, V.Q, V.R, V.S]);
+                    switch (currentStep) {
+                        case 0:
+                            drawThickLine(V.R, V.N, false,              "#000000", stepId + "_" + currentStep + "_lineNR_Drawing");  // (UpdateForNewExercise) Customize the steps, black given thick line
+                            drawThickRightAngle(V.R, V.N, V.T, 0.5);                                                                 // (UpdateForNewExercise) Customize the steps, black given
+                            drawLineLabels(V.R, V.N, "h≈11.2",          "#00bbbb", stepId + "_" + currentStep + "_lineNR_Label");    // (UpdateForNewExercise) Customize the steps, cyan answer
+                            highlightPolygon([V.P, V.Q, V.S],           "#ffeb3b", stepId + "_" + currentStep + "_trianglePQS");
+                            break;
+                        case 1:
+                            drawThickLine(V.P, V.X, false,              "#000000", stepId + "_" + currentStep + "_linePX_Drawing");  // (UpdateForNewExercise) Customize the steps, black given thick line
+                            drawThickRightAngle(V.P, V.X, V.R, 0.5);                                                                 // (UpdateForNewExercise) Customize the steps, black given
+                            drawLineLabels(V.P, V.X, "d=?",             "#d63384", stepId + "_" + currentStep + "_linePX_Label");    // (UpdateForNewExercise) Customize the steps, pink unknown
+                            highlightPolygon([V.Q, V.R, V.S],           "#ffeb3b", stepId + "_" + currentStep + "_triangleQRS");
+                            break;
+                        case 2:
+                            drawThickLine(V.R, V.N, false,              "#000000", stepId + "_" + currentStep + "_lineNR_Drawing");  // (UpdateForNewExercise) Customize the steps, black given thick line
+                            drawThickRightAngle(V.R, V.N, V.T, 0.5);                                                                 // (UpdateForNewExercise) Customize the steps, black given
+                            drawThickLine(V.P, V.X, false,              "#000000", stepId + "_" + currentStep + "_linePX_Drawing");  // (UpdateForNewExercise) Customize the steps, black given thick line
+                            drawThickRightAngle(V.P, V.X, V.R, 0.5);                                                                 // (UpdateForNewExercise) Customize the steps, black given
+                            // Blue Group (Volume calculation factors for Base QRS)
+                            drawLineLabels(V.P, V.X, "d=?",             "#0000ee", stepId + "_" + currentStep + "_linePX_Label");    // (UpdateForNewExercise) Customize the steps, same group as d
+                            drawLineLabels(V.Q, V.R, "12",              "#0000ee", stepId + "_" + currentStep + "_lineQR_Label");    // (UpdateForNewExercise) Customize the steps, same group as d
+                            drawLineLabels(V.Q, V.S, "14.5",            "#0000ee", stepId + "_" + currentStep + "_lineQS_Label");    // (UpdateForNewExercise) Customize the steps, same group as d
+                            drawAngleArc(V.R, V.Q, V.S, "60.720°", 1.0, "#0000ee", stepId + "_" + currentStep + "_angleRQS");        // (UpdateForNewExercise) Customize the steps, same group as d
+                            // Red Group (Volume calculation factors for Base PQS)
+                            drawLineLabels(V.R, V.N, "h≈11.2",          "#ff0000", stepId + "_" + currentStep + "_lineNR_Label");    // (UpdateForNewExercise) Customize the steps, same group as h
+                            drawLineLabels(V.P, V.S, "10",              "#ff0000", stepId + "_" + currentStep + "_linePS_Label");    // (UpdateForNewExercise) Customize the steps, same group as h
+                            drawLineLabels(V.P, V.Q, "12",              "#ff0000", stepId + "_" + currentStep + "_linePQ_Label");    // (UpdateForNewExercise) Customize the steps, same group as h
+                            drawAngleArc(V.Q, V.P, V.S, "82°", 1.0,     "#ff0000", stepId + "_" + currentStep + "_angleQPS");        // (UpdateForNewExercise) Customize the steps, same group as h
+                            highlightPolygon([V.P, V.Q, V.S],           "#ff0000", stepId + "_" + currentStep + "_triangleQPS");
+                            break;
+                        case 3: case 4: case 5:
+                            drawThickLine(V.P, V.X, false,              "#000000", stepId + "_" + currentStep + "_linePX_Drawing");  // (UpdateForNewExercise) Customize the steps, black given thick line
+                            drawThickRightAngle(V.P, V.X, V.R, 0.5);                                                                 // (UpdateForNewExercise) Customize the steps, black given
+                            drawLineLabels(V.P, V.X, "d≈8.0641",        "#00bbbb", stepId + "_" + currentStep + "_linePX_Label");    // (UpdateForNewExercise) Customize the steps, answer
+                            break;
+                    }
+                }
+                if (window.MathJax) MathJax.typesetPromise([steps[currentStep]]);
+
+                currentStep++;
+                container.setAttribute('data-current-step', currentStep);
+                
+                if (currentStep === steps.length) {
+                    btn.textContent = "Completed";
+                    btn.disabled = true; // Optional: disable button when done
+                    btn.style.opacity = "0.5";
+                } else {
+                    btn.textContent = "Next Step";
+                }
+                collapseOtherParts(containerId);
+            }
+        }
+
+        function animate() { // It tells the browser to run the animate function approximately 60 times per second.
+            requestAnimationFrame(animate);
+            
+            // 1. Update the controls
+            controls.update();
+            
+            const debugBox = document.getElementById('debug-info');
+            if (debugBox) {
+                const cp = camera.position, ct = controls.target;
+                debugBox.innerHTML = `<b style="color:#0d6efd">TARGET:</b> x:${ct.x.toFixed(1)} y:${ct.y.toFixed(1)} z:${ct.z.toFixed(1)}<br>` +
+                                    `<b style="color:#198754">CAMERA:</b> x:${cp.x.toFixed(1)} y:${cp.y.toFixed(1)} z:${cp.z.toFixed(1)}`;
+            }
+            
+            // 2. FORCE the camera to update its matrices immediately 
+            // so the projection math uses current frame data
+            camera.updateMatrixWorld();
+            camera.matrixWorldInverse.copy(camera.matrixWorld).invert();
+            camera.projectionMatrixInverse.copy(camera.projectionMatrix).invert();
+        
+            // 3. Label Projection Logic
+            const widthHalf = container.clientWidth / 2;
+            const heightHalf = container.clientHeight / 2;
+            
+            for (let key in activeLabels) {
+                let pos = V[key];
+                if (!pos) continue;
+                
+                // Use the updated camera state
+                const vector = pos.clone().project(camera);
+                
+                if (vector.z < 1) {
+                    const x = (vector.x * widthHalf) + widthHalf;
+                    const y = -(vector.y * heightHalf) + heightHalf;
+                    
+                    activeLabels[key].style.display = 'block';
+                    // Use transform: translate for smoother movement than top/left
+                    activeLabels[key].style.transform = `translate(-50%, -50%)`;
+                    activeLabels[key].style.left = `${x}px`;
+                    activeLabels[key].style.top = `${y}px`;
+                } else { 
+                    activeLabels[key].style.display = 'none'; 
+                }
+            }
+            renderer.render(scene, camera);
+        }
+        
+        function clearStepHighlights() {
+            const toRemove = scene.children.filter(c => c.userData && c.userData.isStepHighlight);
+            toRemove.forEach(c => {
+                if (c.geometry) c.geometry.dispose();
+                if (c.material) c.material.dispose();
+                scene.remove(c);
+            });
+            // Clear HTML Labels
+            for (let key in activeLabels) {
+                // If the key starts with "step", remove it from the screen
+                if (key.startsWith("step")) { 
+                    const labelDiv = activeLabels[key];
+                    if (labelDiv && labelDiv.parentNode) {
+                        labelDiv.parentNode.removeChild(labelDiv);
+                    }
+                    delete activeLabels[key]; // Remove from tracking object
+                    delete V[key];            // Remove from coordinate object
+                }
+            }
+        }
+        
+        function hideAllPartASteps() {
+            // Select all solution containers in Part A
+            const containers = ['sol-ai', 'sol-aii'];
+            
+            containers.forEach(id => {
+                const container = document.getElementById(id);
+                const steps = container.getElementsByClassName('step');
+                const btnId = id.replace('sol-', 'btn-');
+                const btn = document.getElementById(btnId);
+        
+                for (let s of steps) {
+                    // Only hide if it's NOT the final answer
+                    if (!s.classList.contains('final-ans')) {
+                        s.style.display = 'none';
+                    }
+                }
+                
+                // Reset the button state so user can restart the steps if they want
+                container.setAttribute('data-current-step', '0');
+                btn.textContent = "Show Step";
+                btn.disabled = false;
+                btn.style.opacity = "1";
+            });
+        
+            // Clear highlights from the 3D scene
+            clearScene();
+            if (currentFigure === 'A') drawFigureA();
+        }
+        
+        function collapseOtherParts(activeId) {
+            const allContainers = document.querySelectorAll('.solution-content');
+            
+            allContainers.forEach(container => {
+                // If the container is NOT the one we just clicked, 
+                // we simply skip it. This keeps previously opened steps visible.
+                if (container.id !== activeId) {
+                    return; 
+                }
+            });
+        }
+        
+        function drawFigureA() {                                                                                                    // Draw figure in part A (UpdateForNewExercise)
+            V.R = V.Ra;    // Set R specifically for Part a
+            
+            const lines = [[V.P, V.Q], [V.Q, V.R], [V.R, V.S], [V.S, V.P]];
+            const matLine = new THREE.LineBasicMaterial({ color: 0x333333, linewidth: 2 });
+            createPolygon([V.P, V.Q, V.R, V.S], 0x0d6efd);
+            drawLineLabels(V.P, V.Q, "12", "black", "static_PQ");
+            drawLineLabels(V.P, V.S, "10", "black", "static_PS");
+            drawLineLabels(V.Q, V.R, "13", "black", "static_QR");
+
+            drawLines(lines);
+
+            const angleQPS = drawAngleArc(V.Q, V.P, V.S, "82°", 1.0, "#000000", "static_angleQPS")
+            const angleQRS = drawAngleArc(V.Q, V.R, V.S, "65°", 1.0, "#000000", "static_angleQRS")
+
+            // Corrected Label Assignment for Part a
+            setupLabels({ "P": V.P, "Q": V.Q, "R": V.R, "S": V.S });
+        }
+
+        function drawFigureB() {                                                                                                    // Draw figure in part B (UpdateForNewExercise)
+            V.R = V.Rb;    // Set R specifically for Part b
+            
+            const lines = [ [V.P, V.Q], [V.Q, V.R], [V.R, V.S], [V.S, V.P], [V.Q, V.S] ];
+            const matLine = new THREE.LineBasicMaterial({ color: 0x333333, linewidth: 2 });
+            createPolygon([V.P, V.S, V.Q], 0x0d6efd); // replace: createTriangle(V.P, V.S, V.Q, 0x0d6efd);
+            createPolygon([V.S, V.R, V.Q], 0x0d6efd); // replace: createTriangle(V.S, V.Rb, V.Q, 0x0d6efd);
+            // createPolygon([V.S, V.R, V.Q], 0x28a745); // replace: createTriangle(V.S, V.Rb, V.Q, 0x28a745);
+            
+            drawLines(lines);
+            
+            // Corrected Label Assignment for Part b
+            setupLabels({ "P": V.P, "Q": V.Q, "R": V.R, "S": V.S });
+        }
+        
+        // ==========================================
+        // TOGGLES BEWTEEN PARTS A AND B
+        // ==========================================
+        // This function toggles (切換) the visibility of solution elements and triggers MathJax to render any LaTeX formulas when they are revealed.
+        function toggle(id) {
+            const el = document.getElementById(id);
+            const isHidden = (el.style.display === 'none' || el.style.display === '');
+            el.style.display = isHidden ? 'block' : 'none';
+            if (isHidden && window.MathJax) { MathJax.typesetPromise([el]); }
+        }
+
+        // This function switches between parts a and b by clearing the scene, toggling button text, and adjusting camera controls based on the selected part.
+        function handleToggle(type) {                                                                                                    // Switches between parts a and b (UpdateForNewExercise)
+            const btn = document.getElementById('btn-fig' + type);
+            const footerA = document.getElementById('part-a-footer');
+        
+            if (currentFigure === type) {
+                // If already showing this figure, HIDE IT
+                clearScene();
+                currentFigure = null;
+                btn.textContent = "Show Figure";
+                if (type === 'A') footerA.style.display = 'none';
+            } else {
+                // SHOW the figure
+                clearScene();
+                currentFigure = type; // Set this BEFORE calling setup functions
+               if (type === 'A') {                                                                                                       // (UpdateForNewExercise) handleToggle, part a
+                    setCameraPartA();
+                    drawFigureA(); 
+                    footerA.style.display = 'inline-block';
+                } else {                                                                                                                 // (UpdateForNewExercise) handleToggle, part b
+                    setCameraPartB(null, null, true);                    
+                    drawFigureB();
+                    if (footerA) footerA.style.display = 'none';
+                }
+                currentFigure = type;
+                btn.textContent = "Hide Figure";
+
+                resetCamera();
+                // Reset the other button text if it exists
+                const otherType = (type === 'A') ? 'B' : 'A';                                                                            // (UpdateForNewExercise) types a and b
+                const otherBtn = document.getElementById('btn-fig' + otherType);
+                if (otherBtn) otherBtn.textContent = "Show Figure";
+            }
+        }
+
+        function toggleQuestion(divId, btnId) {
+            const el = document.getElementById(divId);
+            const btn = document.getElementById(btnId);
+            
+            // Check if currently hidden or not set
+            const isHidden = (el.style.display === 'none' || el.style.display === '');
+            
+            if (isHidden) {
+                el.style.display = 'block';
+                btn.textContent = "Hide Full Question ✖";
+                btn.style.background = "#6c757d"; // Optional: change color when "Hide" is active
+            } else {
+                el.style.display = 'none';
+                btn.textContent = "View Full Question 📄";
+                btn.style.background = "#007bff"; // Reset to original blue
+            }
+        }
+        
+        function drawLines(linePairs, isSolid = true, color = 0x333333, name ="") {
+            const material = isSolid 
+                ? new THREE.LineBasicMaterial({ color: color, linewidth: 2 })
+                : new THREE.LineDashedMaterial({ color: color, dashSize: 0.5, gapSize: 0.2, linewidth: 2 });
+        
+            linePairs.forEach(pair => {
+                const geometry = new THREE.BufferGeometry().setFromPoints(pair);
+                const line = new THREE.Line(geometry, material);
+                
+                if (!isSolid) {
+                    line.computeLineDistances();
+                }
+                line.name = name; // This is the crucial line for deletion logic
+                scene.add(line);
+            });
+        }
+
+        function drawThickLine(p1, p2, isSolid = true, color = 0x000000, name = "") {
+            // 1. Create the base geometry from the two points
+            const points = [p1, p2];
+            const geometry = new THREE.BufferGeometry().setFromPoints(points);
+        
+            // 2. Define the material (Solid or Dashed)
+            const material = isSolid 
+                ? new THREE.LineBasicMaterial({ 
+                    color: color, 
+                    depthTest: false 
+                  })
+                : new THREE.LineDashedMaterial({ 
+                    color: color, 
+                    dashSize: 0.5, 
+                    gapSize: 0.2, 
+                    depthTest: false 
+                  });
+        
+            // 3. Create a Group to hold the "bold" layers
+            const thickLineGroup = new THREE.Group();
+            thickLineGroup.name = name; // For your deletion logic
+        
+            // 4. Define offsets (Original + 6 directions) to simulate thickness
+            const offsets = [
+                [0, 0, 0],
+                [0.01, 0, 0], [-0.01, 0, 0],
+                [0, 0.01, 0], [0, -0.01, 0],
+                [0, 0, 0.01], [0, 0, -0.01]
+            ];
+        
+            offsets.forEach(offset => {
+                const line = new THREE.Line(geometry, material);
+                
+                // Position each layer slightly differently
+                line.position.set(offset[0], offset[1], offset[2]);
+        
+                // If dashed, we must compute distances for each instance
+                if (!isSolid) {
+                    line.computeLineDistances();
+                }
+        
+                // Tagging for your existing cleanup logic (isStepHighlight)
+                line.userData.isStepHighlight = true;
+                line.renderOrder = 1000;
+        
+                thickLineGroup.add(line);
+            });
+        
+            // Tag the group so it's caught by your scene cleanup
+            thickLineGroup.userData.isStepHighlight = true;
+            
+            scene.add(thickLineGroup);
+            return thickLineGroup;
+        }
+        
+        function drawLineLabels(p1, p2, labelText = "", color = 0x000000, labelKey = null) {
+            const midPoint = new THREE.Vector3().addVectors(p1, p2).multiplyScalar(0.5);
+            const labelDiv = makeLabel(labelText);
+            labelDiv.style.color = color;
+            
+            // If no key is provided, generate a random one (for static labels)
+            // If a key is provided (e.g., "lineLabel_aii_QS"), use it for tracking/deletion
+            const key = labelKey || "lineLabel_" + Math.random().toString(36).substr(2, 9);
+            V[key] = midPoint;
+            activeLabels[key] = labelDiv;
+        }
+
+        // used in 3D version of drawAngleArc() 
+        class Arc3D extends THREE.Curve {
+            constructor(p1, vertex, p2, radius) {
+                super();
+                this.vertex = vertex;
+                this.radius = radius;
+        
+                // Create vectors from vertex to points
+                this.v1 = new THREE.Vector3().subVectors(p1, vertex).normalize();
+                this.v2 = new THREE.Vector3().subVectors(p2, vertex).normalize();
+        
+                // The 'axis' is the normal to the plane formed by p1, vertex, p2
+                this.axis = new THREE.Vector3().crossVectors(this.v1, this.v2);
+
+                if (this.axis.length() < 0.0001) {
+                    this.axis = new THREE.Vector3(0, 0, 1); 
+                } else {
+                    this.axis.normalize();
+                }
+                
+                // Total interior angle
+                this.totalAngle = this.v1.angleTo(this.v2);
+            }
+        
+            // Three.js calls this internally to get points along the curve
+            getPoint(t, optionalTarget = new THREE.Vector3()) {
+                const currentAngle = t * this.totalAngle;
+                return optionalTarget
+                    .copy(this.v1)
+                    .applyAxisAngle(this.axis, currentAngle)
+                    .multiplyScalar(this.radius)
+                    .add(this.vertex);
+            }
+        }
+        
+        // 3D version of drawing arcs
+        function drawAngleArc(p1, vertex, p2, labelText = "", radius = 1.0, color = 0x000000, labelKey = null) {
+            // 1. Initialize our custom 3D curve
+            const arcCurve = new Arc3D(p1, vertex, p2, radius);
+        
+            // 2. Get points along the curve
+            const points = arcCurve.getPoints(50);
+        
+            // 3. Create the geometry and line
+            const geometry = new THREE.BufferGeometry().setFromPoints(points);
+            const material = new THREE.LineBasicMaterial({ color: color, linewidth: 2, depthTest: false });
+            const arcLine = new THREE.Line(geometry, material);
+            arcLine.renderOrder = 1000;
+            arcLine.userData.isStepHighlight = true;
+            scene.add(arcLine);
+        
+            // 4. Add the Label at the midpoint
+            if (labelText) {
+                // Calculate the midpoint (t = 0.5)
+                const midPoint = arcCurve.getPoint(0.5);
+                
+                // Create the label element
+                const labelDiv = makeLabel(labelText);
+                labelDiv.style.color = color; // Match label color to arc color
+                
+                // Assign a unique key so the () loop can track this 3D position
+                const key = labelKey || "angleLabel_" + Math.random().toString(36).substr(2, 9);
+                V[key] = midPoint; 
+                activeLabels[key] = labelDiv;
+            }
+        }
+
+        function drawRightAngle(p1, vertex, p2, size = 1.0, color = 0x000000) {
+            const d1 = new THREE.Vector3().subVectors(p1, vertex).normalize().multiplyScalar(size);
+            const d2 = new THREE.Vector3().subVectors(p2, vertex).normalize().multiplyScalar(size);
+            
+            const corner1 = vertex.clone().add(d1);
+            const corner2 = vertex.clone().add(d1).add(d2);
+            const corner3 = vertex.clone().add(d2);
+            
+            const geom = new THREE.BufferGeometry().setFromPoints([corner1, corner2, corner3]);
+            const line = new THREE.Line(geom, new THREE.LineBasicMaterial({ color: color, linewidth: 1, depthTest: false }));
+            line.visible = true;
+            // 4. Tag it so your clearScene() or highlight functions can find/remove it
+            line.userData.isStepHighlight = true; 
+            line.renderOrder = 1000; // 5. Force it to the front layer
+            scene.add(line);
+            return line;
+        }
+        
+        function drawThickRightAngle(p1, vertex, p2, size = 1.0, color = 0x000000) {
+            // 1. Calculate the corners for the square symbol
+            const d1 = new THREE.Vector3().subVectors(p1, vertex).normalize().multiplyScalar(size);
+            const d2 = new THREE.Vector3().subVectors(p2, vertex).normalize().multiplyScalar(size);
+            
+            const corner1 = vertex.clone().add(d1);
+            const corner2 = vertex.clone().add(d1).add(d2);
+            const corner3 = vertex.clone().add(d2);
+            
+            const points = [corner1, corner2, corner3];
+            const geom = new THREE.BufferGeometry().setFromPoints(points);
+            
+            // 2. Create a Group to hold the "bold" layers
+            const thickLineGroup = new THREE.Group();
+            
+            const mat = new THREE.LineBasicMaterial({ 
+                color: color, 
+                depthTest: false,
+                transparent: true,
+                opacity: 0.9 
+            });
+        
+            // 3. Create multiple lines with tiny offsets to simulate thickness
+            // We offset slightly in X, Y, and Z to ensure thickness from all camera angles
+            const offsets = [
+                [0, 0, 0],       // Original
+                [0.01, 0, 0],    // Shift Right
+                [-0.01, 0, 0],   // Shift Left
+                [0, 0.01, 0],    // Shift Up
+                [0, -0.01, 0],   // Shift Down
+                [0, 0, 0.01],    // Shift Forward
+                [0, 0, -0.01]    // Shift Backward
+            ];
+        
+            offsets.forEach(offset => {
+                const line = new THREE.Line(geom, mat);
+                line.position.set(offset[0], offset[1], offset[2]);
+                
+                // Tagging each sub-line for cleanup
+                line.userData.isStepHighlight = true;
+                line.renderOrder = 1000;
+                
+                thickLineGroup.add(line);
+            });
+        
+            // Tag the group itself just in case
+            thickLineGroup.userData.isStepHighlight = true;
+            
+            scene.add(thickLineGroup);
+            return thickLineGroup;
+        }
+        
+        function makeLabel(text) {
+            const div = document.createElement('div');
+            div.className = 'label';
+            div.textContent = text;
+            container.appendChild(div);
+            return div;
+        }
+
+        function setupLabels(labelMap) {
+            for (const [name, positionVec] of Object.entries(labelMap)) {
+                // 1. Create the DOM element and store in activeLabels
+                activeLabels[name] = makeLabel(name);
+                
+                // 2. Map the coordinate for the () loop projection
+                V[name] = positionVec;
+            }
+        }
+
+        /**
+         * highlightPolygon
+         * Creates a semi-transparent mesh for a triangle (3 points) or quadrilateral (4 points).
+         * @param {THREE.Vector3[]} points - Array of 3 or 4 Vector3 points.
+         * @param {string} color - Hex color string (e.g., "#0d6efd").
+         * @param {string} id - Unique identifier for cleanup (e.g., stepId + "_" + currentStep + "_poly").
+         */
+        function highlightPolygon(points, color = "#0d6efd", id = null) {
+            const geom = new THREE.BufferGeometry().setFromPoints(points);
+            
+            // Define indices: 3 points = 1 triangle, 4 points = 2 triangles
+            const indices = points.length === 4 ? [0, 1, 2, 0, 2, 3] : [0, 1, 2];
+            geom.setIndex(indices);
+            
+            // Compute normals so lighting (if any) works, though BasicMaterial doesn't need it
+            geom.computeVertexNormals();
+        
+            const mesh = new THREE.Mesh(
+                geom, 
+                new THREE.MeshBasicMaterial({ 
+                    color: color, 
+                    side: THREE.DoubleSide, 
+                    transparent: true, 
+                    opacity: 0.3,           // Muted opacity so labels remain readable
+                    depthWrite: false,      // Prevents the "box" from blocking lines behind it
+                    polygonOffset: true,
+                    polygonOffsetFactor: 1,
+                    polygonOffsetUnits: 1
+                })
+            );
+        
+            // If you have a tracking system like your other functions:
+            if (id) {
+                mesh.name = id;
+                // Assuming you have an array or group to track objects for the current step
+                // activeStepObjects.push(mesh); 
+            }
+        
+            scene.add(mesh);
+            return mesh; // Return in case you need to modify it later
+        }
+        
+        function stickTempPointLabel(point, text = "", color = "#d63384", labelKey = null) {
+            // 1. Create the HTML element using your existing makeLabel
+            const labelDiv = makeLabel(text);
+            labelDiv.style.color = color;
+            labelDiv.style.fontWeight = "bold"; // Optional: makes it stand out as a point label
+            
+            // 2. Generate a key for tracking (just like in drawLineLabels)
+            // If no labelKey is provided, it creates a random one so it doesn't overwrite others.
+            const key = labelKey || "tempPointLabel_" + Math.random().toString(36).substr(2, 9);
+            
+            // 3. Map the coordinate and the element
+            // This allows your existing animation loop to project the 3D point to the screen.
+            V[key] = point; 
+            activeLabels[key] = labelDiv;
+        }
+        
+        // A newer function than createTriangle()
+        function createPolygon(points, color = 0x0d6efd) {
+            const geom = new THREE.BufferGeometry().setFromPoints(points);
+            
+            // If 3 points, one triangle (0,1,2). If 4 points, two triangles (0,1,2 and 0,2,3)
+            const indices = points.length === 4 ? [0, 1, 2, 0, 2, 3] : [0, 1, 2];
+            
+            geom.setIndex(indices);
+            const mesh = new THREE.Mesh(geom, new THREE.MeshBasicMaterial({ 
+                color, 
+                side: THREE.DoubleSide, 
+                transparent: true, 
+                opacity: 0.4,
+                polygonOffset: true,
+                polygonOffsetFactor: 1,
+                polygonOffsetUnits: 1
+            }));
+            scene.add(mesh);
+        }
+
+        // an older function
+        function createTriangle(p1, p2, p3, color = 0x0d6efd) {
+            const geom = new THREE.BufferGeometry().setFromPoints([p1, p2, p3]);
+            geom.setIndex([0, 1, 2]);
+            const mesh = new THREE.Mesh(geom, new THREE.MeshBasicMaterial({ 
+                color, side: THREE.DoubleSide, transparent: true, opacity: 0.4,
+                depthTest: false, depthWrite: false
+            }));
+            mesh.renderOrder = 1;
+            scene.add(mesh);
+        }
+
+        function shadeTetrahedron(points, color = 0x0d6efd, opacity = 0.2) {
+            if (points.length !== 4) {
+                console.error("shadeTetrahedron requires exactly 4 points.");
+                return;
+            }
+        
+            const [P1, P2, P3, P4] = points;
+        
+            // Define the 4 triangular faces of a tetrahedron
+            const faces = [
+                [P1, P2, P3],
+                [P1, P2, P4],
+                [P1, P3, P4],
+                [P2, P3, P4]
+            ];
+        
+            faces.forEach(facePoints => {
+                const geom = new THREE.BufferGeometry().setFromPoints(facePoints);
+                geom.setIndex([0, 1, 2]); // Define the triangle via indices
+                
+                const mat = new THREE.MeshBasicMaterial({ 
+                    color: color, 
+                    side: THREE.DoubleSide, 
+                    transparent: true, 
+                    opacity: opacity,
+                    // polygonOffset helps prevent the shading from "flickering" 
+                    // against the wireframe lines
+                    polygonOffset: true,
+                    polygonOffsetFactor: 1,
+                    polygonOffsetUnits: 1
+                });
+        
+                const mesh = new THREE.Mesh(geom, mat);
+                
+                // Tagging for your existing cleanup/step logic
+                mesh.userData.isStepHighlight = true;
+                
+                scene.add(mesh);
+            });
+        }
+        
+        function toggleAnswersOnly(prefix, btn) {
+            // Targets only IDs starting with the specific prefix (e.g., 'sol-b')
+            const containers = document.querySelectorAll(`[id^="${prefix}"]`);
+            
+            // Check current state based on button text
+            const isShowing = btn.textContent === "Hide Answers";
+        
+            containers.forEach(container => {
+                const steps = container.getElementsByClassName('step');
+                const btnId = container.id.replace('sol-', 'btn-');
+                const stepBtn = document.getElementById(btnId);
+        
+                if (isShowing) {
+                    // HIDE LOGIC
+                    container.style.display = 'none';
+                    for (let s of steps) { s.style.display = 'none'; }
+                    if (stepBtn) {
+                        stepBtn.textContent = "Show Step";
+                        stepBtn.disabled = false;
+                        stepBtn.style.opacity = "1";
+                    }
+                    container.setAttribute('data-current-step', '0');
+                } else {
+                    // SHOW ANSWERS ONLY LOGIC
+                    container.style.display = 'block';
+                    for (let s of steps) {
+                        // Only show steps that have the 'final-ans' class
+                        s.style.display = s.classList.contains('final-ans') ? 'block' : 'none';
+                    }
+                }
+            });
+            btn.textContent = isShowing ? "Show Answers Only" : "Hide Answers";
+            if (window.MathJax) MathJax.typeset();
+        }
+        
+        function clearScene() {
+            for (let i = scene.children.length - 1; i >= 0; i--) {
+                const obj = scene.children[i];
+                if (obj.type !== 'AmbientLight' && obj.type !== 'DirectionalLight') {
+                    if (obj.geometry) obj.geometry.dispose();
+                    if (obj.material) {
+                        // Handle arrays of materials or single materials
+                        if (Array.isArray(obj.material)) {
+                            obj.material.forEach(m => m.dispose());
+                        } else {
+                            obj.material.dispose();
+                        }
+                    }
+                    scene.remove(obj);
+                }
+            }
+            // Clear DOM labels correctly
+            Object.keys(activeLabels).forEach(key => {
+                const l = activeLabels[key];
+                if (l && l.parentNode) {
+                    l.parentNode.removeChild(l);
+                }
+                delete activeLabels[key];
+            });
+        
+            Object.values(activeLabels).forEach(l => {
+                if (l && l.parentNode) {
+                    l.parentNode.removeChild(l);
+                }
+            });
+        
+            activeLabels = {};
+        }
+    </script>
+</body>
+</html>
