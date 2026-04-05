@@ -473,7 +473,7 @@
         // The "Original" Flat View for Part A
         function setCameraPartA() {                                                                                                            // Camera setting (UpdateForNewExercise)
             const aspect = window.innerWidth / window.innerHeight;
-            const frustumSize = 40; 
+            const frustumSize = 100; 
             console.log("frustumSize: " + frustumSize); // Fixed console.log
         
             // 1. Calculate centroid of ABC
@@ -488,7 +488,7 @@
             camera.updateProjectionMatrix();
         
             // 3. Position and Orientation
-            camera.position.set(center.x, center.y, center.z + 200);
+            camera.position.set(center.x, center.y, center.z + 150);
             camera.up.set(0, 1, 0); 
             camera.lookAt(center);
         
@@ -502,8 +502,8 @@
                 controls.noZoom = false; 
                 
                 controls.staticMoving = true;
-                controls.minDistance = 150;
-                controls.maxDistance = 200;
+                controls.minDistance = 75;
+                controls.maxDistance = 100;
                 controls.update();
             }
         }
