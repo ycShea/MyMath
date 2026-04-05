@@ -224,8 +224,11 @@
                         Let $h$ be the height of $\triangle ABF$ from $A$ to $BF$:<br>
                         $h = \frac{2 \times \text{Area}}{BF} = \frac{2 \times 458.18}{33.364} \approx 27.466\text{ cm}$
                     </p>
-                    <p class="step final-ans" style="display:none;">                    <!-- (UpdateForNewExercise) Part biii Step 3 Final answers -->
-                        $\sin \theta = \frac{AD}{h} = \frac{10}{27.466} \implies \theta \approx 21.4^\circ$
+                     <p class="step" style="display:none;">                              <!-- (UpdateForNewExercise) Part biii Step 3-->
+                        $\sin \theta = \frac{AD}{h} = \frac{10}{27.466}$
+                    </p>
+                    <p class="step final-ans" style="display:none;">                    <!-- (UpdateForNewExercise) Part biii Step 4 Final answers -->
+                        $\theta \approx 21.4^\circ$
                     </p>
                 </div>
             </div>
@@ -296,52 +299,50 @@
         const sineAngle = (a, b, angleBrad) => Math.asin(a * Math.sin(angleBrad) / b);                      // A = sineAngle(a, b, angleBrad)
 
         // Definition of data
-        const pq = 12, ps = 10, qr = 13;
+        const bc = 24, ad = 10, ce = 2;
         const scale = 0.6;
-        const angle_qps = degToRad(82);
-        const angle_qrs = degToRad(65);
-        const angle_rotate = degToRad(100); // 180 - 80 degrees
+        const angle_bac = degToRad(30);
+        const angle_acb = degToRad(42);
+        // const angle_rotate = degToRad(100); // 180 - 80 degrees
 
-        // Used only for calculation of R
-        const qs = cosineSide(pq, ps, angle_qps);
-        const angle_pqs = sineAngle(ps, qs, angle_qps);
-        const angle_qsr = sineAngle(qr, qs, angle_qrs);
-        const angle_rqs = Math.PI - angle_qrs - angle_qsr;
-        const angle_exterior_q = Math.PI - angle_pqs - angle_rqs;
+        // 1. Calculate base triangle ABC angles and sides
+        const angle_abc = degToRad(180 - 30 - 42);         // 108 degrees
+        const ac = sineSide(bc, angle_abc, angle_bac);     // Side AC
+        const ab = sineSide(bc, angle_acb, angle_bac);     // Side AB
+        // 2. Geometry of the extension to ground (ADF and CEF)
+        // Ratio based on similar triangles ADF and CEF: CF / AC = CE / (AD - CE)
+        const ratio_cf_ac = ce / (ad - ce);                // 2 / (10 - 2) = 0.25
+        const cf = ac * ratio_cf_ac;
+        const af = ac + cf;
+        // 3. 3D distances and ground projections
+        const bd_ground = Math.sqrt(Math.pow(ab, 2) - Math.pow(ad, 2));
+        const df_ground = Math.sqrt(Math.pow(af, 2) - Math.pow(ad, 2));
+        // bf is the intersection line on the ground (z=0)
+        // Calculate BF using the Law of Cosines in triangle ABF (3D space)
+        const bf = cosineSide(ab, af, angle_bac);
+        // 4. Determine coordinates on the horizontal plane (B is origin)
+        // Let F lie on the X-axis
+        const f_x = bf;
+        
+        // Calculate D position using intersection of circles (BD and DF on ground)
+        const d_x = (Math.pow(bd_ground, 2) + Math.pow(bf, 2) - Math.pow(df_ground, 2)) / (2 * bf);
+        const d_y = Math.sqrt(Math.max(0, Math.pow(bd_ground, 2) - Math.pow(d_x, 2)));
 
+        // E lies on the line segment DF. Since CE/AD = 2/10 = 1/5:
+        // E is 1/5 of the way from F to D (or 4/5 from D to F)
+        const e_x = d_x + (4 / 5) * (bf - d_x);
+        const e_y = d_y - (4 / 5) * d_y;
+        
         // Definition of points
         // Vertices for Part A
         const V = {
-            P: new THREE.Vector3(0, 0, 0),
-            Q: new THREE.Vector3(pq * scale, 0, 0),
-            S: new THREE.Vector3(ps * scale * Math.cos(angle_qps), ps * scale * Math.sin(angle_qps), 0)
+            B: new THREE.Vector3(0, 0, 0),
+            F: new THREE.Vector3(f_x * scale, 0, 0),
+            D: new THREE.Vector3(d_x * scale, d_y * scale, 0),
+            E: new THREE.Vector3(e_x * scale, e_y * scale, 0),
+            A: new THREE.Vector3(d_x * scale, d_y * scale, ad * scale),
+            C: new THREE.Vector3(e_x * scale, e_y * scale, ce * scale)
         };
-        // R for Part A (Flat)
-        V.Ra = V.Q.clone().add(new THREE.Vector3(qr * scale * Math.cos(angle_exterior_q), qr * scale * Math.sin(angle_exterior_q), 0));
-        // angle_exterior_q appromixately = 84 degree
-        // V.Ra = V.Q.clone().add(new THREE.Vector3(13 * scale * Math.cos(degToRad(84)), 13 * scale * Math.sin(degToRad(84)), 0));
-
-        // R for Part B (Folded (180 - 80) deg)
-        // Get the direction of the hinge (the folding line SQ, rotate along the vector SQ using right-hand rule)
-        const axis = new THREE.Vector3().subVectors(V.Q, V.S).normalize();
-        // Rotate flat-plane vertex Ra around hinge axis SQ by 100° to define the folded 3D position.
-        V.Rb = V.Ra.clone().sub(V.Q).applyAxisAngle(axis, angle_rotate).add(V.Q);
-
-        // Calculate T as the projection of Ra onto the line segment QS
-        V.T = new THREE.Vector3().subVectors(V.S, V.Q).normalize()
-            .multiplyScalar(new THREE.Vector3().subVectors(V.Ra, V.Q).dot(
-                new THREE.Vector3().subVectors(V.S, V.Q).normalize()
-            ))
-            .add(V.Q);
-        // The projection of the folded R onto the PQS plane (XY plane)
-        V.N = new THREE.Vector3(V.Rb.x, V.Rb.y, 0);
-        V.M = new THREE.Vector3().addVectors(V.N, V.Rb).multiplyScalar(0.5);
-
-        // Get the direction (Normal) of plane QRS (vector SQ cross vector SR)
-        const n = new THREE.Vector3().crossVectors(new THREE.Vector3().subVectors(V.Q, V.S), new THREE.Vector3().subVectors(V.Rb, V.S)).normalize();
-        // Project P onto the plane. Formula: X = P + ((AnyPointOnPlane - P) ⋅ n) * n
-        const dist = new THREE.Vector3().subVectors(V.Q, V.P).dot(n); 
-        V.X = V.P.clone().add(n.clone().multiplyScalar(dist));
         
         // Verify against your 8.0641 calculation
         // Object.entries(V).forEach(([name, point]) => { console.log(name + "=", point); });
