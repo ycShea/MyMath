@@ -130,7 +130,7 @@
             <!-------------------------->
             <div class="part-container">
                 <div class="part-header">
-                    <span><strong>(a)</strong>Find the length of $AC$.</span>       <!-- (UpdateForNewExercise) Questions part ai -->
+                    <span><strong>Part (a)</strong> Find the length of $AC$.</span>       <!-- (UpdateForNewExercise) Questions part ai -->
                     <button id="btn-ai" class="btn-show" onclick="revealStep('sol-ai', 'btn-ai', [])">Show Step</button>
                 </div>
 
@@ -174,16 +174,13 @@
                 </div>
                 <div id="sol-bi" class="solution-content" data-current-step="0">
                     <p class="step" style="display:none;">                              <!-- (UpdateForNewExercise) Part bi Step 0-->
-                        Consider $\triangle QRS$.<br>
-                        Let $T$ be a point on $QS$ such that $RT \perp QS$.<br>
+                        Using similar triangles $\triangle ADF \sim \triangle CEF$: $\frac{CF}{CE} = \frac{AF}{AD}$
                     </p>
                     <p class="step" style="display:none;">                              <!-- (UpdateForNewExercise) Part bi Step 1-->
-                        In right-angled $\triangle RTQ$,<br>
-                        $RT = QR\sin\angle RQS \approx 13\sin\angle 54.280^\circ \approx 13.340\text{ cm}$<br>
+                        $\frac{CF}{2} = \frac{CF + 45.65}{10}$
                     </p>
                     <p class="step" style="display:none;">                              <!-- (UpdateForNewExercise) Part bi Step 2-->
-                        Let the shortest distance be $h$<br>
-                        $h = RT\sin(80^\circ) \approx 11.168 \text{ cm}$<br>
+                        $8CF = 91.3 \implies CF \approx 11.4 \text{ cm}$
                     </p>
                     <p class="step final-ans" style="display:none;">                    <!-- (UpdateForNewExercise) Part bi Step 3 Final answers -->
                         $h \approx 11.2 \text{ cm}$
@@ -197,71 +194,65 @@
                 </div>
                 <div id="sol-bii" class="solution-content" data-current-step="0">
                     <p class="step" style="display:none;">                              <!-- (UpdateForNewExercise) Part bii Step 0-->
-                        Consider the volume of tetrahedron $PQRS$, $ \text{volume} = \frac{1}{3}(\text{Area of }\triangle PQS)h = \frac{1}{3}\left(\frac{1}{2}(PQ)(PS)\sin(\angle QPS)\right)h$.
+                        First, find $AB$ using the Sine Rule in $\triangle ABC$:<br>
+                        $\frac{AB}{\sin 42^\circ} = \frac{24}{\sin 30^\circ} \implies AB \approx 32.118\text{ cm}$
                     </p>
                     <p class="step" style="display:none;">                              <!-- (UpdateForNewExercise) Part bii Step 1-->
-                        On the other hand, let $d$ cm be the shortest distance from $P$ to the plane $QRS$.<br>
-                        $ \text{Volume} = \frac{1}{3}(\text{Area of } \triangle QRS)d = \frac{1}{3}\left(\frac{1}{2}(QR)(QS)\sin(\angle RQS)\right)d$
+                        Calculate $AF$:<br>
+                        $AF = AC + CF = 45.651 + 11.413 = 57.064\text{ cm}$
                     </p>
                     <p class="step" style="display:none;">                              <!-- (UpdateForNewExercise) Part bii Step 2-->
-                        <!-- $$ \frac{1}{3}(\text{Area of }\triangle PQS)h = \frac{1}{3}(\text{Area of }\triangle QRS)d$$ -->
-                        $$ \frac{1}{3}\left(\frac{1}{2}(PQ)(PS)\sin(\angle QPS)\right)h = \frac{1}{3}\left(\frac{1}{2}(QR)(QS)\sin(\angle RQS)\right)d$$
+                        Area of $\triangle ABF = \frac{1}{2}(AB)(AF)\sin(\angle BAF)$:<br>
+                        $\text{Area} = \frac{1}{2}(32.118)(57.064)\sin 30^\circ$
                     </p>
-                    <p class="step" style="display:none;">                              <!-- (UpdateForNewExercise) Part bii Step 3-->
-                        $$(12)(10)\sin(82^\circ)(11.168) \approx (13)(14.513)\sin(60.720^\circ)(d)$$
-                        $d \approx 8.0641$<br>
-                    </p>
-                    <p class="step" style="display:none;">                              <!-- (UpdateForNewExercise) Part bii Step 4-->
-                        $X$ is a point lying on the plane $QRS$, thus $PX \geq d$. i.e. The distance between $P$ and $X$ exceeds 8 cm.<br>
-                    </p>
-                    <p class="step final-ans" style="display:none;">                    <!-- (UpdateForNewExercise) Part bii Step 5 Final answers -->
-                        The claim is correct.<br>
+                    <p class="step final-ans" style="display:none;">                    <!-- (UpdateForNewExercise) Part bii Step 3 Final answers -->
+                        Area of $\triangle ABF \approx 458.2 \text{ cm}^2$
                     </p>
                 </div>
             </div>
 <div class="part-container">
                 <div class="part-header">
                     <span><strong>(b)(iii)</strong> Find inclination of $ABC$ to the horizontal ground.</span>
-                    <button id="btn-biii" class="btn-show" onclick="revealStep('sol-bi', 'btn-bi', [])">Show Step</button>        <!-- (UpdateForNewExercise) Questions part b -->
+                    <button id="btn-biii" class="btn-show" onclick="revealStep('sol-biii', 'btn-biii', [])">Show Step</button>        <!-- (UpdateForNewExercise) Questions part b -->
                 </div>
                 <div id="sol-bi" class="solution-content" data-current-step="0">
-                    <p class="step" style="display:none;">                              <!-- (UpdateForNewExercise) Part bi Step 0-->
-                        Consider $\triangle QRS$.<br>
-                        Let $T$ be a point on $QS$ such that $RT \perp QS$.<br>
+                    <p class="step" style="display:none;">                              <!-- (UpdateForNewExercise) Part biii Step 0-->
+                        The inclination $\theta$ is the angle between plane $ABC$ and the ground. Since $B$ and $F$ are on the ground, $BF$ is the intersection line.
                     </p>
-                    <p class="step" style="display:none;">                              <!-- (UpdateForNewExercise) Part bi Step 1-->
-                        In right-angled $\triangle RTQ$,<br>
-                        $RT = QR\sin\angle RQS \approx 13\sin\angle 54.280^\circ \approx 13.340\text{ cm}$<br>
+                    <p class="step" style="display:none;">                              <!-- (UpdateForNewExercise) Part biii Step 1-->
+                        Find $BF$ using Cosine Rule in $\triangle ABF$:<br>
+                        $BF^2 = 32.118^2 + 57.064^2 - 2(32.118)(57.064)\cos 30^\circ \implies BF \approx 33.364\text{ cm}$
                     </p>
-                    <p class="step" style="display:none;">                              <!-- (UpdateForNewExercise) Part bi Step 2-->
-                        Let the shortest distance be $h$<br>
-                        $h = RT\sin(80^\circ) \approx 11.168 \text{ cm}$<br>
+                    <p class="step" style="display:none;">                              <!-- (UpdateForNewExercise) Part biii Step 2-->
+                        Let $h$ be the height of $\triangle ABF$ from $A$ to $BF$:<br>
+                        $h = \frac{2 \times \text{Area}}{BF} = \frac{2 \times 458.18}{33.364} \approx 27.466\text{ cm}$
                     </p>
-                    <p class="step final-ans" style="display:none;">                    <!-- (UpdateForNewExercise) Part bi Step 3 Final answers -->
-                        $h \approx 11.2 \text{ cm}$
+                    <p class="step final-ans" style="display:none;">                    <!-- (UpdateForNewExercise) Part biii Step 3 Final answers -->
+                        $\sin \theta = \frac{AD}{h} = \frac{10}{27.466} \implies \theta \approx 21.4^\circ$
                     </p>
                 </div>
             </div>
 <div class="part-container">
                 <div class="part-header">
-                    <span><strong>(b)(iv)</strong> Claim: the area of $BDF$ is greater than $460\text{ cm^2}$. Do you agree?.</span>
-                    <button id="btn-biv" class="btn-show" onclick="revealStep('sol-bi', 'btn-bi', [])">Show Step</button>        <!-- (UpdateForNewExercise) Questions part b -->
+                    <span><strong>(b)(iv)</strong> Claim: the area of $BDF$ is greater than $460\text{ cm}^2$. Do you agree?.</span>
+                    <button id="btn-biv" class="btn-show" onclick="revealStep('sol-biv', 'btn-biv', [])">Show Step</button>        <!-- (UpdateForNewExercise) Questions part b -->
                 </div>
                 <div id="sol-bi" class="solution-content" data-current-step="0">
-                    <p class="step" style="display:none;">                              <!-- (UpdateForNewExercise) Part bi Step 0-->
-                        Consider $\triangle QRS$.<br>
-                        Let $T$ be a point on $QS$ such that $RT \perp QS$.<br>
+                    <p class="step" style="display:none;">                              <!-- (UpdateForNewExercise) Part biv Step 0-->
+                        Calculate the sides of $\triangle BDF$ on the ground:<br>
+                        $DF = \sqrt{AF^2 - AD^2} \approx 56.181\text{ cm}$<br>
+                        $BD = \sqrt{AB^2 - AD^2} \approx 30.522\text{ cm}$
                     </p>
-                    <p class="step" style="display:none;">                              <!-- (UpdateForNewExercise) Part bi Step 1-->
-                        In right-angled $\triangle RTQ$,<br>
-                        $RT = QR\sin\angle RQS \approx 13\sin\angle 54.280^\circ \approx 13.340\text{ cm}$<br>
+                    <p class="step" style="display:none;">                              <!-- (UpdateForNewExercise) Part biv Step 1-->
+                        Find $\angle BDF$ using Cosine Rule:<br>
+                        $\cos \angle BDF = \frac{BD^2 + DF^2 - BF^2}{2(BD)(DF)} \approx 0.8674$
                     </p>
-                    <p class="step" style="display:none;">                              <!-- (UpdateForNewExercise) Part bi Step 2-->
-                        Let the shortest distance be $h$<br>
-                        $h = RT\sin(80^\circ) \approx 11.168 \text{ cm}$<br>
+                    <p class="step" style="display:none;">                              <!-- (UpdateForNewExercise) Part biv Step 2-->
+                        $\text{Area of } \triangle BDF = \frac{1}{2}(BD)(DF)\sin(\angle BDF)$:<br>
+                        $\text{Area} \approx \frac{1}{2}(30.522)(56.181)(0.4975) \approx 426.5 \text{ cm}^2$
                     </p>
-                    <p class="step final-ans" style="display:none;">                    <!-- (UpdateForNewExercise) Part bi Step 3 Final answers -->
-                        $h \approx 11.2 \text{ cm}$
+                    <p class="step final-ans" style="display:none;">                    <!-- (UpdateForNewExercise) Part biv Step 3 Final answers -->
+                        Since $426.5 < 460$, the claim is incorrect. I do not agree.
                     </p>
                 </div>
             </div>
