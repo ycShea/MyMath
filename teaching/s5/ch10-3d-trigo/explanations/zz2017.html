@@ -609,12 +609,12 @@
                 if (stepId === "step-ai") {
                     switch (currentStep) {
                         case 0: case 1: case 2:
-                            drawLineLabels(V.Q, V.S, "?",     "#d63384", stepId + "_" + currentStep + "_lineQS_Label");                           // (UpdateForNewExercise) Customize the steps, pink unknown
-                            highlightPolygon([V.P, V.Q, V.S], "#bb0000", stepId + "_" + currentStep + "_trianglePQS");
+                            drawLineLabels(V.A, V.B, "?",     "#d63384", stepId + "_" + currentStep + "_lineAB_Label");                           // (UpdateForNewExercise) Customize the steps, pink unknown
+                            highlightPolygon([V.A, V.B, V.C], "#bb0000", stepId + "_" + currentStep + "_triangleABC");
                             break;
                         case 3:
-                            drawLineLabels(V.Q, V.S, "14.5",  "#00bbbb", stepId + "_" + currentStep + "_lineQS_Label");                           // (UpdateForNewExercise) Customize the steps, cyan answer
-                            highlightPolygon([V.P, V.Q, V.S], "#bb0000", stepId + "_" + currentStep + "_trianglePQS");
+                            drawLineLabels(V.B, V.C, "14.5",  "#00bbbb", stepId + "_" + currentStep + "_lineBC_Label");                           // (UpdateForNewExercise) Customize the steps, cyan answer
+                            highlightPolygon([V.A, V.B, V.C], "#bb0000", stepId + "_" + currentStep + "_triangleABC");
                             break;
                     }
                 }
