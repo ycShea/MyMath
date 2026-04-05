@@ -469,10 +469,11 @@
                 setCameraPartA();    // This covers both Figure A and the initial 'null' state
             }
         }
+        
         // The "Original" Flat View for Part A
         function setCameraPartA() {                                                                                                            // Camera setting (UpdateForNewExercise)
             const aspect = window.innerWidth / window.innerHeight;
-            const frustumSize = 40; 
+            const frustumSize = 80; 
         
             // 1. Calculate centroid of ABC
             const center = new THREE.Vector3().add(V.A).add(V.B).add(V.C).divideScalar(3);
@@ -501,10 +502,11 @@
                 
                 controls.staticMoving = true;
                 controls.minDistance = 15;
-                controls.maxDistance = 30;
+                controls.maxDistance = 20;
                 controls.update();
             }
         }
+        
         // The "3D Perspective" View for Part B (Matching your image)
         function setCameraPartB(cameraVector = null, targetVector = null, lockHorizontal = false) {                                            // Camera setting (UpdateForNewExercise)
             // Set the orientation (Z-up or Y-up depending on your coordinate system)
@@ -613,12 +615,17 @@
                 // Part (a)(i)
                 if (stepId === "step-ai") {
                     switch (currentStep) {
-                        case 0: case 1: case 2:
-                            drawLineLabels(V.A, V.B, "?",     "#d63384", stepId + "_" + currentStep + "_lineAB_Label");                           // (UpdateForNewExercise) Customize the steps, pink unknown
+                        case 0:
+                            drawAngleArc(V.A, V.B, V.C, "?", 1.0,       "#d63384", stepId + "_" + currentStep + "_angleABC");                    // (UpdateForNewExercise) Customize the steps, pink unknown
+                            break;
+                         case 1:
+                            drawAngleArc(V.A, V.B, V.C, "108°", 1.0,       "#d63384", stepId + "_" + currentStep + "_angleABC");                    // (UpdateForNewExercise) Customize the steps, cyan unknown
+                            drawLineLabels(V.A, V.C, "?",     "#d63384", stepId + "_" + currentStep + "_lineAC_Label");                           // (UpdateForNewExercise) Customize the steps, pink unknown
                             highlightPolygon([V.A, V.B, V.C], "#bb0000", stepId + "_" + currentStep + "_triangleABC");
                             break;
-                        case 3:
-                            drawLineLabels(V.B, V.C, "14.5",  "#00bbbb", stepId + "_" + currentStep + "_lineBC_Label");                           // (UpdateForNewExercise) Customize the steps, cyan answer
+                         case 2: case 3:
+                            drawAngleArc(V.A, V.B, V.C, "108°", 1.0,       "#d63384", stepId + "_" + currentStep + "_angleABC");                    // (UpdateForNewExercise) Customize the steps, pink from previous part
+                            drawLineLabels(V.A, V.C, "45.7",     "#d63384", stepId + "_" + currentStep + "_lineAC_Label");                           // (UpdateForNewExercise) Customize the steps, cyan answer
                             highlightPolygon([V.A, V.B, V.C], "#bb0000", stepId + "_" + currentStep + "_triangleABC");
                             break;
                     }
