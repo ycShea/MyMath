@@ -471,37 +471,47 @@
                 setCameraPartA();    // This covers both Figure A and the initial 'null' state
             }
         }
+        
         // The "Original" Flat View for Part A
         function setCameraPartA(cameraVector = null, targetVector = null) {                                                                    // Camera setting (UpdateForNewExercise)
             // Set the orientation (Z-up or Y-up depending on your coordinate system)
             // Most of your code uses Z=0 as the floor, so we keep Z as the vertical axis
-            camera.up.set(0, 1, 0);
-            
-            if (targetVector) { // Handle Target (What the camera is looking at)
-                controls.target.copy(targetVector);
-            } else {
-                // Default Part B Center (near the fold)
-                controls.target.set(5, 4, 0);    // Centered on the flat shape
-            }
-            
+                        
             if (cameraVector) { // Handle Camera Position
                 camera.position.copy(cameraVector);
             } else {
                 // Default Part B "Overview" Position
                 camera.position.set(0, 0, 20);    // Straight on
             }
+
+            let target; 
+            if (targetVector) { // Handle Target (What the camera is looking at)
+                target = targetVector.clone();
+            } else {
+                target = new THREE.Vector3(5, 4, 0);    // Centered on the flat shape
+            }
+
+            // 3. Camera LookAt
+            camera.up.set(0, 1, 0);
+            camera.lookAt(target);
             
-            // Ensure rotation is disabled whenever Part A camera is set
-            // TrackballControls uses noRotate/noPan instead of enableRotate/enablePan
-            controls.noRotate = true; 
-            controls.noPan = true;
-            controls.noZoom = false; // Allow zoom if you want, or set to true to lock completely
-            
-            controls.staticMoving = true;
-            controls.minDistance = 15;
-            controls.maxDistance = 30;
-            controls.update();
+            // 4. Controls setup
+            if (controls) {
+                controls.target.copy(target);
+                
+                // Ensure rotation is disabled whenever Part A camera is set
+                // TrackballControls uses noRotate/noPan instead of enableRotate/enablePan
+                controls.noRotate = true; 
+                controls.noPan = true;
+                controls.noZoom = false; // Allow zoom if you want, or set to true to lock completely
+                
+                controls.staticMoving = true;
+                controls.minDistance = 15;
+                controls.maxDistance = 30;
+                controls.update();
+            }
         }
+        
         // The "3D Perspective" View for Part B (Matching your image)
         function setCameraPartB(cameraVector = null, targetVector = null, lockHorizontal = false) {                                            // Camera setting (UpdateForNewExercise)
             // Set the orientation (Z-up or Y-up depending on your coordinate system)
