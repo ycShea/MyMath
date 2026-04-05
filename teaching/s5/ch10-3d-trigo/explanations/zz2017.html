@@ -473,7 +473,7 @@
         // The "Original" Flat View for Part A
         function setCameraPartA() {                                                                                                            // Camera setting (UpdateForNewExercise)
             const aspect = window.innerWidth / window.innerHeight;
-            const frustumSize = 80; 
+            const frustumSize = 20; 
         
             // 1. Calculate centroid of ABC
             const center = new THREE.Vector3().add(V.A).add(V.B).add(V.C).divideScalar(3);
@@ -630,30 +630,7 @@
                             break;
                     }
                 }
-                // Part (a)(ii)
-                if (stepId === "step-aii") {
-                    switch (currentStep) {
-                        case 0: case 1:
-                            drawAngleArc(V.Q, V.S, V.R, "?", 1.0,       "#d63384", stepId + "_" + currentStep + "_angleQSR");                    // (UpdateForNewExercise) Customize the steps, pink unknown
-                            drawLineLabels(V.Q, V.S, "14.513",          "#d63384", stepId + "_" + currentStep + "_lineQS_Label");                // (UpdateForNewExercise) Customize the steps, pink unknown from part (a)(i)
-                            highlightPolygon([V.Q, V.R, V.S],           "#bb0000", stepId + "_" + currentStep + "_triangleQRS");
-                            break;                    
-                        case 2:
-                            drawAngleArc(V.Q, V.S, V.R, "54.280°", 1.0, "#00bbbb", stepId + "_" + currentStep + "_angleQSR");                    // (UpdateForNewExercise) Customize the steps, cyan answer
-                            highlightPolygon([V.Q, V.R, V.S],           "#bb0000", stepId + "_" + currentStep + "_triangleQRS");
-                            break;
-                        case 3:
-                            drawAngleArc(V.Q, V.S, V.R, "54.280°", 1.0, "#d63384", stepId + "_" + currentStep + "_angleQSR");                    // (UpdateForNewExercise) Customize the steps, pink unknown from part (a)(ii)
-                            drawAngleArc(V.R, V.Q, V.S, "?", 1.0,       "#d63384", stepId + "_" + currentStep + "_angleRQS");                    // (UpdateForNewExercise) Customize the steps, pink unknown
-                            highlightPolygon([V.Q, V.R, V.S],           "#bb0000", stepId + "_" + currentStep + "_triangleQRS");
-                            break;
-                        case 4:
-                            drawAngleArc(V.Q, V.S, V.R, "54.280°", 1.0, "#d63384", stepId + "_" + currentStep + "_angleQSR");                    // (UpdateForNewExercise) Customize the steps, pink unknown from part (a)(ii)
-                            drawAngleArc(V.R, V.Q, V.S, "60.7°", 1.0,   "#00bbbb", stepId + "_" + currentStep + "_angleRQS");                    // (UpdateForNewExercise) Customize the steps, cyan answer
-                            highlightPolygon([V.Q, V.R, V.S],           "#bb0000", stepId + "_" + currentStep + "_triangleQRS");
-                            break;
-                    }
-                }
+
                 // Part (b)(i)
                 if (stepId === "step-bi") {
                     stickTempPointLabel(V.T, "T", "#d63384", stepId + "_" + currentStep + "_pointT");
