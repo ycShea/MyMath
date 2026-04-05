@@ -488,10 +488,10 @@
             camera.updateProjectionMatrix();
         
             // 3. Position and Orientation
-            camera.position.set(center.x, center.y, center.z + 30);
+            camera.position.set(center.x, center.y, center.z + 40);
             camera.up.set(0, 1, 0); 
             camera.lookAt(center);
-console.log("version 2");
+console.log("version 3");
             // 4. Controls setup
             if (controls) {
                 controls.target.copy(center);
@@ -502,8 +502,8 @@ console.log("version 2");
                 controls.noZoom = false; 
                 
                 controls.staticMoving = true;
-                controls.minDistance = 30;
-                controls.maxDistance = 30;
+                controls.minDistance = 40;
+                controls.maxDistance = 40;
                 controls.update();
             }
         }
