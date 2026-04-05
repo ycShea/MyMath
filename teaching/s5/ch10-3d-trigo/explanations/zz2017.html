@@ -473,7 +473,8 @@
         // The "Original" Flat View for Part A
         function setCameraPartA() {                                                                                                            // Camera setting (UpdateForNewExercise)
             const aspect = window.innerWidth / window.innerHeight;
-            const frustumSize = 20; 
+            const frustumSize = 120; 
+            console.log("frustumSize: " + frustumSize); // Fixed console.log
         
             // 1. Calculate centroid of ABC
             const center = new THREE.Vector3().add(V.A).add(V.B).add(V.C).divideScalar(3);
@@ -626,7 +627,7 @@
                          case 2: case 3:
                             drawAngleArc(V.A, V.B, V.C, "108°", 1.0,       "#d63384", stepId + "_" + currentStep + "_angleABC");                    // (UpdateForNewExercise) Customize the steps, pink from previous part
                             drawLineLabels(V.A, V.C, "45.7",     "#d63384", stepId + "_" + currentStep + "_lineAC_Label");                           // (UpdateForNewExercise) Customize the steps, cyan answer
-                            highlightPolygon([V.A, V.B, V.C], "#bb0000", stepId + "_" + currentStep + "_triangleABC");
+                            highlightPolygon([V.A, V.B, V.C], "#00bbbb", stepId + "_" + currentStep + "_triangleABC");
                             break;
                     }
                 }
