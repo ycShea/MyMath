@@ -474,7 +474,6 @@
         function setCameraPartA() {                                                                                                            // Camera setting (UpdateForNewExercise)
             const aspect = window.innerWidth / window.innerHeight;
             const frustumSize = 100; 
-            console.log("frustumSize: " + frustumSize);
         
             // 1. Calculate centroid of ABC
             const center = new THREE.Vector3().add(V.A).add(V.B).add(V.C).divideScalar(3);
@@ -491,7 +490,7 @@
             camera.position.set(center.x, center.y, center.z + 40);
             camera.up.set(0, 1, 0); 
             camera.lookAt(center);
-console.log("version 3");
+
             // 4. Controls setup
             if (controls) {
                 controls.target.copy(center);
@@ -614,18 +613,19 @@ console.log("version 3");
                 clearStepHighlights();
                 // 5. DRAWING LOGIC (Now always starts with a clean slate)                                                                       // (UpdateForNewExercise) MAIN STEPS (SEARCH)
                 // Part (a)(i)
+console.log("version 1");
                 if (stepId === "step-ai") {
                     switch (currentStep) {
                         case 0:
-                            drawAngleArc(V.A, V.B, V.C, "?", 1.0,       "#d63384", stepId + "_" + currentStep + "_angleABC");                    // (UpdateForNewExercise) Customize the steps, pink unknown
+                            drawAngleArc(V.A, V.B, V.C, "?", 2.0,       "#d63384", stepId + "_" + currentStep + "_angleABC");                    // (UpdateForNewExercise) Customize the steps, pink unknown
                             break;
                          case 1:
-                            drawAngleArc(V.A, V.B, V.C, "108°", 1.0,       "#d63384", stepId + "_" + currentStep + "_angleABC");                    // (UpdateForNewExercise) Customize the steps, cyan unknown
+                            drawAngleArc(V.A, V.B, V.C, "108°", 2.0,       "#d63384", stepId + "_" + currentStep + "_angleABC");                    // (UpdateForNewExercise) Customize the steps, cyan unknown
                             drawLineLabels(V.A, V.C, "?",     "#d63384", stepId + "_" + currentStep + "_lineAC_Label");                           // (UpdateForNewExercise) Customize the steps, pink unknown
                             highlightPolygon([V.A, V.B, V.C], "#bb0000", stepId + "_" + currentStep + "_triangleABC");
                             break;
                          case 2: case 3:
-                            drawAngleArc(V.A, V.B, V.C, "108°", 1.0,       "#d63384", stepId + "_" + currentStep + "_angleABC");                    // (UpdateForNewExercise) Customize the steps, pink from previous part
+                            drawAngleArc(V.A, V.B, V.C, "108°", 2.0,       "#d63384", stepId + "_" + currentStep + "_angleABC");                    // (UpdateForNewExercise) Customize the steps, pink from previous part
                             drawLineLabels(V.A, V.C, "45.7",     "#d63384", stepId + "_" + currentStep + "_lineAC_Label");                           // (UpdateForNewExercise) Customize the steps, cyan answer
                             highlightPolygon([V.A, V.B, V.C], "#00bbbb", stepId + "_" + currentStep + "_triangleABC");
                             break;
