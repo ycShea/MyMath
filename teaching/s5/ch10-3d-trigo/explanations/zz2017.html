@@ -474,7 +474,7 @@
         function setCameraPartA() {                                                                                                            // Camera setting (UpdateForNewExercise)
             const aspect = window.innerWidth / window.innerHeight;
             const frustumSize = 100; 
-            console.log("frustumSize: " + frustumSize); // Fixed console.log
+            console.log("frustumSize: " + frustumSize);
         
             // 1. Calculate centroid of ABC
             const center = new THREE.Vector3().add(V.A).add(V.B).add(V.C).divideScalar(3);
@@ -491,7 +491,7 @@
             camera.position.set(center.x, center.y, center.z + 10);
             camera.up.set(0, 1, 0); 
             camera.lookAt(center);
-        
+            console.log("version 1");
             // 4. Controls setup
             if (controls) {
                 controls.target.copy(center);
@@ -502,8 +502,8 @@
                 controls.noZoom = false; 
                 
                 controls.staticMoving = true;
-                controls.minDistance = 20;
-                controls.maxDistance = 30;
+                controls.minDistance = 30;
+                controls.maxDistance = 45;
                 controls.update();
             }
         }
