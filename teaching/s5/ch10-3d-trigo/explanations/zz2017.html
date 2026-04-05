@@ -475,19 +475,46 @@
             // Most of your code uses Z=0 as the floor, so we keep Z as the vertical axis
             camera.up.set(0, 1, 0);
             
+            /*
             if (targetVector) { // Handle Target (What the camera is looking at)
                 controls.target.copy(targetVector);
             } else {
                 // Default Part B Center (near the fold)
                 controls.target.set(1.33, 6.14, 2.4);    // Centered on the flat shape
             }
+            */
+            const aspect = window.innerWidth / window.innerHeight;
+            const frustumSize = 40; // Increase this to zoom out, decrease to zoom in
             
+            const camera = new THREE.OrthographicCamera(
+                frustumSize * aspect / -2, 
+                frustumSize * aspect / 2, 
+                frustumSize / 2, 
+                frustumSize / -2, 
+                1, 
+                1000
+            );
+            
+            const center = new THREE.Vector3().add(V.A).add(V.B).add(V.C).divideScalar(3);
+            
+            // Position directly above the centroid on the Z-axis
+            camera.position.set(center.x, center.y, center.z + 100);
+            camera.up.set(0, 1, 0); 
+            camera.lookAt(center);
+            
+            if (controls) {
+                controls.target.copy(center);
+                controls.update();
+            }
+
+            /*
             if (cameraVector) { // Handle Camera Position
                 camera.position.copy(cameraVector);
             } else {
                 // Default Part B "Overview" Position
                 camera.position.set(0, 0, 20);    // Straight on
             }
+            */
             
             // Ensure rotation is disabled whenever Part A camera is set
             // TrackballControls uses noRotate/noPan instead of enableRotate/enablePan
