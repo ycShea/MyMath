@@ -201,24 +201,26 @@
 <!-- Steps for searching-->
             <div class="part-container">
                 <div class="part-header">
-                    <span><strong>(b)(ii)</strong> Find area of $\triangle ABC$.</span>
+                    <span><strong>(b)(ii)</strong> Find area of $\triangle ABF$.</span>
                     <button id="btn-bii" class="btn-show" onclick="revealStep('sol-bii', 'btn-bii', [])">Show Step</button>                            <!-- (UpdateForNewExercise) Questions part b -->
                 </div>
                 <div id="sol-bii" class="solution-content" data-current-step="0">
                     <p class="step" style="display:none;">                              <!-- (UpdateForNewExercise) Part bii Step 0-->
-                        First, find $AB$ using the Sine Rule in $\triangle ABC$:<br>
-                        $\frac{AB}{\sin 42^\circ} = \frac{24}{\sin 30^\circ} \implies AB \approx 32.118\text{ cm}$
+                        Calculate $AF$:<br>
+                        $AF = AC + CF \approx 45.651 + 11.413 \approx 57.064\text{ cm}$
                     </p>
                     <p class="step" style="display:none;">                              <!-- (UpdateForNewExercise) Part bii Step 1-->
-                        Calculate $AF$:<br>
-                        $AF = AC + CF = 45.651 + 11.413 = 57.064\text{ cm}$
+                        Using sine rule to $\triangle ABC$ to find $AB$:<br>
+                        $\frac{AB}{\sin\angle ACB} = \frac{BC}{\sin\angle BAC}$<br>
+                        $\frac{AB}{\sin 42^\circ} = \frac{24}{\sin 30^\circ}$<br>
+                        $AB \approx 32.118$<br> \\32.11826911
                     </p>
                     <p class="step" style="display:none;">                              <!-- (UpdateForNewExercise) Part bii Step 2-->
-                        Area of $\triangle ABF = \frac{1}{2}(AB)(AF)\sin(\angle BAF)$:<br>
-                        $\text{Area} = \frac{1}{2}(32.118)(57.064)\sin 30^\circ$
+                        Area of $\triangle ABF = \frac{1}{2}(AB)(AF)\sin(\angle BAF)$<br>
+                        $\text{Area} \appro \frac{1}{2}(32.118)(57.064)\sin 30^\circ \appro 458.20$    // 458.1943369
                     </p>
                     <p class="step final-ans" style="display:none;">                    <!-- (UpdateForNewExercise) Part bii Step 3 Final answers -->
-                        Area of $\triangle ABF \approx 458.2 \text{ cm}^2$
+                        Area of $\triangle ABF \approx 458 \text{ cm}^2$
                     </p>
                 </div>
             </div>
@@ -689,7 +691,7 @@
                             //drawThickLine(V.R, V.T, false,              "#000000", stepId + "_" + currentStep + "_lineRT_Drawing");     // (UpdateForNewExercise) Customize the steps, given thick line
                             //drawThickRightAngle(V.Q, V.T, V.R, 0.5);                                                                    // (UpdateForNewExercise) Customize the steps, given
                             drawLineLabels(V.A, V.D, "10",              "#000000", stepId + "_" + currentStep + "_lineAD_Label");       // (UpdateForNewExercise) Customize the steps, given
-                            drawLineLabels(V.C, V.E, "2",               "#000000", stepId + "_" + currentStep + "_lineCE_Label");       // (UpdateForNewExercise) Customize the steps, given
+                            drawLineLabels(V.C, V.E, "CE=2",            "#000000", stepId + "_" + currentStep + "_lineCE_Label");       // (UpdateForNewExercise) Customize the steps, given
                             highlightPolygon([V.A, V.D, V.F],           "#ffeb3b", stepId + "_" + currentStep + "_triangleADF");
                             highlightPolygon([V.C, V.E, V.F],           "#bb0000", stepId + "_" + currentStep + "_triangleCEF");
                             break;
@@ -710,47 +712,24 @@
                 // Part (b)(ii)
 console.log("version 7");
                 if (stepId === "step-bii") {
-                    /*
-                    setCameraPartB(
-                        new THREE.Vector3(4.2, 1.6, 1.1),         // cameraVector
-                        new THREE.Vector3(2.5, -18, 3.6)          // targetVector
-                    );
-                    */
-                    // shadeTetrahedron([V.P, V.Q, V.R, V.S]);
                     switch (currentStep) {
                         case 0:
-                            drawThickLine(V.R, V.N, false,              "#000000", stepId + "_" + currentStep + "_lineNR_Drawing");  // (UpdateForNewExercise) Customize the steps, black given thick line
-                            drawThickRightAngle(V.R, V.N, V.T, 0.5);                                                                 // (UpdateForNewExercise) Customize the steps, black given
-                            drawLineLabels(V.R, V.N, "h≈11.2",          "#00bbbb", stepId + "_" + currentStep + "_lineNR_Label");    // (UpdateForNewExercise) Customize the steps, cyan answer
-                            highlightPolygon([V.P, V.Q, V.S],           "#ffeb3b", stepId + "_" + currentStep + "_trianglePQS");
+                            drawLineLabels(V.A, V.C, "45.651",          "#d63384", stepId + "_" + currentStep + "_lineAC_Label");    // (UpdateForNewExercise) Customize the steps, pink unknown from part bi
+                            drawLineLabels(V.C, V.F, "11.413",          "#d63384", stepId + "_" + currentStep + "_lineCF_Label");    // (UpdateForNewExercise) Customize the steps, pink unknown
+                            drawLineLabels(V.A, V.F, "AF≈57.064",       "#d63384", stepId + "_" + currentStep + "_lineAF_Label");    // (UpdateForNewExercise) Customize the steps, pink unknown
                             break;
                         case 1:
-                            drawThickLine(V.P, V.X, false,              "#000000", stepId + "_" + currentStep + "_linePX_Drawing");  // (UpdateForNewExercise) Customize the steps, black given thick line
-                            drawThickRightAngle(V.P, V.X, V.R, 0.5);                                                                 // (UpdateForNewExercise) Customize the steps, black given
-                            drawLineLabels(V.P, V.X, "d=?",             "#d63384", stepId + "_" + currentStep + "_linePX_Label");    // (UpdateForNewExercise) Customize the steps, pink unknown
-                            highlightPolygon([V.Q, V.R, V.S],           "#ffeb3b", stepId + "_" + currentStep + "_triangleQRS");
+                            highlightPolygon([V.A, V.B, V.C],           "#ffeb3b", stepId + "_" + currentStep + "_triangleABC");
+                            drawLineLabels(V.A, V.B, "32.118",          "#d63384", stepId + "_" + currentStep + "_lineAB_Label");    // (UpdateForNewExercise) Customize the steps, pink unknown
+                            drawLineLabels(V.B, V.C, "24",              "#000000", stepId + "_" + currentStep + "_lineAB_Label");    // (UpdateForNewExercise) Customize the steps, black given
+                            drawAngleArc(V.A, V.C, V.B, "42°", 1.0,     "#000000", stepId + "_" + currentStep + "_angleACB");        // (UpdateForNewExercise) Customize the steps, black given
+                            drawAngleArc(V.B, V.A, V.C, "30°", 1.0,     "#000000", stepId + "_" + currentStep + "_angleBAC");        // (UpdateForNewExercise) Customize the steps, black given
                             break;
-                        case 2:
-                            drawThickLine(V.R, V.N, false,              "#000000", stepId + "_" + currentStep + "_lineNR_Drawing");  // (UpdateForNewExercise) Customize the steps, black given thick line
-                            drawThickRightAngle(V.R, V.N, V.T, 0.5);                                                                 // (UpdateForNewExercise) Customize the steps, black given
-                            drawThickLine(V.P, V.X, false,              "#000000", stepId + "_" + currentStep + "_linePX_Drawing");  // (UpdateForNewExercise) Customize the steps, black given thick line
-                            drawThickRightAngle(V.P, V.X, V.R, 0.5);                                                                 // (UpdateForNewExercise) Customize the steps, black given
-                            // Blue Group (Volume calculation factors for Base QRS)
-                            drawLineLabels(V.P, V.X, "d=?",             "#0000ee", stepId + "_" + currentStep + "_linePX_Label");    // (UpdateForNewExercise) Customize the steps, same group as d
-                            drawLineLabels(V.Q, V.R, "12",              "#0000ee", stepId + "_" + currentStep + "_lineQR_Label");    // (UpdateForNewExercise) Customize the steps, same group as d
-                            drawLineLabels(V.Q, V.S, "14.5",            "#0000ee", stepId + "_" + currentStep + "_lineQS_Label");    // (UpdateForNewExercise) Customize the steps, same group as d
-                            drawAngleArc(V.R, V.Q, V.S, "60.720°", 1.0, "#0000ee", stepId + "_" + currentStep + "_angleRQS");        // (UpdateForNewExercise) Customize the steps, same group as d
-                            // Red Group (Volume calculation factors for Base PQS)
-                            drawLineLabels(V.R, V.N, "h≈11.2",          "#ff0000", stepId + "_" + currentStep + "_lineNR_Label");    // (UpdateForNewExercise) Customize the steps, same group as h
-                            drawLineLabels(V.P, V.S, "10",              "#ff0000", stepId + "_" + currentStep + "_linePS_Label");    // (UpdateForNewExercise) Customize the steps, same group as h
-                            drawLineLabels(V.P, V.Q, "12",              "#ff0000", stepId + "_" + currentStep + "_linePQ_Label");    // (UpdateForNewExercise) Customize the steps, same group as h
-                            drawAngleArc(V.Q, V.P, V.S, "82°", 1.0,     "#ff0000", stepId + "_" + currentStep + "_angleQPS");        // (UpdateForNewExercise) Customize the steps, same group as h
-                            highlightPolygon([V.P, V.Q, V.S],           "#ff0000", stepId + "_" + currentStep + "_triangleQPS");
-                            break;
-                        case 3: case 4: case 5:
-                            drawThickLine(V.P, V.X, false,              "#000000", stepId + "_" + currentStep + "_linePX_Drawing");  // (UpdateForNewExercise) Customize the steps, black given thick line
-                            drawThickRightAngle(V.P, V.X, V.R, 0.5);                                                                 // (UpdateForNewExercise) Customize the steps, black given
-                            drawLineLabels(V.P, V.X, "d≈8.0641",        "#00bbbb", stepId + "_" + currentStep + "_linePX_Label");    // (UpdateForNewExercise) Customize the steps, answer
+                        case 2: case 3:
+                            highlightPolygon([V.A, V.B, V.F],           "#ffeb3b", stepId + "_" + currentStep + "_triangleABF");
+                            drawLineLabels(V.A, V.F, "57.064",          "#d63384", stepId + "_" + currentStep + "_lineAB_Label");    // (UpdateForNewExercise) Customize the steps, pink from previous part
+                            drawLineLabels(V.A, V.B, "32.118",          "#d63384", stepId + "_" + currentStep + "_lineAB_Label");    // (UpdateForNewExercise) Customize the steps, pink from previous part
+                            drawAngleArc(V.B, V.A, V.C, "30°", 1.0,     "#000000", stepId + "_" + currentStep + "_angleBAC");        // (UpdateForNewExercise) Customize the steps, black given
                             break;
                     }
                 }
