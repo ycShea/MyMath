@@ -449,16 +449,15 @@
 
         function drawFigureB() {                                                                                                    // Draw figure in part B (UpdateForNewExercise)
             
-            const lines = [ [V.P, V.Q], [V.Q, V.R], [V.R, V.S], [V.S, V.P], [V.Q, V.S] ];
+            const lines = [ [V.A, V.B], [V.A, V.C], [V.B, V.C], [V.A, V.D], [V.C, V.E] ];
             const matLine = new THREE.LineBasicMaterial({ color: 0x333333, linewidth: 2 });
-            createPolygon([V.P, V.S, V.Q], 0x0d6efd); // replace: createTriangle(V.P, V.S, V.Q, 0x0d6efd);
-            createPolygon([V.S, V.R, V.Q], 0x0d6efd); // replace: createTriangle(V.S, V.Rb, V.Q, 0x0d6efd);
-            // createPolygon([V.S, V.R, V.Q], 0x28a745); // replace: createTriangle(V.S, V.Rb, V.Q, 0x28a745);
+            createPolygon([V.A, V.B, V.C], 0x0d6efd); // replace: createTriangle(V.P, V.S, V.Q, 0x0d6efd);
+            // createPolygon([V.S, V.R, V.Q], 0x0d6efd); // replace: createTriangle(V.S, V.Rb, V.Q, 0x0d6efd);
             
             drawLines(lines);
             
             // Corrected Label Assignment for Part b
-            setupLabels({ "P": V.P, "Q": V.Q, "R": V.R, "S": V.S });
+            setupLabels({ "A": V.A, "B": V.B, "C": V.C, "D": V.D, "E": V.E, "F": V.F });
         }
 
         // ==========================================
