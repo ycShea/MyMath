@@ -460,12 +460,15 @@
             // Corrected Label Assignment for Part b
             setupLabels({ "A": V.A, "B": V.B, "C": V.C, "D": V.D, "E": V.E, "F": V.F });
 
+            // ==========================================
+            // Drawing Horizontal Ground
+            // ==========================================
             // 1. Calculate the center of the ground points B, D, E, F
             const centerX = (V.B.x + V.D.x + V.E.x + V.F.x) / 4;
             const centerY = (V.B.y + V.D.y + V.E.y + V.F.y) / 4;
             
             // 2. Adjust the size (approximate based on your scale and coordinates)
-            const planeSize = 30; 
+            const planeSize = 35; 
             const geometry = new THREE.PlaneGeometry(planeSize, planeSize);
             const material = new THREE.MeshPhongMaterial({ 
                 color: 0x808080, 
@@ -488,7 +491,9 @@
             grid.position.set(centerX, centerY, 0); // Position the grid with the plane
             scene.add(grid);
             */
-            
+            // ==========================================
+            // End of drawing Horizontal Ground
+            // ==========================================
         }
 
         // ==========================================
@@ -563,7 +568,7 @@
             if (cameraVector) { // Handle Camera Position
                 camera.position.copy(cameraVector);
             } else {
-                camera.position.set(7.7, -33.2, 5.6);
+                camera.position.set(13.8, -31.6, 11.4);
             }
             if (lockHorizontal) {
                 controls.minPolarAngle = Math.PI / 2;
