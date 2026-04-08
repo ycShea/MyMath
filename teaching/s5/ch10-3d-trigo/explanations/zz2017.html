@@ -354,6 +354,30 @@
 //        console.log("(a)(ii) angle RQS:", radToDeg(angle_rqs));
 //        console.log("(b)(i)  Distance h:", V.Rb.distanceTo(V.N));
 //        console.log("(b)(ii) Distance d:", V.P.distanceTo(V.X));
+
+        // 1. Create geometry and material
+        // Set the size large enough to cover your points (e.g., 100x100)
+        const planeSize = 100;
+        const geometry = new THREE.PlaneGeometry(planeSize, planeSize);
+        const material = new THREE.MeshPhongMaterial({ 
+            color: 0x808080, 
+            side: THREE.DoubleSide, 
+            transparent: true, 
+            opacity: 0.5 
+        });
+        
+        // 2. Create the mesh
+        const plane = new THREE.Mesh(geometry, material);
+        
+        // 3. Position the plane
+        // Since your code uses Z as height and B is at (0,0,0), 
+        // the plane is already at Z=0 by default.
+        scene.add(plane);
+        
+        // 4. Optional: Add a grid helper to make the plane visible
+        const grid = new THREE.GridHelper(planeSize, 20);
+        grid.rotation.x = Math.PI / 2; // Rotate grid to lie flat on the xy-plane
+        scene.add(grid);
         
         // ==========================================
         // SETUP OF CAMERA (UpdateForNewExercise)                                                                    <-- (UpdateForNewExercise)
@@ -433,7 +457,7 @@
         // DRAW FIGURES OF A AND B
         // ==========================================
         function drawFigureA() {                                                                                                    // Draw figure in part A (UpdateForNewExercise)          
-            const lines = [[V.A, V.B], [V.B, V.A], [V.A, V.C]];
+            const lines = [ [V.A, V.B], [V.B, V.C], [V.A, V.C] ];
             const matLine = new THREE.LineBasicMaterial({ color: 0x333333, linewidth: 2 });
             createPolygon([V.A, V.B, V.C], 0x0d6efd);
             drawLineLabels(V.B, V.C, "24", "black", "static_BC");
@@ -455,6 +479,7 @@
             // createPolygon([V.S, V.R, V.Q], 0x0d6efd); // replace: createTriangle(V.S, V.Rb, V.Q, 0x0d6efd);
             
             drawLines(lines);
+            drawLines([ [V.C, V.F] ], false);
             
             // Corrected Label Assignment for Part b
             setupLabels({ "A": V.A, "B": V.B, "C": V.C, "D": V.D, "E": V.E, "F": V.F });
