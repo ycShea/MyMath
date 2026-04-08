@@ -414,6 +414,7 @@
         // drawThickRightAngle(p1, vertex, p2, size = 1.0, color = 0x000000)                                // Creates a bold 3D right-angle symbol using offset layers
         // drawFigureA()                                                                                    // Initializes the 2D layout for Part A with lines and arcs
         // drawFigureB()                                                                                    // Initializes the 3D tetrahedron layout for Part B
+        // setupGround(width = 40, height = 40, centerX = 0, centerY = 0, hasGrid = true)                   // Initializes a rectangular visual floor for 3D spatial reference
         
         // ==========================================
         // LABELS & HIGHLIGHTS
@@ -460,42 +461,42 @@
             // Corrected Label Assignment for Part b
             setupLabels({ "A": V.A, "B": V.B, "C": V.C, "D": V.D, "E": V.E, "F": V.F });
 
-            // ==========================================
             // Drawing Horizontal Ground
-            // ==========================================
-            // 1. Calculate the center of the ground points B, D, E, F
-            const centerX = (V.B.x + V.D.x + V.E.x + V.F.x) / 4;
-            const centerY = (V.B.y + V.D.y + V.E.y + V.F.y) / 4;
+            const cx = (V.B.x + V.D.x + V.E.x + V.F.x) / 4;
+            const cy = (V.B.y + V.D.y + V.E.y + V.F.y) / 4;
             
-            // 2. Adjust the size (approximate based on your scale and coordinates)
-            const planeSize = 35; 
-            const geometry = new THREE.PlaneGeometry(planeSize, planeSize);
+            setupGround(35, 15, cx, cy, true);    // setupGround(width = 40, height = 40, centerX = 0, centerY = 0, hasGrid = true)
+        }
+        
+        // ==========================================
+        // GROUND UTILITY
+        // ==========================================
+        function setupGround(width = 40, height = 40, centerX = 0, centerY = 0, hasGrid = true) {
+            // 1. Create the rectangular floor
+            const geometry = new THREE.PlaneGeometry(width, height);
             const material = new THREE.MeshPhongMaterial({ 
                 color: 0x808080, 
                 side: THREE.DoubleSide, 
                 transparent: true, 
                 opacity: 0.3 
             });
-            
+        
             const plane = new THREE.Mesh(geometry, material);
-            
-            // 3. Move the plane and grid to the calculated center
-            // Z remains 0 because it's the ground plane
             plane.position.set(centerX, centerY, 0);
+            plane.name = "ground_plane"; // Helpful for clearScene()
             scene.add(plane);
-
-            /*
-            // square grids on the gound
-            const grid = new THREE.GridHelper(planeSize, 10);
-            grid.rotation.x = Math.PI / 2;
-            grid.position.set(centerX, centerY, 0); // Position the grid with the plane
-            scene.add(grid);
-            */
-            // ==========================================
-            // End of drawing Horizontal Ground
-            // ==========================================
+        
+            // 2. Add the grid only if requested
+            if (hasGrid) {
+                // GridHelper is always square, so we use the larger dimension
+                const grid = new THREE.GridHelper(Math.max(width, height), 10);
+                grid.rotation.x = Math.PI / 2;
+                grid.position.set(centerX, centerY, 0);
+                grid.name = "ground_grid";
+                scene.add(grid);
+            }
         }
-
+        
         // ==========================================
         // CAMERA SETTING
         // ==========================================
@@ -568,7 +569,7 @@
             if (cameraVector) { // Handle Camera Position
                 camera.position.copy(cameraVector);
             } else {
-                camera.position.set(13.8, -31.6, 11.4);
+                camera.position.set(7.4, -31.1, 14.5);
             }
             if (lockHorizontal) {
                 controls.minPolarAngle = Math.PI / 2;
@@ -650,7 +651,7 @@
                 clearStepHighlights();
                 // 5. DRAWING LOGIC (Now always starts with a clean slate)                                                                       // (UpdateForNewExercise) MAIN STEPS (SEARCH)
                 // Part (a)(i)
-console.log("version 3");
+console.log("version 4");
                 if (stepId === "step-ai") {
                     switch (currentStep) {
                         case 0:
