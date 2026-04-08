@@ -103,21 +103,21 @@
         <div class="content-side">
             <a href="index.html" style="text-decoration: none; color: #007bff;">← Back to List</a>
             <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
-                <h1>2017 DSE Paper I Q19</h1>                                                                                         <!-- (UpdateForNewExercise) Questions Number -->
+                <h1>2017 DSE Paper I Q19</h1>                                                                                         <!-- () Questions Number -->
                 <button id="btn-view-q" class="btn-show" onclick="toggleQuestion('full-q-popup', 'btn-view-q')">View Full Question 📄</button>
             </div>
             <div id="full-q-popup" class="full-question-popup">
-                <img src="questions-images/2017 DSE Paper I Q19.png" alt="2017 DSE Q19 Diagram">                                       <!-- (UpdateForNewExercise) Questions Image -->
+                <img src="questions-images/2017 DSE Paper I Q19.png" alt="2017 DSE Q19 Diagram">                                       <!-- () Questions Image -->
             </div>
             <!-------------------------->
             <!-- Question of part (a) -->
             <!-------------------------->
             <div class="question-summary">
-                <strong></strong> In triangle ABC, $BC = 24\text{ cm}$, $\angle BAC = 30^\circ$ and $\angle ACB = 42^\circ$.                  <!-- (UpdateForNewExercise) Questions part a -->
+                <strong></strong> In triangle ABC, $BC = 24\text{ cm}$, $\angle BAC = 30^\circ$ and $\angle ACB = 42^\circ$.                  <!-- () Questions part a -->
                 <div style="margin-top: 10px; display: flex; align-items: center; justify-content: space-between; gap: 15px;">
                     <div style="display: flex; align-items: center; gap: 15px;">
-                        <button id="btn-figA" class="btn-show" onclick="handleToggle('A')">Show Figure</button>                                                                                           <!-- (UpdateForNewExercise) Button in part a -->
-                        <div id="part-a-footer" style="display: none; background: #fff3cd; padding: 5px 12px; border-radius: 5px; border: 1px solid #ffeeba; font-size: 0.9rem; white-space: nowrap;">    <!-- (UpdateForNewExercise) Button in part a -->
+                        <button id="btn-figA" class="btn-show" onclick="handleToggle('A')">Show Figure</button>                                                                                           <!-- () Button in part a -->
+                        <div id="part-a-footer" style="display: none; background: #fff3cd; padding: 5px 12px; border-radius: 5px; border: 1px solid #ffeeba; font-size: 0.9rem; white-space: nowrap;">    <!-- () Button in part a -->
                             <strong>Note:</strong> You are viewing the 2D layout.
                         </div>
                     </div>
@@ -156,7 +156,9 @@
             <!-- Question of part (b) -->
             <!-------------------------->
             <div class="question-summary">                                                                
-                <strong>Part (b)</strong> The metal sheet $PQRS$ is now folded along $QS$. It is given that the angle between plane $PQS$ and plane $QRS$ is $80^\circ$.                                   <!-- (UpdateForNewExercise) Questions part b -->
+                <strong>Part (b)</strong> In the figure, the thin metal sheet $\triangle ABC$ is held such that only vertex $B$ lies on the horizontal ground.
+                Points $D$ and $E$ lie on the horizontal ground vertically below vertices $A$ and $C$ respectively. $AC$ produced meets the horizontal ground at point $F$.
+                It is given that $AD = 10\text{ cm}$ and $CE = 2\text{ cm}$.                                                                                                                              <!-- (UpdateForNewExercise) Questions part b -->
                 <div style="margin-top: 10px; display: flex; align-items: center; justify-content: space-between; gap: 15px;">
                     <div style="display: flex; align-items: center; gap: 15px;">
                         <button id="btn-figB" class="btn-show" onclick="handleToggle('B')">Show Figure</button>                                                                                           <!-- (UpdateForNewExercise) Button in part b -->
@@ -651,7 +653,6 @@
                 clearStepHighlights();
                 // 5. DRAWING LOGIC (Now always starts with a clean slate)                                                                       // (UpdateForNewExercise) MAIN STEPS (SEARCH)
                 // Part (a)(i)
-console.log("version 4");
                 if (stepId === "step-ai") {
                     switch (currentStep) {
                         case 0:
@@ -671,13 +672,15 @@ console.log("version 4");
                 }
 
                 // Part (b)(i)
+console.log("version 5");
                 if (stepId === "step-bi") {
                     stickTempPointLabel(V.T, "T", "#d63384", stepId + "_" + currentStep + "_pointT");
                     switch (currentStep) {
                         case 0:
-                            drawThickLine(V.R, V.T, false,              "#000000", stepId + "_" + currentStep + "_lineRT_Drawing");     // (UpdateForNewExercise) Customize the steps, given thick line
-                            drawThickRightAngle(V.Q, V.T, V.R, 0.5);                                                                    // (UpdateForNewExercise) Customize the steps, given
-                            highlightPolygon([V.Q, V.R, V.S],           "#ffeb3b", stepId + "_" + currentStep + "_triangleQRS");
+                            //drawThickLine(V.R, V.T, false,              "#000000", stepId + "_" + currentStep + "_lineRT_Drawing");     // (UpdateForNewExercise) Customize the steps, given thick line
+                            //drawThickRightAngle(V.Q, V.T, V.R, 0.5);                                                                    // (UpdateForNewExercise) Customize the steps, given
+                            highlightPolygon([V.A, V.D, V.F],           "#ffeb3b", stepId + "_" + currentStep + "_triangleADF");
+                            highlightPolygon([V.C, V.E, V.F],           "#ffeb3b", stepId + "_" + currentStep + "_triangleCEF");
                             break;
                         case 1:
                             drawThickLine(V.R, V.T, false,              "#000000", stepId + "_" + currentStep + "_lineRT_Drawing");     // (UpdateForNewExercise) Customize the steps, given thick line
