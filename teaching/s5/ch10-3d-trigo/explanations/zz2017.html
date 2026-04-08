@@ -354,30 +354,6 @@
 //        console.log("(a)(ii) angle RQS:", radToDeg(angle_rqs));
 //        console.log("(b)(i)  Distance h:", V.Rb.distanceTo(V.N));
 //        console.log("(b)(ii) Distance d:", V.P.distanceTo(V.X));
-
-        // 1. Create geometry and material
-        // Set the size large enough to cover your points (e.g., 100x100)
-        const planeSize = 100;
-        const geometry = new THREE.PlaneGeometry(planeSize, planeSize);
-        const material = new THREE.MeshPhongMaterial({ 
-            color: 0x808080, 
-            side: THREE.DoubleSide, 
-            transparent: true, 
-            opacity: 0.5 
-        });
-        
-        // 2. Create the mesh
-        const plane = new THREE.Mesh(geometry, material);
-        
-        // 3. Position the plane
-        // Since your code uses Z as height and B is at (0,0,0), 
-        // the plane is already at Z=0 by default.
-        scene.add(plane);
-        
-        // 4. Optional: Add a grid helper to make the plane visible
-        const grid = new THREE.GridHelper(planeSize, 20);
-        grid.rotation.x = Math.PI / 2; // Rotate grid to lie flat on the xy-plane
-        scene.add(grid);
         
         // ==========================================
         // SETUP OF CAMERA (UpdateForNewExercise)                                                                    <-- (UpdateForNewExercise)
@@ -483,6 +459,31 @@
             
             // Corrected Label Assignment for Part b
             setupLabels({ "A": V.A, "B": V.B, "C": V.C, "D": V.D, "E": V.E, "F": V.F });
+
+            // 1. Create geometry and material
+            // Set the size large enough to cover your points (e.g., 10x10)
+            const planeSize = 10;
+            const geometry = new THREE.PlaneGeometry(planeSize, planeSize);
+            const material = new THREE.MeshPhongMaterial({ 
+                color: 0x808080, 
+                side: THREE.DoubleSide, 
+                transparent: true, 
+                opacity: 0.5 
+            });
+            
+            // 2. Create the mesh
+            const plane = new THREE.Mesh(geometry, material);
+            
+            // 3. Position the plane
+            // Since your code uses Z as height and B is at (0,0,0), 
+            // the plane is already at Z=0 by default.
+            scene.add(plane);
+            
+            // 4. Optional: Add a grid helper to make the plane visible
+            const grid = new THREE.GridHelper(planeSize, 20);
+            grid.rotation.x = Math.PI / 2; // Rotate grid to lie flat on the xy-plane
+            scene.add(grid);
+            
         }
 
         // ==========================================
@@ -551,14 +552,13 @@
                 controls.target.copy(targetVector);
             } else {
                 // Default Part B Center (near the fold)
-                controls.target.set(3.6, 1.7, 1.6); // coordinates of N
+                controls.target.set(7.3, 2, 2);
             }
             
             if (cameraVector) { // Handle Camera Position
                 camera.position.copy(cameraVector);
             } else {
-                // Default Part B "Overview" Position
-                camera.position.set(23, -3, 5);
+                camera.position.set(7.7, -33.2, 5.6);
             }
             if (lockHorizontal) {
                 controls.minPolarAngle = Math.PI / 2;
