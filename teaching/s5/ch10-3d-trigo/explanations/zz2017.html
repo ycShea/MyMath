@@ -173,7 +173,6 @@
             <!-- Solution of part (b) -->
             <!-------------------------->
 <div class="part-container">
-<!-- Steps -->
                 <div class="part-header">
                     <span><strong>(b)(i)</strong> Find the distance between $C$ and $F$.</span>
                     <button id="btn-bi" class="btn-show" onclick="revealStep('sol-bi', 'btn-bi', [])">Show Step</button>        <!-- (UpdateForNewExercise) Questions part b -->
@@ -188,7 +187,7 @@
                     <p class="step" style="display:none;">                              <!-- (UpdateForNewExercise) Part bi Step 2-->
                         $AF = 5CF$<br>
                         $AC + CF = 5CF$<br>
-                        $45.651 + CF \approx 5CF$
+                        $AC = 4CF$<br>
                         $45.651 \approx 4CF$
                     </p>
                     <p class="step" style="display:none;">                              <!-- (UpdateForNewExercise) Part bi Step 3-->
@@ -199,6 +198,7 @@
                     </p>
                 </div>
             </div>
+<!-- Steps for searching-->
             <div class="part-container">
                 <div class="part-header">
                     <span><strong>(b)(ii)</strong> Find area of $\triangle ABC$.</span>
@@ -682,7 +682,6 @@
                 }
 
                 // Part (b)(i)
-console.log("version 7");
                 if (stepId === "step-bi") {
                     stickTempPointLabel(V.T, "T", "#d63384", stepId + "_" + currentStep + "_pointT");
                     switch (currentStep) {
@@ -695,23 +694,21 @@ console.log("version 7");
                             highlightPolygon([V.C, V.E, V.F],           "#bb0000", stepId + "_" + currentStep + "_triangleCEF");
                             break;
                         case 2:
-                            //drawThickLine(V.R, V.T, false,              "#000000", stepId + "_" + currentStep + "_lineRT_Drawing");     // (UpdateForNewExercise) Customize the steps, given thick line
-                            //drawThickRightAngle(V.Q, V.T, V.R, 0.5);                                                                    // (UpdateForNewExercise) Customize the steps, given
-                            //drawLineLabels(V.Q, V.R, "13",              "#000000", stepId + "_" + currentStep + "_lineQR_Label");       // (UpdateForNewExercise) Customize the steps, given
-                            //drawAngleArc(V.R, V.Q, V.T, "60.720°", 1.0, "#d63384", stepId + "_" + currentStep + "_angleRQT");           // (UpdateForNewExercise) Customize the steps, unknown from part (a)(i)
-                            drawLineLabels(V.A, V.C, "45.651",               "#d63384", stepId + "_" + currentStep + "_lineAC_Label");       // (UpdateForNewExercise) Customize the steps, unknown
+                            drawLineLabels(V.A, V.C, "45.651",          "#d63384", stepId + "_" + currentStep + "_lineAC_Label");       // (UpdateForNewExercise) Customize the steps, unknown
                             drawLineLabels(V.C, V.F, "?",               "#d63384", stepId + "_" + currentStep + "_lineCF_Label");       // (UpdateForNewExercise) Customize the steps, unknown
-                            //highlightPolygon([V.Q, V.R, V.T],           "#ffeb3b", stepId + "_" + currentStep + "_triangleQRT");
+                            //highlightPolygon([V.Q, V.R, V.T],         "#ffeb3b", stepId + "_" + currentStep + "_triangleQRT");
                             break;
                         case 3:
-                            drawLineLabels(V.C, V.F, "11.413",               "#d63384", stepId + "_" + currentStep + "_lineCF_Label");       // (UpdateForNewExercise) Customize the steps, unknown
+                            drawLineLabels(V.A, V.C, "45.651",          "#d63384", stepId + "_" + currentStep + "_lineAC_Label");       // (UpdateForNewExercise) Customize the steps, unknown
+                            drawLineLabels(V.C, V.F, "11.413",          "#d63384", stepId + "_" + currentStep + "_lineCF_Label");       // (UpdateForNewExercise) Customize the steps, unknown
                             break;
                         case 4:
-                            drawLineLabels(V.C, V.F, "11.4",               "#00bbbb", stepId + "_" + currentStep + "_lineCF_Label");       // (UpdateForNewExercise) Customize the steps, cyan answer
+                            drawLineLabels(V.C, V.F, "11.4",            "#00bbbb", stepId + "_" + currentStep + "_lineCF_Label");       // (UpdateForNewExercise) Customize the steps, cyan answer
                             break;
                     }
                 }
                 // Part (b)(ii)
+console.log("version 6");
                 if (stepId === "step-bii") {
                     /*
                     setCameraPartB(
