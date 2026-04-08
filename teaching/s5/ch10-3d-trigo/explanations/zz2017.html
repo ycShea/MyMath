@@ -173,19 +173,29 @@
             <!-- Solution of part (b) -->
             <!-------------------------->
 <div class="part-container">
+<!-- Steps -->
                 <div class="part-header">
                     <span><strong>(b)(i)</strong> Find the distance between $C$ and $F$.</span>
                     <button id="btn-bi" class="btn-show" onclick="revealStep('sol-bi', 'btn-bi', [])">Show Step</button>        <!-- (UpdateForNewExercise) Questions part b -->
                 </div>
                 <div id="sol-bi" class="solution-content" data-current-step="0">
                     <p class="step" style="display:none;">                              <!-- (UpdateForNewExercise) Part bi Step 0-->
-                        Using similar triangles $\triangle ADF \sim \triangle CEF$: $\frac{CF}{CE} = \frac{AF}{AD}$
+                        Using similar triangles $\triangle ADF \sim \triangle CEF$: $\frac{AF}{AD} = \frac{CF}{CE}$
                     </p>
                     <p class="step" style="display:none;">                              <!-- (UpdateForNewExercise) Part bi Step 1-->
-                        $\frac{CF}{2} = \frac{CF + 45.65}{10}$
+                        $\frac{AF}{CF} = \frac{AD}{CE} = \frac{10}{2} = 5$
                     </p>
-                    <p class="step final-ans" style="display:none;">                    <!-- (UpdateForNewExercise) Part bi Step 23 Final answers -->
-                        $8CF = 91.3 \implies CF \approx 11.4 \text{ cm}$
+                    <p class="step" style="display:none;">                              <!-- (UpdateForNewExercise) Part bi Step 2-->
+                        $AF = 5CF$<br>
+                        $AC + CF = 5CF$<br>
+                        $45.651 + CF \approx 5CF$
+                        $45.651 \approx 4CF$
+                    </p>
+                    <p class="step" style="display:none;">                              <!-- (UpdateForNewExercise) Part bi Step 3-->
+                        $CF = \frac{45.651}{4} \approx 11.413 \text{ cm}$
+                    </p>
+                    <p class="step final-ans" style="display:none;">                    <!-- (UpdateForNewExercise) Part bi Step 4 Final answers -->
+                        $CF = \approx 11.4 \text{ cm}$
                     </p>
                 </div>
             </div>
@@ -672,41 +682,32 @@
                 }
 
                 // Part (b)(i)
-console.log("version 5");
+console.log("version 7");
                 if (stepId === "step-bi") {
                     stickTempPointLabel(V.T, "T", "#d63384", stepId + "_" + currentStep + "_pointT");
                     switch (currentStep) {
-                        case 0:
+                        case 0: case 1:
                             //drawThickLine(V.R, V.T, false,              "#000000", stepId + "_" + currentStep + "_lineRT_Drawing");     // (UpdateForNewExercise) Customize the steps, given thick line
                             //drawThickRightAngle(V.Q, V.T, V.R, 0.5);                                                                    // (UpdateForNewExercise) Customize the steps, given
+                            drawLineLabels(V.A, V.D, "10",              "#000000", stepId + "_" + currentStep + "_lineAD_Label");       // (UpdateForNewExercise) Customize the steps, given
+                            drawLineLabels(V.C, V.E, "2",               "#000000", stepId + "_" + currentStep + "_lineCE_Label");       // (UpdateForNewExercise) Customize the steps, given
                             highlightPolygon([V.A, V.D, V.F],           "#ffeb3b", stepId + "_" + currentStep + "_triangleADF");
-                            highlightPolygon([V.C, V.E, V.F],           "#ffeb3b", stepId + "_" + currentStep + "_triangleCEF");
-                            break;
-                        case 1:
-                            drawThickLine(V.R, V.T, false,              "#000000", stepId + "_" + currentStep + "_lineRT_Drawing");     // (UpdateForNewExercise) Customize the steps, given thick line
-                            drawThickRightAngle(V.Q, V.T, V.R, 0.5);                                                                    // (UpdateForNewExercise) Customize the steps, given
-                            drawLineLabels(V.Q, V.R, "13",              "#000000", stepId + "_" + currentStep + "_lineQR_Label");       // (UpdateForNewExercise) Customize the steps, given
-                            drawAngleArc(V.R, V.Q, V.T, "60.720°", 1.0, "#d63384", stepId + "_" + currentStep + "_angleRQT");           // (UpdateForNewExercise) Customize the steps, unknown from part (a)(i)
-                            drawLineLabels(V.R, V.T, "?",               "#d63384", stepId + "_" + currentStep + "_lineRT_Label");       // (UpdateForNewExercise) Customize the steps, unknown
-                            highlightPolygon([V.Q, V.R, V.T],           "#ffeb3b", stepId + "_" + currentStep + "_triangleQRT");
+                            highlightPolygon([V.C, V.E, V.F],           "#bb0000", stepId + "_" + currentStep + "_triangleCEF");
                             break;
                         case 2:
-                            drawThickLine(V.R, V.T, false,              "#000000", stepId + "_" + currentStep + "_lineRT_Drawing");     // (UpdateForNewExercise) Customize the steps, given thick line
-                            drawThickRightAngle(V.R, V.N, V.T, 0.4);                                                                    // (UpdateForNewExercise) Customize the steps, given
-                            drawLineLabels(V.R, V.T, "13.340",          "#00bbbb", stepId + "_" + currentStep + "_lineRT_Label");       // (UpdateForNewExercise) Customize the steps, unknown from part (b)(i)
-                            drawThickLine(V.R, V.N, false,              "#000000", stepId + "_" + currentStep + "_lineNR_Drawing");     // (UpdateForNewExercise) Customize the steps, given thick line
-                            drawThickLine(V.N, V.T, false,              "#000000", stepId + "_" + currentStep + "_lineNT_Drawing");     // (UpdateForNewExercise) Customize the steps, given thick line
-                            drawLineLabels(V.N, V.M, "h=?",             "#d63384", stepId + "_" + currentStep + "_lineMN_Label");       // (UpdateForNewExercise) Customize the steps, unknown
-                            drawAngleArc(V.R, V.T, V.N, "80°", 0.5,     "#000000", stepId + "_" + currentStep + "_angleRTN");           // (UpdateForNewExercise) Customize the steps, given
-                            highlightPolygon([V.N, V.R, V.T],           "#ffeb3b", stepId + "_" + currentStep + "_triangleNRT");
+                            //drawThickLine(V.R, V.T, false,              "#000000", stepId + "_" + currentStep + "_lineRT_Drawing");     // (UpdateForNewExercise) Customize the steps, given thick line
+                            //drawThickRightAngle(V.Q, V.T, V.R, 0.5);                                                                    // (UpdateForNewExercise) Customize the steps, given
+                            //drawLineLabels(V.Q, V.R, "13",              "#000000", stepId + "_" + currentStep + "_lineQR_Label");       // (UpdateForNewExercise) Customize the steps, given
+                            //drawAngleArc(V.R, V.Q, V.T, "60.720°", 1.0, "#d63384", stepId + "_" + currentStep + "_angleRQT");           // (UpdateForNewExercise) Customize the steps, unknown from part (a)(i)
+                            drawLineLabels(V.A, V.C, "45.651",               "#d63384", stepId + "_" + currentStep + "_lineAC_Label");       // (UpdateForNewExercise) Customize the steps, unknown
+                            drawLineLabels(V.C, V.F, "?",               "#d63384", stepId + "_" + currentStep + "_lineCF_Label");       // (UpdateForNewExercise) Customize the steps, unknown
+                            //highlightPolygon([V.Q, V.R, V.T],           "#ffeb3b", stepId + "_" + currentStep + "_triangleQRT");
                             break;
                         case 3:
-                            drawThickLine(V.R, V.T, false,              "#000000", stepId + "_" + currentStep + "_lineRT_Drawing");     // (UpdateForNewExercise) Customize the steps, given thick line
-                            drawThickRightAngle(V.R, V.N, V.T, 0.4);                                                                    // (UpdateForNewExercise) Customize the steps, given
-                            drawThickLine(V.R, V.N, false,              "#000000", stepId + "_" + currentStep + "_lineNR_Drawing");     // (UpdateForNewExercise) Customize the steps, given thick line
-                            drawThickLine(V.N, V.T, false,              "#000000", stepId + "_" + currentStep + "_lineNT_Drawing");     // (UpdateForNewExercise) Customize the steps, given thick line
-                            drawLineLabels(V.N, V.M, "h≈11.2",          "#00bbbb", stepId + "_" + currentStep + "_lineNR_Label");       // (UpdateForNewExercise) Customize the steps, answer
-                            highlightPolygon([V.N, V.R, V.T],           "#ffeb3b", stepId + "_" + currentStep + "_triangleNRT");
+                            drawLineLabels(V.C, V.F, "11.413",               "#d63384", stepId + "_" + currentStep + "_lineCF_Label");       // (UpdateForNewExercise) Customize the steps, unknown
+                            break;
+                        case 4:
+                            drawLineLabels(V.C, V.F, "11.4",               "#00bbbb", stepId + "_" + currentStep + "_lineCF_Label");       // (UpdateForNewExercise) Customize the steps, cyan answer
                             break;
                     }
                 }
