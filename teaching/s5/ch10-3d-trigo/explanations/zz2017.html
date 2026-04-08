@@ -198,7 +198,7 @@
                     </p>
                 </div>
             </div>
-<!-- Steps for searching-->
+<!-- Steps for searching -->
             <div class="part-container">
                 <div class="part-header">
                     <span><strong>(b)(ii)</strong> Find area of $\triangle ABF$.</span>
@@ -710,24 +710,24 @@
                     }
                 }
                 // Part (b)(ii)
-console.log("version 7");
+console.log("version 8"); // Steps for searching
                 if (stepId === "step-bii") {
                     switch (currentStep) {
                         case 0:
                             drawLineLabels(V.A, V.C, "AC≈45.651",          "#d63384", stepId + "_" + currentStep + "_lineAC_Label");    // (UpdateForNewExercise) Customize the steps, pink unknown from part bi
                             drawLineLabels(V.C, V.F, "CF≈11.413",          "#d63384", stepId + "_" + currentStep + "_lineCF_Label");    // (UpdateForNewExercise) Customize the steps, pink unknown
-                            drawLineLabels(V.A, V.F, "AF≈57.064",       "#d63384", stepId + "_" + currentStep + "_lineAF_Label");    // (UpdateForNewExercise) Customize the steps, pink unknown
+                            drawLineLabels(V.A, V.F, "AF=AC+CF≈57.064",       "#d63384", stepId + "_" + currentStep + "_lineAF_Label");    // (UpdateForNewExercise) Customize the steps, pink unknown
                             break;
                         case 1:
                             highlightPolygon([V.A, V.B, V.C],           "#ffeb3b", stepId + "_" + currentStep + "_triangleABC");
                             drawLineLabels(V.B, V.C, "24",              "#000000", stepId + "_" + currentStep + "_lineBC_Label");    // (UpdateForNewExercise) Customize the steps, black given
                             drawAngleArc(V.A, V.C, V.B, "42°", 2.0,     "#000000", stepId + "_" + currentStep + "_angleACB");        // (UpdateForNewExercise) Customize the steps, black given
-                            drawAngleArc(V.B, V.A, V.C, "30°", 2.0,     "#000000", stepId + "_" + currentStep + "_angleBAC");        // (UpdateForNewExercise) Customize the steps, black given
+                            drawAngleArc(V.B, V.A, V.C, "30°", 3.0,     "#000000", stepId + "_" + currentStep + "_angleBAC");        // (UpdateForNewExercise) Customize the steps, black given
                             drawLineLabels(V.A, V.B, "32.118",          "#d63384", stepId + "_" + currentStep + "_lineAB_Label");    // (UpdateForNewExercise) Customize the steps, pink unknown
                             break;
                         case 2: case 3:
                             highlightPolygon([V.A, V.B, V.F],           "#ff0000", stepId + "_" + currentStep + "_triangleABF");
-                            drawLineLabels(V.A, V.F, "57.064",          "#d63384", stepId + "_" + currentStep + "_lineAF_Label");    // (UpdateForNewExercise) Customize the steps, pink from previous part
+                            drawLineLabels(V.A, V.F, "AF≈57.064",          "#d63384", stepId + "_" + currentStep + "_lineAF_Label");    // (UpdateForNewExercise) Customize the steps, pink from previous part
                             drawLineLabels(V.A, V.B, "32.118",          "#d63384", stepId + "_" + currentStep + "_lineAB_Label");    // (UpdateForNewExercise) Customize the steps, pink from previous part
                             drawAngleArc(V.B, V.A, V.C, "30°", 1.0,     "#000000", stepId + "_" + currentStep + "_angleBAC");        // (UpdateForNewExercise) Customize the steps, black given
                             break;
