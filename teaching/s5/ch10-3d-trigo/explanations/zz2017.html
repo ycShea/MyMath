@@ -465,7 +465,7 @@
             const centerY = (V.B.y + V.D.y + V.E.y + V.F.y) / 4;
             
             // 2. Adjust the size (approximate based on your scale and coordinates)
-            const planeSize = 40; 
+            const planeSize = 30; 
             const geometry = new THREE.PlaneGeometry(planeSize, planeSize);
             const material = new THREE.MeshPhongMaterial({ 
                 color: 0x808080, 
@@ -480,11 +480,14 @@
             // Z remains 0 because it's the ground plane
             plane.position.set(centerX, centerY, 0);
             scene.add(plane);
-            
+
+            /*
+            // square grids on the gound
             const grid = new THREE.GridHelper(planeSize, 10);
             grid.rotation.x = Math.PI / 2;
             grid.position.set(centerX, centerY, 0); // Position the grid with the plane
             scene.add(grid);
+            */
             
         }
 
