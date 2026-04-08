@@ -156,7 +156,7 @@
             <!-- Question of part (b) -->
             <!-------------------------->
             <div class="question-summary">                                                                
-                <strong>Part (b)</strong> In the figure, the thin metal sheet $\triangle ABC$ is held such that only vertex $B$ lies on the horizontal ground.
+                <strong>Part (b)</strong> The thin metal sheet $\triangle ABC$ is held such that only vertex $B$ lies on the horizontal ground.
                 Points $D$ and $E$ lie on the horizontal ground vertically below vertices $A$ and $C$ respectively. $AC$ produced meets the horizontal ground at point $F$.
                 It is given that $AD = 10\text{ cm}$ and $CE = 2\text{ cm}$.                                                                                                                              <!-- (UpdateForNewExercise) Questions part b -->
                 <div style="margin-top: 10px; display: flex; align-items: center; justify-content: space-between; gap: 15px;">
@@ -465,7 +465,7 @@
 
             // Drawing Horizontal Ground
             const cx = (V.A.x + V.B.x + V.C.x + V.F.x) / 4;
-            const cy = (V.A.y + V.B.y + V.C.y + V.F.y) / 4;
+            const cy = (V.A.y + V.B.y + V.C.y + V.F.y) / 4 - 5;
             
             setupGround(35, 20, cx, cy, false);    // setupGround(width = 40, height = 40, centerX = 0, centerY = 0, hasGrid = true)
         }
