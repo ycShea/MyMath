@@ -460,28 +460,30 @@
             // Corrected Label Assignment for Part b
             setupLabels({ "A": V.A, "B": V.B, "C": V.C, "D": V.D, "E": V.E, "F": V.F });
 
-            // 1. Create geometry and material
-            // Set the size large enough to cover your points (e.g., 10x10)
-            const planeSize = 10;
+            // 1. Calculate the center of the ground points B, D, E, F
+            const centerX = (V.B.x + V.D.x + V.E.x + V.F.x) / 4;
+            const centerY = (V.B.y + V.D.y + V.E.y + V.F.y) / 4;
+            
+            // 2. Adjust the size (approximate based on your scale and coordinates)
+            const planeSize = 40; 
             const geometry = new THREE.PlaneGeometry(planeSize, planeSize);
             const material = new THREE.MeshPhongMaterial({ 
                 color: 0x808080, 
                 side: THREE.DoubleSide, 
                 transparent: true, 
-                opacity: 0.5 
+                opacity: 0.3 
             });
             
-            // 2. Create the mesh
             const plane = new THREE.Mesh(geometry, material);
             
-            // 3. Position the plane
-            // Since your code uses Z as height and B is at (0,0,0), 
-            // the plane is already at Z=0 by default.
+            // 3. Move the plane and grid to the calculated center
+            // Z remains 0 because it's the ground plane
+            plane.position.set(centerX, centerY, 0);
             scene.add(plane);
             
-            // 4. Optional: Add a grid helper to make the plane visible
-            const grid = new THREE.GridHelper(planeSize, 20);
-            grid.rotation.x = Math.PI / 2; // Rotate grid to lie flat on the xy-plane
+            const grid = new THREE.GridHelper(planeSize, 10);
+            grid.rotation.x = Math.PI / 2;
+            grid.position.set(centerX, centerY, 0); // Position the grid with the plane
             scene.add(grid);
             
         }
