@@ -2,7 +2,7 @@
 This directory uses a Google Spreadsheet as a database to list 3D Geometry and Trigonometry problem walkthroughs.
 
 Link to the HTML:
-[https://ycshea.github.io/MyMath/teaching/s5/ch10-3d-trigo/explanations/zz2017.html](https://ycshea.github.io/MyMath/teaching/s5/ch10-3d-trigo/explanations/index.html)
+[https://ycshea.github.io/MyMath/teaching/s5/ch10-3d-trigo/explanations/index.html](https://ycshea.github.io/MyMath/teaching/s5/ch10-3d-trigo/explanations/index.html)
 
 ### 📊 How to Update Content
 1. **Open Spreadsheet:**  
