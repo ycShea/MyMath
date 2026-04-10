@@ -866,17 +866,14 @@ console.log("version 8"); // Steps for searching
                     btn.parentNode.insertBefore(redoBtn, btn);
         
                     redoBtn.onclick = function() {
-                        // 1. Reset steps
+                        container.style.display = 'none';
                         for (let s of steps) { s.style.display = 'none'; }
+                        if (stepBtn) {
+                            stepBtn.textContent = "Show Step";
+                            stepBtn.disabled = false;
+                            stepBtn.style.opacity = "1";
+                        }
                         container.setAttribute('data-current-step', '0');
-        
-                        // 2. Reset Main Button
-                        btn.textContent = "Show Step";
-                        btn.disabled = false;
-                        btn.style.opacity = "1";
-        
-                        // 3. Clear 3D Scene
-                        // clearScene(); 
         
                         // 4. Remove self
                         redoBtn.remove();
