@@ -236,7 +236,7 @@
                     </p>
                     <p class="step" style="display:none;">                              <!-- (UpdateForNewExercise) Part biii Step 1-->
                         The inclination $\theta$ is the angle between plane $ABC$ (or $ABF$) and the ground $DBF$.<br>
-                        Since $BF$ is the intersection line, the angle between plane $ABF$ (or $ABC$) and the ground $DBF$ = $\angle APD$.<br>
+                        Since $BF$ is the intersection line, the angle between the two planes = $\angle APD$.<br>
                         i.e. $\theta = \angle APD$.
                     </p>
                     <p class="step" style="display:none;">                              <!-- (UpdateForNewExercise) Part biii Step 2-->
@@ -774,10 +774,13 @@ console.log("version 8"); // Steps for searching
                             drawAngleArc(V.A, V.P, V.D, "θ", 3.0,       "#d63384", stepId + "_" + currentStep + "_angleAPD");           // (UpdateForNewExercise) Customize the steps, pink unknown
                             break;
                         case 2:
-                            highlightPolygon([V.A, V.D, V.P],           "#ffeb3b", stepId + "_" + currentStep + "_triangleADP");
+                            highlightPolygon([V.A, V.D, V.P],           "#d63384", stepId + "_" + currentStep + "_triangleADP");
                             drawThickRightAngle(V.A, V.D, V.P, 1.2);                                                                    // (UpdateForNewExercise) Customize the steps, given
                             drawAngleArc(V.A, V.P, V.D, "θ", 3.0,       "#d63384", stepId + "_" + currentStep + "_angleAPD");           // (UpdateForNewExercise) Customize the steps, pink unknown
                             drawLineLabels(V.A, V.D, "10",              "#000000", stepId + "_" + currentStep + "_lineAD_Label");       // (UpdateForNewExercise) Customize the steps, given
+                            drawThickLine(V.A, V.P, false,              "#000000", stepId + "_" + currentStep + "_lineAP_Drawing");     // (UpdateForNewExercise) Customize the steps, given thick line
+                            drawThickLine(V.D, V.P, false,              "#000000", stepId + "_" + currentStep + "_lineDP_Drawing");     // (UpdateForNewExercise) Customize the steps, given thick line
+                            drawLineLabels(V.A, V.P, "?",               "#d63384", stepId + "_" + currentStep + "_lineAP_Label");       // (UpdateForNewExercise) Customize the steps, pink unknown
                             break;
                         case 3: case 4:
                             highlightPolygon([V.A, V.B, V.F],           "#ff0000", stepId + "_" + currentStep + "_triangleABF");
