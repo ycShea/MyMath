@@ -232,9 +232,9 @@
                 <div id="sol-biii" class="solution-content" data-current-step="0">
                     <p class="step" style="display:none;">                              <!-- (UpdateForNewExercise) Part biii Step 0-->
                         The inclination $\theta$ is the angle between plane $ABF$ (or $ABC$) and the ground $DBF$.<br>
+                        Let $P$ be the foot of perpendicular from $A$ to the straight line $BF$.
                     </p>
                     <p class="step" style="display:none;">                              <!-- (UpdateForNewExercise) Part biii Step 1-->
-                        Let $P$ be the foot of perpendicular from $A$ to the straight line $BF$.<br>
                         By the theorem of three perpendiculars, $DP$ is also perpendicular to line $BF$.<br>
                         Since $BF$ is the intersection line, the angle between plane $ABF$ (or $ABC$) and the ground $DBF$ = $\angle APD$.<br>
                         i.e. $\theta = \angle APD$.
@@ -758,21 +758,19 @@ console.log("version 8"); // Steps for searching
                 if (stepId === "step-biii") {
                     switch (currentStep) {
                         case 0:
-                            drawThickLine(V.D, V.P, false,              "#000000", stepId + "_" + currentStep + "_lineDH_Drawing");     // (UpdateForNewExercise) Customize the steps, given thick line
                             drawThickLine(V.A, V.P, false,              "#000000", stepId + "_" + currentStep + "_lineAH_Drawing");     // (UpdateForNewExercise) Customize the steps, given thick line
                             drawThickLine(V.I, V.J, false,              "#000000", stepId + "_" + currentStep + "_lineIJ_Drawing");     // (UpdateForNewExercise) Customize the steps, given thick line
-                            drawThickRightAngle(V.B, V.P, V.D, 1.2);                                                                    // (UpdateForNewExercise) Customize the steps, given
                             drawThickRightAngle(V.B, V.P, V.A, 1.2);                                                                    // (UpdateForNewExercise) Customize the steps, given
                             setupLabels({ "P": V.P });
                             break;
                         case 1:
-                            drawThickLine(V.D, V.P, false,              "#000000", stepId + "_" + currentStep + "_lineDH_Drawing");     // (UpdateForNewExercise) Customize the steps, given thick line
-                            drawThickLine(V.A, V.P, false,              "#000000", stepId + "_" + currentStep + "_lineAH_Drawing");     // (UpdateForNewExercise) Customize the steps, given thick line
-                            drawAngleArc(V.A, V.P, V.D, "θ", 3.0,       "#d63384", stepId + "_" + currentStep + "_angleAHD");           // (UpdateForNewExercise) Customize the steps, pink unknown
-                            drawThickLine(V.I, V.J, false,              "#000000", stepId + "_" + currentStep + "_lineIJ_Drawing");     // (UpdateForNewExercise) Customize the steps, given thick line
-                            drawThickRightAngle(V.B, V.P, V.D, 1.2);                                                                    // (UpdateForNewExercise) Customize the steps, given
-                            drawThickRightAngle(V.B, V.P, V.A, 1.2);                                                                    // (UpdateForNewExercise) Customize the steps, given
-                            setupLabels({ "P": V.P });
+                            //drawThickLine(V.D, V.P, false,              "#000000", stepId + "_" + currentStep + "_lineDH_Drawing");     // (UpdateForNewExercise) Customize the steps, given thick line
+                            //drawThickLine(V.A, V.P, false,              "#000000", stepId + "_" + currentStep + "_lineAH_Drawing");     // (UpdateForNewExercise) Customize the steps, given thick line
+                            //drawAngleArc(V.A, V.P, V.D, "θ", 3.0,       "#d63384", stepId + "_" + currentStep + "_angleAHD");           // (UpdateForNewExercise) Customize the steps, pink unknown
+                            //drawThickLine(V.I, V.J, false,              "#000000", stepId + "_" + currentStep + "_lineIJ_Drawing");     // (UpdateForNewExercise) Customize the steps, given thick line
+                            //drawThickRightAngle(V.B, V.P, V.D, 1.2);                                                                    // (UpdateForNewExercise) Customize the steps, given
+                            //drawThickRightAngle(V.B, V.P, V.A, 1.2);                                                                    // (UpdateForNewExercise) Customize the steps, given
+                            //setupLabels({ "P": V.P });
                             break;
                         case 2:
                             highlightPolygon([V.A, V.B, V.C],           "#ffeb3b", stepId + "_" + currentStep + "_triangleABC");
