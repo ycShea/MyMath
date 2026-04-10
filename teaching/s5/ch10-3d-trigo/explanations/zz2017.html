@@ -360,6 +360,13 @@
             A: new THREE.Vector3(d_x * scale, d_y * scale, ad * scale),
             C: new THREE.Vector3(e_x * scale, e_y * scale, ce * scale)
         };
+
+        // Direction vector of BF and BA
+        const BF = new THREE.Vector3().subVectors(V.F, V.B);
+        const BA = new THREE.Vector3().subVectors(V.A, V.B);
+        const t = BA.dot(BF) / BF.lengthSq();        // Projection parameter
+        // Foot of perpendicular from A to BF
+        V.H = new THREE.Vector3().copy(V.B).add(BF.multiplyScalar(t));
         
         // Verify against your 8.0641 calculation
         // Object.entries(V).forEach(([name, point]) => { console.log(name + "=", point); });
