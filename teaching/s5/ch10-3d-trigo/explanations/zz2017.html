@@ -383,6 +383,7 @@
         V.P = footOfPerpendicular(V.D, [V.B, V.F]);
         V.I = V.F.clone().multiplyScalar(2).sub(V.B);
         V.J = V.B.clone().multiplyScalar(2).sub(V.F);
+        V.K = V.B.clone().add(V.F).multiplyScalar(0.5);
         
         // Verify against your 8.0641 calculation
         // Object.entries(V).forEach(([name, point]) => { console.log(name + "=", point); });
@@ -766,7 +767,7 @@ console.log("version 8"); // Steps for searching
                             drawThickLine(V.D, V.P, false,              "#000000", stepId + "_" + currentStep + "_lineDH_Drawing");     // (UpdateForNewExercise) Customize the steps, given thick line
                             drawThickRightAngle(V.B, V.P, V.D, 1.2);                                                                    // (UpdateForNewExercise) Customize the steps, given
                             // setupLabels({ "P": V.P });
-                            drawLineLabels(V.P, V.P, "P",               "#000000", stepId + "_" + currentStep + "_pointP_Label");       // (UpdateForNewExercise) Customize the steps, pink unknown
+                            drawLineLabels(V.P, V.P, "P",               "#000000", stepId + "_" + currentStep + "_pointP_Label");       // (UpdateForNewExercise) Customize the steps, given
                             break;
                         case 1:
                             drawThickLine(V.I, V.J, false,              "#000000", stepId + "_" + currentStep + "_lineIJ_Drawing");     // (UpdateForNewExercise) Customize the steps, given thick line
@@ -775,6 +776,7 @@ console.log("version 8"); // Steps for searching
                             drawThickLine(V.D, V.P, false,              "#000000", stepId + "_" + currentStep + "_lineDH_Drawing");     // (UpdateForNewExercise) Customize the steps, given thick line
                             drawThickRightAngle(V.B, V.P, V.D, 1.2);
                             drawAngleArc(V.A, V.P, V.D, "θ", 3.0,       "#d63384", stepId + "_" + currentStep + "_angleAPD");           // (UpdateForNewExercise) Customize the steps, pink unknown
+                            drawLineLabels(V.P, V.P, "P",               "#000000", stepId + "_" + currentStep + "_pointP_Label");       // (UpdateForNewExercise) Customize the steps, given
                             break;
                         case 2:
                             highlightPolygon([V.A, V.D, V.P],           "#d63384", stepId + "_" + currentStep + "_triangleADP");
@@ -784,6 +786,7 @@ console.log("version 8"); // Steps for searching
                             drawThickLine(V.A, V.P, false,              "#000000", stepId + "_" + currentStep + "_lineAP_Drawing");     // (UpdateForNewExercise) Customize the steps, given thick line
                             drawThickLine(V.D, V.P, false,              "#000000", stepId + "_" + currentStep + "_lineDP_Drawing");     // (UpdateForNewExercise) Customize the steps, given thick line
                             drawLineLabels(V.A, V.P, "?",               "#d63384", stepId + "_" + currentStep + "_lineAP_Label");       // (UpdateForNewExercise) Customize the steps, pink unknown
+                            drawLineLabels(V.P, V.P, "P",               "#000000", stepId + "_" + currentStep + "_pointP_Label");       // (UpdateForNewExercise) Customize the steps, given
                             break;
                         case 3:
                             highlightPolygon([V.A, V.B, V.F],           "#ff0000", stepId + "_" + currentStep + "_triangleABF");
@@ -791,6 +794,7 @@ console.log("version 8"); // Steps for searching
                             drawLineLabels(V.A, V.B, "32.118",          "#d63384", stepId + "_" + currentStep + "_lineAB_Label");    // (UpdateForNewExercise) Customize the steps, pink from previous part
                             drawAngleArc(V.B, V.A, V.C, "30°", 3.0,     "#000000", stepId + "_" + currentStep + "_angleBAC");        // (UpdateForNewExercise) Customize the steps, black given
                             drawLineLabels(V.B, V.F, "?",               "#d63384", stepId + "_" + currentStep + "_lineBF_Label");    // (UpdateForNewExercise) Customize the steps, pink unknown
+                            drawLineLabels(V.P, V.P, "P",               "#000000", stepId + "_" + currentStep + "_pointP_Label");       // (UpdateForNewExercise) Customize the steps, given
                             break;
                         case 4:
                             drawLineLabels(V.B, V.F, "33.367",          "#d63384", stepId + "_" + currentStep + "_lineBF_Label");    // (UpdateForNewExercise) Customize the steps, pink unknown
@@ -799,7 +803,8 @@ console.log("version 8"); // Steps for searching
                             drawThickLine(V.A, V.P, false,              "#000000", stepId + "_" + currentStep + "_lineAP_Drawing");     // (UpdateForNewExercise) Customize the steps, given thick line
                             drawThickLine(V.F, V.P, false,              "#000000", stepId + "_" + currentStep + "_lineFP_Drawing");     // (UpdateForNewExercise) Customize the steps, given thick line
                             drawThickRightAngle(V.B, V.P, V.A, 1.2);                                                                    // (UpdateForNewExercise) Customize the steps, given
-                            drawLineLabels(V.A, V.F, "Area ≈ 458.19",   "#d63384", stepId + "_" + currentStep + "_lineAF_Label");    // (UpdateForNewExercise) Customize the steps, pink unknown
+                            drawLineLabels(V.A, V.K, "Area ≈ 458.19",   "#d63384", stepId + "_" + currentStep + "_lineAF_Label");    // (UpdateForNewExercise) Customize the steps, pink unknown
+                            drawLineLabels(V.P, V.P, "P",               "#000000", stepId + "_" + currentStep + "_pointP_Label");       // (UpdateForNewExercise) Customize the steps, given
                             break;
                         case 5:
                             highlightPolygon([V.A, V.D, V.P],           "#d63384", stepId + "_" + currentStep + "_triangleADP");
@@ -809,6 +814,7 @@ console.log("version 8"); // Steps for searching
                             drawThickLine(V.A, V.P, false,              "#000000", stepId + "_" + currentStep + "_lineAP_Drawing");     // (UpdateForNewExercise) Customize the steps, given thick line
                             drawThickLine(V.D, V.P, false,              "#000000", stepId + "_" + currentStep + "_lineDP_Drawing");     // (UpdateForNewExercise) Customize the steps, given thick line
                             drawLineLabels(V.A, V.P, "27.464",          "#d63384", stepId + "_" + currentStep + "_lineAP_Label");       // (UpdateForNewExercise) Customize the steps, pink unknown
+                            drawLineLabels(V.P, V.P, "P",               "#000000", stepId + "_" + currentStep + "_pointP_Label");       // (UpdateForNewExercise) Customize the steps, given
                             break;
                         case 6:
                             highlightPolygon([V.A, V.D, V.P],           "#d63384", stepId + "_" + currentStep + "_triangleADP");
@@ -818,6 +824,7 @@ console.log("version 8"); // Steps for searching
                             drawThickLine(V.A, V.P, false,              "#000000", stepId + "_" + currentStep + "_lineAP_Drawing");     // (UpdateForNewExercise) Customize the steps, given thick line
                             drawThickLine(V.D, V.P, false,              "#000000", stepId + "_" + currentStep + "_lineDP_Drawing");     // (UpdateForNewExercise) Customize the steps, given thick line
                             drawLineLabels(V.A, V.P, "27.464",          "#d63384", stepId + "_" + currentStep + "_lineAP_Label");       // (UpdateForNewExercise) Customize the steps, pink unknown
+                            drawLineLabels(V.P, V.P, "P",               "#000000", stepId + "_" + currentStep + "_pointP_Label");       // (UpdateForNewExercise) Customize the steps, given
                             break;
                     }
                 }
