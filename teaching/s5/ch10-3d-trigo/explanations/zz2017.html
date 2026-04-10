@@ -753,6 +753,8 @@ console.log("version 8"); // Steps for searching
                             drawThickLine(V.A, V.H, false,              "#000000", stepId + "_" + currentStep + "_lineAH_Drawing");     // (UpdateForNewExercise) Customize the steps, given thick line
                             drawAngleArc(V.A, V.H, V.D, "θ", 2.0,       "#d63384", stepId + "_" + currentStep + "_angleAHD");           // (UpdateForNewExercise) Customize the steps, pink unknown
                             drawThickLine(V.I, V.J, false,              "#000000", stepId + "_" + currentStep + "_lineIJ_Drawing");     // (UpdateForNewExercise) Customize the steps, given thick line
+                            drawThickRightAngle(V.B, V.H, V.D, 0.4);                                                                    // (UpdateForNewExercise) Customize the steps, given
+                            drawThickRightAngle(V.B, V.H, V.A, 0.4);                                                                    // (UpdateForNewExercise) Customize the steps, given
                             break;
                         case 1:
                             highlightPolygon([V.A, V.B, V.C],           "#ffeb3b", stepId + "_" + currentStep + "_triangleABC");
@@ -763,7 +765,7 @@ console.log("version 8"); // Steps for searching
                             break;
                         case 2: case 3:
                             highlightPolygon([V.A, V.B, V.F],           "#ff0000", stepId + "_" + currentStep + "_triangleABF");
-                            drawLineLabels(V.A, V.F, "AF≈57.064",          "#d63384", stepId + "_" + currentStep + "_lineAF_Label");    // (UpdateForNewExercise) Customize the steps, pink from previous part
+                            drawLineLabels(V.A, V.F, "AF≈57.064",       "#d63384", stepId + "_" + currentStep + "_lineAF_Label");    // (UpdateForNewExercise) Customize the steps, pink from previous part
                             drawLineLabels(V.A, V.B, "32.118",          "#d63384", stepId + "_" + currentStep + "_lineAB_Label");    // (UpdateForNewExercise) Customize the steps, pink from previous part
                             drawAngleArc(V.B, V.A, V.C, "30°", 3.0,     "#000000", stepId + "_" + currentStep + "_angleBAC");        // (UpdateForNewExercise) Customize the steps, black given
                             break;
