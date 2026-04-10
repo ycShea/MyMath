@@ -231,7 +231,12 @@
                 </div>
                 <div id="sol-biii" class="solution-content" data-current-step="0">
                     <p class="step" style="display:none;">                              <!-- (UpdateForNewExercise) Part biii Step 0-->
-                        The inclination $\theta$ is the angle between plane $ABC$ and the ground. Since $B$ and $F$ are on the ground, $BF$ is the intersection line.
+                        Let $H$ be the foot of perpendicular from $D$ to the straight line $BF$.<br>
+                        Since $B$ and $F$ are on the ground, $BF$ is the intersection line, the inclination $\theta$ is the angle between plane $ABC$ and the ground.<br>
+                        $\theta = \angle AHD$
+                    </p>
+                    <p class="step" style="display:none;">                              <!-- (UpdateForNewExercise) Part biii Step 0-->
+                        Then the inclination $\theta$ is the angle between plane $ABC$ and the ground. Since $B$ and $F$ are on the ground, $BF$ is the intersection line.
                     </p>
                     <p class="step" style="display:none;">                              <!-- (UpdateForNewExercise) Part biii Step 1-->
                         Find $BF$ using Cosine Rule in $\triangle ABF$:<br>
@@ -751,10 +756,11 @@ console.log("version 8"); // Steps for searching
                         case 0:
                             drawThickLine(V.D, V.H, false,              "#000000", stepId + "_" + currentStep + "_lineDH_Drawing");     // (UpdateForNewExercise) Customize the steps, given thick line
                             drawThickLine(V.A, V.H, false,              "#000000", stepId + "_" + currentStep + "_lineAH_Drawing");     // (UpdateForNewExercise) Customize the steps, given thick line
-                            drawAngleArc(V.A, V.H, V.D, "θ", 2.0,       "#d63384", stepId + "_" + currentStep + "_angleAHD");           // (UpdateForNewExercise) Customize the steps, pink unknown
+                            drawAngleArc(V.A, V.H, V.D, "θ", 3.0,       "#d63384", stepId + "_" + currentStep + "_angleAHD");           // (UpdateForNewExercise) Customize the steps, pink unknown
                             drawThickLine(V.I, V.J, false,              "#000000", stepId + "_" + currentStep + "_lineIJ_Drawing");     // (UpdateForNewExercise) Customize the steps, given thick line
-                            drawThickRightAngle(V.B, V.H, V.D, 0.4);                                                                    // (UpdateForNewExercise) Customize the steps, given
-                            drawThickRightAngle(V.B, V.H, V.A, 0.4);                                                                    // (UpdateForNewExercise) Customize the steps, given
+                            drawThickRightAngle(V.B, V.H, V.D, 1.2);                                                                    // (UpdateForNewExercise) Customize the steps, given
+                            drawThickRightAngle(V.B, V.H, V.A, 1.2);                                                                    // (UpdateForNewExercise) Customize the steps, given
+                            setupLabels({ "H": V.H });
                             break;
                         case 1:
                             highlightPolygon([V.A, V.B, V.C],           "#ffeb3b", stepId + "_" + currentStep + "_triangleABC");
