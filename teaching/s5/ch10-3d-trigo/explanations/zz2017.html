@@ -791,6 +791,24 @@ console.log("version 8"); // Steps for searching
                             drawAngleArc(V.B, V.A, V.C, "30°", 3.0,     "#000000", stepId + "_" + currentStep + "_angleBAC");        // (UpdateForNewExercise) Customize the steps, black given
                             drawLineLabels(V.B, V.F, "?",               "#d63384", stepId + "_" + currentStep + "_lineBF_Label");    // (UpdateForNewExercise) Customize the steps, pink unknown
                             break;
+                        case 5:
+                            highlightPolygon([V.A, V.D, V.P],           "#d63384", stepId + "_" + currentStep + "_triangleADP");
+                            drawThickRightAngle(V.A, V.D, V.P, 1.2);                                                                    // (UpdateForNewExercise) Customize the steps, given
+                            drawAngleArc(V.A, V.P, V.D, "θ", 3.0,       "#d63384", stepId + "_" + currentStep + "_angleAPD");           // (UpdateForNewExercise) Customize the steps, pink unknown
+                            drawLineLabels(V.A, V.D, "10",              "#000000", stepId + "_" + currentStep + "_lineAD_Label");       // (UpdateForNewExercise) Customize the steps, given
+                            drawThickLine(V.A, V.P, false,              "#000000", stepId + "_" + currentStep + "_lineAP_Drawing");     // (UpdateForNewExercise) Customize the steps, given thick line
+                            drawThickLine(V.D, V.P, false,              "#000000", stepId + "_" + currentStep + "_lineDP_Drawing");     // (UpdateForNewExercise) Customize the steps, given thick line
+                            drawLineLabels(V.A, V.P, "27.464",          "#d63384", stepId + "_" + currentStep + "_lineAP_Label");       // (UpdateForNewExercise) Customize the steps, pink unknown
+                            break;
+                        case 6:
+                            highlightPolygon([V.A, V.D, V.P],           "#d63384", stepId + "_" + currentStep + "_triangleADP");
+                            drawThickRightAngle(V.A, V.D, V.P, 1.2);                                                                    // (UpdateForNewExercise) Customize the steps, given
+                            drawAngleArc(V.A, V.P, V.D, "θ≈21.4°", 3.0, "#d63384", stepId + "_" + currentStep + "_angleAPD");           // (UpdateForNewExercise) Customize the steps, pink unknown
+                            drawLineLabels(V.A, V.D, "10",              "#000000", stepId + "_" + currentStep + "_lineAD_Label");       // (UpdateForNewExercise) Customize the steps, given
+                            drawThickLine(V.A, V.P, false,              "#000000", stepId + "_" + currentStep + "_lineAP_Drawing");     // (UpdateForNewExercise) Customize the steps, given thick line
+                            drawThickLine(V.D, V.P, false,              "#000000", stepId + "_" + currentStep + "_lineDP_Drawing");     // (UpdateForNewExercise) Customize the steps, given thick line
+                            drawLineLabels(V.A, V.P, "27.464",          "#d63384", stepId + "_" + currentStep + "_lineAP_Label");       // (UpdateForNewExercise) Customize the steps, pink unknown
+                            break;
                     }
                 }
 
