@@ -131,6 +131,7 @@
             <div class="part-container">
                 <div class="part-header">
                     <span><strong>Part (a)</strong> Find the length of $AC$.</span>       <!-- (UpdateForNewExercise) Questions part ai -->
+                    <button id="redo-ai" class="btn-redo" style="display: none; background-color: #28a745; color: white;" onclick="redoSteps('sol-ai', 'btn-ai', 'redo-ai')">Redo</button>
                     <button id="btn-ai" class="btn-show" onclick="revealStep('sol-ai', 'btn-ai', [])">Show Step</button>
                 </div>
 
@@ -623,6 +624,32 @@
             // Required for OrbitControls to recognize the manual changes
             controls.update();
         }
+
+        function redoSteps(containerId, btnId, redoBtnId) {
+            const container = document.getElementById(containerId);
+            const btn = document.getElementById(btnId);
+            const redoBtn = document.getElementById(redoBtnId);
+            const steps = container.getElementsByClassName('step');
+        
+            // 1. Reset currentStep to zero
+            container.setAttribute('data-current-step', '0');
+        
+            // 2. Hide all step text
+            for (let s of steps) {
+                s.style.display = 'none';
+            }
+        
+            // 3. Reset "Show Step" button
+            btn.textContent = "Show Step";
+            btn.disabled = false;
+            btn.style.opacity = "1";
+        
+            // 4. Hide the Redo button again
+            redoBtn.style.display = 'none';
+        
+            // 5. Clear 3D highlights
+            clearScene(); 
+        }
         
         // This function orchestrates the progressive reveal of solution steps by synchronizing the visibility of HTML text, MathJax formula rendering, and the corresponding 3D triangle highlights in the Three.js scene.
         // The function is triggered when the button is pressed
@@ -835,9 +862,16 @@ console.log("version 8"); // Steps for searching
                 container.setAttribute('data-current-step', currentStep);
                 
                 if (currentStep === steps.length) {
+                    // 1. Change Show Step to Completed
                     btn.textContent = "Completed";
-                    btn.disabled = true; // Optional: disable button when done
+                    btn.disabled = true;
                     btn.style.opacity = "0.5";
+                
+                    // 2. Show the Redo button (Assuming your redo ID follows a pattern)
+                    const redoBtn = document.getElementById("redo-" + containerId.replace('sol-', ''));
+                    if (redoBtn) {
+                        redoBtn.style.display = 'inline-block';
+                    }
                 } else {
                     btn.textContent = "Next Step";
                 }
