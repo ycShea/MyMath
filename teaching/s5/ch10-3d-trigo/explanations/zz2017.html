@@ -540,7 +540,8 @@
                 color: 0x808080, 
                 side: THREE.DoubleSide, 
                 transparent: true, 
-                opacity: 0.3 
+                opacity: 0.3,
+                depthWrite: false
             });
         
             const plane = new THREE.Mesh(geometry, material);
@@ -1391,8 +1392,8 @@ console.log("version 9"); // Steps for searching
                     opacity: 0.3,           // Muted opacity so labels remain readable
                     depthWrite: false,      // Prevents the "box" from blocking lines behind it
                     polygonOffset: true,
-                    polygonOffsetFactor: 1,
-                    polygonOffsetUnits: 1
+                    polygonOffsetFactor: -1,        // <---pulls it forward
+                    polygonOffsetUnits: -1          // <---pulls it forward
                 })
             );
         
@@ -1438,8 +1439,8 @@ console.log("version 9"); // Steps for searching
                 transparent: true, 
                 opacity: 0.4,
                 polygonOffset: true,
-                polygonOffsetFactor: 1,
-                polygonOffsetUnits: 1
+                polygonOffsetFactor: -1,    // <---pulls it forward
+                polygonOffsetUnits: -1      // <---pulls it forward
             }));
             scene.add(mesh);
             return mesh;
