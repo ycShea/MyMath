@@ -133,7 +133,7 @@
                 <div class="part-header">
                     <span><strong>Part (a)</strong> Find the length of $AC$.</span>       <!-- (UpdateForNewExercise) Questions part ai -->
                     <button id="redo-ai" class="btn-redo" style="display: none; background-color: #28a745; color: white;" onclick="redoSteps('ai')">Redo</button>
-                    <button id="btn-ai" class="btn-show" onclick="revealStep('sol-ai', 'btn-ai', [])">Show Step</button>
+                    <button id="btn-ai" class="btn-show" onclick="revealStep('ai', [])">Show Step</button>
                 </div>
 
                 <div id="sol-ai" class="solution-content" data-current-step="0">
@@ -178,7 +178,7 @@
                 <div class="part-header">
                     <span><strong>(b)(i)</strong> Find the distance between $C$ and $F$.</span>
                     <button id="redo-bi" class="btn-redo" style="display: none; background-color: #28a745; color: white;" onclick="redoSteps('bi')">Redo</button>
-                    <button id="btn-bi" class="btn-show" onclick="revealStep('sol-bi', 'btn-bi', [])">Show Step</button>        <!-- (UpdateForNewExercise) Questions part b -->
+                    <button id="btn-bi" class="btn-show" onclick="revealStep('bi', [])">Show Step</button>        <!-- (UpdateForNewExercise) Questions part b -->
                 </div>
                 <div id="sol-bi" class="solution-content" data-current-step="0">
                     <p class="step" style="display:none;">                              <!-- (UpdateForNewExercise) Part bi Step 0-->
@@ -205,7 +205,7 @@
                 <div class="part-header">
                     <span><strong>(b)(ii)</strong> Find area of $\triangle ABF$.</span>
                     <button id="redo-bii" class="btn-redo" style="display: none; background-color: #28a745; color: white;" onclick="redoSteps('bii')">Redo</button>
-                    <button id="btn-bii" class="btn-show" onclick="revealStep('sol-bii', 'btn-bii', [])">Show Step</button>                            <!-- (UpdateForNewExercise) Questions part b -->
+                    <button id="btn-bii" class="btn-show" onclick="revealStep('bii', [])">Show Step</button>                            <!-- (UpdateForNewExercise) Questions part b -->
                 </div>
                 <div id="sol-bii" class="solution-content" data-current-step="0">
                     <p class="step" style="display:none;">                              <!-- (UpdateForNewExercise) Part bii Step 0-->
@@ -231,7 +231,7 @@
                 <div class="part-header">
                     <span><strong>(b)(iii)</strong> Find inclination of $ABC$ to the horizontal ground.</span>
                     <button id="redo-biii" class="btn-redo" style="display: none; background-color: #28a745; color: white;" onclick="redoSteps('biii')">Redo</button>
-                    <button id="btn-biii" class="btn-show" onclick="revealStep('sol-biii', 'btn-biii', [])">Show Step</button>        <!-- (UpdateForNewExercise) Questions part b -->
+                    <button id="btn-biii" class="btn-show" onclick="revealStep('biii', [])">Show Step</button>        <!-- (UpdateForNewExercise) Questions part b -->
                 </div>
                 <div id="sol-biii" class="solution-content" data-current-step="0">
                     <p class="step" style="display:none;">                              <!-- (UpdateForNewExercise) Part biii Step 0-->
@@ -269,7 +269,7 @@
                 <div class="part-header">
                     <button id="redo-biv" class="btn-redo" style="display: none; background-color: #28a745; color: white;" onclick="redoSteps('biv')">Redo</button>
                     <span><strong>(b)(iv)</strong> Claim: the area of $BDF$ is greater than $460\text{ cm}^2$. Do you agree?.</span>
-                    <button id="btn-biv" class="btn-show" onclick="revealStep('sol-biv', 'btn-biv', [])">Show Step</button>        <!-- (UpdateForNewExercise) Questions part b -->
+                    <button id="btn-biv" class="btn-show" onclick="revealStep('biv', [])">Show Step</button>        <!-- (UpdateForNewExercise) Questions part b -->
                 </div>
                 <div id="sol-biv" class="solution-content" data-current-step="0">
                     <p class="step" style="display:none;">                              <!-- (UpdateForNewExercise) Part biv Step 0-->
@@ -436,7 +436,8 @@
         // handleToggle(type)                       // Switches entire scene state between 2D (Part A) and 3D (Part B)
         // toggleQuestion(divId, btnId)             // Switches visibility for the full question text container
         // toggleAnswersOnly(prefix, btn)           // Filters solution blocks to show only final answers/results
-        // revealStep(containerId, buttonId)        // Progressively shows solution steps and triggers 3D highlights
+        // redoSteps(session)                       // Restart the steps
+        // revealStep(session)                      // Progressively shows solution steps and triggers 3D highlights
         
         // ==========================================
         // CAMERA & SCENE MANAGEMENT
@@ -660,8 +661,8 @@
         
         // This function orchestrates the progressive reveal of solution steps by synchronizing the visibility of HTML text, MathJax formula rendering, and the corresponding 3D triangle highlights in the Three.js scene.
         // The function is triggered when the button is pressed
-        // For example: <button id="btn-bii" class="btn-show" onclick="revealStep('sol-bii', 'btn-bii', [])">Show Step</button>
-        function revealStep(containerId, buttonId, triangleKeys) {                                                                // revealStep (UpdateForNewExercise)
+        // For example: <button id="btn-bii" class="btn-show" onclick="revealStep('bii', [])">Show Step</button>
+        function revealStep(session, triangleKeys = []) {                                                                // revealStep (UpdateForNewExercise)
             // =============================================================
             // 0. CLEAR STEP-SPECIFIC OBJECTS (Labels, Arcs, Extra Lines)
             // =============================================================
@@ -691,8 +692,8 @@
             // =============================================================
             
             // 1. Detect which part we are in
-            const isPartA = containerId.startsWith('sol-a');                                                                              // parts a and b (UpdateForNewExercise)
-            const isPartB = containerId.startsWith('sol-b');
+            const isPartA = session.startsWith('a');                                                                              // parts a and b (UpdateForNewExercise)
+            const isPartB = session.startsWith('b');
             
             // 2. Switch to Figure A if solving Part A and Switch to Figure B if solving Part B (This is what was missing)                // handleToggle A and B (UpdateForNewExercise)
             if (isPartA && currentFigure !== 'A') {
@@ -702,13 +703,13 @@
                 handleToggle('B');
             }
 
-            const container = document.getElementById(containerId);
+            const container = document.getElementById("sol-" + session);
             // Collects all HTML elements with the class "step" within the specific solution container.
             // This creates a live HTMLCollection (array-like list) used to reveal each line of the math solution one-by-one as the user clicks the "Show Step" button.
             const steps = container.getElementsByClassName('step');
-            const btn = document.getElementById(buttonId);
+            const btn = document.getElementById("btn-" + session);
             
-            const stepId = containerId.replace('sol-', 'step-');
+            const stepId = "step-" + session
             let currentStep = parseInt(container.getAttribute('data-current-step'));
             
             // 3. Update the "currentFigure === null" check to be dynamic
@@ -872,14 +873,14 @@ console.log("version 8"); // Steps for searching
                     btn.style.opacity = "0.5";
                 
                     // 2. Show the Redo button (Assuming your redo ID follows a pattern)
-                    const redoBtn = document.getElementById("redo-" + containerId.replace('sol-', ''));
+                    const redoBtn = document.getElementById("redo-" + session);
                     if (redoBtn) {
                         redoBtn.style.display = 'inline-block';
                     }
                 } else {
                     btn.textContent = "Next Step";
                 }
-                collapseOtherParts(containerId);
+                collapseOtherParts("sol-" + session);
             }
         }
 
