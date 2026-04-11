@@ -784,8 +784,10 @@
                             drawLineLabels(V.A, V.F, "AF≈57.063",       "#d63384", stepId + "_" + currentStep + "_lineAF_Label");    // (UpdateForNewExercise) Customize the steps, pink from previous part
                             drawLineLabels(V.A, V.B, "32.118",          "#d63384", stepId + "_" + currentStep + "_lineAB_Label");    // (UpdateForNewExercise) Customize the steps, pink from previous part
                             drawAngleArc(V.B, V.A, V.C, "30°", 3.0,     "#000000", stepId + "_" + currentStep + "_angleBAC");        // (UpdateForNewExercise) Customize the steps, black given
-                            if (currentStep === 2) break;
-                            drawLineLabels(V.A, V.K, "Area ≈ 458",      "#00bbbb", stepId + "_" + currentStep + "_lineAF_Label");    // (UpdateForNewExercise) Customize the steps, cyan answer
+                            if (currentStep === 2)
+                                drawLineLabels(V.A, V.K, "Area = ?",    "#d63384", stepId + "_" + currentStep + "_lineAF_Label");    // (UpdateForNewExercise) Customize the steps, pink unknown
+                            else
+                                drawLineLabels(V.A, V.K, "Area ≈ 458",  "#00bbbb", stepId + "_" + currentStep + "_lineAF_Label");    // (UpdateForNewExercise) Customize the steps, cyan answer
                             break;
                         
                     }
