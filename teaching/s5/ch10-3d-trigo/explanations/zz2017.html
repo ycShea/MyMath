@@ -66,6 +66,12 @@
             height: auto;      /* Maintain aspect ratio */
             border-radius: 4px;
         }
+.button-group {
+    display: flex;
+    align-items: center;
+    gap: 10px; /* Maintains a fixed distance between buttons */
+    justify-content: flex-start; /* Keeps them anchored to the left */
+}
         .part-container { margin-bottom: 15px; border: 1px solid #eee; border-radius: 8px; overflow: hidden; }
         .part-header { display: flex; justify-content: space-between; align-items: center; padding: 12px 20px; background: #fafafa; }
         .solution-content { display: none; padding: 20px; background: #fff; border-top: 1px solid #eee; }
@@ -132,8 +138,10 @@
             <div class="part-container">
                 <div class="part-header">
                     <span><strong>Part (a)</strong> Find the length of $AC$.</span>       <!-- (UpdateForNewExercise) Questions part ai -->
-                    <button id="redo-ai" class="btn-redo" style="display: none; background-color: #28a745; color: white;" onclick="redoSteps('ai')">Redo</button>
-                    <button id="btn-ai" class="btn-show" onclick="revealStep('ai', [])">Show Step</button>
+                    <div class="button-group">
+                        <button id="redo-ai" style="display: none;">Redo</button>
+                        <button id="btn-ai">Show Step</button>
+                    </div>
                 </div>
 
                 <div id="sol-ai" class="solution-content" data-current-step="0">
@@ -276,11 +284,11 @@
                         Consider $\triangle BDF$, $DP$ is the height from $D$ to $BF$.<br>
                     </p>
                     <p class="step" style="display:none;">                              <!-- (UpdateForNewExercise) Part biv Step 1-->
-                        Consider the right-angled $\triangle ADP$,<br>
-                        $\tan \angle BDF = \frac{10}{DP} \implies DP \approx 25.579$    <!-- DP ≈ 25.57872769 -->
+                        In the right-angled $\triangle ADP$,<br>
+                        $\tan \angle BDF = \frac{10}{DP} \implies DP \approx 25.579$ cm    <!-- DP ≈ 25.57872769 -->
                     </p>
                     <p class="step" style="display:none;">                              <!-- (UpdateForNewExercise) Part biv Step 2-->
-                        $$\text{Area of }\triangle BDF = \frac{1}{2}(DP)(BF) \approx \frac{1}{2}(25.579)(33.367) \approx 426.74$$        <!-- Area ≈ 426.741482 -->
+                        $$\text{Area of }\triangle BDF = \frac{1}{2}(DP)(BF) \approx \frac{1}{2}(25.579)(33.367) \approx 426.74 \text{ cm}^2$$        <!-- Area ≈ 426.741482 -->
                         Area of $\triangle BDF < 480 \text{ cm}^2$                
                     </p>
                     <p class="step final-ans" style="display:none;">                    <!-- (UpdateForNewExercise) Part biv Step 3 Final answers -->
@@ -873,7 +881,8 @@ console.log("version 8"); // Steps for searching
                     // 2. Show the Redo button (Assuming your redo ID follows a pattern)
                     const redoBtn = document.getElementById("redo-" + session);
                     if (redoBtn) {
-                        redoBtn.style.display = 'inline-block';
+                        // redoBtn.style.display = 'inline-block';
+                        redoBtn.style.display = 'block'; // Or 'inline-block'
                     }
                 } else {
                     btn.textContent = "Next Step";
