@@ -1431,7 +1431,11 @@ console.log("version 8"); // Steps for searching
                 const steps = container.getElementsByClassName('step');
                 const btnId = container.id.replace('sol-', 'btn-');
                 const stepBtn = document.getElementById(btnId);
-        
+                
+                // --- NEW: Identify the Redo button ---
+                const redoBtnId = "redo-" + container.id.replace('sol-', '');
+                const redoBtn = document.getElementById(redoBtnId);
+                
                 if (isShowing) {
                     // HIDE LOGIC
                     container.style.display = 'none';
@@ -1442,6 +1446,8 @@ console.log("version 8"); // Steps for searching
                         stepBtn.style.opacity = "1";
                     }
                     container.setAttribute('data-current-step', '0');
+                    // --- HIDE REDO BUTTON when hiding everything ---
+                    if (redoBtn) redoBtn.style.display = 'none';
                 } else {
                     // SHOW ANSWERS ONLY LOGIC
                     container.style.display = 'block';
@@ -1449,6 +1455,9 @@ console.log("version 8"); // Steps for searching
                         // Only show steps that have the 'final-ans' class
                         s.style.display = s.classList.contains('final-ans') ? 'block' : 'none';
                     }
+                    // --- HIDE REDO BUTTON when showing answers only ---
+                    // (Because the steps aren't fully "Completed" yet)
+                    if (redoBtn) redoBtn.style.display = 'none';
                 }
             });
             btn.textContent = isShowing ? "Show Answers Only" : "Hide Answers";
