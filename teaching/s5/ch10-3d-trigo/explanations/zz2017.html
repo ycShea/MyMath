@@ -798,7 +798,8 @@
                             drawLineLabels(V.A, V.F, "AF=AC+CF≈57.063", "#d63384", stepId + "_" + currentStep + "_lineAF_Label");    // (UpdateForNewExercise) Customize the steps, pink unknown
                             break;
                         case 1:
-                            highlightPolygon([V.A, V.B, V.C],           "#ffeb3b", stepId + "_" + currentStep + "_triangleABC");
+                            polygonB.visible = false;
+                            highlightPolygon([V.A, V.B, V.C],           "#00bbbb", stepId + "_" + currentStep + "_triangleABC");
                             drawLineLabels(V.B, V.C, "24",              "#000000", stepId + "_" + currentStep + "_lineBC_Label");    // (UpdateForNewExercise) Customize the steps, black given
                             drawAngleArc(V.A, V.C, V.B, "42°", 2.0,     "#000000", stepId + "_" + currentStep + "_angleACB");        // (UpdateForNewExercise) Customize the steps, black given
                             drawAngleArc(V.B, V.A, V.C, "30°", 3.0,     "#000000", stepId + "_" + currentStep + "_angleBAC");        // (UpdateForNewExercise) Customize the steps, black given
