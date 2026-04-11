@@ -882,66 +882,40 @@ console.log("version 9"); // Steps for searching
                 if (stepId === "step-biv") {
                     switch (currentStep) {
                         case 0:
-                            drawLineLabels(V.B, V.F, "33.367",          "#d63384", stepId + "_" + currentStep + "_lineBF_Label");       // (UpdateForNewExercise) Customize the steps, pink unknown
-                            highlightPolygon([V.D, V.B, V.F],           "#ff0000", stepId + "_" + currentStep + "_triangleBDF");
-                            drawLineLabels(V.D, V.P, "?",               "#d63384", stepId + "_" + currentStep + "_lineDP_Label");       // (UpdateForNewExercise) Customize the steps, pink from previous part
-                            drawThickLine(V.D, V.P, false,              "#000000", stepId + "_" + currentStep + "_lineDP_Drawing");     // (UpdateForNewExercise) Customize the steps, given thick line
-                            drawThickLine(V.B, V.P, false,              "#000000", stepId + "_" + currentStep + "_lineBP_Drawing");     // (UpdateForNewExercise) Customize the steps, given thick line
-                            drawThickLine(V.B, V.F, true,               "#000000", stepId + "_" + currentStep + "_lineBF_Drawing");     // (UpdateForNewExercise) Customize the steps, given thick line
-                            drawThickRightAngle(V.B, V.P, V.D, 1.2);                                                                    // (UpdateForNewExercise) Customize the steps, given
-                            drawLineLabels(V.K, V.K, "Area = ?",        "#d63384", stepId + "_" + currentStep + "_pointK_Label");       // (UpdateForNewExercise) Customize the steps, pink unknown
-                            drawLineLabels(V.P, V.P, "P",               "#000000", stepId + "_" + currentStep + "_pointP_Label");       // (UpdateForNewExercise) Customize the steps, given
+                            drawLineLabels(V.B, V.F, "33.367",            "#d63384", stepId + "_" + currentStep + "_lineBF_Label");       // (UpdateForNewExercise) Customize the steps, pink unknown
+                            highlightPolygon([V.D, V.B, V.F],             "#ff0000", stepId + "_" + currentStep + "_triangleBDF");
+                            drawLineLabels(V.D, V.P, "?",                 "#d63384", stepId + "_" + currentStep + "_lineDP_Label");       // (UpdateForNewExercise) Customize the steps, pink from previous part
+                            drawThickLine(V.D, V.P, false,                "#000000", stepId + "_" + currentStep + "_lineDP_Drawing");     // (UpdateForNewExercise) Customize the steps, given thick line
+                            drawThickLine(V.B, V.P, false,                "#000000", stepId + "_" + currentStep + "_lineBP_Drawing");     // (UpdateForNewExercise) Customize the steps, given thick line
+                            drawThickLine(V.B, V.F, true,                 "#000000", stepId + "_" + currentStep + "_lineBF_Drawing");     // (UpdateForNewExercise) Customize the steps, given thick line
+                            drawThickRightAngle(V.B, V.P, V.D, 1.2);                                                                      // (UpdateForNewExercise) Customize the steps, given
+                            drawLineLabels(V.L, V.L, "Area = ?",          "#d63384", stepId + "_" + currentStep + "_pointK_Label");       // (UpdateForNewExercise) Customize the steps, pink unknown
+                            drawLineLabels(V.P, V.P, "P",                 "#000000", stepId + "_" + currentStep + "_pointP_Label");       // (UpdateForNewExercise) Customize the steps, given
                             break;
                         case 1:
-                            highlightPolygon([V.A, V.D, V.P],           "#d63384", stepId + "_" + currentStep + "_triangleADP");
-                            drawThickRightAngle(V.A, V.D, V.P, 1.2);                                                                    // (UpdateForNewExercise) Customize the steps, given
+                            highlightPolygon([V.A, V.D, V.P],             "#d63384", stepId + "_" + currentStep + "_triangleADP");
+                            drawThickRightAngle(V.A, V.D, V.P, 1.2);                                                                      // (UpdateForNewExercise) Customize the steps, given
                             drawAngleArc(V.A, V.P, V.D, "θ≈21.353°", 3.0, "#d63384", stepId + "_" + currentStep + "_angleAPD");           // (UpdateForNewExercise) Customize the steps, pink unknown
                             drawLineLabels(V.A, V.D, "10",                "#000000", stepId + "_" + currentStep + "_lineAD_Label");       // (UpdateForNewExercise) Customize the steps, given
                             drawThickLine(V.A, V.P, false,                "#000000", stepId + "_" + currentStep + "_lineAP_Drawing");     // (UpdateForNewExercise) Customize the steps, given thick line
                             drawThickLine(V.D, V.P, false,                "#000000", stepId + "_" + currentStep + "_lineDP_Drawing");     // (UpdateForNewExercise) Customize the steps, given thick line
-                            drawLineLabels(V.D, V.P, "?",                 "#d63384", stepId + "_" + currentStep + "_lineDP_Label");       // (UpdateForNewExercise) Customize the steps, pink unknown
+                            drawLineLabels(V.D, V.P, "25.579",            "#d63384", stepId + "_" + currentStep + "_lineDP_Label");       // (UpdateForNewExercise) Customize the steps, pink unknown
                             drawLineLabels(V.P, V.P, "P",                 "#000000", stepId + "_" + currentStep + "_pointP_Label");       // (UpdateForNewExercise) Customize the steps, given
                             break;
-                        case 2:
-                            drawLineLabels(V.B, V.F, "33.367",          "#d63384", stepId + "_" + currentStep + "_lineBF_Label");       // (UpdateForNewExercise) Customize the steps, pink unknown
-                            highlightPolygon([V.D, V.B, V.F],           "#ff0000", stepId + "_" + currentStep + "_triangleBDF");
-                            drawLineLabels(V.D, V.P, "?",               "#d63384", stepId + "_" + currentStep + "_lineDP_Label");       // (UpdateForNewExercise) Customize the steps, pink from previous part
-                            drawThickLine(V.D, V.P, false,              "#000000", stepId + "_" + currentStep + "_lineDP_Drawing");     // (UpdateForNewExercise) Customize the steps, given thick line
-                            drawThickLine(V.B, V.P, false,              "#000000", stepId + "_" + currentStep + "_lineBP_Drawing");     // (UpdateForNewExercise) Customize the steps, given thick line
-                            drawThickLine(V.B, V.F, true,               "#000000", stepId + "_" + currentStep + "_lineBF_Drawing");     // (UpdateForNewExercise) Customize the steps, given thick line
-                            drawThickRightAngle(V.B, V.P, V.D, 1.2);                                                                    // (UpdateForNewExercise) Customize the steps, given
-                            drawLineLabels(V.L, V.L, "Area = ?",        "#d63384", stepId + "_" + currentStep + "_pointK_Label");       // (UpdateForNewExercise) Customize the steps, pink unknown
-                            drawLineLabels(V.P, V.P, "P",               "#000000", stepId + "_" + currentStep + "_pointP_Label");       // (UpdateForNewExercise) Customize the steps, given
-                            break;
-                        case 4:
-                            drawLineLabels(V.B, V.F, "33.367",          "#d63384", stepId + "_" + currentStep + "_lineBF_Label");       // (UpdateForNewExercise) Customize the steps, pink unknown
-                            highlightPolygon([V.A, V.B, V.F],           "#ff0000", stepId + "_" + currentStep + "_triangleABF");
-                            drawLineLabels(V.A, V.P, "?",               "#d63384", stepId + "_" + currentStep + "_lineAP_Label");       // (UpdateForNewExercise) Customize the steps, pink from previous part
-                            drawThickLine(V.A, V.P, false,              "#000000", stepId + "_" + currentStep + "_lineAP_Drawing");     // (UpdateForNewExercise) Customize the steps, given thick line
-                            drawThickLine(V.F, V.P, false,              "#000000", stepId + "_" + currentStep + "_lineFP_Drawing");     // (UpdateForNewExercise) Customize the steps, given thick line
-                            drawThickRightAngle(V.B, V.P, V.A, 1.2);                                                                    // (UpdateForNewExercise) Customize the steps, given
-                            drawLineLabels(V.K, V.K, "Area ≈ 458.19",   "#d63384", stepId + "_" + currentStep + "_pointK_Label");       // (UpdateForNewExercise) Customize the steps, pink unknown
-                            drawLineLabels(V.P, V.P, "P",               "#000000", stepId + "_" + currentStep + "_pointP_Label");       // (UpdateForNewExercise) Customize the steps, given
-                            break;
-                        case 5:
-                            highlightPolygon([V.A, V.D, V.P],           "#d63384", stepId + "_" + currentStep + "_triangleADP");
-                            drawThickRightAngle(V.A, V.D, V.P, 1.2);                                                                    // (UpdateForNewExercise) Customize the steps, given
-                            drawAngleArc(V.A, V.P, V.D, "θ", 3.0,       "#d63384", stepId + "_" + currentStep + "_angleAPD");           // (UpdateForNewExercise) Customize the steps, pink unknown
-                            drawLineLabels(V.A, V.D, "10",              "#000000", stepId + "_" + currentStep + "_lineAD_Label");       // (UpdateForNewExercise) Customize the steps, given
-                            drawThickLine(V.A, V.P, false,              "#000000", stepId + "_" + currentStep + "_lineAP_Drawing");     // (UpdateForNewExercise) Customize the steps, given thick line
-                            drawThickLine(V.D, V.P, false,              "#000000", stepId + "_" + currentStep + "_lineDP_Drawing");     // (UpdateForNewExercise) Customize the steps, given thick line
-                            drawLineLabels(V.A, V.P, "27.464",          "#d63384", stepId + "_" + currentStep + "_lineAP_Label");       // (UpdateForNewExercise) Customize the steps, pink unknown
-                            drawLineLabels(V.P, V.P, "P",               "#000000", stepId + "_" + currentStep + "_pointP_Label");       // (UpdateForNewExercise) Customize the steps, given
-                            break;
-                        case 6:
-                            highlightPolygon([V.A, V.D, V.P],           "#d63384", stepId + "_" + currentStep + "_triangleADP");
-                            drawThickRightAngle(V.A, V.D, V.P, 1.2);                                                                    // (UpdateForNewExercise) Customize the steps, given
-                            drawAngleArc(V.A, V.P, V.D, "θ≈21.4°", 3.0, "#00bbbb", stepId + "_" + currentStep + "_angleAPD");           // (UpdateForNewExercise) Customize the steps, cyan answer
-                            drawLineLabels(V.A, V.D, "10",              "#000000", stepId + "_" + currentStep + "_lineAD_Label");       // (UpdateForNewExercise) Customize the steps, given
-                            drawThickLine(V.A, V.P, false,              "#000000", stepId + "_" + currentStep + "_lineAP_Drawing");     // (UpdateForNewExercise) Customize the steps, given thick line
-                            drawThickLine(V.D, V.P, false,              "#000000", stepId + "_" + currentStep + "_lineDP_Drawing");     // (UpdateForNewExercise) Customize the steps, given thick line
-                            drawLineLabels(V.A, V.P, "27.464",          "#d63384", stepId + "_" + currentStep + "_lineAP_Label");       // (UpdateForNewExercise) Customize the steps, pink unknown
-                            drawLineLabels(V.P, V.P, "P",               "#000000", stepId + "_" + currentStep + "_pointP_Label");       // (UpdateForNewExercise) Customize the steps, given
+                        case 2: case 3:
+                            highlightPolygon([V.D, V.B, V.F],             "#ff0000", stepId + "_" + currentStep + "_triangleBDF");
+                            drawLineLabels(V.D, V.P, "?",                 "#d63384", stepId + "_" + currentStep + "_lineDP_Label");       // (UpdateForNewExercise) Customize the steps, pink from previous part
+                            drawThickLine(V.D, V.P, false,                "#000000", stepId + "_" + currentStep + "_lineDP_Drawing");     // (UpdateForNewExercise) Customize the steps, given thick line
+                            drawThickLine(V.B, V.P, false,                "#000000", stepId + "_" + currentStep + "_lineBP_Drawing");     // (UpdateForNewExercise) Customize the steps, given thick line
+                            drawThickLine(V.B, V.F, true,                 "#000000", stepId + "_" + currentStep + "_lineBF_Drawing");     // (UpdateForNewExercise) Customize the steps, given thick line
+                            drawThickRightAngle(V.B, V.P, V.D, 1.2);                                                                      // (UpdateForNewExercise) Customize the steps, given
+                            drawLineLabels(V.P, V.P, "P",                 "#000000", stepId + "_" + currentStep + "_pointP_Label");       // (UpdateForNewExercise) Customize the steps, given
+                            if (currentStep === 2) {
+                                drawLineLabels(V.L, V.L, "Area = ?",      "#d63384", stepId + "_" + currentStep + "_pointK_Label");       // (UpdateForNewExercise) Customize the steps, pink unknown
+                                drawLineLabels(V.B, V.F, "33.367",        "#d63384", stepId + "_" + currentStep + "_lineBF_Label");       // (UpdateForNewExercise) Customize the steps, pink unknown
+                            }
+                            else
+                                drawLineLabels(V.K, V.K, "Area ≈ 456.74", "#00bbbb", stepId + "_" + currentStep + "_pointK_Label");       // (UpdateForNewExercise) Customize the steps, cyan answer
                             break;
                     }
                 }
