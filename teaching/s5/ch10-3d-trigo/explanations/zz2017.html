@@ -638,7 +638,8 @@
             for (let s of steps) {
                 s.style.display = 'none';
             }
-        
+            container.style.display = 'none';
+            
             // 3. Reset "Show Step" button
             btn.textContent = "Show Step";
             btn.disabled = false;
@@ -647,8 +648,6 @@
             // 4. Hide the Redo button again
             redoBtn.style.display = 'none';
             handleToggle('A');
-            // 5. Clear 3D highlights
-            // clearScene(); 
         }
         
         // This function orchestrates the progressive reveal of solution steps by synchronizing the visibility of HTML text, MathJax formula rendering, and the corresponding 3D triangle highlights in the Three.js scene.
