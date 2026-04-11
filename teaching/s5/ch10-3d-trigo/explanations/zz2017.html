@@ -216,7 +216,7 @@
                     <span><strong>(b)(ii)</strong> Find area of $\triangle ABF$.</span>
                     <div class="button-group">
                         <button id="redo-bii" class="btn-redo" style="display: none; background-color: #28a745; color: white;" onclick="redoSteps('bii')">Restart</button>
-                        <button id="btn-bii" class="btn-show" onclick="revealStep('bii', [])">Show Step</button>                            <!-- (UpdateForNewExercise) Questions part b -->
+                        <button id="btn-bii" class="btn-show" onclick="revealStep('bii')">Show Step</button>                            <!-- (UpdateForNewExercise) Questions part b -->
                     </div>
                 </div>
                 <div id="sol-bii" class="solution-content" data-current-step="0">
@@ -244,7 +244,7 @@
                     <span><strong>(b)(iii)</strong> Find inclination of $ABC$ to the horizontal ground.</span>
                     <div class="button-group">
                         <button id="redo-biii" class="btn-redo" style="display: none; background-color: #28a745; color: white;" onclick="redoSteps('biii')">Restart</button>
-                        <button id="btn-biii" class="btn-show" onclick="revealStep('biii', [])">Show Step</button>        <!-- (UpdateForNewExercise) Questions part b -->
+                        <button id="btn-biii" class="btn-show" onclick="revealStep('biii')">Show Step</button>        <!-- (UpdateForNewExercise) Questions part b -->
                     </div>
                 </div>
                 <div id="sol-biii" class="solution-content" data-current-step="0">
@@ -284,7 +284,7 @@
                     <span><strong>(b)(iv)</strong> Claim: the area of $BDF$ is greater than $460\text{ cm}^2$. Do you agree?.</span>
                     <div class="button-group">
                         <button id="redo-biv" class="btn-redo" style="display: none; background-color: #28a745; color: white;" onclick="redoSteps('biv')">Restart</button>
-                        <button id="btn-biv" class="btn-show" onclick="revealStep('biv', [])">Show Step</button>        <!-- (UpdateForNewExercise) Questions part b -->
+                        <button id="btn-biv" class="btn-show" onclick="revealStep('biv')">Show Step</button>        <!-- (UpdateForNewExercise) Questions part b -->
                     </div>
                 </div>
                 <div id="sol-biv" class="solution-content" data-current-step="0">
@@ -422,6 +422,8 @@
         
         let currentFigure = null;
         let activeLabels = {};
+        let polygonA;
+        let polygonB;
 
         resetCamera();
         animate();
@@ -488,7 +490,6 @@
         // highlightPolygon(points, color = "#0d6efd", id = null)                            // Adds a semi-transparent mesh to highlight specific areas
         // clearStepHighlights()                                                             // Adds a semi-transparent colored mesh to a specific 3D triangle
         // createPolygon(points, color = 0x0d6efd)                                           // Renders a filled 3D mesh for 3-point or 4-point shapes
-        // createTriangle(p1, p2, p3, color = 0x0d6efd)                                      // Legacy helper for rendering a single 3D triangle mesh
         // shadeTetrahedron(points, color = 0x0d6efd, opacity = 0.2)                         // Renders all four faces of a 3D tetrahedron with opacity
         // ==========================================
 
@@ -498,7 +499,7 @@
         function drawFigureA() {                                                                                                    // Draw figure in part A (UpdateForNewExercise)          
             const lines = [ [V.A, V.B], [V.B, V.C], [V.A, V.C] ];
             const matLine = new THREE.LineBasicMaterial({ color: 0x333333, linewidth: 2 });
-            createPolygon([V.A, V.B, V.C], 0x0d6efd);
+            polygonA = createPolygon([V.A, V.B, V.C], 0x0d6efd);
             drawLineLabels(V.B, V.C, "24", "black", "static_BC");
 
             drawLines(lines);
@@ -514,8 +515,7 @@
             
             const lines = [ [V.A, V.B], [V.A, V.C], [V.B, V.C], [V.A, V.D], [V.C, V.E] ];
             const matLine = new THREE.LineBasicMaterial({ color: 0x333333, linewidth: 2 });
-            createPolygon([V.A, V.B, V.C], 0x0d6efd); // replace: createTriangle(V.P, V.S, V.Q, 0x0d6efd);
-            // createPolygon([V.S, V.R, V.Q], 0x0d6efd); // replace: createTriangle(V.S, V.Rb, V.Q, 0x0d6efd);
+            polygonB = createPolygon([V.A, V.B, V.C], 0x0d6efd);
             
             drawLines(lines);
             drawLines([ [V.C, V.F] ], false);
@@ -742,6 +742,7 @@
                 // 5. DRAWING LOGIC (Now always starts with a clean slate)                                                                       // (UpdateForNewExercise) MAIN STEPS (SEARCH)
                 // Part (a)(i)
                 if (stepId === "step-ai") {
+                    polygonA.visible = true;
                     switch (currentStep) {
                         case 0:
                             drawAngleArc(V.A, V.B, V.C, "?", 2.0,    "#d63384", stepId + "_" + currentStep + "_angleABC");                    // (UpdateForNewExercise) Customize the steps, pink unknown
@@ -761,6 +762,7 @@
 
                 // Part (b)(i)
                 if (stepId === "step-bi") {
+                    polygonB.visible = true;
                     stickTempPointLabel(V.T, "T", "#d63384", stepId + "_" + currentStep + "_pointT");
                     switch (currentStep) {
                         case 0: case 1:
@@ -787,6 +789,7 @@
                 }
                 // Part (b)(ii)
                 if (stepId === "step-bii") {
+                    polygonB.visible = true;
                     switch (currentStep) {
                         case 0:
                             drawLineLabels(V.A, V.C, "AC≈45.651",       "#d63384", stepId + "_" + currentStep + "_lineAC_Label");    // (UpdateForNewExercise) Customize the steps, pink unknown from part bi
@@ -815,6 +818,7 @@
                 }
                 // Part (b)(iii)
                 if (stepId === "step-biii") {
+                    polygonB.visible = true;
                     switch (currentStep) {
                         case 0: case 1:
                             drawThickLine(V.I, V.J, false,              "#000000", stepId + "_" + currentStep + "_lineIJ_Drawing");     // (UpdateForNewExercise) Customize the steps, given thick line
@@ -880,6 +884,7 @@
 console.log("version 9"); // Steps for searching
                 // Part (b)(iv)
                 if (stepId === "step-biv") {
+                    polygonB.visible = true;
                     switch (currentStep) {
                         case 0:
                             drawLineLabels(V.B, V.F, "33.367",            "#d63384", stepId + "_" + currentStep + "_lineBF_Label");       // (UpdateForNewExercise) Customize the steps, pink unknown
@@ -903,6 +908,7 @@ console.log("version 9"); // Steps for searching
                             drawLineLabels(V.P, V.P, "P",                 "#000000", stepId + "_" + currentStep + "_pointP_Label");       // (UpdateForNewExercise) Customize the steps, given
                             break;
                         case 2: case 3:
+                            polygonB.visible = false;
                             highlightPolygon([V.D, V.B, V.F],             "#ff0000", stepId + "_" + currentStep + "_triangleBDF");
                             drawThickLine(V.D, V.P, false,                "#000000", stepId + "_" + currentStep + "_lineDP_Drawing");     // (UpdateForNewExercise) Customize the steps, given thick line
                             drawThickLine(V.B, V.P, false,                "#000000", stepId + "_" + currentStep + "_lineBP_Drawing");     // (UpdateForNewExercise) Customize the steps, given thick line
@@ -1412,7 +1418,8 @@ console.log("version 9"); // Steps for searching
             activeLabels[key] = labelDiv;
         }
         
-        // A newer function than createTriangle()
+        // A function to draw polygon at the beginning
+        // Renders a filled 3D mesh for 3-point or 4-point shapes
         function createPolygon(points, color = 0x0d6efd) {
             const geom = new THREE.BufferGeometry().setFromPoints(points);
             
@@ -1430,18 +1437,7 @@ console.log("version 9"); // Steps for searching
                 polygonOffsetUnits: 1
             }));
             scene.add(mesh);
-        }
-
-        // an older function
-        function createTriangle(p1, p2, p3, color = 0x0d6efd) {
-            const geom = new THREE.BufferGeometry().setFromPoints([p1, p2, p3]);
-            geom.setIndex([0, 1, 2]);
-            const mesh = new THREE.Mesh(geom, new THREE.MeshBasicMaterial({ 
-                color, side: THREE.DoubleSide, transparent: true, opacity: 0.4,
-                depthTest: false, depthWrite: false
-            }));
-            mesh.renderOrder = 1;
-            scene.add(mesh);
+            return mesh;
         }
 
         function shadeTetrahedron(points, color = 0x0d6efd, opacity = 0.2) {
