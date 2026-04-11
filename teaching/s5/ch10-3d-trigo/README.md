@@ -15,7 +15,9 @@ teaching/
     └── ch10-3d-trigo/               <-- Applications of Trigonometry in 3D
         ├── index.html                <-- Chapter Main Menu
         ├── style.css                 <-- Shared styles for the chapter
-        ├── basic-concepts/
+        ├── images/
+        │   └── ...                   <-- Images used in index.html
+        ├── basic-concepts/           <-- UNDERCONSTRUCTION
         │   └── index.html            <-- Definitions & Core Rules
         ├── examples/
         │   └── index.html            <-- Step-by-Step Worked Examples
