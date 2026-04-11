@@ -904,7 +904,6 @@ console.log("version 9"); // Steps for searching
                             break;
                         case 2: case 3:
                             highlightPolygon([V.D, V.B, V.F],             "#ff0000", stepId + "_" + currentStep + "_triangleBDF");
-                            drawLineLabels(V.D, V.P, "25.579",            "#d63384", stepId + "_" + currentStep + "_lineDP_Label");       // (UpdateForNewExercise) Customize the steps, pink from previous part
                             drawThickLine(V.D, V.P, false,                "#000000", stepId + "_" + currentStep + "_lineDP_Drawing");     // (UpdateForNewExercise) Customize the steps, given thick line
                             drawThickLine(V.B, V.P, false,                "#000000", stepId + "_" + currentStep + "_lineBP_Drawing");     // (UpdateForNewExercise) Customize the steps, given thick line
                             drawThickLine(V.B, V.F, true,                 "#000000", stepId + "_" + currentStep + "_lineBF_Drawing");     // (UpdateForNewExercise) Customize the steps, given thick line
@@ -913,6 +912,7 @@ console.log("version 9"); // Steps for searching
                             if (currentStep === 2) {
                                 drawLineLabels(V.L, V.L, "Area = ?",      "#d63384", stepId + "_" + currentStep + "_pointL_Label");       // (UpdateForNewExercise) Customize the steps, pink unknown
                                 drawLineLabels(V.B, V.F, "33.367",        "#d63384", stepId + "_" + currentStep + "_lineBF_Label");       // (UpdateForNewExercise) Customize the steps, pink unknown
+                                drawLineLabels(V.D, V.P, "25.579",        "#d63384", stepId + "_" + currentStep + "_lineDP_Label");       // (UpdateForNewExercise) Customize the steps, pink from previous part
                             }
                             else
                                 drawLineLabels(V.L, V.L, "Area ≈ 456.74", "#00bbbb", stepId + "_" + currentStep + "_pointL_Label");       // (UpdateForNewExercise) Customize the steps, cyan answer
