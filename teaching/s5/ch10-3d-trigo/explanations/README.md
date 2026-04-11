@@ -23,6 +23,10 @@ Link to the HTML:
 * Styles: linked to `../style.css`
 
 ### 📁 File Structure
+* [2020 DSE MATH II Q38](./explanations/2020-DSE-MATH-II-Q38.html)
+* [25/26 S5UT4 MCQ6](./explanations/2526-S5UT4-MCQ6.html)
+
+### 📁 File Structure
 explanations/
 ├── index.html <-- Main Dynamic List
 ├── 2020-DSE-MATH-II-Q38.html <-- Individual Solution
