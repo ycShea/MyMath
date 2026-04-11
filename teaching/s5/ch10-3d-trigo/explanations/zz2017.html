@@ -389,7 +389,7 @@
         V.P = footOfPerpendicular(V.D, [V.B, V.F]);
         V.I = V.F.clone().multiplyScalar(2).sub(V.B);
         V.J = V.B.clone().multiplyScalar(2).sub(V.F);
-        V.K = V.B.clone().add(V.F).multiplyScalar(0.5);
+        V.K = V.A.clone().add(V.B).add(V.F).divideScalar(3);
         
         // Verify against your 8.0641 calculation
         // Object.entries(V).forEach(([name, point]) => { console.log(name + "=", point); });
@@ -785,9 +785,9 @@
                             drawLineLabels(V.A, V.B, "32.118",          "#d63384", stepId + "_" + currentStep + "_lineAB_Label");    // (UpdateForNewExercise) Customize the steps, pink from previous part
                             drawAngleArc(V.B, V.A, V.C, "30°", 3.0,     "#000000", stepId + "_" + currentStep + "_angleBAC");        // (UpdateForNewExercise) Customize the steps, black given
                             if (currentStep === 2)
-                                drawLineLabels(V.A, V.K, "Area = ?",    "#d63384", stepId + "_" + currentStep + "_lineAF_Label");    // (UpdateForNewExercise) Customize the steps, pink unknown
+                                drawLineLabels(V.K, V.K, "Area = ?",    "#d63384", stepId + "_" + currentStep + "_pointK_Label");    // (UpdateForNewExercise) Customize the steps, pink unknown
                             else
-                                drawLineLabels(V.A, V.K, "Area ≈ 458",  "#00bbbb", stepId + "_" + currentStep + "_lineAF_Label");    // (UpdateForNewExercise) Customize the steps, cyan answer
+                                drawLineLabels(V.K, V.K, "Area ≈ 458",  "#00bbbb", stepId + "_" + currentStep + "_pointK_Label");    // (UpdateForNewExercise) Customize the steps, cyan answer
                             break;
                         
                     }
@@ -831,7 +831,7 @@ console.log("version 8"); // Steps for searching
                             drawThickLine(V.A, V.P, false,              "#000000", stepId + "_" + currentStep + "_lineAP_Drawing");     // (UpdateForNewExercise) Customize the steps, given thick line
                             drawThickLine(V.F, V.P, false,              "#000000", stepId + "_" + currentStep + "_lineFP_Drawing");     // (UpdateForNewExercise) Customize the steps, given thick line
                             drawThickRightAngle(V.B, V.P, V.A, 1.2);                                                                    // (UpdateForNewExercise) Customize the steps, given
-                            drawLineLabels(V.A, V.K, "Area ≈ 458.19",   "#d63384", stepId + "_" + currentStep + "_lineAF_Label");    // (UpdateForNewExercise) Customize the steps, pink unknown
+                            drawLineLabels(V.K, V.K, "Area ≈ 458.19",   "#d63384", stepId + "_" + currentStep + "_pointK_Label");    // (UpdateForNewExercise) Customize the steps, pink unknown
                             drawLineLabels(V.P, V.P, "P",               "#000000", stepId + "_" + currentStep + "_pointP_Label");       // (UpdateForNewExercise) Customize the steps, given
                             break;
                         case 5:
