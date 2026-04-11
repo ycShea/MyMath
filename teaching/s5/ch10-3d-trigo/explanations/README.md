@@ -27,3 +27,5 @@ explanations/
 ├── index.html <-- Main Dynamic List
 ├── 2020-DSE-MATH-II-Q38.html <-- Individual Solution
 └── 2526-S5UT4-MCQ6.html <-- Individual Solution
+├── 2020-DSE-MATH-II-Q38.html <-- Individual Solution
+└── 2526-S5UT4-MCQ6.html <-- Individual Solution
