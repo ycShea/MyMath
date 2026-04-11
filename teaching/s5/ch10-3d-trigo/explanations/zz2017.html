@@ -65,17 +65,6 @@
             height: auto;      /* Maintain aspect ratio */
             border-radius: 4px;
         }
-        .btn-redo {
-            padding: 5px 15px;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-            font-size: 14px;
-            transition: background-color 0.2s;
-        }
-        .btn-redo:hover {
-            background-color: #218838;
-        }
         .part-container { margin-bottom: 15px; border: 1px solid #eee; border-radius: 8px; overflow: hidden; }
         .part-header { display: flex; justify-content: space-between; align-items: center; padding: 12px 20px; background: #fafafa; }
         .solution-content { display: none; padding: 20px; background: #fff; border-top: 1px solid #eee; }
@@ -142,6 +131,7 @@
             <div class="part-container">
                 <div class="part-header">
                     <span><strong>Part (a)</strong> Find the length of $AC$.</span>       <!-- (UpdateForNewExercise) Questions part ai -->
+                    <button id="redo-ai" class="btn-redo" style="display: none; background-color: #28a745; color: white;" onclick="redoSteps('sol-ai', 'btn-ai', 'redo-ai')">Redo</button>
                     <button id="btn-ai" class="btn-show" onclick="revealStep('sol-ai', 'btn-ai', [])">Show Step</button>
                 </div>
 
@@ -153,7 +143,7 @@
                         Using Sine Rule: $$\frac{AC}{\sin 108^\circ} = \frac{24}{\sin 30^\circ}$$
                     </p>
                     <p class="step" style="display:none;">                              <!-- (UpdateForNewExercise) Part ai Step 2 -->
-                        $AC = \frac{24 \sin 108^\circ}{\sin 30^\circ} \approx 45.651 \text{ cm}$    <!-- AC ≈ 45.65071278 -->
+                        $AC = \frac{24 \sin 108^\circ}{\sin 30^\circ} \approx 45.651 \text{ cm}$
                     </p>
                     <p class="step final-ans" style="display:none;">                    <!-- (UpdateForNewExercise) Part ai Step 3 -->
                         $AC \approx 45.7 \text{ cm}$
@@ -202,7 +192,7 @@
                         $4CF \approx 45.651$
                     </p>
                     <p class="step" style="display:none;">                              <!-- (UpdateForNewExercise) Part bi Step 3-->
-                        $CF \approx \frac{45.651}{4} \approx 11.413 \text{ cm}$         <!-- CF ≈ 11.4126782 cm -->
+                        $CF \approx \frac{45.651}{4} \approx 11.413 \text{ cm}$
                     </p>
                     <p class="step final-ans" style="display:none;">                    <!-- (UpdateForNewExercise) Part bi Step 4 Final answers -->
                         $CF \approx 11.4 \text{ cm}$
@@ -223,7 +213,7 @@
                         Using sine rule to $\triangle ABC$ to find $AB$:<br>
                         $$\frac{AB}{\sin\angle ACB} = \frac{BC}{\sin\angle BAC}$$
                         $$\frac{AB}{\sin 42^\circ} = \frac{24}{\sin 30^\circ}$$
-                        $AB \approx 32.118$<br>                                         <!-- AB ≈ 32.11826911 -->
+                        $AB \approx 32.118$<br>                                         <!-- AB≈ 32.11826911 -->
                     </p>
                     <p class="step" style="display:none;">                              <!-- (UpdateForNewExercise) Part bii Step 2-->
                         Area of $\triangle ABF = \frac{1}{2}(AB)(AF)\sin(\angle BAF)$<br>
@@ -255,7 +245,7 @@
                     </p>
                     <p class="step" style="display:none;">                              <!-- (UpdateForNewExercise) Part biii Step 3-->
                         Find $BF$ using the Cosine Rule in $\triangle ABF$:<br>
-                        $BF^2 = 32.118^2 + 57.064^2 - 2(32.118)(57.064)\cos 30^\circ \implies BF \approx 33.368\text{ cm}$    <!-- BF ≈ 33.36690449 -->
+                        $BF^2 = 32.118^2 + 57.064^2 - 2(32.118)(57.064)\cos 30^\circ \implies BF \approx 33.367\text{ cm}$
                     </p>
                     <p class="step" style="display:none;">                              <!-- (UpdateForNewExercise) Part biii Step 4-->
                         $AP$ is the height of $\triangle ABF$ from $A$ to $BF$:<br>
@@ -634,6 +624,32 @@
             // Required for OrbitControls to recognize the manual changes
             controls.update();
         }
+
+        function redoSteps(containerId, btnId, redoBtnId) {
+            const container = document.getElementById(containerId);
+            const btn = document.getElementById(btnId);
+            const redoBtn = document.getElementById(redoBtnId);
+            const steps = container.getElementsByClassName('step');
+        
+            // 1. Reset currentStep to zero
+            container.setAttribute('data-current-step', '0');
+        
+            // 2. Hide all step text
+            for (let s of steps) {
+                s.style.display = 'none';
+            }
+        
+            // 3. Reset "Show Step" button
+            btn.textContent = "Show Step";
+            btn.disabled = false;
+            btn.style.opacity = "1";
+        
+            // 4. Hide the Redo button again
+            redoBtn.style.display = 'none';
+        
+            // 5. Clear 3D highlights
+            clearScene(); 
+        }
         
         // This function orchestrates the progressive reveal of solution steps by synchronizing the visibility of HTML text, MathJax formula rendering, and the corresponding 3D triangle highlights in the Three.js scene.
         // The function is triggered when the button is pressed
@@ -846,92 +862,23 @@ console.log("version 8"); // Steps for searching
                 container.setAttribute('data-current-step', currentStep);
                 
                 if (currentStep === steps.length) {
+                    // 1. Change Show Step to Completed
                     btn.textContent = "Completed";
                     btn.disabled = true;
                     btn.style.opacity = "0.5";
-        
-                    // Create and add the Redo button
-                    const redoBtn = document.createElement('button');
-                    redoBtn.id = "redo-" + containerId;
-                    redoBtn.textContent = "Redo";
-                    redoBtn.style.backgroundColor = "#28a745"; // Green
-                    redoBtn.style.color = "white";
-                    redoBtn.style.marginRight = "10px";
-                    redoBtn.style.padding = "5px 15px";
-                    redoBtn.style.border = "none";
-                    redoBtn.style.borderRadius = "4px";
-                    redoBtn.style.cursor = "pointer";
-        
-                    // Insert Redo button to the left of the Completed button
-                    btn.parentNode.insertBefore(redoBtn, btn);
-        
-                    redoBtn.onclick = function() {
-                        container.style.display = 'none';
-                        for (let s of steps) { s.style.display = 'none'; }
-                        if (stepBtn) {
-                            stepBtn.textContent = "Show Step";
-                            stepBtn.disabled = false;
-                            stepBtn.style.opacity = "1";
-                        }
-                        container.setAttribute('data-current-step', '0');
-        
-                        // 4. Remove self
-                        redoBtn.remove();
-                    };
+                
+                    // 2. Show the Redo button (Assuming your redo ID follows a pattern)
+                    const redoBtn = document.getElementById("redo-" + containerId.replace('sol-', ''));
+                    if (redoBtn) {
+                        redoBtn.style.display = 'inline-block';
+                    }
                 } else {
                     btn.textContent = "Next Step";
                 }
                 collapseOtherParts(containerId);
-                if (window.MathJax) MathJax.typeset();
             }
         }
 
-        function updateStepButton(container, btn) {
-            const currentStep = parseInt(container.getAttribute('data-current-step'));
-            const totalSteps = container.getElementsByClassName('step').length;
-        
-            // Check if we are at the final step
-            if (currentStep >= totalSteps) {
-                btn.textContent = "Completed";
-                btn.disabled = true;
-                btn.style.opacity = "0.5";
-        
-                // Create the Redo button if it doesn't exist
-                if (!document.getElementById(`redo-${container.id}`)) {
-                    const redoBtn = document.createElement('button');
-                    redoBtn.id = `redo-${container.id}`;
-                    redoBtn.textContent = "Redo";
-                    redoBtn.className = "btn-redo"; // Add this class to your CSS
-                    redoBtn.style.backgroundColor = "#28a745"; // Green
-                    redoBtn.style.color = "white";
-                    redoBtn.style.marginRight = "10px";
-                    
-                    // Insert before the "Completed" button
-                    btn.parentNode.insertBefore(redoBtn, btn);
-        
-                    redoBtn.onclick = () => {
-                        // 1. Reset step counter
-                        container.setAttribute('data-current-step', '0');
-                        
-                        // 2. Hide all steps
-                        const steps = container.getElementsByClassName('step');
-                        for (let s of steps) { s.style.display = 'none'; }
-        
-                        // 3. Reset main button
-                        btn.textContent = "Show Step";
-                        btn.disabled = false;
-                        btn.style.opacity = "1";
-        
-                        // 4. Clear 3D scene (optional, based on your logic)
-                        clearScene();
-        
-                        // 5. Remove Redo button
-                        redoBtn.remove();
-                    };
-                }
-            }
-        }
-        
         function animate() { // It tells the browser to run the animate function approximately 60 times per second.
             requestAnimationFrame(animate);
             
