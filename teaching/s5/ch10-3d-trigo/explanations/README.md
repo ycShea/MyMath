@@ -22,14 +22,17 @@ Link to the HTML:
 * Script: `index.html` uses JavaScript `fetch()` to parse CSV data and group items by Category
 * Styles: linked to `../style.css`
 
-### 📁 File Structure
-* [2020 DSE MATH II Q38](./explanations/2020-DSE-MATH-II-Q38.html)
-* [25/26 S5UT4 MCQ6](./explanations/2526-S5UT4-MCQ6.html)
+### 📄 File links
+* [🔗 2017-DSE-MATH-I-Q19.html](https://ycshea.github.io/MyMath/teaching/s5/ch10-3d-trigo/explanations/2017-DSE-MATH-I-Q19.html)
+* [🔗 2020-DSE-MATH-II-Q38.html](https://ycshea.github.io/MyMath/teaching/s5/ch10-3d-trigo/explanations/2020-DSE-MATH-II-Q38.html)
+* [🔗 2024-DSE-MATH-I-Q18.html](https://ycshea.github.io/MyMath/teaching/s5/ch10-3d-trigo/explanations/2024-DSE-MATH-I-Q18.html)
+* [🔗 2526-S5UT4-MCQ6.html](https://ycshea.github.io/MyMath/teaching/s5/ch10-3d-trigo/explanations/2526-S5UT4-MCQ6.html)
 
 ### 📁 File Structure
+```text
 explanations/
-├── index.html <-- Main Dynamic List
-├── 2020-DSE-MATH-II-Q38.html <-- Individual Solution
-└── 2526-S5UT4-MCQ6.html <-- Individual Solution
-├── 2020-DSE-MATH-II-Q38.html <-- Individual Solution
-└── 2526-S5UT4-MCQ6.html <-- Individual Solution
+├── index.html                  <-- Main Dynamic List
+├── 2017-DSE-MATH-I-Q19.html    <-- Individual Solution
+├── 2020-DSE-MATH-II-Q38.html   <-- Individual Solution
+├── 2024-DSE-MATH-I-Q18.html    <-- Individual Solution
+└── 2526-S5UT4-MCQ6.html        <-- Individual Solution
