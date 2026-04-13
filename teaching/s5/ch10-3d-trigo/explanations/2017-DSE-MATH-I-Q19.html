@@ -1420,7 +1420,7 @@ console.log(stepId + ": "+ currentStep);
          * @param {string} color - Hex color string (e.g., "#0d6efd").
          * @param {string} id - Unique identifier for cleanup (e.g., stepId + "_" + currentStep + "_poly").
          */
-        function highlightPolygon(points, color = "#0d6efd", 女id = null) {
+        function highlightPolygon(points, color = "#0d6efd", id = null) {
             const geom = new THREE.BufferGeometry().setFromPoints(points);
             
             // Define indices: 3 points = 1 triangle, 4 points = 2 triangles
