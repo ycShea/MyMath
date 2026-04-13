@@ -459,7 +459,6 @@
         // ==========================================
         // TOGGLES & UI CONTROLS
         // ==========================================
-        // toggle(id)                               // Toggles visibility of HTML solution blocks and renders MathJax
         // handleToggle(type)                       // Switches entire scene state between 2D (Part A) and 3D (Part B)
         // toggleQuestion(divId, btnId)             // Switches visibility for the full question text container
         // toggleAnswersOnly(prefix, btn)           // Filters solution blocks to show only final answers/results
@@ -506,7 +505,7 @@
         // ==========================================
         function drawFigureA() {                                                                                                    // Draw figure in part A (UpdateForNewExercise)          
             const lines = [ [V.A, V.B], [V.B, V.C], [V.A, V.C] ];
-            const matLine = new THREE.LineBasicMaterial({ color: 0x333333, linewidth: 2 });
+            // const matLine = new THREE.LineBasicMaterial({ color: 0x333333, linewidth: 2 });
             polygonA = createPolygon([V.A, V.B, V.C], 0x0d6efd);
             drawLineLabels(V.B, V.C, "24", "black", "static_BC");
 
@@ -522,7 +521,7 @@
         function drawFigureB() {                                                                                                    // Draw figure in part B (UpdateForNewExercise)
             
             const lines = [ [V.A, V.B], [V.A, V.C], [V.B, V.C], [V.A, V.D], [V.C, V.E] ];
-            const matLine = new THREE.LineBasicMaterial({ color: 0x333333, linewidth: 2 });
+            // const matLine = new THREE.LineBasicMaterial({ color: 0x333333, linewidth: 2 });
             polygonB = createPolygon([V.A, V.B, V.C], 0x0d6efd);
             
             drawLines(lines);
@@ -956,7 +955,8 @@ console.log("version 9"); // Steps for searching
                 } else {
                     btn.textContent = "Next Step";
                 }
-                collapseOtherParts("sol-" + session);
+                // Delete this, suggested by Claude
+                // collapseOtherParts("sol-" + session);
             }
         }
 
@@ -1042,13 +1042,16 @@ console.log("version 9"); // Steps for searching
         // ==========================================
         // TOGGLES BEWTEEN PARTS A AND B
         // ==========================================
+        /*
         // This function toggles (切換) the visibility of solution elements and triggers MathJax to render any LaTeX formulas when they are revealed.
+        // toggle(id)                               // Toggles visibility of HTML solution blocks and renders MathJax
         function toggle(id) {
             const el = document.getElementById(id);
             const isHidden = (el.style.display === 'none' || el.style.display === '');
             el.style.display = isHidden ? 'block' : 'none';
             if (isHidden && window.MathJax) { MathJax.typesetPromise([el]); }
         }
+        */
 
         // This function switches between parts a and b by clearing the scene, toggling button text, and adjusting camera controls based on the selected part.
         function handleToggle(type) {                                                                                                    // Switches between parts a and b (UpdateForNewExercise)
@@ -1531,12 +1534,15 @@ console.log("version 9"); // Steps for searching
                 }
                 delete activeLabels[key];
             });
-        
+
+            /*
+            // This second loop is redundant — the first forEach already deletes everything
             Object.values(activeLabels).forEach(l => {
                 if (l && l.parentNode) {
                     l.parentNode.removeChild(l);
                 }
             });
+            */
         
             activeLabels = {};
         }
