@@ -666,6 +666,7 @@
         let polygonA;
         let polygonB;
 
+        initSteps();
         resetCamera();
         animate();
         window.addEventListener('resize', () => {
@@ -1401,7 +1402,6 @@ console.log("version 9"); // Steps for searching
                 currentFigure = type;
                 btn.textContent = "Hide Figure";
                 
-                initSteps();
                 resetCamera();
                 // Reset the other button text if it exists
                 const otherType = (type === 'A') ? 'B' : 'A';                                                                            // (UpdateForNewExercise) types a and b
