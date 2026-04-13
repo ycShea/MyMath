@@ -447,62 +447,94 @@
         
         console.table(V);
 //        console.log("(a)(i)  QS:", V.Q.distanceTo(V.S));
-
+        
         // ==========================================
         // USER INTERACTION LOGIC
         // ==========================================
-        // 1. Wait for User Clicks: The functions handleToggle() and revealStep() 
-        //    do not run until a user clicks a button on the webpage.
-        // 
-        // 2. Logic Flow upon Interaction:
-        //    - User Click: Triggers revealStep() or a toggle button.
-        //    - Logic Check: The function evaluates the state of 'currentFigure'.
-        //    - Drawing Trigger: If it's the first click, it calls handleToggle('A').
-        //    - Scene Update: handleToggle() calls drawFigureA() (or B), 
-        //      which uses scene.add() to inject geometric objects into the 3D space.
-        //    - Visual Change: On the very next frame of the animate() loop 
-        //      (within 16ms), the renderer draws the new objects for the user.
+        // 1. PAGE STRUCTURE
+        //    - Left side: Three.js 3D canvas (canvas-side)
+        //    - Right side: Scrollable question text and solution steps (content-side)
+        //    - All user buttons are on the right side only.
+        //
+        // 2. FIVE UPDATE ZONES (what to change for a new exercise)
+        //    - Zone 1: Page <title> tag
+        //    - Zone 2: Question text, solution steps, and part headers (HTML)
+        //    - Zone 3: EXERCISE config object — given values and camera positions
+        //    - Zone 4: drawFigureA() and drawFigureB() — what lines/labels to draw
+        //    - Zone 5: revealStep() switch/case blocks — what to highlight per step
+        //
+        // 3. FIGURE TOGGLE FLOW (Show Figure button)
+        //    - User clicks "Show Figure A" or "Show Figure B"
+        //    - handleToggle(type) clears the scene, sets currentFigure, then calls
+        //      setCameraPartA/B() and drawFigureA/B() to rebuild the scene.
+        //    - If the same figure is clicked again, the scene is cleared and hidden.
+        //    - Only one figure (A or B) can be visible at a time.
+        //
+        // 4. STEP REVEAL FLOW (Show Step / Next Step button)
+        //    - User clicks "Show Step" on any part (ai, bi, bii, biii, biv).
+        //    - revealStep(session) checks currentFigure and auto-switches if needed
+        //      (e.g. clicking a Part B step while Figure A is showing).
+        //    - The current step's <p> tag becomes visible.
+        //    - clearStepHighlights() wipes previous step's 3D objects and labels.
+        //    - The matching case in the switch block draws new highlights and labels.
+        //    - MathJax re-renders any LaTeX in the newly revealed step.
+        //    - data-current-step counter increments; button changes to "Next Step".
+        //    - On the final step, button becomes "Completed" and Restart appears.
+        //
+        // 5. RESTART FLOW (Restart button)
+        //    - redoSteps(session) hides all steps, resets the counter to 0,
+        //      re-enables the Show Step button, and calls handleToggle() to
+        //      redraw the base figure cleanly.
+        //
+        // 6. ANSWERS-ONLY FLOW (Show Answers Only button)
+        //    - toggleAnswersOnly(prefix) hides all non-final-ans steps and shows
+        //      only <p class="step final-ans"> elements across the matching parts.
+        //    - Clicking again ("Hide Answers") collapses everything back to hidden.
+        //
+        // 7. RENDER LOOP (animate)
+        //    - Runs at ~60fps via requestAnimationFrame.
+        //    - Each frame: updates TrackballControls, then projects every entry in
+        //      activeLabels from 3D world space to 2D screen coordinates so that
+        //      HTML labels stay attached to their 3D points as the camera moves.
+        // ==========================================
+
         
         // ==========================================
-        // TOGGLES & UI CONTROLS
+        // FUNCTION INDEX
         // ==========================================
-        // handleToggle(type)                       // Switches entire scene state between 2D (Part A) and 3D (Part B)
-        // toggleQuestion(divId, btnId)             // Switches visibility for the full question text container
-        // toggleAnswersOnly(prefix, btn)           // Filters solution blocks to show only final answers/results
-        // redoSteps(session)                       // Restart the steps
-        // revealStep(session)                      // Progressively shows solution steps and triggers 3D highlights
+
+        // --- [ZONE 4] Figures & Camera ---
+        // handleToggle(type)                       // Switch scene between Part A (2D) and Part B (3D)
+        // drawFigureA()                            // Draw Part A: triangle ABC with angles and labels
+        // drawFigureB()                            // Draw Part B: 3D folded figure with ground plane
+        // setupGround(w, h, cx, cy, hasGrid)       // Add a semi-transparent rectangular floor to scene
+        // resetCamera()                            // Reset camera based on current active figure
+        // setCameraPartA()                         // Top-down 2D view, rotation locked
+        // setCameraPartB(cam, target, lockH)       // 3D perspective view, rotation enabled
+        // animate()                                // Main render loop: updates controls and projects labels
+
+        // --- [ZONE 5] Step Logic ---
+        // revealStep(session)                      // Reveal next solution step and run its draw() function
+        // redoSteps(session)                       // Reset a solution back to step 0
+        // clearStepHighlights()                    // Remove all step-specific 3D objects and HTML labels
         
-        // ==========================================
-        // CAMERA & SCENE MANAGEMENT
-        // ==========================================
-        // resetCamera()         // Resets view based on the current active figure (A or B)
-        // setCameraPartA()      // Sets 2D top-down view and locks rotation for flat diagrams
-        // setCameraPartB()      // Sets 3D perspective and handles rotation for folded shapes
-        // animate()             // Main loop for rendering the scene and projecting HTML labels
-        // clearScene()          // Disposes of geometries and removes all objects/labels from scene
+        // --- [ZONE 2] HTML Question Text ---
+        // toggleQuestion(divId, btnId)             // Show/hide the full question image popup
+        // toggleAnswersOnly(prefix, btn)           // Show final answers only, or hide all steps
         
-        // ==========================================
-        // 3D DRAWING & ANNOTATION
-        // ==========================================
-        // drawLines(linePairs, isSolid = true, color = 0x333333, name ="")                                 // Renders basic or dashed 3D lines between vertex pairs
-        // drawThickLine(p1, p2, isSolid = true, color = 0x000000, name = "")                               // Simulates line weight by layering multiple offset lines
-        // Arc3D (class)                                                                                    // Custom Curve class for calculating 3D circular arc paths
-        // drawAngleArc(p1, vertex, p2, labelText = "", radius = 1.0, color = 0x000000, labelKey = null)    // Renders a 3D arc and text label to denote specific angles
-        // drawThickRightAngle(p1, vertex, p2, size = 1.0, color = 0x000000)                                // Creates a bold 3D right-angle symbol using offset layers
-        // drawFigureA()                                                                                    // Initializes the 2D layout for Part A with lines and arcs
-        // drawFigureB()                                                                                    // Initializes the 3D tetrahedron layout for Part B
-        // setupGround(width = 40, height = 40, centerX = 0, centerY = 0, hasGrid = false)                  // Initializes a rectangular visual floor for 3D spatial reference
-        
-        // ==========================================
-        // LABELS & HIGHLIGHTS
-        // ==========================================
-        // makeLabel(text)                                                                   // Utility to create and append a DOM element for 3D tracking
-        // setupLabels(labelMap)                                                             // Maps a collection of point names to their 3D coordinates
-        // drawLineLabels(p1, p2, labelText = "", color = 0x000000, labelKey = null)         // Projects a text label at the midpoint of a 3D line segment
-        // stickTempPointLabel(point, text = "", color = "#d63384", labelKey = null)         // Places a temporary, bolded label at a specific 3D point
-        // highlightPolygon(points, color = "#0d6efd", id = null)                            // Adds a semi-transparent mesh to highlight specific areas
-        // clearStepHighlights()                                                             // Adds a semi-transparent colored mesh to a specific 3D triangle
-        // createPolygon(points, color = 0x0d6efd)                                           // Renders a filled 3D mesh for 3-point or 4-point shapes
+        // --- Engine (never touch) ---
+        // clearScene()                             // Dispose and remove all 3D objects and DOM labels
+        // drawLines(pairs, isSolid, color, name)   // Draw basic solid or dashed lines
+        // drawThickLine(p1, p2, isSolid, color, name)   // Draw bold line using layered offsets
+        // drawAngleArc(p1, v, p2, label, r, color, key) // Draw 3D arc with label at midpoint
+        // drawThickRightAngle(p1, v, p2, size, color)   // Draw bold right-angle square symbol
+        // highlightPolygon(points, color, id)           // Semi-transparent triangle/quad mesh overlay
+        // createPolygon(points, color)                  // Solid semi-transparent triangle/quad mesh
+        // makeLabel(text)                               // Create a floating HTML label div
+        // setupLabels(labelMap)                         // Register multiple point labels at once
+        // drawLineLabels(p1, p2, label, color, key)     // Place a label at midpoint of a line
+        // stickTempPointLabel(point, text, color, key)  // Place a label at a specific 3D point
+        // Arc3D (class)                                 // THREE.Curve subclass for 3D circular arcs
         // ==========================================
 
         // ==========================================
@@ -525,6 +557,45 @@
             renderer.setSize(container.clientWidth, container.clientHeight);
         });
         
+        // --- [ZONE 4] Figures & Camera ---
+        // ==========================================
+        // TOGGLES (切換) BEWTEEN PARTS A AND B
+        // ==========================================
+        // This function switches between parts a and b by clearing the scene, toggling button text, and adjusting camera controls based on the selected part.
+        function handleToggle(type) {                                                                                                    // Switches between parts a and b (UpdateForNewExercise)
+            const btn = document.getElementById('btn-fig' + type);
+            const footerA = document.getElementById('part-a-footer');
+        
+            if (currentFigure === type) {
+                // If already showing this figure, HIDE IT
+                clearScene();
+                currentFigure = null;
+                btn.textContent = "Show Figure";
+                if (type === 'A') footerA.style.display = 'none';
+            } else {
+                // SHOW the figure
+                clearScene();
+                currentFigure = type; // Set this BEFORE calling setup functions
+               if (type === 'A') {                                                                                                       // (UpdateForNewExercise) handleToggle, part a
+                    setCameraPartA();
+                    drawFigureA(); 
+                    footerA.style.display = 'inline-block';
+                } else {                                                                                                                 // (UpdateForNewExercise) handleToggle, part b
+                    setCameraPartB(null, null, true);                    
+                    drawFigureB();
+                    if (footerA) footerA.style.display = 'none';
+                }
+                currentFigure = type;
+                btn.textContent = "Hide Figure";
+
+                resetCamera();
+                // Reset the other button text if it exists
+                const otherType = (type === 'A') ? 'B' : 'A';                                                                            // (UpdateForNewExercise) types a and b
+                const otherBtn = document.getElementById('btn-fig' + otherType);
+                if (otherBtn) otherBtn.textContent = "Show Figure";
+            }
+        }
+
         // ==========================================
         // DRAW FIGURES OF A AND B
         // ==========================================
@@ -545,7 +616,6 @@
         }
 
         function drawFigureB() {                                                                                                    // Draw figure in part B (UpdateForNewExercise) Zone 4
-            
             const lines = [ [V.A, V.B], [V.A, V.C], [V.B, V.C], [V.A, V.D], [V.C, V.E] ];
             // const matLine = new THREE.LineBasicMaterial({ color: 0x333333, linewidth: 2 });
             polygonB = createPolygon([V.A, V.B, V.C], 0x0d6efd);
@@ -682,34 +752,53 @@
             controls.update();
         }
 
-        function redoSteps(session) {            
-            const container = document.getElementById("sol-" + session);
-            const btn = document.getElementById("btn-" + session);
-            const redoBtn = document.getElementById("redo-" + session);
-            const steps = container.getElementsByClassName('step');
-        
-            // 1. Reset currentStep to zero
-            container.setAttribute('data-current-step', '0');
-        
-            // 2. Hide all step text
-            for (let s of steps) {
-                s.style.display = 'none';
-            }
-            container.style.display = 'none';
+        function animate() { // It tells the browser to run the animate function approximately 60 times per second.
+            requestAnimationFrame(animate);
             
-            // 3. Reset "Show Step" button
-            btn.textContent = "Show Step";
-            btn.disabled = false;
-            btn.style.opacity = "1";
+            // 1. Update the controls
+            controls.update();
+            
+            const debugBox = document.getElementById('debug-info');
+            if (debugBox) {
+                const cp = camera.position, ct = controls.target;
+                debugBox.innerHTML = `<b style="color:#0d6efd">TARGET:</b> x:${ct.x.toFixed(1)} y:${ct.y.toFixed(1)} z:${ct.z.toFixed(1)}<br>` +
+                                    `<b style="color:#198754">CAMERA:</b> x:${cp.x.toFixed(1)} y:${cp.y.toFixed(1)} z:${cp.z.toFixed(1)}`;
+            }
+            
+            // 2. FORCE the camera to update its matrices immediately 
+            // so the projection math uses current frame data
+            camera.updateMatrixWorld();
+            camera.matrixWorldInverse.copy(camera.matrixWorld).invert();
+            camera.projectionMatrixInverse.copy(camera.projectionMatrix).invert();
         
-            // 4. Hide the Redo button again
-            redoBtn.style.display = 'none';
-            // 5. Logic for handleToggle
-            // Use .startsWith('a') to catch 'ai', 'aii', etc.
-            const part = session.startsWith('a') ? 'A' : 'B';
-            handleToggle(part);
+            // 3. Label Projection Logic
+            const widthHalf = container.clientWidth / 2;
+            const heightHalf = container.clientHeight / 2;
+            
+            for (let key in activeLabels) {
+                let pos = V[key];
+                if (!pos) continue;
+                
+                // Use the updated camera state
+                const vector = pos.clone().project(camera);
+                
+                if (vector.z < 1) {
+                    const x = (vector.x * widthHalf) + widthHalf;
+                    const y = -(vector.y * heightHalf) + heightHalf;
+                    
+                    activeLabels[key].style.display = 'block';
+                    // Use transform: translate for smoother movement than top/left
+                    activeLabels[key].style.transform = `translate(-50%, -50%)`;
+                    activeLabels[key].style.left = `${x}px`;
+                    activeLabels[key].style.top = `${y}px`;
+                } else { 
+                    activeLabels[key].style.display = 'none'; 
+                }
+            }
+            renderer.render(scene, camera);
         }
-        
+
+        // --- [ZONE 5] Step Logic ---
         // This function orchestrates the progressive reveal of solution steps by synchronizing the visibility of HTML text, MathJax formula rendering, and the corresponding 3D triangle highlights in the Three.js scene.
         // The function is triggered when the button is pressed
         // For example: <button id="btn-bii" class="btn-show" onclick="revealStep('bii')">Show Step</button>
@@ -990,53 +1079,35 @@ console.log(stepId + ": "+ currentStep);
                 }
             }
         }
-
-        function animate() { // It tells the browser to run the animate function approximately 60 times per second.
-            requestAnimationFrame(animate);
-            
-            // 1. Update the controls
-            controls.update();
-            
-            const debugBox = document.getElementById('debug-info');
-            if (debugBox) {
-                const cp = camera.position, ct = controls.target;
-                debugBox.innerHTML = `<b style="color:#0d6efd">TARGET:</b> x:${ct.x.toFixed(1)} y:${ct.y.toFixed(1)} z:${ct.z.toFixed(1)}<br>` +
-                                    `<b style="color:#198754">CAMERA:</b> x:${cp.x.toFixed(1)} y:${cp.y.toFixed(1)} z:${cp.z.toFixed(1)}`;
-            }
-            
-            // 2. FORCE the camera to update its matrices immediately 
-            // so the projection math uses current frame data
-            camera.updateMatrixWorld();
-            camera.matrixWorldInverse.copy(camera.matrixWorld).invert();
-            camera.projectionMatrixInverse.copy(camera.projectionMatrix).invert();
         
-            // 3. Label Projection Logic
-            const widthHalf = container.clientWidth / 2;
-            const heightHalf = container.clientHeight / 2;
-            
-            for (let key in activeLabels) {
-                let pos = V[key];
-                if (!pos) continue;
-                
-                // Use the updated camera state
-                const vector = pos.clone().project(camera);
-                
-                if (vector.z < 1) {
-                    const x = (vector.x * widthHalf) + widthHalf;
-                    const y = -(vector.y * heightHalf) + heightHalf;
-                    
-                    activeLabels[key].style.display = 'block';
-                    // Use transform: translate for smoother movement than top/left
-                    activeLabels[key].style.transform = `translate(-50%, -50%)`;
-                    activeLabels[key].style.left = `${x}px`;
-                    activeLabels[key].style.top = `${y}px`;
-                } else { 
-                    activeLabels[key].style.display = 'none'; 
-                }
+        function redoSteps(session) {            
+            const container = document.getElementById("sol-" + session);
+            const btn = document.getElementById("btn-" + session);
+            const redoBtn = document.getElementById("redo-" + session);
+            const steps = container.getElementsByClassName('step');
+        
+            // 1. Reset currentStep to zero
+            container.setAttribute('data-current-step', '0');
+        
+            // 2. Hide all step text
+            for (let s of steps) {
+                s.style.display = 'none';
             }
-            renderer.render(scene, camera);
+            container.style.display = 'none';
+            
+            // 3. Reset "Show Step" button
+            btn.textContent = "Show Step";
+            btn.disabled = false;
+            btn.style.opacity = "1";
+        
+            // 4. Hide the Redo button again
+            redoBtn.style.display = 'none';
+            // 5. Logic for handleToggle
+            // Use .startsWith('a') to catch 'ai', 'aii', etc.
+            const part = session.startsWith('a') ? 'A' : 'B';
+            handleToggle(part);
         }
-        
+
         function clearStepHighlights() {
             const toRemove = scene.children.filter(c => c.userData && c.userData.isStepHighlight);
             toRemove.forEach(c => {
@@ -1057,45 +1128,9 @@ console.log(stepId + ": "+ currentStep);
                 }
             }
         }
-        
-        // ==========================================
-        // TOGGLES (切換) BEWTEEN PARTS A AND B
-        // ==========================================
-        // This function switches between parts a and b by clearing the scene, toggling button text, and adjusting camera controls based on the selected part.
-        function handleToggle(type) {                                                                                                    // Switches between parts a and b (UpdateForNewExercise)
-            const btn = document.getElementById('btn-fig' + type);
-            const footerA = document.getElementById('part-a-footer');
-        
-            if (currentFigure === type) {
-                // If already showing this figure, HIDE IT
-                clearScene();
-                currentFigure = null;
-                btn.textContent = "Show Figure";
-                if (type === 'A') footerA.style.display = 'none';
-            } else {
-                // SHOW the figure
-                clearScene();
-                currentFigure = type; // Set this BEFORE calling setup functions
-               if (type === 'A') {                                                                                                       // (UpdateForNewExercise) handleToggle, part a
-                    setCameraPartA();
-                    drawFigureA(); 
-                    footerA.style.display = 'inline-block';
-                } else {                                                                                                                 // (UpdateForNewExercise) handleToggle, part b
-                    setCameraPartB(null, null, true);                    
-                    drawFigureB();
-                    if (footerA) footerA.style.display = 'none';
-                }
-                currentFigure = type;
-                btn.textContent = "Hide Figure";
 
-                resetCamera();
-                // Reset the other button text if it exists
-                const otherType = (type === 'A') ? 'B' : 'A';                                                                            // (UpdateForNewExercise) types a and b
-                const otherBtn = document.getElementById('btn-fig' + otherType);
-                if (otherBtn) otherBtn.textContent = "Show Figure";
-            }
-        }
-
+        
+        // --- [ZONE 2] HTML Question Text ---
         function toggleQuestion(divId, btnId) {
             const el = document.getElementById(divId);
             const btn = document.getElementById(btnId);
@@ -1114,6 +1149,79 @@ console.log(stepId + ": "+ currentStep);
             }
         }
         
+        function toggleAnswersOnly(prefix, btn) {
+            // Targets only IDs starting with the specific prefix (e.g., 'sol-b')
+            const containers = document.querySelectorAll(`[id^="${prefix}"]`);
+            
+            // Check current state based on button text
+            const isShowing = btn.textContent === "Hide Answers";
+        
+            containers.forEach(container => {
+                const steps = container.getElementsByClassName('step');
+                const btnId = container.id.replace('sol-', 'btn-');
+                const stepBtn = document.getElementById(btnId);
+                
+                // --- NEW: Identify the Redo button ---
+                const redoBtnId = "redo-" + container.id.replace('sol-', '');
+                const redoBtn = document.getElementById(redoBtnId);
+                
+                if (isShowing) {
+                    // HIDE LOGIC
+                    container.style.display = 'none';
+                    for (let s of steps) { s.style.display = 'none'; }
+                    if (stepBtn) {
+                        stepBtn.textContent = "Show Step";
+                        stepBtn.disabled = false;
+                        stepBtn.style.opacity = "1";
+                    }
+                    container.setAttribute('data-current-step', '0');
+                    // --- HIDE REDO BUTTON when hiding everything ---
+                    if (redoBtn) redoBtn.style.display = 'none';
+                } else {
+                    // SHOW ANSWERS ONLY LOGIC
+                    container.style.display = 'block';
+                    for (let s of steps) {
+                        // Only show steps that have the 'final-ans' class
+                        s.style.display = s.classList.contains('final-ans') ? 'block' : 'none';
+                    }
+                    // --- HIDE REDO BUTTON when showing answers only ---
+                    // (Because the steps aren't fully "Completed" yet)
+                    if (redoBtn) redoBtn.style.display = 'none';
+                }
+            });
+            btn.textContent = isShowing ? "Show Answers Only" : "Hide Answers";
+            if (window.MathJax) MathJax.typeset();
+        }
+    
+        // --- Engine (never touch) ---
+        function clearScene() {
+            for (let i = scene.children.length - 1; i >= 0; i--) {
+                const obj = scene.children[i];
+                if (obj.type !== 'AmbientLight' && obj.type !== 'DirectionalLight') {
+                    if (obj.geometry) obj.geometry.dispose();
+                    if (obj.material) {
+                        // Handle arrays of materials or single materials
+                        if (Array.isArray(obj.material)) {
+                            obj.material.forEach(m => m.dispose());
+                        } else {
+                            obj.material.dispose();
+                        }
+                    }
+                    scene.remove(obj);
+                }
+            }
+            // Clear DOM labels correctly
+            Object.keys(activeLabels).forEach(key => {
+                const l = activeLabels[key];
+                if (l && l.parentNode) {
+                    l.parentNode.removeChild(l);
+                }
+                delete activeLabels[key];
+            });
+        
+            activeLabels = {};
+        }
+
         function drawLines(linePairs, isSolid = true, color = 0x333333, name ="") {
             const material = isSolid 
                 ? new THREE.LineBasicMaterial({ color: color, linewidth: 2 })
@@ -1184,18 +1292,6 @@ console.log(stepId + ": "+ currentStep);
             
             scene.add(thickLineGroup);
             return thickLineGroup;
-        }
-        
-        function drawLineLabels(p1, p2, labelText = "", color = 0x000000, labelKey = null) {
-            const midPoint = new THREE.Vector3().addVectors(p1, p2).multiplyScalar(0.5);
-            const labelDiv = makeLabel(labelText);
-            labelDiv.style.color = color;
-            
-            // If no key is provided, generate a random one (for static labels)
-            // If a key is provided (e.g., "lineLabel_aii_QS"), use it for tracking/deletion
-            const key = labelKey || "lineLabel_" + Math.random().toString(36).substr(2, 9);
-            V[key] = midPoint;
-            activeLabels[key] = labelDiv;
         }
 
         // used in 3D version of drawAngleArc() 
@@ -1317,24 +1413,6 @@ console.log(stepId + ": "+ currentStep);
             return thickLineGroup;
         }
         
-        function makeLabel(text) {
-            const div = document.createElement('div');
-            div.className = 'label';
-            div.textContent = text;
-            container.appendChild(div);
-            return div;
-        }
-
-        function setupLabels(labelMap) {
-            for (const [name, positionVec] of Object.entries(labelMap)) {
-                // 1. Create the DOM element and store in activeLabels
-                activeLabels[name] = makeLabel(name);
-                
-                // 2. Map the coordinate for the () loop projection
-                V[name] = positionVec;
-            }
-        }
-
         /**
          * highlightPolygon
          * Creates a semi-transparent mesh for a triangle (3 points) or quadrilateral (4 points).
@@ -1342,7 +1420,7 @@ console.log(stepId + ": "+ currentStep);
          * @param {string} color - Hex color string (e.g., "#0d6efd").
          * @param {string} id - Unique identifier for cleanup (e.g., stepId + "_" + currentStep + "_poly").
          */
-        function highlightPolygon(points, color = "#0d6efd", id = null) {
+        function highlightPolygon(points, color = "#0d6efd", 女id = null) {
             const geom = new THREE.BufferGeometry().setFromPoints(points);
             
             // Define indices: 3 points = 1 triangle, 4 points = 2 triangles
@@ -1377,22 +1455,6 @@ console.log(stepId + ": "+ currentStep);
             return mesh; // Return in case you need to modify it later
         }
         
-        function stickTempPointLabel(point, text = "", color = "#d63384", labelKey = null) {
-            // 1. Create the HTML element using your existing makeLabel
-            const labelDiv = makeLabel(text);
-            labelDiv.style.color = color;
-            labelDiv.style.fontWeight = "bold"; // Optional: makes it stand out as a point label
-            
-            // 2. Generate a key for tracking (just like in drawLineLabels)
-            // If no labelKey is provided, it creates a random one so it doesn't overwrite others.
-            const key = labelKey || "tempPointLabel_" + Math.random().toString(36).substr(2, 9);
-            
-            // 3. Map the coordinate and the element
-            // This allows your existing animation loop to project the 3D point to the screen.
-            V[key] = point; 
-            activeLabels[key] = labelDiv;
-        }
-        
         // A function to draw polygon at the beginning
         // Renders a filled 3D mesh for 3-point or 4-point shapes
         function createPolygon(points, color = 0x0d6efd) {
@@ -1415,77 +1477,52 @@ console.log(stepId + ": "+ currentStep);
             return mesh;
         }
         
-        function toggleAnswersOnly(prefix, btn) {
-            // Targets only IDs starting with the specific prefix (e.g., 'sol-b')
-            const containers = document.querySelectorAll(`[id^="${prefix}"]`);
-            
-            // Check current state based on button text
-            const isShowing = btn.textContent === "Hide Answers";
-        
-            containers.forEach(container => {
-                const steps = container.getElementsByClassName('step');
-                const btnId = container.id.replace('sol-', 'btn-');
-                const stepBtn = document.getElementById(btnId);
-                
-                // --- NEW: Identify the Redo button ---
-                const redoBtnId = "redo-" + container.id.replace('sol-', '');
-                const redoBtn = document.getElementById(redoBtnId);
-                
-                if (isShowing) {
-                    // HIDE LOGIC
-                    container.style.display = 'none';
-                    for (let s of steps) { s.style.display = 'none'; }
-                    if (stepBtn) {
-                        stepBtn.textContent = "Show Step";
-                        stepBtn.disabled = false;
-                        stepBtn.style.opacity = "1";
-                    }
-                    container.setAttribute('data-current-step', '0');
-                    // --- HIDE REDO BUTTON when hiding everything ---
-                    if (redoBtn) redoBtn.style.display = 'none';
-                } else {
-                    // SHOW ANSWERS ONLY LOGIC
-                    container.style.display = 'block';
-                    for (let s of steps) {
-                        // Only show steps that have the 'final-ans' class
-                        s.style.display = s.classList.contains('final-ans') ? 'block' : 'none';
-                    }
-                    // --- HIDE REDO BUTTON when showing answers only ---
-                    // (Because the steps aren't fully "Completed" yet)
-                    if (redoBtn) redoBtn.style.display = 'none';
-                }
-            });
-            btn.textContent = isShowing ? "Show Answers Only" : "Hide Answers";
-            if (window.MathJax) MathJax.typeset();
+        function makeLabel(text) {
+            const div = document.createElement('div');
+            div.className = 'label';
+            div.textContent = text;
+            container.appendChild(div);
+            return div;
         }
-        
-        function clearScene() {
-            for (let i = scene.children.length - 1; i >= 0; i--) {
-                const obj = scene.children[i];
-                if (obj.type !== 'AmbientLight' && obj.type !== 'DirectionalLight') {
-                    if (obj.geometry) obj.geometry.dispose();
-                    if (obj.material) {
-                        // Handle arrays of materials or single materials
-                        if (Array.isArray(obj.material)) {
-                            obj.material.forEach(m => m.dispose());
-                        } else {
-                            obj.material.dispose();
-                        }
-                    }
-                    scene.remove(obj);
-                }
+
+        function setupLabels(labelMap) {
+            for (const [name, positionVec] of Object.entries(labelMap)) {
+                // 1. Create the DOM element and store in activeLabels
+                activeLabels[name] = makeLabel(name);
+                
+                // 2. Map the coordinate for the () loop projection
+                V[name] = positionVec;
             }
-            // Clear DOM labels correctly
-            Object.keys(activeLabels).forEach(key => {
-                const l = activeLabels[key];
-                if (l && l.parentNode) {
-                    l.parentNode.removeChild(l);
-                }
-                delete activeLabels[key];
-            });
-        
-            activeLabels = {};
         }
+        
+        function drawLineLabels(p1, p2, labelText = "", color = 0x000000, labelKey = null) {
+            const midPoint = new THREE.Vector3().addVectors(p1, p2).multiplyScalar(0.5);
+            const labelDiv = makeLabel(labelText);
+            labelDiv.style.color = color;
+            
+            // If no key is provided, generate a random one (for static labels)
+            // If a key is provided (e.g., "lineLabel_aii_QS"), use it for tracking/deletion
+            const key = labelKey || "lineLabel_" + Math.random().toString(36).substr(2, 9);
+            V[key] = midPoint;
+            activeLabels[key] = labelDiv;
+        }
+
+        function stickTempPointLabel(point, text = "", color = "#d63384", labelKey = null) {
+            // 1. Create the HTML element using your existing makeLabel
+            const labelDiv = makeLabel(text);
+            labelDiv.style.color = color;
+            labelDiv.style.fontWeight = "bold"; // Optional: makes it stand out as a point label
+            
+            // 2. Generate a key for tracking (just like in drawLineLabels)
+            // If no labelKey is provided, it creates a random one so it doesn't overwrite others.
+            const key = labelKey || "tempPointLabel_" + Math.random().toString(36).substr(2, 9);
+            
+            // 3. Map the coordinate and the element
+            // This allows your existing animation loop to project the 3D point to the screen.
+            V[key] = point; 
+            activeLabels[key] = labelDiv;
+        }
+        
     </script>
 </body>
 </html>
