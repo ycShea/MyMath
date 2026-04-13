@@ -6,7 +6,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>2017 DSE Paper I Q19 Solution</title>                                                                                    <!-- (UpdateForNewExercise) Questions -->
+    <!-- ============================================= -->
+    <!-- [ZONE 1] Page title — update for new exercise -->
+    <!-- ============================================= -->
+    <title>2017 DSE Paper I Q19 Solution</title>                                                                                    <!-- (UpdateForNewExercise) Zone 1, HTML Head (title only) -->
     <!-------------------------->
     <!-- CSS at the beginning -->
     <!-------------------------->
@@ -67,12 +70,12 @@
             height: auto;      /* Maintain aspect ratio */
             border-radius: 4px;
         }
-.button-group {
-    display: flex;
-    align-items: center;
-    gap: 10px; /* Maintains a fixed distance between buttons */
-    justify-content: flex-start; /* Keeps them anchored to the left */
-}
+        .button-group {
+            display: flex;
+            align-items: center;
+            gap: 10px; /* Maintains a fixed distance between buttons */
+            justify-content: flex-start; /* Keeps them anchored to the left */
+        }
         .part-container { margin-bottom: 15px; border: 1px solid #eee; border-radius: 8px; overflow: hidden; }
         .part-header { display: flex; justify-content: space-between; align-items: center; padding: 12px 20px; background: #fafafa; }
         .solution-content { display: none; padding: 20px; background: #fff; border-top: 1px solid #eee; }
@@ -108,24 +111,27 @@
         </div>
 
         <!-- This section contains the scrollable problem text, interactive solution toggles, and MathJax-rendered (渲染) formulas. -->
+        <!-- ================================================ -->
+        <!-- [ZONE 2] Question text — update for new exercise -->
+        <!-- ================================================ -->
         <div class="content-side">
             <a href="index.html" style="text-decoration: none; color: #007bff;">← Back to List</a>
             <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
-                <h1>2017 DSE Paper I Q19</h1>                                                                                         <!-- () Questions Number -->
+                <h1>2017 DSE Paper I Q19</h1>                                                                                                 <!-- (UpdateForNewExercise) Zone 2, Questions Number -->
                 <button id="btn-view-q" class="btn-show" onclick="toggleQuestion('full-q-popup', 'btn-view-q')">View Full Question 📄</button>
             </div>
             <div id="full-q-popup" class="full-question-popup">
-                <img src="questions-images/2017 DSE Paper I Q19.png" alt="2017 DSE Q19 Diagram">                                       <!-- () Questions Image -->
+                <img src="questions-images/2017 DSE Paper I Q19.png" alt="2017 DSE Q19 Diagram">                                              <!-- (UpdateForNewExercise) Zone 2, Questions Image -->
             </div>
             <!-------------------------->
             <!-- Question of part (a) -->
             <!-------------------------->
             <div class="question-summary">
-                <strong></strong> In triangle ABC, $BC = 24\text{ cm}$, $\angle BAC = 30^\circ$ and $\angle ACB = 42^\circ$.                  <!-- () Questions part a -->
+                <strong></strong> In triangle ABC, $BC = 24\text{ cm}$, $\angle BAC = 30^\circ$ and $\angle ACB = 42^\circ$.                  <!-- (UpdateForNewExercise) Zone 2, Questions part a -->
                 <div style="margin-top: 10px; display: flex; align-items: center; justify-content: space-between; gap: 15px;">
                     <div style="display: flex; align-items: center; gap: 15px;">
-                        <button id="btn-figA" class="btn-show" onclick="handleToggle('A')">Show Figure</button>                                                                                           <!-- () Button in part a -->
-                        <div id="part-a-footer" style="display: none; background: #fff3cd; padding: 5px 12px; border-radius: 5px; border: 1px solid #ffeeba; font-size: 0.9rem; white-space: nowrap;">    <!-- () Button in part a -->
+                        <button id="btn-figA" class="btn-show" onclick="handleToggle('A')">Show Figure</button>                                                                                           <!-- (UpdateForNewExercise) Zone 2, Button in part a -->
+                        <div id="part-a-footer" style="display: none; background: #fff3cd; padding: 5px 12px; border-radius: 5px; border: 1px solid #ffeeba; font-size: 0.9rem; white-space: nowrap;">    <!-- (UpdateForNewExercise) Zone 2, Button in part a -->
                             <strong>Note:</strong> You are viewing the 2D layout.
                         </div>
                     </div>
@@ -138,24 +144,24 @@
             <!-------------------------->
             <div class="part-container">
                 <div class="part-header">
-                    <span><strong>Part (a)</strong> Find the length of $AC$.</span>       <!-- (UpdateForNewExercise) Questions part ai -->
+                    <span><strong>Part (a)</strong> Find the length of $AC$.</span>                                                           <!-- (UpdateForNewExercise) Zone 2, Questions part ai -->
                     <div class="button-group">
                         <button id="redo-ai" class="btn-redo" style="display: none; background-color: #28a745; color: white;" onclick="redoSteps('ai')">Restart</button>
                         <button id="btn-ai" class="btn-show" onclick="revealStep('ai')">Show Step</button>
                     </div>
                 </div>
-
+<!-- Steps for searching -->
                 <div id="sol-ai" class="solution-content" data-current-step="0">
-                    <p class="step" style="display:none;">                              <!-- (UpdateForNewExercise) Part ai Step 0-->
+                    <p class="step" style="display:none;">                                                                                    <!-- (UpdateForNewExercise) Zone 2, Solution part ai, Step 0 -->
                         Find $\angle ABC$: $180^\circ - 30^\circ - 42^\circ = 108^\circ$
                     </p>
-                    <p class="step" style="display:none;">                              <!-- (UpdateForNewExercise) Part ai Step 1 -->
+                    <p class="step" style="display:none;">                                                                                    <!-- (UpdateForNewExercise) Zone 2, Solution part ai, Step 1 -->
                         Using Sine Rule: $$\frac{AC}{\sin 108^\circ} = \frac{24}{\sin 30^\circ}$$
                     </p>
-                    <p class="step" style="display:none;">                              <!-- (UpdateForNewExercise) Part ai Step 2 -->
+                    <p class="step" style="display:none;">                                                                                    <!-- (UpdateForNewExercise) Zone 2, Solution part ai, Step 2 -->
                         $AC = \frac{24 \sin 108^\circ}{\sin 30^\circ} \approx 45.651 \text{ cm}$    <!-- AC ≈ 45.65071275 -->
                     </p>
-                    <p class="step final-ans" style="display:none;">                    <!-- (UpdateForNewExercise) Part ai Step 3 -->
+                    <p class="step final-ans" style="display:none;">                                                                          <!-- (UpdateForNewExercise) Zone 2, Solution part ai, Step 3 Final answers -->
                         $AC \approx 45.7 \text{ cm}$
                     </p>
                 </div>
@@ -169,11 +175,11 @@
             <div class="question-summary">                                                                
                 <strong>Part (b)</strong> The thin metal sheet $\triangle ABC$ is held such that only vertex $B$ lies on the horizontal ground.
                 Points $D$ and $E$ lie on the horizontal ground vertically below vertices $A$ and $C$ respectively. $AC$ produced meets the horizontal ground at point $F$.
-                It is given that $AD = 10\text{ cm}$ and $CE = 2\text{ cm}$.                                                                                                                              <!-- (UpdateForNewExercise) Questions part b -->
+                It is given that $AD = 10\text{ cm}$ and $CE = 2\text{ cm}$.                                                                                                                              <!-- (UpdateForNewExercise) Zone 2, Questions part b -->
                 <div style="margin-top: 10px; display: flex; align-items: center; justify-content: space-between; gap: 15px;">
                     <div style="display: flex; align-items: center; gap: 15px;">
-                        <button id="btn-figB" class="btn-show" onclick="handleToggle('B')">Show Figure</button>                                                                                           <!-- (UpdateForNewExercise) Button in part b -->
-                        <div id="part-b-footer" style="display: none; background: #fff3cd; padding: 5px 12px; border-radius: 5px; border: 1px solid #ffeeba; font-size: 0.9rem; white-space: nowrap;">    <!-- (UpdateForNewExercise) Button in part b -->
+                        <button id="btn-figB" class="btn-show" onclick="handleToggle('B')">Show Figure</button>                                                                                           <!-- (UpdateForNewExercise) Zone 2, Button in part b -->
+                        <div id="part-b-footer" style="display: none; background: #fff3cd; padding: 5px 12px; border-radius: 5px; border: 1px solid #ffeeba; font-size: 0.9rem; white-space: nowrap;">    <!-- (UpdateForNewExercise) Zone 2, Button in part b -->
                             <strong>Note:</strong> You are viewing the 2D layout.
                         </div>
                     </div>
@@ -183,125 +189,127 @@
             <!-------------------------->
             <!-- Solution of part (b) -->
             <!-------------------------->
-<div class="part-container">
+            <div class="part-container">                                                                                            <!-- (UpdateForNewExercise) Zone 2, Container for part bi -->
                 <div class="part-header">
-                    <span><strong>(b)(i)</strong> Find the distance between $C$ and $F$.</span>
+                    <span><strong>(b)(i)</strong> Find the distance between $C$ and $F$.</span>                                     <!-- (UpdateForNewExercise) Zone 2, Questions part bi -->
                     <div class="button-group">
                         <button id="redo-bi" class="btn-redo" style="display: none; background-color: #28a745; color: white;" onclick="redoSteps('bi')">Restart</button>
-                        <button id="btn-bi" class="btn-show" onclick="revealStep('bi')">Show Step</button>        <!-- (UpdateForNewExercise) Questions part b -->
+                        <button id="btn-bi" class="btn-show" onclick="revealStep('bi')">Show Step</button>
                     </div>
                 </div>
+<!-- Steps for searching -->
                 <div id="sol-bi" class="solution-content" data-current-step="0">
-                    <p class="step" style="display:none;">                              <!-- (UpdateForNewExercise) Part bi Step 0-->
+                    <p class="step" style="display:none;">                                                                          <!-- (UpdateForNewExercise) Zone 2, Solution part bi, Step 0 -->
                         Using similar triangles $\triangle ADF \sim \triangle CEF$: $\frac{AF}{AD} = \frac{CF}{CE}$
                     </p>
-                    <p class="step" style="display:none;">                              <!-- (UpdateForNewExercise) Part bi Step 1-->
+                    <p class="step" style="display:none;">                                                                          <!-- (UpdateForNewExercise) Zone 2, Solution part bi, Step 1 -->
                         $\frac{AF}{CF} = \frac{AD}{CE} = \frac{10}{2} = 5$
                     </p>
-                    <p class="step" style="display:none;">                              <!-- (UpdateForNewExercise) Part bi Step 2-->
+                    <p class="step" style="display:none;">                                                                          <!-- (UpdateForNewExercise) Zone 2, Solution part bi, Step 2 -->
                         $AF = 5CF$<br>
                         $AC + CF = 5CF$<br>
                         $4CF = AC$<br>
                         $4CF \approx 45.651$
                     </p>
-                    <p class="step" style="display:none;">                              <!-- (UpdateForNewExercise) Part bi Step 3-->
+                    <p class="step" style="display:none;">                                                                          <!-- (UpdateForNewExercise) Zone 2, Solution part bi, Step 3 -->
                         $CF \approx \frac{45.651}{4} \approx 11.413 \text{ cm}$         <!-- AC ≈ 45.65071275, CF ≈ 11.4126782 -->
                     </p>
-                    <p class="step final-ans" style="display:none;">                    <!-- (UpdateForNewExercise) Part bi Step 4 Final answers -->
+                    <p class="step final-ans" style="display:none;">                                                                <!-- (UpdateForNewExercise) Part bi Step 4 Final answers -->
                         $CF \approx 11.4 \text{ cm}$
                     </p>
                 </div>
             </div>
-            <div class="part-container">
+            
+            <div class="part-container">                                                                                <!-- (UpdateForNewExercise) Zone 2, Container for part bii -->
                 <div class="part-header">
-                    <span><strong>(b)(ii)</strong> Find area of $\triangle ABF$.</span>
+                    <span><strong>(b)(ii)</strong> Find area of $\triangle ABF$.</span>                                 <!-- (UpdateForNewExercise) Zone 2, Questions part bii -->
                     <div class="button-group">
                         <button id="redo-bii" class="btn-redo" style="display: none; background-color: #28a745; color: white;" onclick="redoSteps('bii')">Restart</button>
-                        <button id="btn-bii" class="btn-show" onclick="revealStep('bii')">Show Step</button>                            <!-- (UpdateForNewExercise) Questions part b -->
+                        <button id="btn-bii" class="btn-show" onclick="revealStep('bii')">Show Step</button>
                     </div>
                 </div>
                 <div id="sol-bii" class="solution-content" data-current-step="0">
-                    <p class="step" style="display:none;">                              <!-- (UpdateForNewExercise) Part bii Step 0-->
+                    <p class="step" style="display:none;">                                                              <!-- (UpdateForNewExercise) Zone 2, Solution part bii, Step 0 -->
                         Calculate $AF$:<br>
                         $AF = AC + CF \approx 45.651 + 11.413 \approx 57.063\text{ cm}$    <!-- AF ≈ 57.06339098 -->
                     </p>
-                    <p class="step" style="display:none;">                              <!-- (UpdateForNewExercise) Part bii Step 1-->
+                    <p class="step" style="display:none;">                                                              <!-- (UpdateForNewExercise) Zone 2, Solution part bii, Step 1 -->
                         Using sine rule to $\triangle ABC$ to find $AB$:<br>
                         $$\frac{AB}{\sin\angle ACB} = \frac{BC}{\sin\angle BAC}$$
                         $$\frac{AB}{\sin 42^\circ} = \frac{24}{\sin 30^\circ}$$
-                        $AB \approx 32.118$<br>                                         <!-- AB ≈ 32.11826911 -->
+                        $AB \approx 32.118$<br>               <!-- AB ≈ 32.11826911 -->
                     </p>
-                    <p class="step" style="display:none;">                              <!-- (UpdateForNewExercise) Part bii Step 2-->
+                    <p class="step" style="display:none;">                                                              <!-- (UpdateForNewExercise) Zone 2, Solution part bii, Step 2 -->
                         Area of $\triangle ABF = \frac{1}{2}(AB)(AF)\sin(\angle BAF)$<br>
                         $\text{Area} \approx \frac{1}{2}(32.118)(57.063)\sin 30^\circ \approx 458.19$    <!-- Area ≈ 458.1943369 -->
                     </p>
-                    <p class="step final-ans" style="display:none;">                    <!-- (UpdateForNewExercise) Part bii Step 3 Final answers -->
+                    <p class="step final-ans" style="display:none;">                                                    <!-- (UpdateForNewExercise) Zone 2, Solution part bii, Step 3 Final answers -->
                         Area of $\triangle ABF \approx 458 \text{ cm}^2$
                     </p>
                 </div>
             </div>
-            <div class="part-container">
+            
+            <div class="part-container">                                                                                <!-- (UpdateForNewExercise) Zone 2, Container for part biii -->
                 <div class="part-header">
-                    <span><strong>(b)(iii)</strong> Find inclination of $ABC$ to the horizontal ground.</span>
+                    <span><strong>(b)(iii)</strong> Find inclination of $ABC$ to the horizontal ground.</span>          <!-- (UpdateForNewExercise) Zone 2, Questions part biii -->
                     <div class="button-group">
                         <button id="redo-biii" class="btn-redo" style="display: none; background-color: #28a745; color: white;" onclick="redoSteps('biii')">Restart</button>
-                        <button id="btn-biii" class="btn-show" onclick="revealStep('biii')">Show Step</button>        <!-- (UpdateForNewExercise) Questions part b -->
+                        <button id="btn-biii" class="btn-show" onclick="revealStep('biii')">Show Step</button>
                     </div>
                 </div>
                 <div id="sol-biii" class="solution-content" data-current-step="0">
-                    <p class="step" style="display:none;">                              <!-- (UpdateForNewExercise) Part biii Step 0-->
+                    <p class="step" style="display:none;">                                                              <!-- (UpdateForNewExercise) Zone 2, Solution part biii, Step 0 -->
                         Let $P$ be the foot of the perpendicular from $A$ to the straight line $BF$.<br>
                         By the theorem of three perpendiculars, $DP$ is also perpendicular to the line $BF$.
                     </p>
-                    <p class="step" style="display:none;">                              <!-- (UpdateForNewExercise) Part biii Step 1-->
+                    <p class="step" style="display:none;">                                                              <!-- (UpdateForNewExercise) Zone 2, Solution part biii, Step 1 -->
                         The inclination $\theta$ is the angle between the plane $ABC$ (or $ABF$) and the ground $DBF$.<br>
                         Since $BF$ is the line of intersection, the angle between the two planes is $\angle APD$.<br>
                         Hence, $\theta = \angle APD$.
                     </p>
-                    <p class="step" style="display:none;">                              <!-- (UpdateForNewExercise) Part biii Step 2-->
+                    <p class="step" style="display:none;">                                                              <!-- (UpdateForNewExercise) Zone 2, Solution part biii, Step 2 -->
                         To find $\theta$, we first need to find $AP$.
                     </p>
-                    <p class="step" style="display:none;">                              <!-- (UpdateForNewExercise) Part biii Step 3-->
+                    <p class="step" style="display:none;">                                                              <!-- (UpdateForNewExercise) Zone 2, Solution part biii, Step 3 -->
                         Find $BF$ using the Cosine Rule in $\triangle ABF$:<br>
                         $BF^2 = 32.118^2 + 57.063^2 - 2(32.118)(57.063)\cos 30^\circ \implies BF \approx 33.367\text{ cm}$    <!-- BF ≈ 33.36690449 -->
                     </p>
-                    <p class="step" style="display:none;">                              <!-- (UpdateForNewExercise) Part biii Step 4-->
+                    <p class="step" style="display:none;">                                                              <!-- (UpdateForNewExercise) Zone 2, Solution part biii, Step 4 -->
                         $AP$ is the height of $\triangle ABF$ from $A$ to $BF$:<br>
                         $$\text{Area of }\triangle ABF = \frac{1}{2}(AP)(BF)$$
                         $$458.19 \approx \frac{1}{2}(AP)(33.367)$$
                         $AP \approx 27.464 \text{ cm}$                                   <!-- AP ≈ 27.46400026 -->
                     </p>
-                     <p class="step" style="display:none;">                              <!-- (UpdateForNewExercise) Part biii Step 5-->
+                     <p class="step" style="display:none;">                                                             <!-- (UpdateForNewExercise) Zone 2, Solution part biii, Step 5 -->
                         $\sin \theta = \frac{AD}{AP} \approx \frac{10}{27.464} \implies \theta \approx 21.353^\circ$
                     </p>
-                    <p class="step final-ans" style="display:none;">                     <!-- (UpdateForNewExercise) Part biii Step 6 Final answers -->
+                    <p class="step final-ans" style="display:none;">                                                    <!-- (UpdateForNewExercise) Zone 2, Solution part biii, Step 6 Final answers -->
                         $\theta \approx 21.4^\circ$                                      <!-- theta ≈ 21.35300646 -->
                     </p>
                 </div>
             </div>
-<!-- Steps for searching -->
-<div class="part-container">
+
+            <div class="part-container">                                                                                                  <!-- (UpdateForNewExercise) Zone 2, Container for part biv -->
                 <div class="part-header">
-                    <span><strong>(b)(iv)</strong> Claim: the area of $BDF$ is greater than $460\text{ cm}^2$. Do you agree?.</span>
+                    <span><strong>(b)(iv)</strong> Claim: the area of $BDF$ is greater than $460\text{ cm}^2$. Do you agree?.</span>      <!-- (UpdateForNewExercise) Zone 2, Questions part biv -->
                     <div class="button-group">
                         <button id="redo-biv" class="btn-redo" style="display: none; background-color: #28a745; color: white;" onclick="redoSteps('biv')">Restart</button>
-                        <button id="btn-biv" class="btn-show" onclick="revealStep('biv')">Show Step</button>        <!-- (UpdateForNewExercise) Questions part b -->
+                        <button id="btn-biv" class="btn-show" onclick="revealStep('biv')">Show Step</button>        
                     </div>
                 </div>
                 <div id="sol-biv" class="solution-content" data-current-step="0">
-                    <p class="step" style="display:none;">                              <!-- (UpdateForNewExercise) Part biv Step 0-->
+                    <p class="step" style="display:none;">                                                                                <!-- (UpdateForNewExercise) Zone 2, Solution part biv, Step 0 -->
                         Consider $\triangle BDF$, $DP$ is the height from $D$ to $BF$.<br>
                     </p>
-                    <p class="step" style="display:none;">                              <!-- (UpdateForNewExercise) Part biv Step 1-->
+                    <p class="step" style="display:none;">                                                                                <!-- (UpdateForNewExercise) Zone 2, Solution part biv, Step 1 -->
                         In the right-angled $\triangle ADP$,<br>
                         $\tan \angle BDF = \frac{10}{DP} \implies DP \approx 25.579$ cm    <!-- DP ≈ 25.57872769 -->
                     </p>
-                    <p class="step" style="display:none;">                              <!-- (UpdateForNewExercise) Part biv Step 2-->
+                    <p class="step" style="display:none;">                                                                                <!-- (UpdateForNewExercise) Zone 2, Solution part biv, Step 2 -->
                         $$\text{Area of }\triangle BDF = \frac{1}{2}(DP)(BF) \approx \frac{1}{2}(25.579)(33.367) \approx 426.74 \text{ cm}^2$$        <!-- Area ≈ 426.741482 -->
                         Area of $\triangle BDF < 480 \text{ cm}^2$                
                     </p>
-                    
-                    <div class="step final-ans" style="display:none;">
+                    <div class="step final-ans" style="display:none;">                                                                    <!-- (UpdateForNewExercise) Zone 2, Solution part biv, Step 3 Final answers -->
                         The claim is disagreed.
                         <br><br>
                         <div style="background-color: #795548; padding: 15px; border-radius: 8px; color: #ffffff; display: inline-block; border: 1px solid #5d4037;">
@@ -345,7 +353,7 @@
         scene.add(new THREE.AmbientLight(0xffffff, 1.0));
 
         // ==========================================
-        // DEFINITION OF PARAMETERS, TOOLS AND POINTS (UpdateForNewExercise)                                                    <-- (UpdateForNewExercise)
+        // DEFINITION OF PARAMETERS, TOOLS AND POINTS                                                                                <-- (UpdateForNewExercise) Zone 3
         // ==========================================
         // Math tools
         const degToRad = (deg) => deg * Math.PI / 180;
@@ -373,7 +381,10 @@
 
         // Definition of data
         // ==========================================
-        // GROUP 1: EXERCISE CONFIG (change this for each new exercise)
+        // [ZONE 3] Exercise config — update for new exercise
+        // ==========================================
+        // ==========================================
+        // GROUP 1: EXERCISE CONFIG (change this for each new exercise)                                                              <-- (UpdateForNewExercise) Zone 3, definition of parameters
         // ==========================================
         const EXERCISE = {
             bc: 24, ad: 10, ce: 2,
@@ -434,16 +445,15 @@
         V.K = centroid(V.A, V.B, V.F);
         V.L = midPoint(V.D, V.B);
         
-        // Verify against your 8.0641 calculation
-        // Object.entries(V).forEach(([name, point]) => { console.log(name + "=", point); });
         console.table(V);
 //        console.log("(a)(i)  QS:", V.Q.distanceTo(V.S));
-//        console.log("(a)(ii) angle RQS:", radToDeg(angle_rqs));
-//        console.log("(b)(i)  Distance h:", V.Rb.distanceTo(V.N));
-//        console.log("(b)(ii) Distance d:", V.P.distanceTo(V.X));
-        
+
+
         // ==========================================
-        // SETUP OF CAMERA (UpdateForNewExercise)                                                                    <-- (UpdateForNewExercise)
+        // [ZONE 4] Camera and Figures — update for new exercise
+        // ==========================================
+        // ==========================================
+        // SETUP OF CAMERA                                                                                  <-- (UpdateForNewExercise) Zone 4, Cameras and figures in different parts
         // ==========================================
         
         let currentFigure = null;
@@ -521,7 +531,7 @@
         // ==========================================
         // DRAW FIGURES OF A AND B
         // ==========================================
-        function drawFigureA() {                                                                                                    // Draw figure in part A (UpdateForNewExercise)          
+        function drawFigureA() {                                                                                                    // Draw figure in part A (UpdateForNewExercise) Zone 4
             const lines = [ [V.A, V.B], [V.B, V.C], [V.A, V.C] ];
             // const matLine = new THREE.LineBasicMaterial({ color: 0x333333, linewidth: 2 });
             polygonA = createPolygon([V.A, V.B, V.C], 0x0d6efd);
@@ -536,7 +546,7 @@
             setupLabels({ "A": V.A, "B": V.B, "C": V.C });
         }
 
-        function drawFigureB() {                                                                                                    // Draw figure in part B (UpdateForNewExercise)
+        function drawFigureB() {                                                                                                    // Draw figure in part B (UpdateForNewExercise) Zone 4
             
             const lines = [ [V.A, V.B], [V.A, V.C], [V.B, V.C], [V.A, V.D], [V.C, V.E] ];
             // const matLine = new THREE.LineBasicMaterial({ color: 0x333333, linewidth: 2 });
@@ -598,7 +608,7 @@
         }
         
         // The "Original" Flat View for Part A
-        function setCameraPartA() {                                                                                                            // Camera setting (UpdateForNewExercise)
+        function setCameraPartA() {                                                                                                            // Camera setting (UpdateForNewExercise) Zone 4
             const aspect = window.innerWidth / window.innerHeight;
             const frustumSize = 100; 
         
@@ -635,7 +645,7 @@
         }
         
         // The "3D Perspective" View for Part B (Matching your image)
-        function setCameraPartB(cameraVector = null, targetVector = null, lockHorizontal = false) {                                            // Camera setting (UpdateForNewExercise)
+        function setCameraPartB(cameraVector = null, targetVector = null, lockHorizontal = false) {                                            // Camera setting (UpdateForNewExercise) Zone 4
             // Set the orientation (Z-up or Y-up depending on your coordinate system)
             // Most of your code uses Z=0 as the floor, so we keep Z as the vertical axis
             camera.up.set(0, 0, 1);
@@ -705,7 +715,10 @@
         // This function orchestrates the progressive reveal of solution steps by synchronizing the visibility of HTML text, MathJax formula rendering, and the corresponding 3D triangle highlights in the Three.js scene.
         // The function is triggered when the button is pressed
         // For example: <button id="btn-bii" class="btn-show" onclick="revealStep('bii', [])">Show Step</button>
-        function revealStep(session, triangleKeys = []) {                                                                // revealStep (UpdateForNewExercise)
+        // ==========================================
+        // [ZONE 5] Step drawing logic — update for new exercise
+        // ==========================================
+        function revealStep(session, triangleKeys = []) {                                                                // revealStep (UpdateForNewExercise) Zone 5
             // =============================================================
             // 0. CLEAR STEP-SPECIFIC OBJECTS (Labels, Arcs, Extra Lines)
             // =============================================================
@@ -735,10 +748,10 @@
             // =============================================================
             
             // 1. Detect which part we are in
-            const isPartA = session.startsWith('a');                                                                              // parts a and b (UpdateForNewExercise)
+            const isPartA = session.startsWith('a');                                                                                          // parts a and b (UpdateForNewExercise) Zone 5
             const isPartB = session.startsWith('b');
             
-            // 2. Switch to Figure A if solving Part A and Switch to Figure B if solving Part B (This is what was missing)                // handleToggle A and B (UpdateForNewExercise)
+            // 2. Switch to Figure A if solving Part A and Switch to Figure B if solving Part B (This is what was missing)                    // handleToggle A and B (UpdateForNewExercise) Zone 5
             if (isPartA && currentFigure !== 'A') {
                 handleToggle('A');
             }
@@ -756,7 +769,7 @@
             let currentStep = parseInt(container.getAttribute('data-current-step'));
             
             // 3. Update the "currentFigure === null" check to be dynamic
-            if (currentStep === 0 && currentFigure === null) {                                                                             // handleToggle A and B (UpdateForNewExercise)
+            if (currentStep === 0 && currentFigure === null) {                                                                                // handleToggle A and B (UpdateForNewExercise) Zone 5
                 handleToggle(isPartA ? 'A' : 'B');
             }
             
@@ -765,7 +778,8 @@
                 
                 steps[currentStep].style.display = 'block';
                 clearStepHighlights();
-                // 5. DRAWING LOGIC (Now always starts with a clean slate)                                                                       // (UpdateForNewExercise) MAIN STEPS (SEARCH)
+                // 5. DRAWING LOGIC (Now always starts with a clean slate)                                                                    // (UpdateForNewExercise) MAIN STEPS (SEARCH) Zone 5
+console.log("version 2017.1"); // Steps for searching
                 // Part (a)(i)
                 if (stepId === "step-ai") {
                     polygonA.visible = true;
@@ -842,6 +856,7 @@
                         
                     }
                 }
+                
                 // Part (b)(iii)
                 if (stepId === "step-biii") {
                     polygonB.visible = true;
@@ -909,7 +924,7 @@
                             break;
                     }
                 }
-console.log("version 9"); // Steps for searching
+
                 // Part (b)(iv)
                 if (stepId === "step-biv") {
                     polygonB.visible = true;
