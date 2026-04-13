@@ -1,6 +1,7 @@
 # Web Design Prototype: 10-Page Progress Navigation
 
 This project features a split-screen layout with a progress-based navigation top bar (1/3 of the page) and a scrollable content area (2/3 of the page).
+https://ycshea.github.io/MyMath/teaching/s5/ch10-3d-trigo/basic-concepts/index.html
 
 ## Features
 * **Progress Navigation:** 10 large buttons occupying the top 1/3 of the screen.
