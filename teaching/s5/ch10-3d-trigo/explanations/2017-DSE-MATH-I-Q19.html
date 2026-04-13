@@ -833,13 +833,12 @@
                 
                 clearStepHighlights();
                 // 5. DRAWING LOGIC (Now always starts with a clean slate)                                                                       // (UpdateForNewExercise) MAIN STEPS (SEARCH)
-                
+
+                /*
                 if (STEPS[session] && STEPS[session][currentStep] && STEPS[session][currentStep].draw) {
                     STEPS[session][currentStep].draw();
-                }
-                if (STEPS[session]?.[currentStep]?.draw) {
-                    STEPS[session][currentStep].draw();
-                }
+                }*/
+                STEPS[session]?.[currentStep]?.draw?.();    // single call, compact form
                 /*
                 // Part (a)(i)
                 if (stepId === "step-ai") {
@@ -1030,7 +1029,6 @@ console.log("version 9"); // Steps for searching
                 }
                 // 3. Re-render MathJax for the new HTML
                 if (window.MathJax) MathJax.typesetPromise([steps[currentStep]]);
-
                 currentStep++;
                 container.setAttribute('data-current-step', currentStep);
                 
