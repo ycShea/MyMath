@@ -27,7 +27,7 @@
         .top-section {
             height: 10vh;
             background: #0f172a;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
             display: flex;
             align-items: center;
             position: relative;
@@ -50,10 +50,10 @@
         }
 
         .nav-btn {
-            flex: 0 0 15%;
+            flex: 0 0 20%;
             height: 100%;
             margin: 0 5px;
-            font-size: 3rem; /* Larger font for better outline visibility */
+            font-size: 3.5rem;
             font-weight: 900;
             cursor: pointer;
             border: none;
@@ -62,27 +62,23 @@
             align-items: center;
             justify-content: center;
             
-            /* Hollow/Outline Style */
+            /* Sharp Hollow Style: Brighter stroke, thinner line */
             color: transparent;
-            -webkit-text-stroke: 1.5px rgba(255, 255, 255, 0.2);
+            -webkit-text-stroke: 1px rgba(255, 255, 255, 0.6);
             
-            transition: all 0.6s cubic-bezier(0.23, 1, 0.32, 1);
+            transition: all 0.5s cubic-bezier(0.2, 1, 0.3, 1);
         }
 
         .nav-btn:hover {
-            -webkit-text-stroke: 1.5px rgba(255, 255, 255, 0.5);
+            -webkit-text-stroke: 1px rgba(255, 255, 255, 1);
+            filter: drop-shadow(0 0 5px rgba(255, 255, 255, 0.2));
         }
 
         .nav-btn.active {
-            -webkit-text-stroke: 1.5px #3b82f6;
-            transform: scale(1.2);
-            /* Optional glow effect instead of underline */
-            text-shadow: 0 0 15px rgba(59, 130, 246, 0.4);
-        }
-
-        /* Removed Underline Effect */
-        .nav-btn::after {
-            display: none;
+            -webkit-text-stroke: 1.5px #60a5fa;
+            transform: scale(1.15);
+            /* Brighter, sharper active state */
+            filter: drop-shadow(0 0 8px rgba(96, 165, 250, 0.5));
         }
 
         .arrow {
@@ -91,9 +87,9 @@
             transform: translateY(-50%);
             width: 40px;
             height: 40px;
-            background: rgba(255, 255, 255, 0.03);
-            color: #64748b;
-            border: 1px solid rgba(255, 255, 255, 0.1);
+            background: rgba(255, 255, 255, 0.1);
+            color: #fff;
+            border: 1px solid rgba(255, 255, 255, 0.2);
             border-radius: 50%;
             cursor: pointer;
             z-index: 10;
@@ -105,9 +101,9 @@
         }
 
         .arrow:hover { 
-            color: #fff;
-            background: rgba(255, 255, 255, 0.1);
-            border-color: #3b82f6;
+            background: #60a5fa;
+            border-color: #60a5fa;
+            box-shadow: 0 0 15px rgba(96, 165, 250, 0.4);
         }
 
         .arrow-left { left: 15px; }
@@ -126,11 +122,11 @@
             display: none;
             max-width: 800px;
             margin: 0 auto;
-            animation: slideUpFade 0.8s cubic-bezier(0.22, 1, 0.36, 1);
+            animation: slideUp 0.7s cubic-bezier(0.16, 1, 0.3, 1);
         }
 
-        @keyframes slideUpFade {
-            0% { opacity: 0; transform: translateY(20px); }
+        @keyframes slideUp {
+            0% { opacity: 0; transform: translateY(15px); }
             100% { opacity: 1; transform: translateY(0); }
         }
 
@@ -143,7 +139,7 @@
             padding: 30px;
             margin-bottom: 40px;
             border-radius: 20px;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.03);
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.02);
             border: 1px solid #e2e8f0;
         }
 
@@ -156,6 +152,7 @@
             justify-content: center;
             color: #94a3b8;
             border-radius: 12px;
+            font-weight: 500;
         }
 
         .text {
@@ -166,7 +163,7 @@
     </style>
 </head>
 <body>
-8
+1
 <div class="container">
     <div class="top-section">
         <button class="arrow arrow-left" onclick="scrollNav(-400)">&#8249;</button>
@@ -193,13 +190,13 @@
         page.id = `page-${i}`;
         
         for (let j = 1; j <= 8; j++) {
-            const h = Math.floor(Math.random() * 150) + 250;
+            const h = Math.floor(Math.random() * 100) + 300;
             page.innerHTML += `
                 <div class="question-block">
-                    <div class="img-placeholder" style="height:${h}px">Section ${i} Content ${j}</div>
+                    <div class="img-placeholder" style="height:${h}px">Asset ${i}.${j}</div>
                     <div class="text">
-                        <strong>Insight ${i}.${j}</strong><br>
-                        Navigation utilizes a smooth scroll-to-center logic and CSS text-stroke for the hollow aesthetic.
+                        <strong>Sharp Module ${i}</strong><br>
+                        Stroke width reduced and brightness increased for high-contrast outline.
                     </div>
                 </div>`;
         }
@@ -219,7 +216,7 @@
         activeBtn.classList.add('active');
         activePage.classList.add('active');
 
-        // Smooth centering with improved timing
+        // Smoothly center the selection
         const offset = activeBtn.offsetLeft - (nav.offsetWidth / 2) + (activeBtn.offsetWidth / 2);
         nav.scrollTo({ left: offset, behavior: 'smooth' });
 
@@ -231,7 +228,6 @@
         nav.scrollBy({ left: val, behavior: 'smooth' });
     }
 
-    // Initialize first page
     goToPage(1);
 </script>
 
