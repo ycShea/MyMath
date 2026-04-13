@@ -31,7 +31,7 @@
             display: flex;
             align-items: center;
             position: relative;
-            padding: 0 60px;
+            padding: 0 70px;
         }
 
         .nav-wrapper {
@@ -61,11 +61,8 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            
-            /* Sharp Hollow Style: Brighter stroke, thinner line */
             color: transparent;
             -webkit-text-stroke: 1px rgba(255, 255, 255, 0.6);
-            
             transition: all 0.5s cubic-bezier(0.2, 1, 0.3, 1);
         }
 
@@ -77,37 +74,45 @@
         .nav-btn.active {
             -webkit-text-stroke: 1.5px #60a5fa;
             transform: scale(1.15);
-            /* Brighter, sharper active state */
             filter: drop-shadow(0 0 8px rgba(96, 165, 250, 0.5));
         }
 
+        /* Bright Pale Arrows */
         .arrow {
             position: absolute;
             top: 50%;
             transform: translateY(-50%);
-            width: 40px;
-            height: 40px;
-            background: rgba(255, 255, 255, 0.1);
-            color: #fff;
-            border: 1px solid rgba(255, 255, 255, 0.2);
+            width: 45px;
+            height: 45px;
+            /* Pale, high-contrast background */
+            background: #f1f5f9; 
+            /* Dark icon for visibility against pale background */
+            color: #0f172a; 
+            border: 2px solid #fff;
             border-radius: 50%;
             cursor: pointer;
             z-index: 10;
-            font-size: 1.2rem;
+            font-size: 1.8rem;
+            font-weight: bold;
             display: flex;
             align-items: center;
             justify-content: center;
             transition: all 0.3s ease;
+            box-shadow: 0 0 15px rgba(255, 255, 255, 0.3);
         }
 
         .arrow:hover { 
-            background: #60a5fa;
-            border-color: #60a5fa;
-            box-shadow: 0 0 15px rgba(96, 165, 250, 0.4);
+            background: #fff;
+            transform: translateY(-50%) scale(1.1);
+            box-shadow: 0 0 20px rgba(255, 255, 255, 0.5);
         }
 
-        .arrow-left { left: 15px; }
-        .arrow-right { right: 15px; }
+        .arrow:active {
+            transform: translateY(-50%) scale(0.95);
+        }
+
+        .arrow-left { left: 12px; }
+        .arrow-right { right: 12px; }
 
         /* Bottom 90% Content Area */
         .bottom-section {
@@ -163,12 +168,12 @@
     </style>
 </head>
 <body>
-1
+
 <div class="container">
     <div class="top-section">
-        <button class="arrow arrow-left" onclick="scrollNav(-400)">&#8249;</button>
+        <button class="arrow arrow-left" onclick="scrollNav(-400)" aria-label="Scroll Left">&#8249;</button>
         <div class="nav-wrapper" id="nav-wrapper"></div>
-        <button class="arrow arrow-right" onclick="scrollNav(400)">&#8250;</button>
+        <button class="arrow arrow-right" onclick="scrollNav(400)" aria-label="Scroll Right">&#8250;</button>
     </div>
     <main class="bottom-section" id="content-area"></main>
 </div>
@@ -195,8 +200,8 @@
                 <div class="question-block">
                     <div class="img-placeholder" style="height:${h}px">Asset ${i}.${j}</div>
                     <div class="text">
-                        <strong>Sharp Module ${i}</strong><br>
-                        Stroke width reduced and brightness increased for high-contrast outline.
+                        <strong>Enhanced Interface ${i}</strong><br>
+                        Navigation utilizes high-contrast pale arrows for visibility on dark backgrounds.
                     </div>
                 </div>`;
         }
@@ -216,11 +221,8 @@
         activeBtn.classList.add('active');
         activePage.classList.add('active');
 
-        // Smoothly center the selection
         const offset = activeBtn.offsetLeft - (nav.offsetWidth / 2) + (activeBtn.offsetWidth / 2);
         nav.scrollTo({ left: offset, behavior: 'smooth' });
-
-        // Smooth vertical scroll
         content.scrollTo({ top: 0, behavior: 'smooth' });
     }
 
