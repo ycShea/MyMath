@@ -138,14 +138,30 @@
             <!-------------------------->
             <div class="part-container">
                 <div class="part-header">
-                    <span><strong>Part (a)</strong> Find the length of $AC$.</span>
+                    <span><strong>Part (a)</strong> Find the length of $AC$.</span>       <!-- (UpdateForNewExercise) Questions part ai -->
                     <div class="button-group">
-                        <button id="redo-ai" class="btn-redo" style="display:none; background-color:#28a745; color:white;" onclick="redoSteps('ai')">Restart</button>
+                        <button id="redo-ai" class="btn-redo" style="display: none; background-color: #28a745; color: white;" onclick="redoSteps('ai')">Restart</button>
                         <button id="btn-ai" class="btn-show" onclick="revealStep('ai')">Show Step</button>
                     </div>
                 </div>
-                <div id="sol-ai" class="solution-content" data-current-step="0"></div>
+
+                <div id="sol-ai" class="solution-content" data-current-step="0">
+                    <p class="step" style="display:none;">                              <!-- (UpdateForNewExercise) Part ai Step 0-->
+                        Find $\angle ABC$: $180^\circ - 30^\circ - 42^\circ = 108^\circ$
+                    </p>
+                    <p class="step" style="display:none;">                              <!-- (UpdateForNewExercise) Part ai Step 1 -->
+                        Using Sine Rule: $$\frac{AC}{\sin 108^\circ} = \frac{24}{\sin 30^\circ}$$
+                    </p>
+                    <p class="step" style="display:none;">                              <!-- (UpdateForNewExercise) Part ai Step 2 -->
+                        $AC = \frac{24 \sin 108^\circ}{\sin 30^\circ} \approx 45.651 \text{ cm}$    <!-- AC ≈ 45.65071275 -->
+                    </p>
+                    <p class="step final-ans" style="display:none;">                    <!-- (UpdateForNewExercise) Part ai Step 3 -->
+                        $AC \approx 45.7 \text{ cm}$
+                    </p>
+                </div>
             </div>
+
+            <!-- <hr style="margin: 30px 0; border: 0; border-top: 1px solid #ddd;"> -->
 
             <!-------------------------->
             <!-- Question of part (b) -->
@@ -167,53 +183,137 @@
             <!-------------------------->
             <!-- Solution of part (b) -->
             <!-------------------------->
-            <!-- Solution of part (b)(i) -->
-            <div class="part-container">
+<div class="part-container">
                 <div class="part-header">
                     <span><strong>(b)(i)</strong> Find the distance between $C$ and $F$.</span>
                     <div class="button-group">
-                        <button id="redo-bi" class="btn-redo" style="display:none; background-color:#28a745; color:white;" onclick="redoSteps('bi')">Restart</button>
-                        <button id="btn-bi" class="btn-show" onclick="revealStep('bi')">Show Step</button>
+                        <button id="redo-bi" class="btn-redo" style="display: none; background-color: #28a745; color: white;" onclick="redoSteps('bi')">Restart</button>
+                        <button id="btn-bi" class="btn-show" onclick="revealStep('bi')">Show Step</button>        <!-- (UpdateForNewExercise) Questions part b -->
                     </div>
                 </div>
-                <div id="sol-bi" class="solution-content" data-current-step="0"></div>
+                <div id="sol-bi" class="solution-content" data-current-step="0">
+                    <p class="step" style="display:none;">                              <!-- (UpdateForNewExercise) Part bi Step 0-->
+                        Using similar triangles $\triangle ADF \sim \triangle CEF$: $\frac{AF}{AD} = \frac{CF}{CE}$
+                    </p>
+                    <p class="step" style="display:none;">                              <!-- (UpdateForNewExercise) Part bi Step 1-->
+                        $\frac{AF}{CF} = \frac{AD}{CE} = \frac{10}{2} = 5$
+                    </p>
+                    <p class="step" style="display:none;">                              <!-- (UpdateForNewExercise) Part bi Step 2-->
+                        $AF = 5CF$<br>
+                        $AC + CF = 5CF$<br>
+                        $4CF = AC$<br>
+                        $4CF \approx 45.651$
+                    </p>
+                    <p class="step" style="display:none;">                              <!-- (UpdateForNewExercise) Part bi Step 3-->
+                        $CF \approx \frac{45.651}{4} \approx 11.413 \text{ cm}$         <!-- AC ≈ 45.65071275, CF ≈ 11.4126782 -->
+                    </p>
+                    <p class="step final-ans" style="display:none;">                    <!-- (UpdateForNewExercise) Part bi Step 4 Final answers -->
+                        $CF \approx 11.4 \text{ cm}$
+                    </p>
+                </div>
             </div>
-            
-            <!-- Solution of part (b)(ii) -->
             <div class="part-container">
                 <div class="part-header">
                     <span><strong>(b)(ii)</strong> Find area of $\triangle ABF$.</span>
                     <div class="button-group">
-                        <button id="redo-bii" class="btn-redo" style="display:none; background-color:#28a745; color:white;" onclick="redoSteps('bii')">Restart</button>
-                        <button id="btn-bii" class="btn-show" onclick="revealStep('bii')">Show Step</button>
+                        <button id="redo-bii" class="btn-redo" style="display: none; background-color: #28a745; color: white;" onclick="redoSteps('bii')">Restart</button>
+                        <button id="btn-bii" class="btn-show" onclick="revealStep('bii')">Show Step</button>                            <!-- (UpdateForNewExercise) Questions part b -->
                     </div>
                 </div>
-                <div id="sol-bii" class="solution-content" data-current-step="0"></div>
+                <div id="sol-bii" class="solution-content" data-current-step="0">
+                    <p class="step" style="display:none;">                              <!-- (UpdateForNewExercise) Part bii Step 0-->
+                        Calculate $AF$:<br>
+                        $AF = AC + CF \approx 45.651 + 11.413 \approx 57.063\text{ cm}$    <!-- AF ≈ 57.06339098 -->
+                    </p>
+                    <p class="step" style="display:none;">                              <!-- (UpdateForNewExercise) Part bii Step 1-->
+                        Using sine rule to $\triangle ABC$ to find $AB$:<br>
+                        $$\frac{AB}{\sin\angle ACB} = \frac{BC}{\sin\angle BAC}$$
+                        $$\frac{AB}{\sin 42^\circ} = \frac{24}{\sin 30^\circ}$$
+                        $AB \approx 32.118$<br>                                         <!-- AB ≈ 32.11826911 -->
+                    </p>
+                    <p class="step" style="display:none;">                              <!-- (UpdateForNewExercise) Part bii Step 2-->
+                        Area of $\triangle ABF = \frac{1}{2}(AB)(AF)\sin(\angle BAF)$<br>
+                        $\text{Area} \approx \frac{1}{2}(32.118)(57.063)\sin 30^\circ \approx 458.19$    <!-- Area ≈ 458.1943369 -->
+                    </p>
+                    <p class="step final-ans" style="display:none;">                    <!-- (UpdateForNewExercise) Part bii Step 3 Final answers -->
+                        Area of $\triangle ABF \approx 458 \text{ cm}^2$
+                    </p>
+                </div>
             </div>
-            
-            <!-- Solution of part (b)(iii) -->
             <div class="part-container">
                 <div class="part-header">
                     <span><strong>(b)(iii)</strong> Find inclination of $ABC$ to the horizontal ground.</span>
                     <div class="button-group">
-                        <button id="redo-biii" class="btn-redo" style="display:none; background-color:#28a745; color:white;" onclick="redoSteps('biii')">Restart</button>
-                        <button id="btn-biii" class="btn-show" onclick="revealStep('biii')">Show Step</button>
+                        <button id="redo-biii" class="btn-redo" style="display: none; background-color: #28a745; color: white;" onclick="redoSteps('biii')">Restart</button>
+                        <button id="btn-biii" class="btn-show" onclick="revealStep('biii')">Show Step</button>        <!-- (UpdateForNewExercise) Questions part b -->
                     </div>
                 </div>
-                <div id="sol-biii" class="solution-content" data-current-step="0"></div>
+                <div id="sol-biii" class="solution-content" data-current-step="0">
+                    <p class="step" style="display:none;">                              <!-- (UpdateForNewExercise) Part biii Step 0-->
+                        Let $P$ be the foot of the perpendicular from $A$ to the straight line $BF$.<br>
+                        By the theorem of three perpendiculars, $DP$ is also perpendicular to the line $BF$.
+                    </p>
+                    <p class="step" style="display:none;">                              <!-- (UpdateForNewExercise) Part biii Step 1-->
+                        The inclination $\theta$ is the angle between the plane $ABC$ (or $ABF$) and the ground $DBF$.<br>
+                        Since $BF$ is the line of intersection, the angle between the two planes is $\angle APD$.<br>
+                        Hence, $\theta = \angle APD$.
+                    </p>
+                    <p class="step" style="display:none;">                              <!-- (UpdateForNewExercise) Part biii Step 2-->
+                        To find $\theta$, we first need to find $AP$.
+                    </p>
+                    <p class="step" style="display:none;">                              <!-- (UpdateForNewExercise) Part biii Step 3-->
+                        Find $BF$ using the Cosine Rule in $\triangle ABF$:<br>
+                        $BF^2 = 32.118^2 + 57.063^2 - 2(32.118)(57.063)\cos 30^\circ \implies BF \approx 33.367\text{ cm}$    <!-- BF ≈ 33.36690449 -->
+                    </p>
+                    <p class="step" style="display:none;">                              <!-- (UpdateForNewExercise) Part biii Step 4-->
+                        $AP$ is the height of $\triangle ABF$ from $A$ to $BF$:<br>
+                        $$\text{Area of }\triangle ABF = \frac{1}{2}(AP)(BF)$$
+                        $$458.19 \approx \frac{1}{2}(AP)(33.367)$$
+                        $AP \approx 27.464 \text{ cm}$                                   <!-- AP ≈ 27.46400026 -->
+                    </p>
+                     <p class="step" style="display:none;">                              <!-- (UpdateForNewExercise) Part biii Step 5-->
+                        $\sin \theta = \frac{AD}{AP} \approx \frac{10}{27.464} \implies \theta \approx 21.353^\circ$
+                    </p>
+                    <p class="step final-ans" style="display:none;">                     <!-- (UpdateForNewExercise) Part biii Step 6 Final answers -->
+                        $\theta \approx 21.4^\circ$                                      <!-- theta ≈ 21.35300646 -->
+                    </p>
+                </div>
             </div>
-            
-            <!-- Solution of part (b)(iv) -->
-            <div class="part-container">
+<!-- Steps for searching -->
+<div class="part-container">
                 <div class="part-header">
-                    <span><strong>(b)(iv)</strong> Claim: the area of $BDF$ is greater than $460\text{ cm}^2$. Do you agree?</span>
+                    <span><strong>(b)(iv)</strong> Claim: the area of $BDF$ is greater than $460\text{ cm}^2$. Do you agree?.</span>
                     <div class="button-group">
-                        <button id="redo-biv" class="btn-redo" style="display:none; background-color:#28a745; color:white;" onclick="redoSteps('biv')">Restart</button>
-                        <button id="btn-biv" class="btn-show" onclick="revealStep('biv')">Show Step</button>
+                        <button id="redo-biv" class="btn-redo" style="display: none; background-color: #28a745; color: white;" onclick="redoSteps('biv')">Restart</button>
+                        <button id="btn-biv" class="btn-show" onclick="revealStep('biv')">Show Step</button>        <!-- (UpdateForNewExercise) Questions part b -->
                     </div>
                 </div>
-                <div id="sol-biv" class="solution-content" data-current-step="0"></div>
+                <div id="sol-biv" class="solution-content" data-current-step="0">
+                    <p class="step" style="display:none;">                              <!-- (UpdateForNewExercise) Part biv Step 0-->
+                        Consider $\triangle BDF$, $DP$ is the height from $D$ to $BF$.<br>
+                    </p>
+                    <p class="step" style="display:none;">                              <!-- (UpdateForNewExercise) Part biv Step 1-->
+                        In the right-angled $\triangle ADP$,<br>
+                        $\tan \angle BDF = \frac{10}{DP} \implies DP \approx 25.579$ cm    <!-- DP ≈ 25.57872769 -->
+                    </p>
+                    <p class="step" style="display:none;">                              <!-- (UpdateForNewExercise) Part biv Step 2-->
+                        $$\text{Area of }\triangle BDF = \frac{1}{2}(DP)(BF) \approx \frac{1}{2}(25.579)(33.367) \approx 426.74 \text{ cm}^2$$        <!-- Area ≈ 426.741482 -->
+                        Area of $\triangle BDF < 480 \text{ cm}^2$                
+                    </p>
+                    
+                    <div class="step final-ans" style="display:none;">
+                        The claim is disagreed.
+                        <br><br>
+                        <div style="background-color: #795548; padding: 15px; border-radius: 8px; color: #ffffff; display: inline-block; border: 1px solid #5d4037;">
+                            In fact, since $\triangle DBF$ is the projection of $\triangle ABF$, we have:
+                            <span style="display: block; margin-top: 10px;">
+                                $$\frac{\text{Area of } \triangle DBF}{\text{Area of } \triangle ABF} = \cos(\angle APD)$$
+                            </span>
+                        </div>
+                    </div>
+                </div>
             </div>
+
         </div>
     </div>
 
@@ -341,321 +441,6 @@
 //        console.log("(a)(ii) angle RQS:", radToDeg(angle_rqs));
 //        console.log("(b)(i)  Distance h:", V.Rb.distanceTo(V.N));
 //        console.log("(b)(ii) Distance d:", V.P.distanceTo(V.X));
-// ==========================================
-// GROUP 3: STEPS DEFINITION (UpdateForNewExercise)
-// Each step has: html (the text) and draw (the 3D scene logic)
-// 'final' marks the final answer step
-// ==========================================
-        const STEPS = {
-        
-            'ai': [
-                {
-                    html: `Find $\\angle ABC$: $180^\\circ - 30^\\circ - 42^\\circ = 108^\\circ$`,
-                    draw: () => {
-                        polygonA.visible = true;
-                        drawAngleArc(V.A, V.B, V.C, "?", 2.0, "#d63384", _s + "_angleABC");
-                    }
-                },
-                {
-                    html: `Using Sine Rule: $$\\frac{AC}{\\sin 108^\\circ} = \\frac{24}{\\sin 30^\\circ}$$`,
-                    draw: () => {
-                        polygonA.visible = true;
-                        drawAngleArc(V.A, V.B, V.C, "108°", 2.0, "#d63384", _s + "_angleABC");
-                        drawLineLabels(V.A, V.C, "?", "#d63384", _s + "_lineAC");
-                        highlightPolygon([V.A, V.B, V.C], "#bb0000", _s + "_triABC");
-                    }
-                },
-                {
-                    html: `$AC = \\frac{24 \\sin 108^\\circ}{\\sin 30^\\circ} \\approx 45.651 \\text{ cm}$`,
-                    draw: () => {
-                        polygonA.visible = true;
-                        drawAngleArc(V.A, V.B, V.C, "108°", 2.0, "#d63384", _s + "_angleABC");
-                        drawLineLabels(V.A, V.C, "?", "#d63384", _s + "_lineAC");
-                        highlightPolygon([V.A, V.B, V.C], "#bb0000", _s + "_triABC");
-                    }
-                },
-                {
-                    html: `$AC \\approx 45.7 \\text{ cm}$`,
-                    final: true,
-                    draw: () => {
-                        polygonA.visible = true;
-                        drawAngleArc(V.A, V.B, V.C, "108°", 2.0, "#d63384", _s + "_angleABC");
-                        drawLineLabels(V.A, V.C, "45.7", "#00bbbb", _s + "_lineAC");
-                        highlightPolygon([V.A, V.B, V.C], "#bb0000", _s + "_triABC");
-                    }
-                },
-            ],
-        
-            'bi': [
-                {
-                    html: `Using similar triangles $\\triangle ADF \\sim \\triangle CEF$: $\\frac{AF}{AD} = \\frac{CF}{CE}$`,
-                    draw: () => {
-                        polygonB.visible = false;
-                        drawLineLabels(V.A, V.D, "10",    "#000000", _s + "_lineAD");
-                        drawLineLabels(V.C, V.E, "CE=2",  "#000000", _s + "_lineCE");
-                        highlightPolygon([V.A, V.D, V.F], "#ffeb3b", _s + "_triADF");
-                        highlightPolygon([V.C, V.E, V.F], "#bb0000", _s + "_triCEF");
-                    }
-                },
-                {
-                    html: `$\\frac{AF}{CF} = \\frac{AD}{CE} = \\frac{10}{2} = 5$`,
-                    draw: () => {
-                        polygonB.visible = false;
-                        drawLineLabels(V.A, V.D, "10",    "#000000", _s + "_lineAD");
-                        drawLineLabels(V.C, V.E, "CE=2",  "#000000", _s + "_lineCE");
-                        highlightPolygon([V.A, V.D, V.F], "#ffeb3b", _s + "_triADF");
-                        highlightPolygon([V.C, V.E, V.F], "#bb0000", _s + "_triCEF");
-                    }
-                },
-                {
-                    html: `$AF = 5CF$<br>$AC + CF = 5CF$<br>$4CF = AC$<br>$4CF \\approx 45.651$`,
-                    draw: () => {
-                        polygonB.visible = true;
-                        drawLineLabels(V.A, V.C, "45.651", "#d63384", _s + "_lineAC");
-                        drawLineLabels(V.C, V.F, "?",      "#d63384", _s + "_lineCF");
-                    }
-                },
-                {
-                    html: `$CF \\approx \\frac{45.651}{4} \\approx 11.413 \\text{ cm}$`,
-                    draw: () => {
-                        polygonB.visible = true;
-                        drawLineLabels(V.A, V.C, "45.651",  "#d63384", _s + "_lineAC");
-                        drawLineLabels(V.C, V.F, "11.413",  "#d63384", _s + "_lineCF");
-                    }
-                },
-                {
-                    html: `$CF \\approx 11.4 \\text{ cm}$`,
-                    final: true,
-                    draw: () => {
-                        polygonB.visible = true;
-                        drawLineLabels(V.C, V.F, "11.4", "#00bbbb", _s + "_lineCF");
-                    }
-                },
-            ],
-        
-            'bii': [
-                {
-                    html: `Calculate $AF$:<br>$AF = AC + CF \\approx 45.651 + 11.413 \\approx 57.063\\text{ cm}$`,
-                    draw: () => {
-                        polygonB.visible = true;
-                        drawLineLabels(V.A, V.C, "AC≈45.651",       "#d63384", _s + "_lineAC");
-                        drawLineLabels(V.C, V.F, "CF≈11.413",       "#d63384", _s + "_lineCF");
-                        drawLineLabels(V.A, V.F, "AF=AC+CF≈57.063", "#d63384", _s + "_lineAF");
-                    }
-                },
-                {
-                    html: `Using sine rule in $\\triangle ABC$ to find $AB$:<br>
-                           $$\\frac{AB}{\\sin\\angle ACB} = \\frac{BC}{\\sin\\angle BAC}$$
-                           $$\\frac{AB}{\\sin 42^\\circ} = \\frac{24}{\\sin 30^\\circ}$$
-                           $AB \\approx 32.118$`,
-                    draw: () => {
-                        polygonB.visible = false;
-                        highlightPolygon([V.A, V.B, V.C],  "#00bbbb", _s + "_triABC");
-                        drawLineLabels(V.B, V.C, "24",     "#000000", _s + "_lineBC");
-                        drawAngleArc(V.A, V.C, V.B, "42°", 2.0, "#000000", _s + "_angleACB");
-                        drawAngleArc(V.B, V.A, V.C, "30°", 3.0, "#000000", _s + "_angleBAC");
-                        drawLineLabels(V.A, V.B, "32.118", "#d63384", _s + "_lineAB");
-                    }
-                },
-                {
-                    html: `Area of $\\triangle ABF = \\frac{1}{2}(AB)(AF)\\sin(\\angle BAF)$<br>
-                           $\\text{Area} \\approx \\frac{1}{2}(32.118)(57.063)\\sin 30^\\circ \\approx 458.19$`,
-                    draw: () => {
-                        polygonB.visible = false;
-                        highlightPolygon([V.A, V.B, V.F],       "#ff0000", _s + "_triABF");
-                        drawLineLabels(V.A, V.F, "AF≈57.063",   "#d63384", _s + "_lineAF");
-                        drawLineLabels(V.A, V.B, "32.118",      "#d63384", _s + "_lineAB");
-                        drawAngleArc(V.B, V.A, V.C, "30°", 3.0, "#000000", _s + "_angleBAC");
-                        drawLineLabels(V.K, V.K, "Area = ?",    "#d63384", _s + "_labelK");
-                    }
-                },
-                {
-                    html: `Area of $\\triangle ABF \\approx 458 \\text{ cm}^2$`,
-                    final: true,
-                    draw: () => {
-                        polygonB.visible = false;
-                        highlightPolygon([V.A, V.B, V.F],       "#ff0000", _s + "_triABF");
-                        drawLineLabels(V.A, V.F, "AF≈57.063",   "#d63384", _s + "_lineAF");
-                        drawLineLabels(V.A, V.B, "32.118",      "#d63384", _s + "_lineAB");
-                        drawAngleArc(V.B, V.A, V.C, "30°", 3.0, "#000000", _s + "_angleBAC");
-                        drawLineLabels(V.K, V.K, "Area ≈ 458",  "#00bbbb", _s + "_labelK");
-                    }
-                },
-            ],
-        
-            'biii': [
-                {
-                    html: `Let $P$ be the foot of the perpendicular from $A$ to $BF$.<br>
-                           By the theorem of three perpendiculars, $DP \\perp BF$.`,
-                    draw: () => {
-                        polygonB.visible = true;
-                        drawThickLine(V.I, V.J, false,   "#000000", _s + "_lineIJ");
-                        drawThickLine(V.A, V.P, false,   "#000000", _s + "_lineAP");
-                        drawThickRightAngle(V.B, V.P, V.A, 1.2);
-                        drawThickLine(V.D, V.P, false,   "#000000", _s + "_lineDP");
-                        drawThickRightAngle(V.B, V.P, V.D, 1.2);
-                        drawLineLabels(V.P, V.P, "P",    "#000000", _s + "_labelP");
-                    }
-                },
-                {
-                    html: `The inclination $\\theta$ is $\\angle APD$ between plane $ABF$ and ground $DBF$.`,
-                    draw: () => {
-                        polygonB.visible = true;
-                        drawThickLine(V.I, V.J, false,   "#000000", _s + "_lineIJ");
-                        drawThickLine(V.A, V.P, false,   "#000000", _s + "_lineAP");
-                        drawThickRightAngle(V.B, V.P, V.A, 1.2);
-                        drawThickLine(V.D, V.P, false,   "#000000", _s + "_lineDP");
-                        drawThickRightAngle(V.B, V.P, V.D, 1.2);
-                        drawLineLabels(V.P, V.P, "P",    "#000000", _s + "_labelP");
-                        drawAngleArc(V.A, V.P, V.D, "θ", 3.0, "#d63384", _s + "_angleAPD");
-                    }
-                },
-                {
-                    html: `To find $\\theta$, we first need $AP$.`,
-                    draw: () => {
-                        polygonB.visible = true;
-                        highlightPolygon([V.A, V.D, V.P],        "#d63384", _s + "_triADP");
-                        drawThickRightAngle(V.A, V.D, V.P, 1.2);
-                        drawAngleArc(V.A, V.P, V.D, "θ", 3.0,    "#d63384", _s + "_angleAPD");
-                        drawLineLabels(V.A, V.D, "10",           "#000000", _s + "_lineAD");
-                        drawThickLine(V.A, V.P, false,           "#000000", _s + "_lineAP");
-                        drawThickLine(V.D, V.P, false,           "#000000", _s + "_lineDP");
-                        drawLineLabels(V.A, V.P, "?",            "#d63384", _s + "_labelAP");
-                        drawLineLabels(V.P, V.P, "P",            "#000000", _s + "_labelP");
-                    }
-                },
-                {
-                    html: `Find $BF$ using Cosine Rule in $\\triangle ABF$:<br>
-                           $BF^2 = 32.118^2 + 57.063^2 - 2(32.118)(57.063)\\cos 30^\\circ$
-                           $\\implies BF \\approx 33.367\\text{ cm}$`,
-                    draw: () => {
-                        polygonB.visible = false;
-                        highlightPolygon([V.A, V.B, V.F],        "#ff0000", _s + "_triABF");
-                        drawLineLabels(V.A, V.F, "AF≈57.063",    "#d63384", _s + "_lineAF");
-                        drawLineLabels(V.A, V.B, "32.118",       "#d63384", _s + "_lineAB");
-                        drawAngleArc(V.B, V.A, V.C, "30°", 3.0,  "#000000", _s + "_angleBAC");
-                        drawLineLabels(V.B, V.F, "?",            "#d63384", _s + "_lineBF");
-                        drawLineLabels(V.P, V.P, "P",            "#000000", _s + "_labelP");
-                    }
-                },
-                {
-                    html: `$AP$ is the height of $\\triangle ABF$ from $A$ to $BF$:<br>
-                           $$\\text{Area} = \\frac{1}{2}(AP)(BF)$$
-                           $$458.19 \\approx \\frac{1}{2}(AP)(33.367)$$
-                           $AP \\approx 27.464 \\text{ cm}$`,
-                    draw: () => {
-                        polygonB.visible = false;
-                        drawLineLabels(V.B, V.F, "33.367",       "#d63384", _s + "_lineBF");
-                        highlightPolygon([V.A, V.B, V.F],        "#ff0000", _s + "_triABF");
-                        drawLineLabels(V.A, V.P, "?",            "#d63384", _s + "_labelAP");
-                        drawThickLine(V.A, V.P, false,           "#000000", _s + "_lineAP");
-                        drawThickLine(V.B, V.P, false,           "#000000", _s + "_lineBP");
-                        drawThickLine(V.B, V.F, true,            "#000000", _s + "_lineBF_solid");
-                        drawThickRightAngle(V.B, V.P, V.A, 1.2);
-                        drawLineLabels(V.K, V.K, "Area ≈ 458.19","#d63384", _s + "_labelK");
-                        drawLineLabels(V.P, V.P, "P",            "#000000", _s + "_labelP");
-                    }
-                },
-                {
-                    html: `$\\sin \\theta = \\frac{AD}{AP} \\approx \\frac{10}{27.464} \\implies \\theta \\approx 21.353^\\circ$`,
-                    draw: () => {
-                        highlightPolygon([V.A, V.D, V.P],        "#d63384", _s + "_triADP");
-                        drawThickRightAngle(V.A, V.D, V.P, 1.2);
-                        drawAngleArc(V.A, V.P, V.D, "θ", 3.0,    "#d63384", _s + "_angleAPD");
-                        drawLineLabels(V.A, V.D, "10",           "#000000", _s + "_lineAD");
-                        drawThickLine(V.A, V.P, false,           "#000000", _s + "_lineAP");
-                        drawThickLine(V.D, V.P, false,           "#000000", _s + "_lineDP");
-                        drawLineLabels(V.A, V.P, "27.464",       "#d63384", _s + "_labelAP");
-                        drawLineLabels(V.P, V.P, "P",            "#000000", _s + "_labelP");
-                    }
-                },
-                {
-                    html: `$\\theta \\approx 21.4^\\circ$`,
-                    final: true,
-                    draw: () => {
-                        highlightPolygon([V.A, V.D, V.P],           "#d63384", _s + "_triADP");
-                        drawThickRightAngle(V.A, V.D, V.P, 1.2);
-                        drawAngleArc(V.A, V.P, V.D, "θ≈21.4°", 3.0, "#00bbbb", _s + "_angleAPD");
-                        drawLineLabels(V.A, V.D, "10",              "#000000", _s + "_lineAD");
-                        drawThickLine(V.A, V.P, false,              "#000000", _s + "_lineAP");
-                        drawThickLine(V.D, V.P, false,              "#000000", _s + "_lineDP");
-                        drawLineLabels(V.A, V.P, "27.464",          "#d63384", _s + "_labelAP");
-                        drawLineLabels(V.P, V.P, "P",               "#000000", _s + "_labelP");
-                    }
-                },
-            ],
-        
-            'biv': [
-                {
-                    html: `Consider $\\triangle BDF$. $DP$ is the height from $D$ to $BF$.`,
-                    draw: () => {
-                        polygonB.visible = true;
-                        drawLineLabels(V.B, V.F, "33.367",  "#d63384", _s + "_lineBF");
-                        highlightPolygon([V.D, V.B, V.F],   "#ff0000", _s + "_triBDF");
-                        drawLineLabels(V.D, V.P, "?",        "#d63384", _s + "_lineDP");
-                        drawThickLine(V.D, V.P, false,       "#000000", _s + "_lineDP_draw");
-                        drawThickLine(V.B, V.P, false,       "#000000", _s + "_lineBP");
-                        drawThickLine(V.B, V.F, true,        "#000000", _s + "_lineBF_draw");
-                        drawThickRightAngle(V.B, V.P, V.D, 1.2);
-                        drawLineLabels(V.L, V.L, "Area = ?", "#d63384", _s + "_labelL");
-                        drawLineLabels(V.P, V.P, "P",        "#000000", _s + "_labelP");
-                    }
-                },
-                {
-                    html: `In right-angled $\\triangle ADP$:<br>
-                           $\\tan\\theta = \\frac{AD}{DP} \\implies DP \\approx 25.579\\text{ cm}$`,
-                    draw: () => {
-                        highlightPolygon([V.A, V.D, V.P],           "#d63384", _s + "_triADP");
-                        drawThickRightAngle(V.A, V.D, V.P, 1.2);
-                        drawAngleArc(V.A, V.P, V.D, "θ≈21.353°", 3.0, "#d63384", _s + "_angleAPD");
-                        drawLineLabels(V.A, V.D, "10",              "#000000", _s + "_lineAD");
-                        drawThickLine(V.A, V.P, false,              "#000000", _s + "_lineAP");
-                        drawThickLine(V.D, V.P, false,              "#000000", _s + "_lineDP");
-                        drawLineLabels(V.D, V.P, "?",               "#d63384", _s + "_labelDP");
-                        drawLineLabels(V.P, V.P, "P",               "#000000", _s + "_labelP");
-                    }
-                },
-                {
-                    html: `$$\\text{Area of }\\triangle BDF = \\frac{1}{2}(DP)(BF) 
-                           \\approx \\frac{1}{2}(25.579)(33.367) \\approx 426.74 \\text{ cm}^2$$
-                           Area of $\\triangle BDF < 460 \\text{ cm}^2$`,
-                    draw: () => {
-                        polygonB.visible = false;
-                        highlightPolygon([V.D, V.B, V.F],    "#ff0000", _s + "_triBDF");
-                        drawThickLine(V.D, V.P, false,        "#000000", _s + "_lineDP");
-                        drawThickLine(V.B, V.P, false,        "#000000", _s + "_lineBP");
-                        drawThickLine(V.B, V.F, true,         "#000000", _s + "_lineBF");
-                        drawThickRightAngle(V.B, V.P, V.D, 1.2);
-                        drawLineLabels(V.P, V.P, "P",         "#000000", _s + "_labelP");
-                        drawLineLabels(V.L, V.L, "Area = ?",  "#d63384", _s + "_labelL");
-                        drawLineLabels(V.B, V.F, "33.367",    "#d63384", _s + "_lineBF_label");
-                        drawLineLabels(V.D, V.P, "25.579",    "#d63384", _s + "_lineDP_label");
-                    }
-                },
-                {
-                    html: `The claim is disagreed.
-                           <br><br>
-                           <div style="background-color:#795548; padding:15px; border-radius:8px; 
-                                       color:#ffffff; display:inline-block; border:1px solid #5d4037;">
-                               In fact, since $\\triangle DBF$ is the projection of $\\triangle ABF$:
-                               <span style="display:block; margin-top:10px;">
-                                   $$\\frac{\\text{Area of }\\triangle DBF}{\\text{Area of }\\triangle ABF} = \\cos(\\angle APD)$$
-                               </span>
-                           </div>`,
-                    final: true,
-                    draw: () => {
-                        polygonB.visible = false;
-                        highlightPolygon([V.D, V.B, V.F],    "#ff0000", _s + "_triBDF");
-                        drawThickLine(V.D, V.P, false,        "#000000", _s + "_lineDP");
-                        drawThickLine(V.B, V.P, false,        "#000000", _s + "_lineBP");
-                        drawThickLine(V.B, V.F, true,         "#000000", _s + "_lineBF");
-                        drawThickRightAngle(V.B, V.P, V.D, 1.2);
-                        drawLineLabels(V.P, V.P, "P",         "#000000", _s + "_labelP");
-                        drawLineLabels(V.L, V.L, "Area≈426.74","#00bbbb", _s + "_labelL");
-                    }
-                },
-            ],
-        };
         
         // ==========================================
         // SETUP OF CAMERA (UpdateForNewExercise)                                                                    <-- (UpdateForNewExercise)
@@ -666,7 +451,6 @@
         let polygonA;
         let polygonB;
 
-        initSteps();
         resetCamera();
         animate();
         window.addEventListener('resize', () => {
@@ -890,22 +674,6 @@
             controls.update();
         }
 
-        // ==========================================
-        // INIT STEPS — builds empty <p> tags from STEPS definition
-        // ==========================================
-        function initSteps() {
-            Object.entries(STEPS).forEach(([session, stepList]) => {
-                const container = document.getElementById('sol-' + session);
-                if (!container) return;
-                stepList.forEach((stepDef) => {
-                    const p = document.createElement('p');
-                    p.className = 'step' + (stepDef.final ? ' final-ans' : '');
-                    p.style.display = 'none';
-                    container.appendChild(p);
-                });
-            });
-        }
-        
         function redoSteps(session) {            
             const container = document.getElementById("sol-" + session);
             const btn = document.getElementById("btn-" + session);
@@ -937,77 +705,6 @@
         // This function orchestrates the progressive reveal of solution steps by synchronizing the visibility of HTML text, MathJax formula rendering, and the corresponding 3D triangle highlights in the Three.js scene.
         // The function is triggered when the button is pressed
         // For example: <button id="btn-bii" class="btn-show" onclick="revealStep('bii', [])">Show Step</button>
-        function revealStep(session) {
-            // 0. Clear step-specific labels and 3D objects from previous click
-            Object.keys(activeLabels).forEach(key => {
-                if (key.startsWith("step")) {
-                    const el = activeLabels[key];
-                    if (el && el.parentNode) el.parentNode.removeChild(el);
-                    delete activeLabels[key];
-                }
-            });
-            for (let i = scene.children.length - 1; i >= 0; i--) {
-                const obj = scene.children[i];
-                if (obj.name && obj.name.startsWith("step")) {
-                    if (obj.geometry) obj.geometry.dispose();
-                    if (obj.material) {
-                        if (Array.isArray(obj.material)) obj.material.forEach(m => m.dispose());
-                        else obj.material.dispose();
-                    }
-                    scene.remove(obj);
-                }
-            }
-        
-            // 1. Switch figure if needed
-            const isPartA = session.startsWith('a');
-            const isPartB = session.startsWith('b');
-            if (isPartA && currentFigure !== 'A') handleToggle('A');
-            else if (isPartB && currentFigure !== 'B') handleToggle('B');
-        
-            // 2. Get container and current step
-            const container = document.getElementById("sol-" + session);
-            const steps = container.getElementsByClassName('step');
-            const btn = document.getElementById("btn-" + session);
-            let currentStep = parseInt(container.getAttribute('data-current-step'));
-        
-            if (currentStep === 0 && currentFigure === null)
-                handleToggle(isPartA ? 'A' : 'B');
-        
-            if (currentStep < steps.length) {
-                // 3. Show container and current step text
-                if (currentStep === 0) container.style.display = 'block';
-                const stepDef = STEPS[session][currentStep];
-                steps[currentStep].innerHTML = stepDef.html;
-                steps[currentStep].style.display = 'block';
-        
-                // 4. Run the drawing function for this step
-                clearStepHighlights();
-                // _s is a global shorthand for the current step's unique key prefix
-                // so each draw() function can use _s + "_someName" for label keys
-                window._s = "step-" + session + "_" + currentStep;
-                if (stepDef.draw) stepDef.draw();
-        
-                // 5. Render MathJax
-                if (window.MathJax) MathJax.typesetPromise([steps[currentStep]]);
-        
-                // 6. Advance step counter
-                currentStep++;
-                container.setAttribute('data-current-step', currentStep);
-        
-                // 7. Update button state
-                if (currentStep === steps.length) {
-                    btn.textContent = "Completed";
-                    btn.disabled = true;
-                    btn.style.opacity = "0.5";
-                    const redoBtn = document.getElementById("redo-" + session);
-                    if (redoBtn) redoBtn.style.display = 'block';
-                } else {
-                    btn.textContent = "Next Step";
-                }
-            }
-        }
-
-        /*
         function revealStep(session, triangleKeys = []) {                                                                // revealStep (UpdateForNewExercise)
             // =============================================================
             // 0. CLEAR STEP-SPECIFIC OBJECTS (Labels, Arcs, Extra Lines)
@@ -1280,8 +977,7 @@ console.log("version 9"); // Steps for searching
                 // collapseOtherParts("sol-" + session);
             }
         }
-*/
-        
+
         function animate() { // It tells the browser to run the animate function approximately 60 times per second.
             requestAnimationFrame(animate);
             
@@ -1401,7 +1097,7 @@ console.log("version 9"); // Steps for searching
                 }
                 currentFigure = type;
                 btn.textContent = "Hide Figure";
-                
+
                 resetCamera();
                 // Reset the other button text if it exists
                 const otherType = (type === 'A') ? 'B' : 'A';                                                                            // (UpdateForNewExercise) types a and b
