@@ -355,52 +355,70 @@
         const sineAngle = (a, b, angleBrad) => Math.asin(a * Math.sin(angleBrad) / b);                      // A = sineAngle(a, b, angleBrad)
 
         // Geometric tools
-        function footOfPerpendicular(point, [p1, p2]) {
-            const line = new THREE.Vector3().subVectors(p2, p1);     // direction of the line
-            const v = new THREE.Vector3().subVectors(point, p1);     // vector from p1 to point
-            const t = v.dot(line) / line.lengthSq();                 // projection parameter
-            return new THREE.Vector3().copy(p1).add(line.multiplyScalar(t));
-        }
+        const footOfPerpendicular = (point, [p1, p2]) => {
+            const line = new THREE.Vector3().subVectors(p2, p1);     // direction of the line: d = p2 - p1
+            const v = new THREE.Vector3().subVectors(point, p1);     // vector from p1 to point: v = point - p1
+            const t = v.dot(line) / line.lengthSq();                 //projection parameter: t = (v·d) / |d|²
+            return new THREE.Vector3().copy(p1).addScaledVector(line, t);  // foot = p1 + t·d
+        };
         const midPoint = (p1, p2) => new THREE.Vector3().addVectors(p1, p2).divideScalar(2);
+        const reflectThrough = (point, mirror) => new THREE.Vector3().addVectors(mirror, mirror).sub(point);
         const centroid = (p1, p2, p3) => new THREE.Vector3().add(p1).add(p2).add(p3).divideScalar(3);
+        const pointOfDivision = (p1, p2, r, s) => 
+            new THREE.Vector3().addVectors(
+                p1.clone().multiplyScalar(s), 
+                p2.clone().multiplyScalar(r)
+            ).divideScalar(r + s);
 
         // Definition of data
-        const bc = 24, ad = 10, ce = 2;
-        const scale = 0.6;
-        const angle_bac = degToRad(30);
-        const angle_acb = degToRad(42);
-        // const angle_rotate = degToRad(100); // 180 - 80 degrees
+        // ==========================================
+        // GROUP 1: EXERCISE CONFIG (change this for each new exercise)
+        // ==========================================
+        const EXERCISE = {
+            bc: 24, ad: 10, ce: 2,
+            scale: 0.6,
+            angle_bac: degToRad(30),
+            angle_acb: degToRad(42),
+            cameraB_position: new THREE.Vector3(5.9, -38.7, 17.6),
+            cameraB_target:   new THREE.Vector3(5.8, 2, 2.2),
+        };
+        
+        // ==========================================
+        // GROUP 2: DERIVED GEOMETRY (auto-calculated, do not touch)
+        // ==========================================
+        // Destructure for convenience so the rest of your code is unchanged
+        const { bc, ad, ce, scale, angle_bac, angle_acb } = EXERCISE;
 
         // 1. Calculate base triangle ABC angles and sides
         const angle_abc = degToRad(180 - 30 - 42);         // 108 degrees
         const ac = sineSide(bc, angle_abc, angle_bac);     // Side AC
         const ab = sineSide(bc, angle_acb, angle_bac);     // Side AB
+        
         // 2. Geometry of the extension to ground (ADF and CEF)
         // Ratio based on similar triangles ADF and CEF: CF / AC = CE / (AD - CE)
         const ratio_cf_ac = ce / (ad - ce);                // 2 / (10 - 2) = 0.25
         const cf = ac * ratio_cf_ac;
         const af = ac + cf;
+        
         // 3. 3D distances and ground projections
         const bd_ground = Math.sqrt(Math.pow(ab, 2) - Math.pow(ad, 2));
         const df_ground = Math.sqrt(Math.pow(af, 2) - Math.pow(ad, 2));
         // bf is the intersection line on the ground (z=0)
         // Calculate BF using the Law of Cosines in triangle ABF (3D space)
         const bf = cosineSide(ab, af, angle_bac);
+        
         // 4. Determine coordinates on the horizontal plane (B is origin)
         // Let F lie on the X-axis
         const f_x = bf;
-        
         // Calculate D position using intersection of circles (BD and DF on ground)
         const d_x = (Math.pow(bd_ground, 2) + Math.pow(bf, 2) - Math.pow(df_ground, 2)) / (2 * bf);
         const d_y = Math.sqrt(Math.max(0, Math.pow(bd_ground, 2) - Math.pow(d_x, 2)));
-
         // E lies on the line segment DF. Since CE/AD = 2/10 = 1/5:
         // E is 1/5 of the way from F to D (or 4/5 from D to F)
         const e_x = d_x + (4 / 5) * (bf - d_x);
         const e_y = d_y - (4 / 5) * d_y;
         
-        // Definition of points
-        // Vertices for Part A
+        // 5. Define all 3D points
         const V = {
             B: new THREE.Vector3(0, 0, 0),
             F: new THREE.Vector3(f_x * scale, 0, 0),
@@ -409,10 +427,9 @@
             A: new THREE.Vector3(d_x * scale, d_y * scale, ad * scale),
             C: new THREE.Vector3(e_x * scale, e_y * scale, ce * scale)
         };
-
         V.P = footOfPerpendicular(V.D, [V.B, V.F]);
-        V.I = V.F.clone().multiplyScalar(2).sub(V.B);
-        V.J = V.B.clone().multiplyScalar(2).sub(V.F);
+        V.I = reflectThrough(V.B, V.F);   // reflect B through F, F is the mid-point of B and I
+        V.J = reflectThrough(V.F, V.B);   // reflect F through B, B is the mid-point of F and J
         V.K = centroid(V.A, V.B, V.F);
         V.L = midPoint(V.D, V.B);
         
@@ -633,13 +650,13 @@
                 controls.target.copy(targetVector);
             } else {
                 // Default Part B Center (near the fold)
-                controls.target.set(5.8, 2, 2.2);
+                controls.target.copy(EXERCISE.cameraB_target);
             }
             
             if (cameraVector) { // Handle Camera Position
                 camera.position.copy(cameraVector);
             } else {
-                camera.position.set(5.9, -38.7, 17.6);
+                camera.position.copy(EXERCISE.cameraB_position);
             }
             if (lockHorizontal) {
                 controls.minPolarAngle = Math.PI / 2;
