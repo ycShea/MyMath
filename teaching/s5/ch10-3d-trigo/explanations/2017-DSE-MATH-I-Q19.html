@@ -448,27 +448,6 @@
         console.table(V);
 //        console.log("(a)(i)  QS:", V.Q.distanceTo(V.S));
 
-
-        // ==========================================
-        // [ZONE 4] Camera and Figures — update for new exercise
-        // ==========================================
-        // ==========================================
-        // SETUP OF CAMERA                                                                                  <-- (UpdateForNewExercise) Zone 4, Cameras and figures in different parts
-        // ==========================================
-        
-        let currentFigure = null;
-        let activeLabels = {};
-        let polygonA;
-        let polygonB;
-
-        resetCamera();
-        animate();
-        window.addEventListener('resize', () => {
-            camera.aspect = container.clientWidth / container.clientHeight;
-            camera.updateProjectionMatrix();
-            renderer.setSize(container.clientWidth, container.clientHeight);
-        });
-
         // ==========================================
         // USER INTERACTION LOGIC
         // ==========================================
@@ -527,8 +506,29 @@
         // ==========================================
 
         // ==========================================
+        // [ZONE 4] Camera and Figures — update for new exercise
+        // ==========================================
+        // ==========================================
+        // SETUP OF CAMERA                                                                                  <-- (UpdateForNewExercise) Zone 4, Cameras and figures in different parts
+        // ==========================================
+        // Zone 4a: state variables
+        let currentFigure = null;
+        let activeLabels = {};
+        let polygonA;
+        let polygonB;
+
+        resetCamera();
+        animate();
+        window.addEventListener('resize', () => {
+            camera.aspect = container.clientWidth / container.clientHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(container.clientWidth, container.clientHeight);
+        });
+        
+        // ==========================================
         // DRAW FIGURES OF A AND B
         // ==========================================
+        // Zone 4b: drawFigureA(), drawFigureB(), setCameraPartA(), setCameraPartB()
         function drawFigureA() {                                                                                                    // Draw figure in part A (UpdateForNewExercise) Zone 4
             const lines = [ [V.A, V.B], [V.B, V.C], [V.A, V.C] ];
             // const matLine = new THREE.LineBasicMaterial({ color: 0x333333, linewidth: 2 });
@@ -712,7 +712,7 @@
         
         // This function orchestrates the progressive reveal of solution steps by synchronizing the visibility of HTML text, MathJax formula rendering, and the corresponding 3D triangle highlights in the Three.js scene.
         // The function is triggered when the button is pressed
-        // For example: <button id="btn-bii" class="btn-show" onclick="revealStep('bii', [])">Show Step</button>
+        // For example: <button id="btn-bii" class="btn-show" onclick="revealStep('bii')">Show Step</button>
         // ==========================================
         // [ZONE 5] Step drawing logic — update for new exercise
         // ==========================================
@@ -1059,19 +1059,8 @@ console.log(stepId + ": "+ currentStep);
         }
         
         // ==========================================
-        // TOGGLES BEWTEEN PARTS A AND B
+        // TOGGLES (切換) BEWTEEN PARTS A AND B
         // ==========================================
-        /*
-        // This function toggles (切換) the visibility of solution elements and triggers MathJax to render any LaTeX formulas when they are revealed.
-        // toggle(id)                               // Toggles visibility of HTML solution blocks and renders MathJax
-        function toggle(id) {
-            const el = document.getElementById(id);
-            const isHidden = (el.style.display === 'none' || el.style.display === '');
-            el.style.display = isHidden ? 'block' : 'none';
-            if (isHidden && window.MathJax) { MathJax.typesetPromise([el]); }
-        }
-        */
-
         // This function switches between parts a and b by clearing the scene, toggling button text, and adjusting camera controls based on the selected part.
         function handleToggle(type) {                                                                                                    // Switches between parts a and b (UpdateForNewExercise)
             const btn = document.getElementById('btn-fig' + type);
