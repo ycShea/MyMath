@@ -23,9 +23,9 @@
             height: 100vh;
         }
 
-        /* Top 1/3 Navigation */
+        /* Top 2/3 Navigation */
         .top-section {
-            height: 33.33vh;
+            height: 66.67vh;
             background-color: #fff;
             border-bottom: 2px solid #ccc;
             display: flex;
@@ -37,7 +37,8 @@
         .nav-wrapper {
             display: flex;
             overflow-x: auto;
-            scroll-behavior: smooth;
+            /* smooth ensures non-jumping movement */
+            scroll-behavior: smooth; 
             width: 100%;
             height: 100%;
             align-items: center;
@@ -50,20 +51,20 @@
         }
 
         .nav-btn {
-            flex: 0 0 20%; /* 1/5 of width */
+            flex: 0 0 20%;
             height: 80%;
-            margin: 0 10px;
-            font-size: 3rem;
-            font-weight: bold;
+            margin: 0 15px;
+            font-size: 5rem;
+            font-weight: 900;
             cursor: pointer;
-            border: 2px solid #ddd;
+            border: 4px solid #eee;
             background-color: #fff;
-            border-radius: 10px;
+            border-radius: 20px;
             display: flex;
             align-items: center;
             justify-content: center;
-            transition: all 0.3s ease;
-            color: #888;
+            transition: transform 0.4s cubic-bezier(0.25, 1, 0.5, 1), background-color 0.3s, color 0.3s;
+            color: #ddd;
         }
 
         .nav-btn.active {
@@ -71,37 +72,41 @@
             color: #fff;
             border-color: #0056b3;
             transform: scale(1.05);
+            box-shadow: 0 15px 30px rgba(0,123,255,0.2);
         }
 
         .arrow {
             position: absolute;
             top: 50%;
             transform: translateY(-50%);
-            width: 50px;
-            height: 50px;
-            background: #333;
+            width: 60px;
+            height: 60px;
+            background: #222;
             color: #fff;
             border: none;
             border-radius: 50%;
             cursor: pointer;
             z-index: 10;
-            font-size: 1.5rem;
+            font-size: 2rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
 
-        .arrow-left { left: 5px; }
-        .arrow-right { right: 5px; }
+        .arrow-left { left: 10px; }
+        .arrow-right { right: 10px; }
 
-        /* Bottom 2/3 Content */
+        /* Bottom 1/3 Content Area */
         .bottom-section {
-            height: 66.67vh;
+            height: 33.33vh;
             overflow-y: auto;
-            padding: 20px;
+            padding: 30px;
             background-color: #fff;
         }
 
         .page {
             display: none;
-            max-width: 800px;
+            max-width: 900px;
             margin: 0 auto;
         }
 
@@ -110,35 +115,37 @@
         }
 
         .question-block {
-            margin-bottom: 50px;
+            margin-bottom: 40px;
             padding-bottom: 20px;
             border-bottom: 1px solid #eee;
         }
 
         .img-placeholder {
             width: 100%;
-            background-color: #ddd;
+            background-color: #eee;
             margin-bottom: 15px;
             display: flex;
             align-items: center;
             justify-content: center;
-            color: #555;
-            border-radius: 5px;
+            color: #888;
+            border-radius: 8px;
+            font-size: 1.2rem;
         }
 
         .text {
-            font-size: 1.2rem;
-            line-height: 1.5;
+            font-size: 1.4rem;
+            line-height: 1.6;
+            color: #333;
         }
     </style>
 </head>
 <body>
-
+1
 <div class="container">
     <div class="top-section">
-        <button class="arrow arrow-left" onclick="scrollNav(-300)">&#10094;</button>
+        <button class="arrow arrow-left" onclick="scrollNav(-500)">&#10094;</button>
         <div class="nav-wrapper" id="nav-wrapper"></div>
-        <button class="arrow arrow-right" onclick="scrollNav(300)">&#10095;</button>
+        <button class="arrow arrow-right" onclick="scrollNav(500)">&#10095;</button>
     </div>
     <main class="bottom-section" id="content-area"></main>
 </div>
@@ -148,7 +155,6 @@
     const content = document.getElementById('content-area');
 
     for (let i = 1; i <= 10; i++) {
-        // Nav Buttons
         const btn = document.createElement('button');
         btn.className = 'nav-btn';
         btn.id = `btn-${i}`;
@@ -156,7 +162,6 @@
         btn.onclick = () => goToPage(i);
         nav.appendChild(btn);
 
-        // Pages
         const page = document.createElement('div');
         page.className = 'page';
         page.id = `page-${i}`;
@@ -165,8 +170,8 @@
             const h = Math.floor(Math.random() * 300) + 200;
             page.innerHTML += `
                 <div class="question-block">
-                    <div class="img-placeholder" style="height:${h}px">Image ${i}.${j}</div>
-                    <div class="text">Question ${i}.${j}: Scrolling content goes here. Variable image height adjusts page length.</div>
+                    <div class="img-placeholder" style="height:${h}px">Asset ${i}.${j}</div>
+                    <div class="text">Question ${i}.${j}: Scrollable page content.</div>
                 </div>`;
         }
         content.appendChild(page);
@@ -180,7 +185,7 @@
         activeBtn.classList.add('active');
         document.getElementById(`page-${num}`).classList.add('active');
 
-        // Center Button
+        // Center Button with smooth internal scroll
         const offset = activeBtn.offsetLeft - (nav.offsetWidth / 2) + (activeBtn.offsetWidth / 2);
         nav.scrollTo({ left: offset, behavior: 'smooth' });
 
