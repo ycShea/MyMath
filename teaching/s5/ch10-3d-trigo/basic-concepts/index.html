@@ -23,21 +23,20 @@
             height: 100vh;
         }
 
-        /* Top 2/3 Navigation */
+        /* Top 10% Navigation */
         .top-section {
-            height: 10vh;
+            height: 10vh; /* Changed to 10% */
             background-color: #fff;
-            border-bottom: 2px solid #ccc;
+            border-bottom: 1px solid #ddd;
             display: flex;
             align-items: center;
             position: relative;
-            padding: 0 60px;
+            padding: 0 50px;
         }
 
         .nav-wrapper {
             display: flex;
             overflow-x: auto;
-            /* smooth ensures non-jumping movement */
             scroll-behavior: smooth; 
             width: 100%;
             height: 100%;
@@ -52,19 +51,20 @@
 
         .nav-btn {
             flex: 0 0 20%;
-            height: 80%;
-            margin: 0 15px;
-            font-size: 5rem;
-            font-weight: 900;
+            height: 70%;
+            margin: 0 10px;
+            font-size: 1.5rem; /* Smaller font for 10% height */
+            font-weight: 700;
             cursor: pointer;
-            border: 4px solid #eee;
+            border: 2px solid #eee;
             background-color: #fff;
-            border-radius: 20px;
+            border-radius: 8px;
             display: flex;
             align-items: center;
             justify-content: center;
-            transition: transform 0.4s cubic-bezier(0.25, 1, 0.5, 1), background-color 0.3s, color 0.3s;
-            color: #ddd;
+            /* Smoother transition for property changes */
+            transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+            color: #bbb;
         }
 
         .nav-btn.active {
@@ -72,42 +72,51 @@
             color: #fff;
             border-color: #0056b3;
             transform: scale(1.05);
-            box-shadow: 0 15px 30px rgba(0,123,255,0.2);
         }
 
         .arrow {
             position: absolute;
             top: 50%;
             transform: translateY(-50%);
-            width: 60px;
-            height: 60px;
+            width: 40px;
+            height: 40px;
             background: #222;
             color: #fff;
             border: none;
             border-radius: 50%;
             cursor: pointer;
             z-index: 10;
-            font-size: 2rem;
+            font-size: 1.2rem;
             display: flex;
             align-items: center;
             justify-content: center;
+            transition: opacity 0.3s;
         }
 
-        .arrow-left { left: 10px; }
-        .arrow-right { right: 10px; }
+        .arrow:hover { opacity: 0.8; }
+        .arrow-left { left: 5px; }
+        .arrow-right { right: 5px; }
 
-        /* Bottom 1/3 Content Area */
+        /* Bottom 90% Content Area */
         .bottom-section {
-            height: 33.33vh;
+            height: 90vh; /* Changed to 90% */
             overflow-y: auto;
             padding: 30px;
             background-color: #fff;
+            scroll-behavior: smooth; /* Smooth vertical scrolling */
         }
 
         .page {
             display: none;
             max-width: 900px;
             margin: 0 auto;
+            /* Smooth fade-in for section transitions */
+            animation: fadeIn 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
         }
 
         .page.active {
@@ -129,23 +138,22 @@
             justify-content: center;
             color: #888;
             border-radius: 8px;
-            font-size: 1.2rem;
         }
 
         .text {
-            font-size: 1.4rem;
+            font-size: 1.2rem;
             line-height: 1.6;
             color: #333;
         }
     </style>
 </head>
 <body>
-3
+4
 <div class="container">
     <div class="top-section">
-        <button class="arrow arrow-left" onclick="scrollNav(-500)">&#10094;</button>
+        <button class="arrow arrow-left" onclick="scrollNav(-400)">&#10094;</button>
         <div class="nav-wrapper" id="nav-wrapper"></div>
-        <button class="arrow arrow-right" onclick="scrollNav(500)">&#10095;</button>
+        <button class="arrow arrow-right" onclick="scrollNav(400)">&#10095;</button>
     </div>
     <main class="bottom-section" id="content-area"></main>
 </div>
@@ -167,35 +175,53 @@
         page.id = `page-${i}`;
         
         for (let j = 1; j <= 8; j++) {
-            const h = Math.floor(Math.random() * 300) + 200;
+            const h = Math.floor(Math.random() * 200) + 150;
             page.innerHTML += `
                 <div class="question-block">
                     <div class="img-placeholder" style="height:${h}px">Asset ${i}.${j}</div>
-                    <div class="text">Question ${i}.${j}: Scrollable page content.</div>
+                    <div class="text">Question ${i}.${j}: Analysis content area.</div>
                 </div>`;
         }
         content.appendChild(page);
     }
 
     function goToPage(num) {
+        // Find existing active elements
+        const currentActiveBtn = document.querySelector('.nav-btn.active');
+        const currentActivePage = document.querySelector('.page.active');
+
+        // Only proceed if clicking a different button
+        if (currentActiveBtn && currentActiveBtn.id === `btn-${num}`) return;
+
+        // Remove active class from all
         document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
         document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
 
         const activeBtn = document.getElementById(`btn-${num}`);
+        const activePage = document.getElementById(`page-${num}`);
+
         activeBtn.classList.add('active');
-        document.getElementById(`page-${num}`).classList.add('active');
+        activePage.classList.add('active');
 
-        // Center Button with smooth internal scroll
-        const offset = activeBtn.offsetLeft - (nav.offsetWidth / 2) + (activeBtn.offsetWidth / 2);
-        nav.scrollTo({ left: offset, behavior: 'smooth' });
+        // Smoother centering calculation
+        const btnWidth = activeBtn.offsetWidth;
+        const btnLeft = activeBtn.offsetLeft;
+        const wrapperWidth = nav.offsetWidth;
+        
+        nav.scrollTo({
+            left: btnLeft - (wrapperWidth / 2) + (btnWidth / 2),
+            behavior: 'smooth'
+        });
 
-        content.scrollTop = 0;
+        // Smooth reset of scroll position
+        content.scrollTo({ top: 0, behavior: 'smooth' });
     }
 
     function scrollNav(val) {
         nav.scrollBy({ left: val, behavior: 'smooth' });
     }
 
+    // Initial load
     goToPage(1);
 </script>
 
