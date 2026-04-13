@@ -23,10 +23,10 @@ Link to the HTML:
 * Styles: linked to `../style.css`
 
 ### 📄 File links
-* [🔗 2017-DSE-MATH-I-Q19.html](https://ycshea.github.io/MyMath/teaching/s5/ch10-3d-trigo/explanations/2017-DSE-MATH-I-Q19.html) (Can be used as template for new exercise)
+* [🔗 2017-DSE-MATH-I-Q19.html](https://ycshea.github.io/MyMath/teaching/s5/ch10-3d-trigo/explanations/2017-DSE-MATH-I-Q19.html) (Can be used as template for new exercise in different parts)
 * [🔗 2020-DSE-MATH-II-Q38.html](https://ycshea.github.io/MyMath/teaching/s5/ch10-3d-trigo/explanations/2020-DSE-MATH-II-Q38.html)
 * [🔗 2024-DSE-MATH-I-Q18.html](https://ycshea.github.io/MyMath/teaching/s5/ch10-3d-trigo/explanations/2024-DSE-MATH-I-Q18.html)
-* [🔗 2526-S5UT4-MCQ6.html](https://ycshea.github.io/MyMath/teaching/s5/ch10-3d-trigo/explanations/2526-S5UT4-MCQ6.html)
+* [🔗 2526-S5UT4-MCQ6.html](https://ycshea.github.io/MyMath/teaching/s5/ch10-3d-trigo/explanations/2526-S5UT4-MCQ6.html)(Can be used as template for new exercise in one part)
 
 ### 📁 File Structure
 ```text
