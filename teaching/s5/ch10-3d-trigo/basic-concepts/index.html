@@ -23,11 +23,11 @@
             height: 100vh;
         }
 
-        /* Top 10% Fancy Navigation */
+        /* Top 10% Navigation */
         .top-section {
             height: 10vh;
-            background: linear-gradient(90deg, #1e293b 0%, #0f172a 100%);
-            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            background: #0f172a;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
             display: flex;
             align-items: center;
             position: relative;
@@ -50,78 +50,63 @@
         }
 
         .nav-btn {
-            flex: 0 0 15%; /* Slightly narrower for a sleeker look */
-            height: 60%;
-            margin: 0 12px;
-            font-size: 1.8rem;
-            font-weight: 800;
+            flex: 0 0 15%;
+            height: 100%;
+            margin: 0 5px;
+            font-size: 3rem; /* Larger font for better outline visibility */
+            font-weight: 900;
             cursor: pointer;
             border: none;
-            background: rgba(255, 255, 255, 0.03);
-            color: #64748b;
-            border-radius: 12px;
+            background: transparent;
             display: flex;
             align-items: center;
             justify-content: center;
-            position: relative;
-            /* Ultra-smooth cubic-bezier transition */
-            transition: all 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
-            overflow: hidden;
+            
+            /* Hollow/Outline Style */
+            color: transparent;
+            -webkit-text-stroke: 1.5px rgba(255, 255, 255, 0.2);
+            
+            transition: all 0.6s cubic-bezier(0.23, 1, 0.32, 1);
         }
 
-        /* Fancy Hover & Glassmorphism */
         .nav-btn:hover {
-            color: #f8fafc;
-            background: rgba(255, 255, 255, 0.08);
+            -webkit-text-stroke: 1.5px rgba(255, 255, 255, 0.5);
         }
 
         .nav-btn.active {
-            color: #fff;
-            background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
-            transform: scale(1.1) translateY(-2px);
-            box-shadow: 0 10px 25px -5px rgba(37, 99, 235, 0.5), 
-                        0 8px 10px -6px rgba(37, 99, 235, 0.5);
+            -webkit-text-stroke: 1.5px #3b82f6;
+            transform: scale(1.2);
+            /* Optional glow effect instead of underline */
+            text-shadow: 0 0 15px rgba(59, 130, 246, 0.4);
         }
 
-        /* Underline effect for active */
+        /* Removed Underline Effect */
         .nav-btn::after {
-            content: '';
-            position: absolute;
-            bottom: 0;
-            left: 50%;
-            width: 0;
-            height: 3px;
-            background: #fff;
-            transition: all 0.4s ease;
-            transform: translateX(-50%);
-        }
-
-        .nav-btn.active::after {
-            width: 40%;
+            display: none;
         }
 
         .arrow {
             position: absolute;
             top: 50%;
             transform: translateY(-50%);
-            width: 35px;
-            height: 35px;
-            background: rgba(255, 255, 255, 0.05);
-            color: #fff;
+            width: 40px;
+            height: 40px;
+            background: rgba(255, 255, 255, 0.03);
+            color: #64748b;
             border: 1px solid rgba(255, 255, 255, 0.1);
             border-radius: 50%;
             cursor: pointer;
             z-index: 10;
-            font-size: 1rem;
+            font-size: 1.2rem;
             display: flex;
             align-items: center;
             justify-content: center;
-            backdrop-filter: blur(4px);
             transition: all 0.3s ease;
         }
 
         .arrow:hover { 
-            background: #3b82f6;
+            color: #fff;
+            background: rgba(255, 255, 255, 0.1);
             border-color: #3b82f6;
         }
 
@@ -141,13 +126,12 @@
             display: none;
             max-width: 800px;
             margin: 0 auto;
-            /* "Liquid" smooth entry */
             animation: slideUpFade 0.8s cubic-bezier(0.22, 1, 0.36, 1);
         }
 
         @keyframes slideUpFade {
-            0% { opacity: 0; transform: translateY(30px) scale(0.98); }
-            100% { opacity: 1; transform: translateY(0) scale(1); }
+            0% { opacity: 0; transform: translateY(20px); }
+            100% { opacity: 1; transform: translateY(0); }
         }
 
         .page.active {
@@ -156,39 +140,38 @@
 
         .question-block {
             background: #fff;
-            padding: 25px;
+            padding: 30px;
             margin-bottom: 40px;
-            border-radius: 16px;
-            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+            border-radius: 20px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.03);
             border: 1px solid #e2e8f0;
         }
 
         .img-placeholder {
             width: 100%;
             background-color: #f1f5f9;
-            margin-bottom: 20px;
+            margin-bottom: 25px;
             display: flex;
             align-items: center;
             justify-content: center;
             color: #94a3b8;
             border-radius: 12px;
-            font-weight: 500;
         }
 
         .text {
             font-size: 1.1rem;
-            line-height: 1.6;
-            color: #1e293b;
+            line-height: 1.7;
+            color: #334155;
         }
     </style>
 </head>
 <body>
-
+8
 <div class="container">
     <div class="top-section">
-        <button class="arrow arrow-left" onclick="scrollNav(-400)">&#10094;</button>
+        <button class="arrow arrow-left" onclick="scrollNav(-400)">&#8249;</button>
         <div class="nav-wrapper" id="nav-wrapper"></div>
-        <button class="arrow arrow-right" onclick="scrollNav(400)">&#10095;</button>
+        <button class="arrow arrow-right" onclick="scrollNav(400)">&#8250;</button>
     </div>
     <main class="bottom-section" id="content-area"></main>
 </div>
@@ -210,11 +193,14 @@
         page.id = `page-${i}`;
         
         for (let j = 1; j <= 8; j++) {
-            const h = Math.floor(Math.random() * 200) + 200;
+            const h = Math.floor(Math.random() * 150) + 250;
             page.innerHTML += `
                 <div class="question-block">
-                    <div class="img-placeholder" style="height:${h}px">Visual Resource ${i}.${j}</div>
-                    <div class="text"><strong>Module ${i}: Item ${j}</strong><br>Experience the ultra-smooth transitions between content sections.</div>
+                    <div class="img-placeholder" style="height:${h}px">Section ${i} Content ${j}</div>
+                    <div class="text">
+                        <strong>Insight ${i}.${j}</strong><br>
+                        Navigation utilizes a smooth scroll-to-center logic and CSS text-stroke for the hollow aesthetic.
+                    </div>
                 </div>`;
         }
         content.appendChild(page);
@@ -233,11 +219,11 @@
         activeBtn.classList.add('active');
         activePage.classList.add('active');
 
-        // Smooth centering for Nav
+        // Smooth centering with improved timing
         const offset = activeBtn.offsetLeft - (nav.offsetWidth / 2) + (activeBtn.offsetWidth / 2);
         nav.scrollTo({ left: offset, behavior: 'smooth' });
 
-        // Smooth vertical scroll to top
+        // Smooth vertical scroll
         content.scrollTo({ top: 0, behavior: 'smooth' });
     }
 
@@ -245,7 +231,7 @@
         nav.scrollBy({ left: val, behavior: 'smooth' });
     }
 
-    // Initialize
+    // Initialize first page
     goToPage(1);
 </script>
 
