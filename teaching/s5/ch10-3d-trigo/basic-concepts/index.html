@@ -12,8 +12,9 @@
 
         body, html {
             height: 100%;
-            font-family: Arial, sans-serif;
+            font-family: sans-serif;
             overflow: hidden;
+            background-color: #f0f0f0;
         }
 
         .container {
@@ -22,153 +23,175 @@
             height: 100vh;
         }
 
-        /* Top 1/3: Navigation Section */
+        /* Top 1/3 Navigation */
         .top-section {
             height: 33.33vh;
-            background-color: #f0f0f0;
+            background-color: #fff;
             border-bottom: 2px solid #ccc;
             display: flex;
-            flex-wrap: wrap;
-            align-content: flex-start;
-            padding: 10px;
+            align-items: center;
+            position: relative;
+            padding: 0 60px;
+        }
+
+        .nav-wrapper {
+            display: flex;
+            overflow-x: auto;
+            scroll-behavior: smooth;
+            width: 100%;
+            height: 100%;
+            align-items: center;
+            scrollbar-width: none;
+            -ms-overflow-style: none;
+        }
+
+        .nav-wrapper::-webkit-scrollbar {
+            display: none;
         }
 
         .nav-btn {
-            width: 20%; /* 1/5 of width */
-            height: calc(50% - 10px); /* Split into two rows */
-            font-size: 1.5rem;
+            flex: 0 0 20%; /* 1/5 of width */
+            height: 80%;
+            margin: 0 10px;
+            font-size: 3rem;
             font-weight: bold;
             cursor: pointer;
-            border: 1px solid #999;
+            border: 2px solid #ddd;
             background-color: #fff;
-            transition: all 0.2s;
-        }
-
-        .nav-btn:hover {
-            background-color: #e0e0e0;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+            color: #888;
         }
 
         .nav-btn.active {
             background-color: #007bff;
-            color: white;
+            color: #fff;
             border-color: #0056b3;
+            transform: scale(1.05);
         }
 
-        /* Bottom 2/3: Content Section */
+        .arrow {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 50px;
+            height: 50px;
+            background: #333;
+            color: #fff;
+            border: none;
+            border-radius: 50%;
+            cursor: pointer;
+            z-index: 10;
+            font-size: 1.5rem;
+        }
+
+        .arrow-left { left: 5px; }
+        .arrow-right { right: 5px; }
+
+        /* Bottom 2/3 Content */
         .bottom-section {
             height: 66.67vh;
             overflow-y: auto;
             padding: 20px;
-            scroll-behavior: smooth;
+            background-color: #fff;
         }
 
-        .page-content {
+        .page {
             display: none;
+            max-width: 800px;
+            margin: 0 auto;
         }
 
-        .page-content.active {
+        .page.active {
             display: block;
         }
 
-        .question {
-            margin-bottom: 40px;
-            padding: 15px;
-            border: 1px solid #eee;
-            border-radius: 8px;
+        .question-block {
+            margin-bottom: 50px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid #eee;
         }
 
-        .question-image {
+        .img-placeholder {
             width: 100%;
             background-color: #ddd;
+            margin-bottom: 15px;
             display: flex;
             align-items: center;
             justify-content: center;
-            margin-bottom: 15px;
-            color: #666;
-            font-style: italic;
+            color: #555;
+            border-radius: 5px;
         }
 
-        .question-text {
-            font-size: 1.1rem;
-            margin-bottom: 10px;
+        .text {
+            font-size: 1.2rem;
+            line-height: 1.5;
         }
     </style>
 </head>
 <body>
 
 <div class="container">
-    <nav class="top-section" id="navbar">
-        </nav>
-
-    <main class="bottom-section" id="content-area">
-        </main>
+    <div class="top-section">
+        <button class="arrow arrow-left" onclick="scrollNav(-300)">&#10094;</button>
+        <div class="nav-wrapper" id="nav-wrapper"></div>
+        <button class="arrow arrow-right" onclick="scrollNav(300)">&#10095;</button>
+    </div>
+    <main class="bottom-section" id="content-area"></main>
 </div>
 
 <script>
-    const navbar = document.getElementById('navbar');
-    const contentArea = document.getElementById('content-area');
-    const totalPages = 10;
-    const questionsPerPage = 8;
+    const nav = document.getElementById('nav-wrapper');
+    const content = document.getElementById('content-area');
 
-    // Generate Buttons and Pages
-    for (let i = 1; i <= totalPages; i++) {
-        // Create Navigation Button
+    for (let i = 1; i <= 10; i++) {
+        // Nav Buttons
         const btn = document.createElement('button');
         btn.className = 'nav-btn';
+        btn.id = `btn-${i}`;
         btn.innerText = i;
-        btn.onclick = () => showPage(i);
-        navbar.appendChild(btn);
+        btn.onclick = () => goToPage(i);
+        nav.appendChild(btn);
 
-        // Create Page Container
+        // Pages
         const page = document.createElement('div');
-        page.className = 'page-content';
+        page.className = 'page';
         page.id = `page-${i}`;
         
-        const title = document.createElement('h2');
-        title.innerText = `Section ${i}`;
-        title.style.marginBottom = '20px';
-        page.appendChild(title);
-
-        // Create 8 Questions per page
-        for (let j = 1; j <= questionsPerPage; j++) {
-            const qBox = document.createElement('div');
-            qBox.className = 'question';
-            
-            // Randomized height for placeholder images to demonstrate scrolling
-            const randomHeight = Math.floor(Math.random() * (400 - 150 + 1)) + 150;
-            
-            qBox.innerHTML = `
-                <div class="question-image" style="height: ${randomHeight}px;">
-                    [Image for Question ${j} - Height: ${randomHeight}px]
-                </div>
-                <div class="question-text">
-                    <strong>Question ${i}.${j}:</strong> This is a sample question that requires the user to scroll if the content exceeds the viewport height.
-                </div>
-                <textarea style="width:100%; height:60px;" placeholder="Enter answer..."></textarea>
-            `;
-            page.appendChild(qBox);
+        for (let j = 1; j <= 8; j++) {
+            const h = Math.floor(Math.random() * 300) + 200;
+            page.innerHTML += `
+                <div class="question-block">
+                    <div class="img-placeholder" style="height:${h}px">Image ${i}.${j}</div>
+                    <div class="text">Question ${i}.${j}: Scrolling content goes here. Variable image height adjusts page length.</div>
+                </div>`;
         }
-        contentArea.appendChild(page);
+        content.appendChild(page);
     }
 
-    function showPage(pageNum) {
-        // Update Buttons
-        document.querySelectorAll('.nav-btn').forEach((btn, index) => {
-            btn.classList.toggle('active', (index + 1) === pageNum);
-        });
+    function goToPage(num) {
+        document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+        document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
 
-        // Update Content
-        document.querySelectorAll('.page-content').forEach(page => {
-            page.classList.remove('active');
-        });
-        document.getElementById(`page-${pageNum}`).classList.add('active');
+        const activeBtn = document.getElementById(`btn-${num}`);
+        activeBtn.classList.add('active');
+        document.getElementById(`page-${num}`).classList.add('active');
 
-        // Reset scroll position to top when changing pages
-        contentArea.scrollTop = 0;
+        // Center Button
+        const offset = activeBtn.offsetLeft - (nav.offsetWidth / 2) + (activeBtn.offsetWidth / 2);
+        nav.scrollTo({ left: offset, behavior: 'smooth' });
+
+        content.scrollTop = 0;
     }
 
-    // Initialize Page 1
-    showPage(1);
+    function scrollNav(val) {
+        nav.scrollBy({ left: val, behavior: 'smooth' });
+    }
+
+    goToPage(1);
 </script>
 
 </body>
