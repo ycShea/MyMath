@@ -509,7 +509,6 @@
         // drawThickLine(p1, p2, isSolid = true, color = 0x000000, name = "")                               // Simulates line weight by layering multiple offset lines
         // Arc3D (class)                                                                                    // Custom Curve class for calculating 3D circular arc paths
         // drawAngleArc(p1, vertex, p2, labelText = "", radius = 1.0, color = 0x000000, labelKey = null)    // Renders a 3D arc and text label to denote specific angles
-        // drawRightAngle(p1, vertex, p2, size = 1.0, color = 0x000000)                                     // Renders a basic 3D square symbol for orthogonal vertices
         // drawThickRightAngle(p1, vertex, p2, size = 1.0, color = 0x000000)                                // Creates a bold 3D right-angle symbol using offset layers
         // drawFigureA()                                                                                    // Initializes the 2D layout for Part A with lines and arcs
         // drawFigureB()                                                                                    // Initializes the 3D tetrahedron layout for Part B
@@ -525,7 +524,6 @@
         // highlightPolygon(points, color = "#0d6efd", id = null)                            // Adds a semi-transparent mesh to highlight specific areas
         // clearStepHighlights()                                                             // Adds a semi-transparent colored mesh to a specific 3D triangle
         // createPolygon(points, color = 0x0d6efd)                                           // Renders a filled 3D mesh for 3-point or 4-point shapes
-        // shadeTetrahedron(points, color = 0x0d6efd, opacity = 0.2)                         // Renders all four faces of a 3D tetrahedron with opacity
         // ==========================================
 
         // ==========================================
@@ -718,7 +716,7 @@
         // ==========================================
         // [ZONE 5] Step drawing logic — update for new exercise
         // ==========================================
-        function revealStep(session, triangleKeys = []) {                                                                // revealStep (UpdateForNewExercise) Zone 5
+        function revealStep(session) {                                                                // revealStep (UpdateForNewExercise) Zone 5
             // =============================================================
             // 0. CLEAR STEP-SPECIFIC OBJECTS (Labels, Arcs, Extra Lines)
             // =============================================================
@@ -780,6 +778,7 @@
                 clearStepHighlights();
                 // 5. DRAWING LOGIC (Now always starts with a clean slate)                                                                    // (UpdateForNewExercise) MAIN STEPS (SEARCH) Zone 5
 console.log("version 2017.1"); // Steps for searching
+console.log(stepId + ": "+ currentStep);
                 // Part (a)(i)
                 if (stepId === "step-ai") {
                     polygonA.visible = true;
@@ -989,8 +988,6 @@ console.log("version 2017.1"); // Steps for searching
                 } else {
                     btn.textContent = "Next Step";
                 }
-                // Delete this, suggested by Claude
-                // collapseOtherParts("sol-" + session);
             }
         }
 
@@ -1059,18 +1056,6 @@ console.log("version 2017.1"); // Steps for searching
                     delete V[key];            // Remove from coordinate object
                 }
             }
-        }
-                
-        function collapseOtherParts(activeId) {
-            const allContainers = document.querySelectorAll('.solution-content');
-            
-            allContainers.forEach(container => {
-                // If the container is NOT the one we just clicked, 
-                // we simply skip it. This keeps previously opened steps visible.
-                if (container.id !== activeId) {
-                    return; 
-                }
-            });
         }
         
         // ==========================================
@@ -1290,24 +1275,6 @@ console.log("version 2017.1"); // Steps for searching
                 activeLabels[key] = labelDiv;
             }
         }
-
-        function drawRightAngle(p1, vertex, p2, size = 1.0, color = 0x000000) {
-            const d1 = new THREE.Vector3().subVectors(p1, vertex).normalize().multiplyScalar(size);
-            const d2 = new THREE.Vector3().subVectors(p2, vertex).normalize().multiplyScalar(size);
-            
-            const corner1 = vertex.clone().add(d1);
-            const corner2 = vertex.clone().add(d1).add(d2);
-            const corner3 = vertex.clone().add(d2);
-            
-            const geom = new THREE.BufferGeometry().setFromPoints([corner1, corner2, corner3]);
-            const line = new THREE.Line(geom, new THREE.LineBasicMaterial({ color: color, linewidth: 1, depthTest: false }));
-            line.visible = true;
-            // 4. Tag it so your clearScene() or highlight functions can find/remove it
-            line.userData.isStepHighlight = true; 
-            line.renderOrder = 1000; // 5. Force it to the front layer
-            scene.add(line);
-            return line;
-        }
         
         function drawThickRightAngle(p1, vertex, p2, size = 1.0, color = 0x000000) {
             // 1. Calculate the corners for the square symbol
@@ -1458,47 +1425,6 @@ console.log("version 2017.1"); // Steps for searching
             scene.add(mesh);
             return mesh;
         }
-
-        function shadeTetrahedron(points, color = 0x0d6efd, opacity = 0.2) {
-            if (points.length !== 4) {
-                console.error("shadeTetrahedron requires exactly 4 points.");
-                return;
-            }
-        
-            const [P1, P2, P3, P4] = points;
-        
-            // Define the 4 triangular faces of a tetrahedron
-            const faces = [
-                [P1, P2, P3],
-                [P1, P2, P4],
-                [P1, P3, P4],
-                [P2, P3, P4]
-            ];
-        
-            faces.forEach(facePoints => {
-                const geom = new THREE.BufferGeometry().setFromPoints(facePoints);
-                geom.setIndex([0, 1, 2]); // Define the triangle via indices
-                
-                const mat = new THREE.MeshBasicMaterial({ 
-                    color: color, 
-                    side: THREE.DoubleSide, 
-                    transparent: true, 
-                    opacity: opacity,
-                    // polygonOffset helps prevent the shading from "flickering" 
-                    // against the wireframe lines
-                    polygonOffset: true,
-                    polygonOffsetFactor: 1,
-                    polygonOffsetUnits: 1
-                });
-        
-                const mesh = new THREE.Mesh(geom, mat);
-                
-                // Tagging for your existing cleanup/step logic
-                mesh.userData.isStepHighlight = true;
-                
-                scene.add(mesh);
-            });
-        }
         
         function toggleAnswersOnly(prefix, btn) {
             // Targets only IDs starting with the specific prefix (e.g., 'sol-b')
@@ -1568,15 +1494,6 @@ console.log("version 2017.1"); // Steps for searching
                 }
                 delete activeLabels[key];
             });
-
-            /*
-            // This second loop is redundant — the first forEach already deletes everything
-            Object.values(activeLabels).forEach(l => {
-                if (l && l.parentNode) {
-                    l.parentNode.removeChild(l);
-                }
-            });
-            */
         
             activeLabels = {};
         }
