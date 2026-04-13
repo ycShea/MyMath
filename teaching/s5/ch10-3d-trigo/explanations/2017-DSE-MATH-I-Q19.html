@@ -772,11 +772,8 @@
                 // Part (b)(i)
                 if (stepId === "step-bi") {
                     polygonB.visible = true;
-                    stickTempPointLabel(V.T, "T", "#d63384", stepId + "_" + currentStep + "_pointT");
                     switch (currentStep) {
                         case 0: case 1:
-                            //drawThickLine(V.R, V.T, false,              "#000000", stepId + "_" + currentStep + "_lineRT_Drawing");     // (UpdateForNewExercise) Customize the steps, given thick line
-                            //drawThickRightAngle(V.Q, V.T, V.R, 0.5);                                                                    // (UpdateForNewExercise) Customize the steps, given
                             polygonB.visible = false;
                             drawLineLabels(V.A, V.D, "10",              "#000000", stepId + "_" + currentStep + "_lineAD_Label");       // (UpdateForNewExercise) Customize the steps, given
                             drawLineLabels(V.C, V.E, "CE=2",            "#000000", stepId + "_" + currentStep + "_lineCE_Label");       // (UpdateForNewExercise) Customize the steps, given
@@ -935,7 +932,7 @@ console.log("version 9"); // Steps for searching
                                 drawLineLabels(V.D, V.P, "25.579",        "#d63384", stepId + "_" + currentStep + "_lineDP_Label");       // (UpdateForNewExercise) Customize the steps, pink from previous part
                             }
                             else
-                                drawLineLabels(V.L, V.L, "Area ≈ 456.74", "#00bbbb", stepId + "_" + currentStep + "_pointL_Label");       // (UpdateForNewExercise) Customize the steps, cyan answer
+                                drawLineLabels(V.L, V.L, "Area ≈ 426.74", "#00bbbb", stepId + "_" + currentStep + "_pointL_Label");       // (UpdateForNewExercise) Customize the steps, cyan answer
                             break;
                     }
                 }
@@ -1029,36 +1026,7 @@ console.log("version 9"); // Steps for searching
                 }
             }
         }
-        
-        function hideAllPartASteps() {
-            // Select all solution containers in Part A
-            const containers = ['sol-ai', 'sol-aii'];
-            
-            containers.forEach(id => {
-                const container = document.getElementById(id);
-                const steps = container.getElementsByClassName('step');
-                const btnId = id.replace('sol-', 'btn-');
-                const btn = document.getElementById(btnId);
-        
-                for (let s of steps) {
-                    // Only hide if it's NOT the final answer
-                    if (!s.classList.contains('final-ans')) {
-                        s.style.display = 'none';
-                    }
-                }
                 
-                // Reset the button state so user can restart the steps if they want
-                container.setAttribute('data-current-step', '0');
-                btn.textContent = "Show Step";
-                btn.disabled = false;
-                btn.style.opacity = "1";
-            });
-        
-            // Clear highlights from the 3D scene
-            clearScene();
-            if (currentFigure === 'A') drawFigureA();
-        }
-        
         function collapseOtherParts(activeId) {
             const allContainers = document.querySelectorAll('.solution-content');
             
