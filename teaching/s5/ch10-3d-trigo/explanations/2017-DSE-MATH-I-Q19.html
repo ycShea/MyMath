@@ -144,7 +144,7 @@
                         <button id="btn-ai" class="btn-show" onclick="revealStep('ai')">Show Step</button>
                     </div>
                 </div>
-
+                /* suggestion from Claude
                 <div id="sol-ai" class="solution-content" data-current-step="0">
                     <p class="step" style="display:none;">                              <!-- (UpdateForNewExercise) Part ai Step 0-->
                         Find $\angle ABC$: $180^\circ - 30^\circ - 42^\circ = 108^\circ$
@@ -158,6 +158,10 @@
                     <p class="step final-ans" style="display:none;">                    <!-- (UpdateForNewExercise) Part ai Step 3 -->
                         $AC \approx 45.7 \text{ cm}$
                     </p>
+                </div>
+                */
+                <div id="sol-ai" class="solution-content" data-current-step="0">
+                    <!-- steps auto-generated from STEPS['ai'] in JS -->
                 </div>
             </div>
 
@@ -441,6 +445,53 @@
 //        console.log("(a)(ii) angle RQS:", radToDeg(angle_rqs));
 //        console.log("(b)(i)  Distance h:", V.Rb.distanceTo(V.N));
 //        console.log("(b)(ii) Distance d:", V.P.distanceTo(V.X));
+        // ==========================================
+        // GROUP 1b: STEPS CONFIG (change this for each new exercise)
+        // ==========================================
+        const STEPS = {
+            'ai': [
+                {
+                    html: `Find $\\angle ABC$: $180^\\circ - 30^\\circ - 42^\\circ = 108^\\circ$`,
+                    isFinal: false,
+                    draw: () => {
+                        polygonA.visible = true;
+                        drawAngleArc(V.A, V.B, V.C, "?", 2.0, "#d63384", "step-ai_0_angleABC");
+                    }
+                },
+                {
+                    html: `Using Sine Rule: $$\\frac{AC}{\\sin 108^\\circ} = \\frac{24}{\\sin 30^\\circ}$$`,
+                    isFinal: false,
+                    draw: () => {
+                        polygonA.visible = true;
+                        drawAngleArc(V.A, V.B, V.C, "108°", 2.0, "#d63384", "step-ai_1_angleABC");
+                        drawLineLabels(V.A, V.C, "?",       "#d63384", "step-ai_1_lineAC");
+                        highlightPolygon([V.A, V.B, V.C],   "#bb0000", "step-ai_1_triABC");
+                    }
+                },
+                {
+                    html: `$AC = \\frac{24 \\sin 108^\\circ}{\\sin 30^\\circ} \\approx 45.651 \\text{ cm}$`,
+                    isFinal: false,
+                    draw: () => {
+                        polygonA.visible = true;
+                        drawAngleArc(V.A, V.B, V.C, "108°", 2.0, "#d63384", "step-ai_2_angleABC");
+                        drawLineLabels(V.A, V.C, "?",       "#d63384", "step-ai_2_lineAC");
+                        highlightPolygon([V.A, V.B, V.C],   "#bb0000", "step-ai_2_triABC");
+                    }
+                },
+                {
+                    html: `$AC \\approx 45.7 \\text{ cm}$`,
+                    isFinal: true,                              // <-- marks this as the final answer
+                    draw: () => {
+                        polygonA.visible = true;
+                        drawAngleArc(V.A, V.B, V.C, "108°", 2.0, "#d63384", "step-ai_3_angleABC");
+                        drawLineLabels(V.A, V.C, "45.7",    "#00bbbb", "step-ai_3_lineAC");
+                        highlightPolygon([V.A, V.B, V.C],   "#bb0000", "step-ai_3_triABC");
+                    }
+                },
+            ],
+            // 'bi': [ ... ],
+            // 'bii': [ ... ],
+        };
         
         // ==========================================
         // SETUP OF CAMERA (UpdateForNewExercise)                                                                    <-- (UpdateForNewExercise)
@@ -451,6 +502,7 @@
         let polygonA;
         let polygonB;
 
+        initSteps();
         resetCamera();
         animate();
         window.addEventListener('resize', () => {
@@ -701,6 +753,19 @@
             const part = session.startsWith('a') ? 'A' : 'B';
             handleToggle(part);
         }
+
+        function initSteps() {
+            Object.entries(STEPS).forEach(([session, stepList]) => {
+                const container = document.getElementById('sol-' + session);
+                if (!container) return;
+                stepList.forEach(stepDef => {
+                    const p = document.createElement('p');
+                    p.className = stepDef.isFinal ? 'step final-ans' : 'step';
+                    p.style.display = 'none';
+                    container.appendChild(p);
+                });
+            });
+        }
         
         // This function orchestrates the progressive reveal of solution steps by synchronizing the visibility of HTML text, MathJax formula rendering, and the corresponding 3D triangle highlights in the Three.js scene.
         // The function is triggered when the button is pressed
@@ -762,10 +827,20 @@
             
             if (currentStep < steps.length) {
                 if (currentStep === 0) container.style.display = 'block';
-                
+
+                steps[currentStep].innerHTML = STEPS[session][currentStep].html;
                 steps[currentStep].style.display = 'block';
+                
                 clearStepHighlights();
                 // 5. DRAWING LOGIC (Now always starts with a clean slate)                                                                       // (UpdateForNewExercise) MAIN STEPS (SEARCH)
+                
+                if (STEPS[session] && STEPS[session][currentStep] && STEPS[session][currentStep].draw) {
+                    STEPS[session][currentStep].draw();
+                }
+                if (STEPS[session]?.[currentStep]?.draw) {
+                    STEPS[session][currentStep].draw();
+                }
+                /*
                 // Part (a)(i)
                 if (stepId === "step-ai") {
                     polygonA.visible = true;
@@ -784,7 +859,7 @@
                             highlightPolygon([V.A, V.B, V.C],        "#bb0000", stepId + "_" + currentStep + "_triangleABC");
                             break;
                     }
-                }
+                }*/
 
                 // Part (b)(i)
                 if (stepId === "step-bi") {
@@ -953,6 +1028,7 @@ console.log("version 9"); // Steps for searching
                             break;
                     }
                 }
+                // 3. Re-render MathJax for the new HTML
                 if (window.MathJax) MathJax.typesetPromise([steps[currentStep]]);
 
                 currentStep++;
@@ -963,18 +1039,13 @@ console.log("version 9"); // Steps for searching
                     btn.textContent = "Completed";
                     btn.disabled = true;
                     btn.style.opacity = "0.5";
-                
-                    // 2. Show the Redo button (Assuming your redo ID follows a pattern)
                     const redoBtn = document.getElementById("redo-" + session);
                     if (redoBtn) {
-                        // redoBtn.style.display = 'inline-block';
                         redoBtn.style.display = 'block'; // Or 'inline-block'
                     }
                 } else {
                     btn.textContent = "Next Step";
                 }
-                // Delete this, suggested by Claude
-                // collapseOtherParts("sol-" + session);
             }
         }
 
