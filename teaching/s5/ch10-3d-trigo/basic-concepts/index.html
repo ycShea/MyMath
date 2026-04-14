@@ -580,37 +580,6 @@
             updateProgress();
         }
         
-        function applyAnswerUI(qId, val, showCorrect) {
-            const correct = answerKey[qId];
-            const isRight = val === correct;
-            const block   = document.getElementById(`block-${qId}`);
-            const result  = document.getElementById(`result-${qId}`);
-            const hint    = document.getElementById(`hint-${qId}`);
-        
-            ['A','B','C','D'].forEach(opt => {
-                const lbl = document.getElementById(`label-${qId}-${opt}`);
-                if (!lbl) return;
-                lbl.className = 'option-label locked';
-                if (opt === val) {
-                    lbl.classList.add(isRight ? 'correct-ans' : 'wrong-ans');
-                }
-                if (!isRight && opt === correct && (showCorrect || true)) {
-                    // Always reveal correct answer immediately
-                    lbl.classList.add('revealed-correct');
-                }
-            });
-        
-            // Result icon
-            result.className = `question-result show ${isRight ? 'tick' : 'cross'}`;
-            result.textContent = isRight ? '✓' : '✗';
-        
-            // Hint
-            if (!isRight) hint.classList.add('show');
-        
-            // Block border
-            if (block) block.classList.add(isRight ? 'all-correct' : 'has-wrong');
-        }
-        
         function updateSessionUI(i) {
             let correct = 0, answered = 0;
             for (let j = 1; j <= QPP; j++) {
@@ -708,12 +677,6 @@
             document.getElementById('scroll-container').scrollTo({ top: 0, behavior: 'smooth' });
         }
         
-        function reviewMode() {
-            document.getElementById('summary-section').classList.remove('active');
-            document.getElementById('submit-bar').style.display = 'none';
-            goToPage(1);
-        }
-        
         function resetQuiz() {
             localStorage.removeItem('quiz_answers_v2');
             localStorage.removeItem('quiz_submitted');
@@ -721,21 +684,88 @@
         }
         
         // ── Navigation ──
+        // ── Navigation ──
         function goToPage(num) {
+            // Hide the summary section
             document.getElementById('summary-section').classList.remove('active');
+            
+            // Show the submit bar ONLY if we haven't submitted the quiz yet
+            if (!submitted) {
+                document.getElementById('submit-bar').style.display = 'flex';
+            }
+
             document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
             document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
         
             const activeBtn  = document.getElementById(`btn-${num}`);
             const activePage = document.getElementById(`page-${num}`);
-            activeBtn.classList.add('active');
-            activePage.classList.add('active');
+            
+            if (activeBtn && activePage) {
+                activeBtn.classList.add('active');
+                activePage.classList.add('active');
         
-            nav.scrollTo({
-                left: activeBtn.offsetLeft - (nav.offsetWidth/2) + (activeBtn.offsetWidth/2),
-                behavior: 'smooth'
-            });
+                nav.scrollTo({
+                    left: activeBtn.offsetLeft - (nav.offsetWidth/2) + (activeBtn.offsetWidth/2),
+                    behavior: 'smooth'
+                });
+            }
             document.getElementById('scroll-container').scrollTo({ top: 0, behavior: 'smooth' });
+        }
+        
+        // ── Review Mode ──
+        function reviewMode() {
+            document.getElementById('summary-section').classList.remove('active');
+            // Allow the submit bar to be hidden during review ONLY if actually submitted
+            if (submitted) {
+                document.getElementById('submit-bar').style.display = 'none';
+            } else {
+                document.getElementById('submit-bar').style.display = 'flex';
+            }
+            goToPage(1);
+        }
+
+        // ── Apply Answer UI ──
+        // Ensure this function ONLY locks and reveals answers if submitted is true
+        function applyAnswerUI(qId, val, showCorrect) {
+            const correct = answerKey[qId];
+            const isRight = val === correct;
+            const block   = document.getElementById(`block-${qId}`);
+            const result  = document.getElementById(`result-${qId}`);
+            const hint    = document.getElementById(`hint-${qId}`);
+        
+            ['A','B','C','D'].forEach(opt => {
+                const lbl = document.getElementById(`label-${qId}-${opt}`);
+                if (!lbl) return;
+                
+                // Remove existing classes
+                lbl.className = 'option-label';
+                
+                if (opt === val) {
+                    lbl.classList.add('selected');
+                    // Only show red/green and lock if submitted
+                    if (submitted) {
+                        lbl.classList.add(isRight ? 'correct-ans' : 'wrong-ans');
+                        lbl.classList.add('locked');
+                    }
+                }
+
+                if (submitted) {
+                    lbl.classList.add('locked');
+                    if (!isRight && opt === correct) {
+                        lbl.classList.add('revealed-correct');
+                    }
+                }
+            });
+        
+            if (submitted) {
+                // Result icon
+                result.className = `question-result show ${isRight ? 'tick' : 'cross'}`;
+                result.textContent = isRight ? '✓' : '✗';
+                // Hint
+                if (!isRight) hint.classList.add('show');
+                // Block border
+                if (block) block.classList.add(isRight ? 'all-correct' : 'has-wrong');
+            }
         }
         
         function scrollNav(val) {
