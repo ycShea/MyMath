@@ -49,7 +49,7 @@
 
         .nav-btn {
             flex: 0 0 20%;
-            height: 100%;
+            height: 80%;
             font-size: 3.5rem;
             font-weight: 900;
             cursor: pointer;
@@ -61,15 +61,14 @@
             color: transparent;
             -webkit-text-stroke: 1px rgba(255, 255, 255, 0.6);
             transition: all 0.5s cubic-bezier(0.2, 1, 0.3, 1);
+            border-radius: 12px;
         }
 
         .nav-btn.active {
             -webkit-text-stroke: 1.5px #60a5fa;
-            transform: scale(1.15);
+            transform: scale(1.1);
             filter: drop-shadow(0 0 8px rgba(96, 165, 250, 0.5));
-            /* Background highlight only */
-            background-color: rgba(96, 165, 250, 0.2); /* Light blue tint */
-            border-radius: 12px; /* Smooth corners for the highlight */
+            background-color: rgba(96, 165, 250, 0.3);
         }
 
         .arrow {
@@ -118,34 +117,23 @@
             border: 1px solid #e2e8f0;
         }
 
-        .score-display {
-            position: fixed;
-            bottom: 20px;
-            right: 20px;
-            background: #60a5fa;
-            color: white;
-            padding: 10px 20px;
-            border-radius: 50px;
-            font-weight: bold;
-            box-shadow: 0 4px 15px rgba(96, 165, 250, 0.4);
-            z-index: 100;
-        }
-
-        /* Multiple Choice Styles */
+        /* 1/ Options arranged as A B / C D */
         .options-container {
             margin-top: 15px;
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
         }
 
         .option-label {
-            padding: 12px 15px;
+            padding: 15px;
             border: 2px solid #e2e8f0;
             border-radius: 10px;
             cursor: pointer;
             transition: all 0.2s;
             display: block;
+            text-align: center;
+            background: #fff;
         }
 
         .option-label:hover { background-color: #f1f5f9; }
@@ -156,6 +144,45 @@
             border-color: #60a5fa;
             background-color: #eff6ff;
             font-weight: 600;
+        }
+
+        /* Submit Button Area */
+        .submit-container {
+            text-align: center;
+            padding: 40px 0 100px; /* Space for bottom score badge */
+        }
+
+        .btn-submit {
+            background-color: #10b981;
+            color: white;
+            border: none;
+            padding: 15px 40px;
+            font-size: 1.2rem;
+            font-weight: bold;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: transform 0.2s, background 0.2s;
+            box-shadow: 0 4px 15px rgba(16, 185, 129, 0.3);
+        }
+
+        .btn-submit:hover {
+            background-color: #059669;
+            transform: scale(1.05);
+        }
+
+        /* Persistent Score Display */
+        .score-display {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: #1e293b;
+            color: white;
+            padding: 12px 25px;
+            border-radius: 50px;
+            font-weight: bold;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+            z-index: 100;
+            border: 1px solid rgba(255,255,255,0.1);
         }
 
         @keyframes slideUp {
@@ -169,7 +196,7 @@
 </head>
 <body>
 
-<div class="score-display">Total Score: <span id="total-score">0</span></div>
+<div class="score-display">Total Score: <span id="display-score">0</span></div>
 
 <div class="container">
     <div class="top-section">
@@ -177,25 +204,29 @@
         <div class="nav-wrapper" id="nav-wrapper"></div>
         <button class="arrow arrow-right" onclick="scrollNav(400)">&#8250;</button>
     </div>
-    <main class="bottom-section" id="content-area"></main>
+    <main class="bottom-section" id="scroll-container">
+        <div id="content-area"></div>
+        <div class="submit-container">
+            <button class="btn-submit" onclick="calculateFinalScore()">Submit Quiz</button>
+        </div>
+    </main>
 </div>
 
 <script>
     const nav = document.getElementById('nav-wrapper');
     const content = document.getElementById('content-area');
-    const scoreText = document.getElementById('total-score');
+    const displayScore = document.getElementById('display-score');
 
-    // Load saved answers from localStorage
+    // 3/ Session persistence logic
+    // We store the user's answers and the last submitted score
     let userAnswers = JSON.parse(localStorage.getItem('quiz_answers')) || {};
+    let lastScore = localStorage.getItem('quiz_score') || 0;
 
-    function updateScore() {
-        let score = 0;
-        // Logic: 1 point for every question answered (adjust for correct/incorrect as needed)
-        score = Object.keys(userAnswers).length;
-        scoreText.innerText = score;
-        localStorage.setItem('quiz_answers', JSON.stringify(userAnswers));
+    function initDisplay() {
+        displayScore.innerText = lastScore;
     }
 
+    // Creating the quiz structure
     for (let i = 1; i <= 10; i++) {
         const btn = document.createElement('button');
         btn.className = 'nav-btn';
@@ -208,17 +239,17 @@
         page.className = 'page';
         page.id = `page-${i}`;
         
-        for (let j = 1; j <= 3; j++) { // Fewer questions per page for clarity
+        for (let j = 1; j <= 3; j++) {
             const qId = `q_${i}_${j}`;
             const savedVal = userAnswers[qId] || "";
 
             page.innerHTML += `
                 <div class="question-block">
-                    <div style="font-size: 1.2rem; margin-bottom: 15px; font-weight: 600;">
-                        Question ${i}.${j}: Select the correct option?
+                    <div style="font-size: 1.2rem; margin-bottom: 20px; font-weight: 600; color: #1e293b;">
+                        Question ${i}.${j}: What is the correct answer?
                     </div>
                     <div class="options-container">
-                        ${['A', 'B', 'C'].map(opt => `
+                        ${['A', 'B', 'C', 'D'].map(opt => `
                             <label>
                                 <input type="radio" name="${qId}" value="${opt}" 
                                     ${savedVal === opt ? 'checked' : ''} 
@@ -234,7 +265,20 @@
 
     function saveAnswer(id, val) {
         userAnswers[id] = val;
-        updateScore();
+        localStorage.setItem('quiz_answers', JSON.stringify(userAnswers));
+    }
+
+    // 2/ Submit button logic
+    function calculateFinalScore() {
+        // Example scoring: 10 points per answer (In a real quiz, you'd check against a key)
+        const totalAnswered = Object.keys(userAnswers).length;
+        const score = totalAnswered * 10; 
+        
+        lastScore = score;
+        displayScore.innerText = lastScore;
+        localStorage.setItem('quiz_score', lastScore);
+        
+        alert("Answers submitted! Your score is: " + score);
     }
 
     function goToPage(num) {
@@ -249,14 +293,15 @@
 
         const offset = activeBtn.offsetLeft - (nav.offsetWidth / 2) + (activeBtn.offsetWidth / 2);
         nav.scrollTo({ left: offset, behavior: 'smooth' });
-        content.scrollTo({ top: 0, behavior: 'smooth' });
+        document.getElementById('scroll-container').scrollTo({ top: 0, behavior: 'smooth' });
     }
 
     function scrollNav(val) {
         nav.scrollBy({ left: val, behavior: 'smooth' });
     }
 
-    updateScore();
+    // Run on refresh
+    initDisplay();
     goToPage(1);
 </script>
 
