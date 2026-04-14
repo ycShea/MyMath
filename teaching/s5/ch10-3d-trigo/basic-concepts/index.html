@@ -494,7 +494,7 @@
     </div>
 
     <script>
-        const SESSIONS = 10;
+        const SESSIONS = 5;
         const QPP = 3; // questions per session
         
         // ── Merged Content Object ──
@@ -514,21 +514,6 @@
             q_5_1: { q: "What is cos(0°)?", a: "A", options: ["0", "0.5", "-1", "1"], image: "q5_1.png" },
             q_5_2: { q: "If f(x) = 2x + 1, what is f(3)?", a: "B", options: ["7", "6", "5", "8"], image: "q5_2.png" },
             q_5_3: { q: "What is the perimeter of a square with side 5?", a: "C", options: ["25", "10", "20", "15"], image: "q5_3.png" },
-            q_6_1: { q: "How many degrees in a triangle?", a: "B", options: ["90", "180", "270", "360"], image: "q6_1.png" },
-            q_6_2: { q: "What is √144?", a: "C", options: ["14", "12", "16", "10"], image: "q6_2.png" },
-            q_6_3: { q: "Simplify: (x²)³", a: "D", options: ["x^5", "x^23", "x^1", "x^6"], image: "q6_3.png" },
-            q_7_1: { q: "What is the y-intercept of y = 4x − 3?", a: "B", options: ["-3", "4", "3", "0"], image: "q7_1.png" },
-            q_7_2: { q: "What is 2³ × 2²?", a: "C", options: ["2^6", "4^5", "2^1", "2^5"], image: "q7_2.png" },
-            q_7_3: { q: "Which is the quadratic formula?", a: "D", options: ["x = (-b ± √(b²-4ac)) / 2a", "y = mx + b", "a² + b² = c²", "πr²"], image: "q7_3.png" },
-            q_8_1: { q: "What is the reciprocal of ½?", a: "B", options: ["0.2", "1", "2", "0.5"], image: "q8_1.png" },
-            q_8_2: { q: "What is the mean of 2, 4, 6, 8?", a: "C", options: ["4", "5", "6", "20"], image: "q8_2.png" },
-            q_8_3: { q: "What is tan(45°)?", a: "D", options: ["0", "0.5", "1", "√3"], image: "q8_3.png" },
-            q_9_1: { q: "What is the HCF of 12 and 18?", a: "B", options: ["2", "3", "4", "6"], image: "q9_1.png" },
-            q_9_2: { q: "Solve: 3(x − 2) = 9", a: "C", options: ["5", "3", "4", "2"], image: "q9_2.png" },
-            q_9_3: { q: "What is the volume of a cube with side 3?", a: "D", options: ["9", "27", "18", "12"], image: "q9_3.png" },
-            q_10_1: { q: "What is the sum of interior angles of a pentagon?", a: "B", options: ["540°", "360°", "720°", "180°"], image: "q10_1.png" },
-            q_10_2: { q: "Which rule states a² + b² = c²?", a: "C", options: ["Sine Rule", "Cosine Rule", "Pythagoras", "Euler"], image: "q10_2.png" },
-            q_10_3: { q: "What is ∫x dx?", a: "D", options: ["x", "1", "x²", "½x² + C"], image: "q10_3.png" },
         };
         
         let userAnswers = JSON.parse(localStorage.getItem('quiz_answers_v2')) || {};
