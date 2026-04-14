@@ -65,6 +65,7 @@
             background-color: rgba(96,165,250,0.15);
         }
 
+        /* small dot-row under each nav number */
         .nav-dots {
             display: flex;
             gap: 3px;
@@ -101,6 +102,7 @@
         .arrow-left  { left: 12px; }
         .arrow-right { right: 12px; }
 
+        /* ── Progress bar ── */
         .progress-bar-wrap {
             height: 4px;
             background: rgba(255,255,255,0.08);
@@ -112,6 +114,7 @@
             width: 0%;
         }
 
+        /* ── Bottom content ── */
         .bottom-section {
             flex: 1;
             overflow-y: auto;
@@ -133,6 +136,32 @@
             to   { opacity: 1; transform: translateY(0); }
         }
 
+        /* ── Session header ── */
+        .session-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 20px;
+        }
+        .session-title {
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: #1e293b;
+        }
+        .session-badge {
+            font-size: 0.85rem;
+            font-weight: 700;
+            padding: 4px 14px;
+            border-radius: 50px;
+            background: #e2e8f0;
+            color: #64748b;
+            transition: background 0.4s, color 0.4s;
+        }
+        .session-badge.perfect { background: #d1fae5; color: #065f46; }
+        .session-badge.partial { background: #fef3c7; color: #92400e; }
+        .session-badge.wrong   { background: #fee2e2; color: #991b1b; }
+
+        /* ── Question card ── */
         .question-block {
             background: #fff;
             padding: 24px;
@@ -158,6 +187,7 @@
             gap: 10px;
         }
 
+        /* radio hidden, label is the whole button */
         .option-wrap input[type="radio"] { display: none; }
 
         .option-label {
@@ -187,8 +217,10 @@
             align-items: center;
             justify-content: center;
             flex-shrink: 0;
+            transition: all 0.2s;
         }
 
+        /* States after answering */
         .option-label.selected {
             border-color: #93c5fd;
             background: #eff6ff;
@@ -201,6 +233,7 @@
         .option-label.correct-ans {
             border-color: #6ee7b7;
             background: #f0fdf4;
+            cursor: default;
         }
         .option-label.correct-ans .option-letter {
             background: #10b981;
@@ -210,6 +243,7 @@
         .option-label.wrong-ans {
             border-color: #fca5a5;
             background: #fff1f2;
+            cursor: default;
         }
         .option-label.wrong-ans .option-letter {
             background: #ef4444;
@@ -219,14 +253,17 @@
         .option-label.revealed-correct {
             border-color: #6ee7b7;
             background: #f0fdf4;
+            cursor: default;
         }
         .option-label.revealed-correct .option-letter {
             background: #10b981;
             color: #fff;
         }
 
+        /* locked after answer */
         .option-label.locked { cursor: default; pointer-events: none; }
 
+        /* result icon at right of question */
         .question-result {
             display: none;
             margin-left: auto;
@@ -239,9 +276,16 @@
             flex-shrink: 0;
         }
         .question-result.show { display: flex; }
-        .question-result.tick { background: #d1fae5; color: #065f46; }
-        .question-result.cross { background: #fee2e2; color: #991b1b; }
+        .question-result.tick {
+            background: #d1fae5;
+            color: #065f46;
+        }
+        .question-result.cross {
+            background: #fee2e2;
+            color: #991b1b;
+        }
 
+        /* hint line shown after wrong answer */
         .hint-line {
             display: none;
             margin-top: 12px;
@@ -254,6 +298,7 @@
         }
         .hint-line.show { display: block; }
 
+        /* ── Summary section ── */
         .summary-section {
             display: none;
             max-width: 760px;
@@ -302,7 +347,28 @@
             color: #64748b;
             margin-top: 2px;
         }
+        .session-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 10px 0;
+            border-bottom: 1px solid #f1f5f9;
+            font-size: 0.9rem;
+        }
+        .session-row:last-child { border-bottom: none; }
+        .session-row-dots {
+            display: flex;
+            gap: 5px;
+        }
+        .session-row-dot {
+            width: 12px; height: 12px;
+            border-radius: 50%;
+        }
+        .session-row-dot.correct { background: #10b981; }
+        .session-row-dot.wrong   { background: #ef4444; }
+        .session-row-dot.empty   { background: #e2e8f0; }
 
+        /* ── Submit / review buttons ── */
         .bottom-bar {
             max-width: 760px;
             margin: 24px auto 0;
@@ -324,7 +390,10 @@
         .btn-primary:hover { background: #2563eb; }
         .btn-success { background: #10b981; color: #fff; }
         .btn-success:hover { background: #059669; }
-        .btn-ghost { background: #f1f5f9; color: #475569; }
+        .btn-ghost {
+            background: #f1f5f9;
+            color: #475569;
+        }
         .btn-ghost:hover { background: #e2e8f0; }
     </style>
 </head>
@@ -340,7 +409,8 @@
         </div>
         <main class="bottom-section" id="scroll-container">
             <div id="content-area"></div>
-        
+    
+            <!-- Summary page (hidden until submitted) -->
             <div class="summary-section" id="summary-section">
                 <div class="summary-card">
                     <div class="summary-big" id="summary-score">0</div>
@@ -360,24 +430,27 @@
                         </div>
                     </div>
                 </div>
+                <div style="background:#fff; border-radius:16px; border:1.5px solid #e2e8f0; padding:24px;">
+                    <div style="font-weight:700; font-size:1rem; color:#1e293b; margin-bottom:12px;">Session breakdown</div>
+                    <div id="session-breakdown"></div>
+                </div>
                 <div class="bottom-bar">
                     <button class="btn btn-ghost" onclick="resetQuiz()">Restart quiz</button>
-                    <button class="btn btn-primary" onclick="goToPage(1)">Back to Quiz</button>
+                    <button class="btn btn-primary" onclick="reviewMode()">Review answers</button>
                 </div>
             </div>
-        
+    
             <div class="bottom-bar" id="submit-bar">
-                <button class="btn btn-ghost" onclick="resetQuiz()">Restart quiz</button>
-                <button class="btn btn-primary" id="view-summary-btn" style="display: none;" onclick="enterSubmittedMode()">View Summary</button>
-                <button class="btn btn-success" id="submit-btn" onclick="submitQuiz()">Submit entire quiz</button>
+                <button class="btn btn-success" onclick="submitQuiz()">Submit quiz</button>
             </div>
         </main>
     </div>
 
     <script>
         const SESSIONS = 10;
-        const QPP = 3; 
+        const QPP = 3; // questions per session
         
+        // ── Answer key ──
         const answerKey = {
             q_1_1:"A", q_1_2:"B", q_1_3:"C",
             q_2_1:"B", q_2_2:"D", q_2_3:"A",
@@ -391,29 +464,53 @@
             q_10_1:"A", q_10_2:"C", q_10_3:"D",
         };
         
+        // Question texts (placeholder — replace with real math questions)
         const questionTexts = {
-            q_1_1: "What is 3² + 4²?", q_1_2: "Simplify: 2x + 3x − x", q_1_3: "What is the slope of y = 3x + 7?",
-            q_2_1: "Which value satisfies 2x − 4 = 0?", q_2_2: "What is sin(90°)?", q_2_3: "Expand: (x + 2)²",
-            q_3_1: "What is the area of a circle with radius 3?", q_3_2: "Solve: x² = 16", q_3_3: "What is log₁₀(1000)?",
-            q_4_1: "What is the derivative of x³?", q_4_2: "Which is a factor of x² − 9?", q_4_3: "What is 0!?",
-            q_5_1: "What is cos(0°)?", q_5_2: "If f(3) for f(x) = 2x + 1?", q_5_3: "Perimeter of square with side 5?",
-            q_6_1: "Degrees in a triangle?", q_6_2: "What is √144?", q_6_3: "Simplify: (x²)³",
-            q_7_1: "y-intercept of y = 4x − 3?", q_7_2: "What is 2³ × 2²?", q_7_3: "Quadratic formula?",
-            q_8_1: "Reciprocal of ½?", q_8_2: "Mean of 2, 4, 6, 8?", q_8_3: "What is tan(45°)?",
-            q_9_1: "HCF of 12 and 18?", q_9_2: "Solve: 3(x − 2) = 9", q_9_3: "Volume of cube with side 3?",
-            q_10_1: "Sum of interior angles of pentagon?", q_10_2: "Which is Pythagoras' rule?", q_10_3: "What is ∫x dx?",
+            q_1_1: "What is 3² + 4²?",
+            q_1_2: "Simplify: 2x + 3x − x",
+            q_1_3: "What is the slope of y = 3x + 7?",
+            q_2_1: "Which value satisfies 2x − 4 = 0?",
+            q_2_2: "What is sin(90°)?",
+            q_2_3: "Expand: (x + 2)²",
+            q_3_1: "What is the area of a circle with radius 3?",
+            q_3_2: "Solve: x² = 16",
+            q_3_3: "What is log₁₀(1000)?",
+            q_4_1: "What is the derivative of x³?",
+            q_4_2: "Which is a factor of x² − 9?",
+            q_4_3: "What is 0!?",
+            q_5_1: "What is cos(0°)?",
+            q_5_2: "If f(x) = 2x + 1, what is f(3)?",
+            q_5_3: "What is the perimeter of a square with side 5?",
+            q_6_1: "How many degrees in a triangle?",
+            q_6_2: "What is √144?",
+            q_6_3: "Simplify: (x²)³",
+            q_7_1: "What is the y-intercept of y = 4x − 3?",
+            q_7_2: "What is 2³ × 2²?",
+            q_7_3: "Which is the quadratic formula?",
+            q_8_1: "What is the reciprocal of ½?",
+            q_8_2: "What is the mean of 2, 4, 6, 8?",
+            q_8_3: "What is tan(45°)?",
+            q_9_1: "What is the HCF of 12 and 18?",
+            q_9_2: "Solve: 3(x − 2) = 9",
+            q_9_3: "What is the volume of a cube with side 3?",
+            q_10_1: "What is the sum of interior angles of a pentagon?",
+            q_10_2: "Which rule states a² + b² = c²?",
+            q_10_3: "What is ∫x dx?",
         };
         
-        const optionTexts = { A: "Option A", B: "Option B", C: "Option C", D: "Option D" };
+        const optionTexts = {
+            A: "Option A", B: "Option B", C: "Option C", D: "Option D"
+        };
         
         let userAnswers = JSON.parse(localStorage.getItem('quiz_answers_v2')) || {};
-        let sessionStatus = JSON.parse(localStorage.getItem('session_status_v2')) || {};
+        let submitted   = JSON.parse(localStorage.getItem('quiz_submitted'))   || false;
         
-        const nav = document.getElementById('nav-wrapper');
+        const nav     = document.getElementById('nav-wrapper');
         const content = document.getElementById('content-area');
         
-        // Build UI
+        // ── Build UI ──
         for (let i = 1; i <= SESSIONS; i++) {
+            // Nav button
             const btn = document.createElement('button');
             btn.className = 'nav-btn';
             btn.id = `btn-${i}`;
@@ -423,204 +520,258 @@
             dotsHtml += '</div>';
             btn.innerHTML = `${i}${dotsHtml}`;
             nav.appendChild(btn);
-
+        
+            // Page
             const page = document.createElement('div');
             page.className = 'page';
             page.id = `page-${i}`;
-            
-            let qHtml = '';
+        
+            page.innerHTML = `
+                <div class="session-header">
+                    <div class="session-title">Session ${i}</div>
+                    <div class="session-badge" id="badge-${i}">0 / ${QPP}</div>
+                </div>`;
+        
             for (let j = 1; j <= QPP; j++) {
                 const qId = `q_${i}_${j}`;
                 const opts = ['A','B','C','D'].map(opt => `
-                    <label class="option-wrap">
-                        <input type="radio" name="${qId}" value="${opt}" onchange="selectAnswer('${qId}','${opt}')">
+                    <label class="option-wrap" id="wrap-${qId}-${opt}">
+                        <input type="radio" name="${qId}" value="${opt}"
+                            onchange="selectAnswer('${qId}','${opt}')">
                         <div class="option-label" id="label-${qId}-${opt}">
                             <div class="option-letter">${opt}</div>
                             <span>${opt}: ${optionTexts[opt]}</span>
                         </div>
                     </label>`).join('');
-
-                qHtml += `
+        
+                page.innerHTML += `
                     <div class="question-block" id="block-${qId}">
                         <div style="display:flex; align-items:flex-start; gap:10px; margin-bottom:16px;">
-                            <div class="question-text" style="flex:1">Q${j}. ${questionTexts[qId]}</div>
+                            <div class="question-text" style="flex:1">Q${j}. ${questionTexts[qId] || 'Question ' + i + '.' + j}</div>
                             <div class="question-result" id="result-${qId}"></div>
                         </div>
                         <div class="options-grid">${opts}</div>
-                        <div class="hint-line" id="hint-${qId}">✓ Correct answer: <strong>${answerKey[qId]}</strong></div>
+                        <div class="hint-line" id="hint-${qId}">
+                            ✓ Correct answer: <strong>${answerKey[qId]}</strong>
+                        </div>
                     </div>`;
             }
-            
-            page.innerHTML = qHtml + `
-                <div class="bottom-bar" style="margin-top: 20px;">
-                    <button class="btn btn-success" id="submit-btn-${i}" onclick="submitSession(${i})">Submit Session ${i}</button>
-                </div>`;
             content.appendChild(page);
         }
         
+        // ── Restore state on load ──
+        function restoreState() {
+            for (const qId in userAnswers) {
+                applyAnswerUI(qId, userAnswers[qId], submitted);
+            }
+            for (let i = 1; i <= SESSIONS; i++) updateSessionUI(i);
+            updateProgress();
+            
+            // Comment out or delete the following line:
+            // if (submitted) enterSubmittedMode(); 
+        }
+        
+        // ── Select answer ──
         function selectAnswer(qId, val) {
-            const sessionNum = qId.split('_')[1];
-            if (sessionStatus[sessionNum]) return;
+            if (submitted) return;
             userAnswers[qId] = val;
             localStorage.setItem('quiz_answers_v2', JSON.stringify(userAnswers));
             applyAnswerUI(qId, val, false);
-            updateSessionUI(parseInt(sessionNum));
+            const parts = qId.split('_');
+            updateSessionUI(parseInt(parts[1]));
             updateProgress();
         }
         
-        function submitSession(sessionNum) {
-            if (sessionStatus[sessionNum]) return;
-            sessionStatus[sessionNum] = true;
-            localStorage.setItem('session_status_v2', JSON.stringify(sessionStatus));
-            for (let j = 1; j <= QPP; j++) {
-                const qId = `q_${sessionNum}_${j}`;
-                if (userAnswers[qId]) applyAnswerUI(qId, userAnswers[qId], true);
-                else applyEmptyUI(qId);
-            }
-            document.getElementById(`submit-btn-${sessionNum}`).style.display = 'none';
-            document.getElementById('view-summary-btn').style.display = 'inline-block';
-            updateSessionUI(sessionNum);
-        }
-
-        function applyEmptyUI(qId) {
-            const block = document.getElementById(`block-${qId}`);
-            const result = document.getElementById(`result-${qId}`);
-            const hint = document.getElementById(`hint-${qId}`);
-            const correct = answerKey[qId];
-            
-            result.className = `question-result show cross`;
-            result.textContent = '✗';
-            hint.classList.add('show');
-            block.classList.add('has-wrong');
-            
-            const correctLbl = document.getElementById(`label-${qId}-${correct}`);
-            if(correctLbl) {
-                correctLbl.classList.add('revealed-correct', 'locked');
-            }
-            ['A','B','C','D'].forEach(opt => {
-                document.getElementById(`label-${qId}-${opt}`).classList.add('locked');
-            });
-        }
-
-        function applyAnswerUI(qId, val, forceReveal) {
-            const sessionNum = qId.split('_')[1];
-            const isSessionSubmitted = sessionStatus[sessionNum] || forceReveal;
-            const correct = answerKey[qId];
-            const isRight = val === correct;
-            const block = document.getElementById(`block-${qId}`);
-            const result = document.getElementById(`result-${qId}`);
-            const hint = document.getElementById(`hint-${qId}`);
-        
-            ['A','B','C','D'].forEach(opt => {
-                const lbl = document.getElementById(`label-${qId}-${opt}`);
-                if (!lbl) return;
-                lbl.className = 'option-label';
-                if (opt === val) {
-                    lbl.classList.add('selected');
-                    if (isSessionSubmitted) lbl.classList.add(isRight ? 'correct-ans' : 'wrong-ans', 'locked');
-                }
-                if (isSessionSubmitted) {
-                    lbl.classList.add('locked');
-                    if (!isRight && opt === correct) lbl.classList.add('revealed-correct');
-                }
-            });
-            if (isSessionSubmitted) {
-                result.className = `question-result show ${isRight ? 'tick' : 'cross'}`;
-                result.textContent = isRight ? '✓' : '✗';
-                if (!isRight) hint.classList.add('show');
-                if (block) block.classList.add(isRight ? 'all-correct' : 'has-wrong');
-            }
-        }
-
         function updateSessionUI(i) {
             let correct = 0, answered = 0;
             for (let j = 1; j <= QPP; j++) {
                 const qId = `q_${i}_${j}`;
                 const dot = document.getElementById(`dot-${i}-${j}`);
-                if (userAnswers[qId]) {
+                if (userAnswers[qId] !== undefined) {
                     answered++;
                     const isRight = userAnswers[qId] === answerKey[qId];
                     if (isRight) correct++;
                     if (dot) dot.className = `nav-dot ${isRight ? 'correct' : 'wrong'}`;
-                } else if (sessionStatus[i]) {
-                    if (dot) dot.className = 'nav-dot wrong';
+                } else {
+                    if (dot) dot.className = 'nav-dot';
                 }
             }
+        
+            const badge = document.getElementById(`badge-${i}`);
+            if (!badge) return;
+            if (answered === 0) {
+                badge.textContent = `0 / ${QPP}`;
+                badge.className = 'session-badge';
+            } else if (correct === QPP) {
+                badge.textContent = `${correct} / ${QPP} ✓`;
+                badge.className = 'session-badge perfect';
+            } else if (correct > 0) {
+                badge.textContent = `${correct} / ${QPP}`;
+                badge.className = 'session-badge partial';
+            } else {
+                badge.textContent = `${correct} / ${QPP}`;
+                badge.className = 'session-badge wrong';
+            }
         }
-
+        
         function updateProgress() {
-            const total = SESSIONS * QPP;
+            const total    = SESSIONS * QPP;
             const answered = Object.keys(userAnswers).length;
             document.getElementById('progress-bar').style.width = `${(answered / total) * 100}%`;
         }
-
+        
+        // ── Submit ──
         function submitQuiz() {
-            if (confirm("Submit all sessions? Unsubmitted sessions will be marked.")) {
-                for (let i = 1; i <= SESSIONS; i++) submitSession(i);
-                enterSubmittedMode();
-            }
+            submitted = true;
+            localStorage.setItem('quiz_submitted', 'true');
+            // document.getElementById('submit-bar').style.display = 'none'; // Remove or comment out
+            // enterSubmittedMode(); // Remove or comment out
+            alert("Quiz submitted! You can now review your answers in the sessions.");
         }
-
+        
         function enterSubmittedMode() {
             document.getElementById('submit-bar').style.display = 'none';
-            const summary = document.getElementById('summary-section');
-            summary.style.display = 'block';
-            summary.classList.add('active');
-            let c = 0, w = 0, s = 0;
+            document.getElementById('summary-section').classList.add('active');
+        
+            let correct = 0, wrong = 0, skipped = 0;
             for (let i = 1; i <= SESSIONS; i++) {
                 for (let j = 1; j <= QPP; j++) {
                     const qId = `q_${i}_${j}`;
-                    if (!userAnswers[qId]) s++;
-                    else if (userAnswers[qId] === answerKey[qId]) c++;
-                    else w++;
+                    if (!userAnswers[qId]) skipped++;
+                    else if (userAnswers[qId] === answerKey[qId]) correct++;
+                    else wrong++;
                 }
             }
-            document.getElementById('summary-score').textContent = c;
-            document.getElementById('stat-correct').textContent = c;
-            document.getElementById('stat-wrong').textContent = w;
-            document.getElementById('stat-skipped').textContent = s;
-            document.querySelectorAll('.page, .nav-btn').forEach(el => el.classList.remove('active'));
-            document.getElementById('scroll-container').scrollTo({ top: 0, behavior: 'smooth' });
-        }
-
-        function goToPage(num) {
-            document.getElementById('summary-section').style.display = 'none';
-            document.getElementById('submit-bar').style.display = 'flex';
-            document.querySelectorAll('.nav-btn, .page').forEach(el => el.classList.remove('active'));
-            const btn = document.getElementById(`btn-${num}`);
-            const pg = document.getElementById(`page-${num}`);
-            if (btn && pg) {
-                btn.classList.add('active');
-                pg.classList.add('active');
-                nav.scrollTo({ left: btn.offsetLeft - (nav.offsetWidth/2) + (btn.offsetWidth/2), behavior: 'smooth' });
+        
+            const total = SESSIONS * QPP;
+            document.getElementById('summary-score').textContent = correct;
+            document.getElementById('summary-sub').textContent   = `out of ${total} questions correct`;
+            document.getElementById('stat-correct').textContent  = correct;
+            document.getElementById('stat-wrong').textContent    = wrong;
+            document.getElementById('stat-skipped').textContent  = skipped;
+        
+            // Session breakdown
+            const breakdown = document.getElementById('session-breakdown');
+            breakdown.innerHTML = '';
+            for (let i = 1; i <= SESSIONS; i++) {
+                let sc = 0;
+                let dotsHtml = '<div class="session-row-dots">';
+                for (let j = 1; j <= QPP; j++) {
+                    const qId = `q_${i}_${j}`;
+                    const ans = userAnswers[qId];
+                    let cls = 'empty';
+                    if (ans) { cls = ans === answerKey[qId] ? 'correct' : 'wrong'; if (cls === 'correct') sc++; }
+                    dotsHtml += `<div class="session-row-dot ${cls}"></div>`;
+                }
+                dotsHtml += '</div>';
+                breakdown.innerHTML += `
+                    <div class="session-row">
+                        <span style="color:#1e293b;font-weight:600;">Session ${i}</span>
+                        ${dotsHtml}
+                        <span style="color:${sc===QPP?'#10b981':sc===0?'#ef4444':'#f59e0b'};font-weight:700;">${sc}/${QPP}</span>
+                    </div>`;
             }
+        
+            goToSummary();
+        }
+        
+        function goToSummary() {
+            document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+            document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
             document.getElementById('scroll-container').scrollTo({ top: 0, behavior: 'smooth' });
         }
-
+        
         function resetQuiz() {
-            localStorage.clear();
+            localStorage.removeItem('quiz_answers_v2');
+            localStorage.removeItem('quiz_submitted');
             location.reload();
         }
-
-        function restoreState() {
-            if (Object.keys(sessionStatus).length > 0) document.getElementById('view-summary-btn').style.display = 'inline-block';
-            for (const qId in userAnswers) applyAnswerUI(qId, userAnswers[qId], false);
-            for (let i = 1; i <= SESSIONS; i++) {
-                if (sessionStatus[i]) {
-                    for(let j=1; j<=QPP; j++) {
-                        const qId = `q_${i}_${j}`;
-                        if(!userAnswers[qId]) applyEmptyUI(qId);
-                        else applyAnswerUI(qId, userAnswers[qId], true);
-                    }
-                    if(document.getElementById(`submit-btn-${i}`)) document.getElementById(`submit-btn-${i}`).style.display = 'none';
-                }
-                updateSessionUI(i);
+        
+        // ── Navigation ──
+        function goToPage(num) {
+            // Force summary to stay hidden
+            document.getElementById('summary-section').classList.remove('active');
+            document.getElementById('summary-section').style.display = 'none'; 
+        
+            document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+            document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+        
+            const activeBtn = document.getElementById(`btn-${num}`);
+            const activePage = document.getElementById(`page-${num}`);
+            
+            if (activeBtn && activePage) {
+                activeBtn.classList.add('active');
+                activePage.classList.add('active');
+                nav.scrollTo({
+                    left: activeBtn.offsetLeft - (nav.offsetWidth/2) + (activeBtn.offsetWidth/2),
+                    behavior: 'smooth'
+                });
             }
-            updateProgress();
+            document.getElementById('scroll-container').scrollTo({ top: 0, behavior: 'smooth' });
+        }
+        
+        // ── Review Mode ──
+        function reviewMode() {
+            document.getElementById('summary-section').classList.remove('active');
+            // Allow the submit bar to be hidden during review ONLY if actually submitted
+            if (submitted) {
+                document.getElementById('submit-bar').style.display = 'none';
+            } else {
+                document.getElementById('submit-bar').style.display = 'flex';
+            }
+            goToPage(1);
         }
 
-        function scrollNav(val) { nav.scrollBy({ left: val, behavior: 'smooth' }); }
+        // ── Apply Answer UI ──
+        // Ensure this function ONLY locks and reveals answers if submitted is true
+        function applyAnswerUI(qId, val, showCorrect) {
+            const correct = answerKey[qId];
+            const isRight = val === correct;
+            const block   = document.getElementById(`block-${qId}`);
+            const result  = document.getElementById(`result-${qId}`);
+            const hint    = document.getElementById(`hint-${qId}`);
+        
+            ['A','B','C','D'].forEach(opt => {
+                const lbl = document.getElementById(`label-${qId}-${opt}`);
+                if (!lbl) return;
+                
+                // Remove existing classes
+                lbl.className = 'option-label';
+                
+                if (opt === val) {
+                    lbl.classList.add('selected');
+                    // Only show red/green and lock if submitted
+                    if (submitted) {
+                        lbl.classList.add(isRight ? 'correct-ans' : 'wrong-ans');
+                        lbl.classList.add('locked');
+                    }
+                }
+
+                if (submitted) {
+                    lbl.classList.add('locked');
+                    if (!isRight && opt === correct) {
+                        lbl.classList.add('revealed-correct');
+                    }
+                }
+            });
+        
+            if (submitted) {
+                // Result icon
+                result.className = `question-result show ${isRight ? 'tick' : 'cross'}`;
+                result.textContent = isRight ? '✓' : '✗';
+                // Hint
+                if (!isRight) hint.classList.add('show');
+                // Block border
+                if (block) block.classList.add(isRight ? 'all-correct' : 'has-wrong');
+            }
+        }
+        
+        function scrollNav(val) {
+            nav.scrollBy({ left: val, behavior: 'smooth' });
+        }
+        
         nav.addEventListener('wheel', e => { e.preventDefault(); nav.scrollLeft += e.deltaY; });
+        
         restoreState();
         goToPage(1);
     </script>
