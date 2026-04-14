@@ -494,9 +494,6 @@
     </div>
 
     <script>
-        const SESSIONS = 5;
-        const QPP = [3, 3, 2, 2, 1]; // Session 1 has 3, Session 2 has 5, etc.
-        
         // ── Merged Content Object ──
         const questionContent = {
             q_1_1: { q: "What is 3² + 4²?", a: "A", options: ["25", "7", "12", "14"], image: "q1_1.png" },
@@ -510,11 +507,17 @@
             q_3_3: { q: "What is log₁₀(1000)?", a: "C", options: ["1", "2", "10", "3"], image: "q3_3.png" },
             q_4_1: { q: "What is the derivative of x³?", a: "A", options: ["3x²", "x²", "3x", "2x³"], image: "q4_1.png" },
             q_4_2: { q: "Which is a factor of x² − 9?", a: "B", options: ["x + 9", "x - 9", "x - 3", "x + 1"], image: "q4_2.png" },
-            q_4_3: { q: "What is 0!?", a: "C", options: ["0", "1", "undefined", "10"], image: "q4_3.png" },
             q_5_1: { q: "What is cos(0°)?", a: "A", options: ["0", "0.5", "-1", "1"], image: "q5_1.png" },
             q_5_2: { q: "If f(x) = 2x + 1, what is f(3)?", a: "B", options: ["7", "6", "5", "8"], image: "q5_2.png" },
-            q_5_3: { q: "What is the perimeter of a square with side 5?", a: "C", options: ["25", "10", "20", "15"], image: "q5_3.png" },
         };
+        // const QPP = [3, 3, 3, 3, 3];
+        const QPP = Object.keys(questionContent).reduce((acc, key) => {
+            const s = parseInt(key.split('_')[1]) - 1; // Get session index (0-based)
+            acc[s] = (acc[s] || 0) + 1;
+            return acc;
+        }, []);
+        // const SESSIONS = 5;
+        const SESSIONS = QPP.length;
         
         let userAnswers = JSON.parse(localStorage.getItem('quiz_answers_v2')) || {};
         function getSessionSubmitted(i) {
