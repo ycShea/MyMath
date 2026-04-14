@@ -187,7 +187,14 @@
             grid-template-columns: 1fr 1fr;
             gap: 10px;
         }
-
+        .option-label.locked { 
+            cursor: default !important; 
+            pointer-events: none; 
+        }
+        .option-label.locked:hover {
+            background: #f8fafc;
+            border-color: #e2e8f0;
+        }
         /* radio hidden, label is the whole button */
         .option-wrap input[type="radio"] { display: none; }
 
@@ -629,11 +636,59 @@
             userAnswers[qId] = val;
             localStorage.setItem('quiz_answers_v2', JSON.stringify(userAnswers));
             applyAnswerUI(qId, val, false);
-            const parts = qId.split('_');
             updateSessionUI(parseInt(parts[1]));
             updateProgress();
         }
+        // ── Apply Answer UI ──
+        function applyAnswerUI(qId, val, showCorrect) {
+            const correct = answerKey[qId];
+            const isRight = val === correct;
+            const block   = document.getElementById(`block-${qId}`);
+            const result  = document.getElementById(`result-${qId}`);
+            const hint    = document.getElementById(`hint-${qId}`);
         
+            ['A','B','C','D'].forEach(opt => {
+                const lbl = document.getElementById(`label-${qId}-${opt}`);
+                const radio = document.querySelector(`input[name="${qId}"][value="${opt}"]`);
+                if (!lbl) return;
+
+                // Reset classes
+                lbl.className = 'option-label';
+                
+                // Sync radio checked state for persistence
+                if (radio) radio.checked = (opt === val);
+
+                if (opt === val) {
+                    lbl.classList.add('selected');
+                    if (showCorrect) {
+                        lbl.classList.add(isRight ? 'correct-ans' : 'wrong-ans');
+                    }
+                }
+
+                if (showCorrect) {
+                    lbl.classList.add('locked');
+                    // Reveal the correct answer if the user was wrong
+                    if (opt === correct) {
+                        lbl.classList.add('revealed-correct');
+                    }
+                }
+            });
+        
+            if (showCorrect) {
+                result.className = `question-result show ${isRight ? 'tick' : 'cross'}`;
+                result.innerHTML = isRight ? '✓' : '✕';
+                if (!isRight) hint.classList.add('show');
+                if (block) {
+                    block.classList.remove('all-correct', 'has-wrong');
+                    block.classList.add(isRight ? 'all-correct' : 'has-wrong');
+                }
+            } else {
+                // Reset feedback UI if not submitted (for restarts/resets)
+                result.className = 'question-result';
+                hint.classList.remove('show');
+                if (block) block.classList.remove('all-correct', 'has-wrong');
+            }
+        }
         function updateSessionUI(i) {
             let correct = 0, answered = 0;
             for (let j = 1; j <= QPP; j++) {
@@ -733,60 +788,6 @@
             document.getElementById('summary-nav-btn').classList.remove('active');
             goToPage(1);
         }
-
-        /*
-        function enterSubmittedMode() {
-            document.getElementById('submit-bar').style.display = 'none';
-            document.getElementById('summary-section').classList.add('active');
-        
-            let correct = 0, wrong = 0, skipped = 0;
-            for (let i = 1; i <= SESSIONS; i++) {
-                for (let j = 1; j <= QPP; j++) {
-                    const qId = `q_${i}_${j}`;
-                    if (!userAnswers[qId]) skipped++;
-                    else if (userAnswers[qId] === answerKey[qId]) correct++;
-                    else wrong++;
-                }
-            }
-        
-            const total = SESSIONS * QPP;
-            document.getElementById('summary-score').textContent = correct;
-            document.getElementById('summary-sub').textContent   = `out of ${total} questions correct`;
-            document.getElementById('stat-correct').textContent  = correct;
-            document.getElementById('stat-wrong').textContent    = wrong;
-            document.getElementById('stat-skipped').textContent  = skipped;
-        
-            // Session breakdown
-            const breakdown = document.getElementById('session-breakdown');
-            breakdown.innerHTML = '';
-            for (let i = 1; i <= SESSIONS; i++) {
-                let sc = 0;
-                let dotsHtml = '<div class="session-row-dots">';
-                for (let j = 1; j <= QPP; j++) {
-                    const qId = `q_${i}_${j}`;
-                    const ans = userAnswers[qId];
-                    let cls = 'empty';
-                    if (ans) { cls = ans === answerKey[qId] ? 'correct' : 'wrong'; if (cls === 'correct') sc++; }
-                    dotsHtml += `<div class="session-row-dot ${cls}"></div>`;
-                }
-                dotsHtml += '</div>';
-                breakdown.innerHTML += `
-                    <div class="session-row">
-                        <span style="color:#1e293b;font-weight:600;">Session ${i}</span>
-                        ${dotsHtml}
-                        <span style="color:${sc===QPP?'#10b981':sc===0?'#ef4444':'#f59e0b'};font-weight:700;">${sc}/${QPP}</span>
-                    </div>`;
-            }
-        
-            goToSummary();
-        }
-
-        function goToSummary() {
-            document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
-            document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-            document.getElementById('scroll-container').scrollTo({ top: 0, behavior: 'smooth' });
-        }
-        */
         
         function resetQuiz() {
             localStorage.removeItem('quiz_answers_v2');
@@ -818,54 +819,8 @@
             }
             document.getElementById('scroll-container').scrollTo({ top: 0, behavior: 'smooth' });
         }
-        
-        // ── Review Mode ──
-        /*
-        function reviewMode() {
-            document.getElementById('summary-section').classList.remove('active');
-            // Allow the submit bar to be hidden during review ONLY if actually submitted
-            if (submitted) {
-                document.getElementById('submit-bar').style.display = 'none';
-            } else {
-                document.getElementById('submit-bar').style.display = 'flex';
-            }
-            goToPage(1);
-        }
-        */
 
         // ── Apply Answer UI ──
-        // Ensure this function ONLY locks and reveals answers if submitted is true
-        function applyAnswerUI(qId, val, showCorrect) {
-            const correct = answerKey[qId];
-            const isRight = val === correct;
-            const block   = document.getElementById(`block-${qId}`);
-            const result  = document.getElementById(`result-${qId}`);
-            const hint    = document.getElementById(`hint-${qId}`);
-        
-            ['A','B','C','D'].forEach(opt => {
-                const lbl = document.getElementById(`label-${qId}-${opt}`);
-                if (!lbl) return;
-                lbl.className = 'option-label';
-                if (opt === val) {
-                    lbl.classList.add('selected');
-                    if (showCorrect) {
-                        lbl.classList.add(isRight ? 'correct-ans' : 'wrong-ans');
-                        lbl.classList.add('locked');
-                    }
-                }
-                if (showCorrect) {
-                    lbl.classList.add('locked');
-                    if (!isRight && opt === correct) lbl.classList.add('revealed-correct');
-                }
-            });
-        
-            if (showCorrect) {
-                result.className = `question-result show ${isRight ? 'tick' : 'cross'}`;
-                result.textContent = isRight ? '✓' : '✗';
-                if (!isRight) hint.classList.add('show');
-                if (block) block.classList.add(isRight ? 'all-correct' : 'has-wrong');
-            }
-        }
         
         function scrollNav(val) {
             nav.scrollBy({ left: val, behavior: 'smooth' });
