@@ -274,7 +274,6 @@
                         <div class="summary-big" id="summary-score">0</div>
                         <p>Correct Answers</p>
                     </div>
-                    <button class="btn btn-success" onclick="location.reload()">Restart Quiz</button>
                 </div>
         
                 <div class="bottom-bar" id="submit-bar">
@@ -356,7 +355,7 @@
                                 <div class="options-grid">
                                     ${['A','B','C','D'].map(opt => `
                                         <label class="option-wrap">
-                                            <input type="radio" name="${q.id}" value="${opt}" onchange="selectAnswer('${q.id}','${opt}')">
+                                            <input type="radio" name="${q.id}" value="${opt}" onchange="selectAnswer('${q.id}','${opt}')" ${userAnswers[q.id] === opt ? 'checked' : ''}>
                                             <div class="option-label" id="label-${q.id}-${opt}">
                                                 <div class="option-letter">${opt}</div>
                                                 <span>${q.options[opt]}</span>
@@ -375,7 +374,6 @@
                 if (submitted) return;
                 userAnswers[qId] = val;
                 localStorage.setItem('quiz_answers_v2', JSON.stringify(userAnswers));
-                applyAnswerUI(qId, val);
                 updateProgress();
             }
         
@@ -416,10 +414,15 @@
             function submitQuiz() {
                 submitted = true;
                 localStorage.setItem('quiz_submitted', 'true');
+                
+                // Trigger feedback for ALL questions
+                quizData.forEach(q => {
+                    applyAnswerUI(q.id, userAnswers[q.id] || "");
+                });
+
                 const score = quizData.reduce((acc, q) => acc + (userAnswers[q.id] === q.answer ? 1 : 0), 0);
                 document.getElementById('summary-score').innerText = score;
                 document.getElementById('submit-bar').style.display = 'none';
-                document.getElementById('content-area').style.display = 'none';
                 document.getElementById('summary-section').classList.add('active');
             }
         
@@ -441,9 +444,10 @@
             goToPage(1);
         
             // Restore State
-            Object.keys(userAnswers).forEach(id => applyAnswerUI(id, userAnswers[id]));
             updateProgress();
-            if (submitted) submitQuiz();
+            if (submitted) {
+                submitQuiz();
+            }
         
         </script>
     </body>
