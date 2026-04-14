@@ -566,7 +566,9 @@
             }
             for (let i = 1; i <= SESSIONS; i++) updateSessionUI(i);
             updateProgress();
-            if (submitted) enterSubmittedMode();
+            
+            // Comment out or delete the following line:
+            // if (submitted) enterSubmittedMode(); 
         }
         
         // ── Select answer ──
@@ -622,7 +624,9 @@
         function submitQuiz() {
             submitted = true;
             localStorage.setItem('quiz_submitted', 'true');
-            enterSubmittedMode();
+            // document.getElementById('submit-bar').style.display = 'none'; // Remove or comment out
+            // enterSubmittedMode(); // Remove or comment out
+            alert("Quiz submitted! You can now review your answers in the sessions.");
         }
         
         function enterSubmittedMode() {
@@ -684,26 +688,20 @@
         }
         
         // ── Navigation ──
-        // ── Navigation ──
         function goToPage(num) {
-            // Hide the summary section
+            // Force summary to stay hidden
             document.getElementById('summary-section').classList.remove('active');
-            
-            // Show the submit bar ONLY if we haven't submitted the quiz yet
-            if (!submitted) {
-                document.getElementById('submit-bar').style.display = 'flex';
-            }
-
+            document.getElementById('summary-section').style.display = 'none'; 
+        
             document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
             document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
         
-            const activeBtn  = document.getElementById(`btn-${num}`);
+            const activeBtn = document.getElementById(`btn-${num}`);
             const activePage = document.getElementById(`page-${num}`);
             
             if (activeBtn && activePage) {
                 activeBtn.classList.add('active');
                 activePage.classList.add('active');
-        
                 nav.scrollTo({
                     left: activeBtn.offsetLeft - (nav.offsetWidth/2) + (activeBtn.offsetWidth/2),
                     behavior: 'smooth'
