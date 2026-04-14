@@ -182,6 +182,14 @@
             line-height: 1.5;
         }
 
+        .question-image {
+            max-width: 100%;
+            height: auto;
+            margin-bottom: 16px;
+            border-radius: 8px;
+            display: block;
+        }
+
         .options-grid {
             display: grid;
             grid-template-columns: 1fr 1fr;
@@ -452,7 +460,6 @@
         <main class="bottom-section" id="scroll-container">
             <div id="content-area"></div>
     
-            <!-- Summary page (hidden until submitted) -->
             <div class="summary-section" id="summary-section">
                 <div class="summary-card">
                     <div class="summary-big" id="summary-score">0</div>
@@ -478,7 +485,7 @@
                 </div>
                 <div class="bottom-bar">
                     <button class="btn btn-ghost" onclick="resetQuiz()">Restart quiz</button>
-                    <button class="btn btn-primary" onclick="reviewMode()">Back to quiz</button>
+                    <button class="btn btn-primary" onclick="backToQuiz()">Back to quiz</button>
                 </div>
             </div>
     
@@ -490,56 +497,38 @@
         const SESSIONS = 10;
         const QPP = 3; // questions per session
         
-        // ── Answer key ──
-        const answerKey = {
-            q_1_1:"A", q_1_2:"B", q_1_3:"C",
-            q_2_1:"B", q_2_2:"D", q_2_3:"A",
-            q_3_1:"C", q_3_2:"B", q_3_3:"D",
-            q_4_1:"A", q_4_2:"C", q_4_3:"B",
-            q_5_1:"D", q_5_2:"A", q_5_3:"C",
-            q_6_1:"B", q_6_2:"B", q_6_3:"D",
-            q_7_1:"A", q_7_2:"D", q_7_3:"A",
-            q_8_1:"C", q_8_2:"B", q_8_3:"C",
-            q_9_1:"D", q_9_2:"A", q_9_3:"B",
-            q_10_1:"A", q_10_2:"C", q_10_3:"D",
-        };
-        
-        // Question texts (placeholder — replace with real math questions)
-        const questionTexts = {
-            q_1_1: "What is 3² + 4²?",
-            q_1_2: "Simplify: 2x + 3x − x",
-            q_1_3: "What is the slope of y = 3x + 7?",
-            q_2_1: "Which value satisfies 2x − 4 = 0?",
-            q_2_2: "What is sin(90°)?",
-            q_2_3: "Expand: (x + 2)²",
-            q_3_1: "What is the area of a circle with radius 3?",
-            q_3_2: "Solve: x² = 16",
-            q_3_3: "What is log₁₀(1000)?",
-            q_4_1: "What is the derivative of x³?",
-            q_4_2: "Which is a factor of x² − 9?",
-            q_4_3: "What is 0!?",
-            q_5_1: "What is cos(0°)?",
-            q_5_2: "If f(x) = 2x + 1, what is f(3)?",
-            q_5_3: "What is the perimeter of a square with side 5?",
-            q_6_1: "How many degrees in a triangle?",
-            q_6_2: "What is √144?",
-            q_6_3: "Simplify: (x²)³",
-            q_7_1: "What is the y-intercept of y = 4x − 3?",
-            q_7_2: "What is 2³ × 2²?",
-            q_7_3: "Which is the quadratic formula?",
-            q_8_1: "What is the reciprocal of ½?",
-            q_8_2: "What is the mean of 2, 4, 6, 8?",
-            q_8_3: "What is tan(45°)?",
-            q_9_1: "What is the HCF of 12 and 18?",
-            q_9_2: "Solve: 3(x − 2) = 9",
-            q_9_3: "What is the volume of a cube with side 3?",
-            q_10_1: "What is the sum of interior angles of a pentagon?",
-            q_10_2: "Which rule states a² + b² = c²?",
-            q_10_3: "What is ∫x dx?",
-        };
-        
-        const optionTexts = {
-            A: "Option A", B: "Option B", C: "Option C", D: "Option D"
+        // ── Merged Content Object ──
+        const questionContent = {
+            q_1_1: { q: "What is 3² + 4²?", a: "A", options: ["25", "7", "12", "14"], image: "" },
+            q_1_2: { q: "Simplify: 2x + 3x − x", a: "B", options: ["5x", "4x", "6x", "x"], image: "" },
+            q_1_3: { q: "What is the slope of y = 3x + 7?", a: "C", options: ["7", "0", "3", "1"], image: "" },
+            q_2_1: { q: "Which value satisfies 2x − 4 = 0?", a: "B", options: ["1", "2", "3", "4"], image: "" },
+            q_2_2: { q: "What is sin(90°)?", a: "D", options: ["0", "0.5", "-1", "1"], image: "" },
+            q_2_3: { q: "Expand: (x + 2)²", a: "A", options: ["x² + 4x + 4", "x² + 4", "x² + 2x + 4", "x² + 4x + 2"], image: "" },
+            q_3_1: { q: "What is the area of a circle with radius 3?", a: "C", options: ["3π", "6π", "9π", "12π"], image: "" },
+            q_3_2: { q: "Solve: x² = 16", a: "B", options: ["2", "±4", "8", "16"], image: "" },
+            q_3_3: { q: "What is log₁₀(1000)?", a: "D", options: ["1", "2", "10", "3"], image: "" },
+            q_4_1: { q: "What is the derivative of x³?", a: "A", options: ["3x²", "x²", "3x", "2x³"], image: "" },
+            q_4_2: { q: "Which is a factor of x² − 9?", a: "C", options: ["x + 9", "x - 9", "x - 3", "x + 1"], image: "" },
+            q_4_3: { q: "What is 0!?", a: "B", options: ["0", "1", "undefined", "10"], image: "" },
+            q_5_1: { q: "What is cos(0°)?", a: "D", options: ["0", "0.5", "-1", "1"], image: "" },
+            q_5_2: { q: "If f(x) = 2x + 1, what is f(3)?", a: "A", options: ["7", "6", "5", "8"], image: "" },
+            q_5_3: { q: "What is the perimeter of a square with side 5?", a: "C", options: ["25", "10", "20", "15"], image: "" },
+            q_6_1: { q: "How many degrees in a triangle?", a: "B", options: ["90", "180", "270", "360"], image: "" },
+            q_6_2: { q: "What is √144?", a: "B", options: ["14", "12", "16", "10"], image: "" },
+            q_6_3: { q: "Simplify: (x²)³", a: "D", options: ["x^5", "x^23", "x^1", "x^6"], image: "" },
+            q_7_1: { q: "What is the y-intercept of y = 4x − 3?", a: "A", options: ["-3", "4", "3", "0"], image: "" },
+            q_7_2: { q: "What is 2³ × 2²?", a: "D", options: ["2^6", "4^5", "2^1", "2^5"], image: "" },
+            q_7_3: { q: "Which is the quadratic formula?", a: "A", options: "x = (-b ± √(b²-4ac)) / 2a", options: ["x = (-b ± √(b²-4ac)) / 2a", "y = mx + b", "a² + b² = c²", "πr²"], image: "" },
+            q_8_1: { q: "What is the reciprocal of ½?", a: "C", options: ["0.2", "1", "2", "0.5"], image: "" },
+            q_8_2: { q: "What is the mean of 2, 4, 6, 8?", a: "B", options: ["4", "5", "6", "20"], image: "" },
+            q_8_3: { q: "What is tan(45°)?", a: "C", options: ["0", "0.5", "1", "√3"], image: "" },
+            q_9_1: { q: "What is the HCF of 12 and 18?", a: "D", options: ["2", "3", "4", "6"], image: "" },
+            q_9_2: { q: "Solve: 3(x − 2) = 9", a: "A", options: ["5", "3", "4", "2"], image: "" },
+            q_9_3: { q: "What is the volume of a cube with side 3?", a: "B", options: ["9", "27", "18", "12"], image: "" },
+            q_10_1: { q: "What is the sum of interior angles of a pentagon?", a: "A", options: ["540°", "360°", "720°", "180°"], image: "" },
+            q_10_2: { q: "Which rule states a² + b² = c²?", a: "C", options: ["Sine Rule", "Cosine Rule", "Pythagoras", "Euler"], image: "" },
+            q_10_3: { q: "What is ∫x dx?", a: "D", options: ["x", "1", "x²", "½x² + C"], image: "" },
         };
         
         let userAnswers = JSON.parse(localStorage.getItem('quiz_answers_v2')) || {};
@@ -579,25 +568,30 @@
         
             for (let j = 1; j <= QPP; j++) {
                 const qId = `q_${i}_${j}`;
-                const opts = ['A','B','C','D'].map(opt => `
+                const data = questionContent[qId] || { q: "Question "+i+"."+j, a: "A", options: ["A","B","C","D"], image: "" };
+                
+                const imgHtml = data.image ? `<img src="${data.image}" class="question-image" alt="Question diagram">` : "";
+
+                const opts = ['A','B','C','D'].map((opt, idx) => `
                     <label class="option-wrap" id="wrap-${qId}-${opt}">
                         <input type="radio" name="${qId}" value="${opt}"
                             onchange="selectAnswer('${qId}','${opt}')">
                         <div class="option-label" id="label-${qId}-${opt}">
                             <div class="option-letter">${opt}</div>
-                            <span>${opt}: ${optionTexts[opt]}</span>
+                            <span>${data.options[idx]}</span>
                         </div>
                     </label>`).join('');
         
                 page.innerHTML += `
                     <div class="question-block" id="block-${qId}">
                         <div style="display:flex; align-items:flex-start; gap:10px; margin-bottom:16px;">
-                            <div class="question-text" style="flex:1">Q${j}. ${questionTexts[qId] || 'Question ' + i + '.' + j}</div>
+                            <div class="question-text" style="flex:1">Q${j}. ${data.q}</div>
                             <div class="question-result" id="result-${qId}"></div>
                         </div>
+                        ${imgHtml}
                         <div class="options-grid">${opts}</div>
                         <div class="hint-line" id="hint-${qId}">
-                            ✓ Correct answer: <strong>${answerKey[qId]}</strong>
+                            ✓ Correct answer: <strong>${data.a}</strong>
                         </div>
                     </div>`;
             }
@@ -641,7 +635,8 @@
         }
         // ── Apply Answer UI ──
         function applyAnswerUI(qId, val, showCorrect) {
-            const correct = answerKey[qId];
+            const data = questionContent[qId];
+            const correct = data ? data.a : "A";
             const isRight = val === correct;
             const block   = document.getElementById(`block-${qId}`);
             const result  = document.getElementById(`result-${qId}`);
@@ -683,7 +678,7 @@
                     block.classList.add(isRight ? 'all-correct' : 'has-wrong');
                 }
             } else {
-                // Reset feedback UI if not submitted (for restarts/resets)
+                // Reset feedback UI if not submitted
                 result.className = 'question-result';
                 hint.classList.remove('show');
                 if (block) block.classList.remove('all-correct', 'has-wrong');
@@ -694,9 +689,12 @@
             for (let j = 1; j <= QPP; j++) {
                 const qId = `q_${i}_${j}`;
                 const dot = document.getElementById(`dot-${i}-${j}`);
+                const data = questionContent[qId];
+                const correctLetter = data ? data.a : "A";
+
                 if (userAnswers[qId] !== undefined) {
                     answered++;
-                    const isRight = userAnswers[qId] === answerKey[qId];
+                    const isRight = userAnswers[qId] === correctLetter;
                     if (isRight) correct++;
                     if (dot) dot.className = getSessionSubmitted(i) ? `nav-dot ${isRight ? 'correct' : 'wrong'}` : 'nav-dot';
                 } else {
@@ -749,8 +747,10 @@
                 for (let j = 1; j <= QPP; j++) {
                     const qId = 'q_' + i + '_' + j;
                     const ans = userAnswers[qId];
+                    const data = questionContent[qId];
+                    const correctLetter = data ? data.a : "A";
                     if (!ans) skipped++;
-                    else if (ans === answerKey[qId]) correct++;
+                    else if (ans === correctLetter) correct++;
                     else wrong++;
             }
           }
@@ -768,15 +768,20 @@
             for (let j = 1; j <= QPP; j++) {
                 const qId = 'q_' + i + '_' + j;
                 const ans = userAnswers[qId];
+                const data = questionContent[qId];
+                const correctLetter = data ? data.a : "A";
                 let cls = 'empty';
-                if (submitted && ans) { cls = ans === answerKey[qId] ? 'correct' : 'wrong'; if (cls === 'correct') sc++; }
-                    dotsHtml += '<div class="session-row-dot ' + cls + '"></div>';
+                if (submitted && ans) { 
+                    cls = ans === correctLetter ? 'correct' : 'wrong'; 
+                    if (cls === 'correct') sc++; 
                 }
-                dotsHtml += '</div>';
-                const label = submitted
-                    ? '<span style="color:' + (sc===QPP?'#10b981':sc===0?'#ef4444':'#f59e0b') + ';font-weight:700;">' + sc + '/' + QPP + '</span>'
-                    : '<span style="color:#94a3b8;font-size:0.8rem;">not submitted</span>';
-                breakdown.innerHTML += '<div class="session-row"><span style="color:#1e293b;font-weight:600;">Session ' + i + '</span>' + dotsHtml + label + '</div>';
+                dotsHtml += '<div class="session-row-dot ' + cls + '"></div>';
+            }
+            dotsHtml += '</div>';
+            const label = submitted
+                ? '<span style="color:' + (sc===QPP?'#10b981':sc===0?'#ef4444':'#f59e0b') + ';font-weight:700;">' + sc + '/' + QPP + '</span>'
+                : '<span style="color:#94a3b8;font-size:0.8rem;">not submitted</span>';
+            breakdown.innerHTML += '<div class="session-row"><span style="color:#1e293b;font-weight:600;">Session ' + i + '</span>' + dotsHtml + label + '</div>';
             }
         
             document.getElementById('summary-section').classList.add('active');
@@ -799,7 +804,6 @@
         
         // ── Navigation ──
         function goToPage(num) {
-            // Force summary to stay hidden
             document.getElementById('summary-section').classList.remove('active');
             document.getElementById('summary-nav-btn').classList.remove('active');
         
@@ -820,8 +824,6 @@
             document.getElementById('scroll-container').scrollTo({ top: 0, behavior: 'smooth' });
         }
 
-        // ── Apply Answer UI ──
-        
         function scrollNav(val) {
             nav.scrollBy({ left: val, behavior: 'smooth' });
         }
