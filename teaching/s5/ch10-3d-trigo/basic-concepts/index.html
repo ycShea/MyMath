@@ -1,27 +1,21 @@
 <!DOCTYPE html>
-<!-- https://ycshea.github.io/MyMath/teaching/s5/ch10-3d-trigo/basic-concepts/index.html -->
 <html lang="en">
     <head>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>Math Quiz Dashboard</title>
         <style>
             * { box-sizing: border-box; margin: 0; padding: 0; }
-            
+    
             body, html {
                 height: 100%;
-                font-family: 'Segoe UI', Roboto, sans-serif;
+                font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
                 overflow: hidden;
                 background-color: #0f172a;
             }
     
-            .container {
-                display: flex;
-                flex-direction: column;
-                height: 100vh;
-            }
+            .container { display: flex; flex-direction: column; height: 100vh; }
     
-            /* --- Navigation --- */
+            /* ── Top nav ── */
             .top-section {
                 height: 10vh;
                 background: #0f172a;
@@ -40,8 +34,8 @@
                 height: 100%;
                 align-items: center;
                 scrollbar-width: none;
+                -ms-overflow-style: none;
             }
-    
             .nav-wrapper::-webkit-scrollbar { display: none; }
     
             .nav-btn {
@@ -56,97 +50,144 @@
                 flex-direction: column;
                 align-items: center;
                 justify-content: center;
+                gap: 2px;
                 color: transparent;
                 -webkit-text-stroke: 1px rgba(255,255,255,0.4);
-                transition: all 0.4s;
+                transition: all 0.4s cubic-bezier(0.2,1,0.3,1);
+                border-radius: 12px;
                 position: relative;
             }
     
             .nav-btn.active {
                 -webkit-text-stroke: 1.5px #60a5fa;
                 transform: scale(1.1);
+                filter: drop-shadow(0 0 8px rgba(96,165,250,0.5));
                 background-color: rgba(96,165,250,0.15);
-                border-radius: 12px;
             }
     
+            /* small dot-row under each nav number */
             .nav-dots {
                 display: flex;
                 gap: 3px;
                 position: absolute;
                 bottom: 6px;
             }
-    
             .nav-dot {
                 width: 6px;
                 height: 6px;
                 border-radius: 50%;
                 background: rgba(255,255,255,0.2);
+                transition: background 0.3s;
             }
-    
-            .nav-dot.correct { background: #34d399; }
-            .nav-dot.wrong { background: #f87171; }
+            .nav-dot.correct  { background: #34d399; }
+            .nav-dot.wrong    { background: #f87171; }
+            .nav-dot.answered { background: rgba(255,255,255,0.5); }
     
             .arrow {
                 position: absolute;
                 top: 50%;
                 transform: translateY(-50%);
-                width: 40px;
-                height: 40px;
+                width: 40px; height: 40px;
                 background: rgba(255,255,255,0.1);
                 color: #fff;
                 border: 1px solid rgba(255,255,255,0.2);
                 border-radius: 50%;
                 cursor: pointer;
                 z-index: 10;
+                font-size: 1.4rem;
+                display: flex;
+                align-items: center;
+                justify-content: center;
             }
-    
-            .arrow-left { left: 12px; }
+            .arrow-left  { left: 12px; }
             .arrow-right { right: 12px; }
     
+            /* ── Progress bar ── */
             .progress-bar-wrap {
                 height: 4px;
                 background: rgba(255,255,255,0.08);
             }
-    
             .progress-bar-fill {
                 height: 100%;
                 background: linear-gradient(90deg, #34d399, #60a5fa);
-                transition: width 0.5s;
+                transition: width 0.5s ease;
                 width: 0%;
             }
     
-            /* --- Content Area --- */
+            /* ── Bottom content ── */
             .bottom-section {
                 flex: 1;
                 overflow-y: auto;
                 padding: 32px 20px 60px;
                 background-color: #f8fafc;
+                scroll-behavior: smooth;
             }
     
             .page {
                 display: none;
                 max-width: 760px;
                 margin: 0 auto;
-                animation: slideUp 0.5s ease;
+                animation: slideUp 0.5s cubic-bezier(0.16,1,0.3,1);
             }
-    
             .page.active { display: block; }
     
             @keyframes slideUp {
                 from { opacity: 0; transform: translateY(12px); }
-                to { opacity: 1; transform: translateY(0); }
+                to   { opacity: 1; transform: translateY(0); }
             }
     
+            /* ── Session header ── */
+            .session-header {
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                margin-bottom: 20px;
+            }
+            .session-title {
+                font-size: 1.1rem;
+                font-weight: 700;
+                color: #1e293b;
+            }
+            .session-badge {
+                font-size: 0.85rem;
+                font-weight: 700;
+                padding: 4px 14px;
+                border-radius: 50px;
+                background: #e2e8f0;
+                color: #64748b;
+                transition: background 0.4s, color 0.4s;
+            }
+            .session-badge.perfect { background: #d1fae5; color: #065f46; }
+            .session-badge.partial { background: #fef3c7; color: #92400e; }
+            .session-badge.wrong   { background: #fee2e2; color: #991b1b; }
+    
+            /* ── Question card ── */
             .question-block {
                 background: #fff;
                 padding: 24px;
                 margin-bottom: 20px;
                 border-radius: 16px;
                 border: 1.5px solid #e2e8f0;
+                transition: border-color 0.3s;
             }
-    
             .question-block.all-correct { border-color: #6ee7b7; }
-            .question-block.has-wrong { border-color: #fca5a5; }
+            .question-block.has-wrong   { border-color: #fca5a5; }
+    
+            .question-text {
+                font-size: 1.05rem;
+                font-weight: 600;
+                color: #1e293b;
+                margin-bottom: 16px;
+                line-height: 1.5;
+            }
+
+            .question-image {
+                max-width: 100%;
+                height: auto;
+                margin-bottom: 16px;
+                border-radius: 8px;
+                display: block;
+            }
     
             .options-grid {
                 display: grid;
@@ -154,301 +195,572 @@
                 gap: 10px;
             }
     
-            .option-wrap input { display: none; }
+            /* radio hidden, label is the whole button */
+            .option-wrap input[type="radio"] { display: none; }
     
             .option-label {
                 display: flex;
                 align-items: center;
                 gap: 10px;
-                padding: 12px;
+                padding: 12px 16px;
                 border: 1.5px solid #e2e8f0;
                 border-radius: 10px;
                 cursor: pointer;
+                font-size: 0.95rem;
+                color: #334155;
                 background: #f8fafc;
-                transition: 0.2s;
+                transition: all 0.2s;
+                user-select: none;
             }
+            .option-label:hover { background: #f1f5f9; border-color: #94a3b8; }
     
             .option-letter {
-                width: 26px;
-                height: 26px;
+                width: 26px; height: 26px;
                 border-radius: 50%;
                 background: #e2e8f0;
+                color: #64748b;
+                font-weight: 700;
+                font-size: 0.8rem;
                 display: flex;
                 align-items: center;
                 justify-content: center;
-                font-weight: bold;
+                flex-shrink: 0;
+                transition: all 0.2s;
             }
     
-            /* Logic States */
-            .correct-ans { border-color: #6ee7b7; background: #f0fdf4; }
-            .correct-ans .option-letter { background: #10b981; color: #fff; }
-            .wrong-ans { border-color: #fca5a5; background: #fff1f2; }
-            .wrong-ans .option-letter { background: #ef4444; color: #fff; }
-            .revealed-correct { border-color: #6ee7b7; background: #f0fdf4; }
-            .revealed-correct .option-letter { background: #10b981; color: #fff; }
-            .locked { pointer-events: none; }
+            /* States after answering */
+            .option-label.selected {
+                border-color: #93c5fd;
+                background: #eff6ff;
+            }
+            .option-label.selected .option-letter {
+                background: #3b82f6;
+                color: #fff;
+            }
     
+            .option-label.correct-ans {
+                border-color: #6ee7b7;
+                background: #f0fdf4;
+                cursor: default;
+            }
+            .option-label.correct-ans .option-letter {
+                background: #10b981;
+                color: #fff;
+            }
+    
+            .option-label.wrong-ans {
+                border-color: #fca5a5;
+                background: #fff1f2;
+                cursor: default;
+            }
+            .option-label.wrong-ans .option-letter {
+                background: #ef4444;
+                color: #fff;
+            }
+    
+            .option-label.revealed-correct {
+                border-color: #6ee7b7;
+                background: #f0fdf4;
+                cursor: default;
+            }
+            .option-label.revealed-correct .option-letter {
+                background: #10b981;
+                color: #fff;
+            }
+    
+            /* locked after answer */
+            .option-label.locked { cursor: default; pointer-events: none; }
+    
+            /* result icon at right of question */
             .question-result {
                 display: none;
-                width: 28px;
-                height: 28px;
+                margin-left: auto;
+                width: 28px; height: 28px;
                 border-radius: 50%;
+                font-size: 0.9rem;
+                font-weight: 700;
                 align-items: center;
                 justify-content: center;
-                font-weight: bold;
+                flex-shrink: 0;
+            }
+            .question-result.show { display: flex; }
+            .question-result.tick {
+                background: #d1fae5;
+                color: #065f46;
+            }
+            .question-result.cross {
+                background: #fee2e2;
+                color: #991b1b;
             }
     
-            .question-result.show { display: flex; }
-            .tick { background: #d1fae5; color: #065f46; }
-            .cross { background: #fee2e2; color: #991b1b; }
-    
+            /* hint line shown after wrong answer */
             .hint-line {
                 display: none;
                 margin-top: 12px;
-                padding: 8px;
+                font-size: 0.85rem;
+                color: #065f46;
                 background: #f0fdf4;
                 border-left: 3px solid #10b981;
-                border-radius: 4px;
+                padding: 8px 12px;
+                border-radius: 0 8px 8px 0;
             }
-    
             .hint-line.show { display: block; }
     
-            /* Summary */
+            /* ── Summary section ── */
             .summary-section {
                 display: none;
                 max-width: 760px;
                 margin: 0 auto;
-                text-align: center;
+                animation: slideUp 0.5s cubic-bezier(0.16,1,0.3,1);
             }
-    
             .summary-section.active { display: block; }
     
             .summary-card {
                 background: #fff;
                 border-radius: 16px;
-                padding: 32px;
                 border: 1.5px solid #e2e8f0;
-                margin-bottom: 20px;
+                padding: 32px;
+                text-align: center;
+                margin-bottom: 24px;
             }
+            .summary-big {
+                font-size: 4rem;
+                font-weight: 900;
+                color: #1e293b;
+                line-height: 1;
+            }
+            .summary-sub {
+                font-size: 1rem;
+                color: #64748b;
+                margin-top: 6px;
+            }
+            .summary-grid {
+                display: grid;
+                grid-template-columns: repeat(3, 1fr);
+                gap: 12px;
+                margin-top: 24px;
+            }
+            .summary-stat {
+                background: #f8fafc;
+                border-radius: 10px;
+                padding: 14px;
+                border: 1px solid #e2e8f0;
+            }
+            .summary-stat-num {
+                font-size: 1.6rem;
+                font-weight: 700;
+                color: #1e293b;
+            }
+            .summary-stat-label {
+                font-size: 0.8rem;
+                color: #64748b;
+                margin-top: 2px;
+            }
+            .session-row {
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                padding: 10px 0;
+                border-bottom: 1px solid #f1f5f9;
+                font-size: 0.9rem;
+            }
+            .session-row:last-child { border-bottom: none; }
+            .session-row-dots {
+                display: flex;
+                gap: 5px;
+            }
+            .session-row-dot {
+                width: 12px; height: 12px;
+                border-radius: 50%;
+            }
+            .session-row-dot.correct { background: #10b981; }
+            .session-row-dot.wrong   { background: #ef4444; }
+            .session-row-dot.empty   { background: #e2e8f0; }
     
-            .summary-big { font-size: 4rem; font-weight: 900; }
-    
+            /* ── Submit / review buttons ── */
             .bottom-bar {
                 max-width: 760px;
-                margin: 20px auto;
+                margin: 24px auto 0;
                 display: flex;
+                gap: 12px;
                 justify-content: flex-end;
-                gap: 10px;
             }
-    
             .btn {
-                padding: 12px 24px;
+                padding: 12px 28px;
                 border-radius: 50px;
-                border: none;
-                font-weight: bold;
+                font-size: 1rem;
+                font-weight: 700;
                 cursor: pointer;
-                transition: 0.2s;
+                border: none;
+                transition: transform 0.2s, background 0.2s;
             }
-    
+            .btn:hover { transform: scale(1.03); }
+            .btn-primary { background: #3b82f6; color: #fff; }
+            .btn-primary:hover { background: #2563eb; }
             .btn-success { background: #10b981; color: #fff; }
             .btn-success:hover { background: #059669; }
+            .btn-ghost {
+                background: #f1f5f9;
+                color: #475569;
+            }
+            .btn-ghost:hover { background: #e2e8f0; }
         </style>
     </head>
-    <body>    
+    <body>
         <div class="container">
             <div class="top-section">
                 <button class="arrow arrow-left" onclick="scrollNav(-400)">&#8249;</button>
                 <div class="nav-wrapper" id="nav-wrapper"></div>
                 <button class="arrow arrow-right" onclick="scrollNav(400)">&#8250;</button>
             </div>
-            
             <div class="progress-bar-wrap">
                 <div class="progress-bar-fill" id="progress-bar"></div>
             </div>
-        
             <main class="bottom-section" id="scroll-container">
                 <div id="content-area"></div>
         
                 <div class="summary-section" id="summary-section">
                     <div class="summary-card">
                         <div class="summary-big" id="summary-score">0</div>
-                        <p>Correct Answers</p>
+                        <div class="summary-sub" id="summary-sub">out of 30 questions correct</div>
+                        <div class="summary-grid">
+                            <div class="summary-stat">
+                                <div class="summary-stat-num" id="stat-correct" style="color:#10b981">0</div>
+                                <div class="summary-stat-label">Correct</div>
+                            </div>
+                            <div class="summary-stat">
+                                <div class="summary-stat-num" id="stat-wrong" style="color:#ef4444">0</div>
+                                <div class="summary-stat-label">Wrong</div>
+                            </div>
+                            <div class="summary-stat">
+                                <div class="summary-stat-num" id="stat-skipped" style="color:#f59e0b">0</div>
+                                <div class="summary-stat-label">Skipped</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div style="background:#fff; border-radius:16px; border:1.5px solid #e2e8f0; padding:24px;">
+                        <div style="font-weight:700; font-size:1rem; color:#1e293b; margin-bottom:12px;">Session breakdown</div>
+                        <div id="session-breakdown"></div>
+                    </div>
+                    <div class="bottom-bar">
+                        <button class="btn btn-ghost" onclick="resetQuiz()">Restart quiz</button>
+                        <button class="btn btn-primary" onclick="reviewMode()">Review answers</button>
                     </div>
                 </div>
         
                 <div class="bottom-bar" id="submit-bar">
-                    <button class="btn btn-success" onclick="submitQuiz()">Submit Quiz</button>
+                    <button class="btn btn-success" onclick="submitQuiz()">Submit quiz</button>
                 </div>
             </main>
         </div>
-    
+        
         <script>
             const SESSIONS = 10;
-            const QPP = 3;
-        
-            const quizData = [
-                { id: "q_1_1", question: "What is 3² + 4²?", options: { A: "25", B: "12", C: "7", D: "49" }, answer: "A", file: "q1_1.png" },
-                { id: "q_1_2", question: "Simplify: 2x + 3x - x", options: { A: "5x", B: "4x", C: "6x", D: "x" }, answer: "B", file: "" },
-                { id: "q_1_3", question: "What is the slope of y = 3x + 7?", options: { A: "7", B: "1/3", C: "3", D: "-3" }, answer: "C", file: "q1_3.png" },
-                { id: "q_2_1", question: "Solve 2x - 4 = 0", options: { A: "1", B: "2", C: "4", D: "0" }, answer: "B", file: "" },
-                { id: "q_2_2", question: "What is sin(90°)?", options: { A: "0", B: "0.5", C: "0.8", D: "1" }, answer: "D", file: "" },
-                { id: "q_2_3", question: "Expand (x+2)²", options: { A: "x²+4x+4", B: "x²+4", C: "x²+2x+4", D: "2x+4" }, answer: "A", file: "" },
-                { id: "q_3_1", question: "Area of circle with radius 3?", options: { A: "3π", B: "6π", C: "9π", D: "12π" }, answer: "C", file: "" },
-                { id: "q_3_2", question: "Solve x² = 16", options: { A: "4", B: "±4", C: "8", D: "2" }, answer: "B", file: "" },
-                { id: "q_3_3", question: "Value of log₁₀(1000)?", options: { A: "1", B: "2", C: "3", D: "10" }, answer: "C", file: "" },
-                { id: "q_4_1", question: "Derivative of x³?", options: { A: "3x²", B: "x²", C: "3x", D: "x³" }, answer: "A", file: "" },
-                { id: "q_4_2", question: "Factor of x² - 9?", options: { A: "x-1", B: "x-9", C: "x-3", D: "x+9" }, answer: "C", file: "" },
-                { id: "q_4_3", question: "Value of 0!?", options: { A: "0", B: "1", C: "undefined", D: "10" }, answer: "B", file: "" },
-                { id: "q_5_1", question: "What is cos(0°)?", options: { A: "0", B: "0.5", C: "-1", D: "1" }, answer: "D", file: "" },
-                { id: "q_5_2", question: "If f(x)=2x+1, f(3)=?", options: { A: "7", B: "6", C: "5", D: "8" }, answer: "A", file: "" },
-                { id: "q_5_3", question: "Perimeter of square side 5?", options: { A: "10", B: "15", C: "20", D: "25" }, answer: "C", file: "" },
-                { id: "q_6_1", question: "Sum of angles in triangle?", options: { A: "90°", B: "180°", C: "270°", D: "360°" }, answer: "B", file: "" },
-                { id: "q_6_2", question: "What is √144?", options: { A: "11", B: "12", C: "14", D: "16" }, answer: "B", file: "" },
-                { id: "q_6_3", question: "Simplify (x²)³?", options: { A: "x⁵", B: "2x³", C: "x⁶", D: "x²³" }, answer: "C", file: "" },
-                { id: "q_7_1", question: "y-intercept of y=4x-3?", options: { A: "-3", B: "4", C: "0", D: "3" }, answer: "A", file: "" },
-                { id: "q_7_2", question: "What is 2³ * 2²?", options: { A: "2⁶", B: "4⁵", C: "2¹", D: "2⁵" }, answer: "D", file: "" },
-                { id: "q_7_3", question: "Quadratic formula roots?", options: { A: "Roots", B: "Area", C: "Slope", D: "Volume" }, answer: "A", file: "" },
-                { id: "q_8_1", question: "Reciprocal of 1/2?", options: { A: "1", B: "0.5", C: "2", D: "-2" }, answer: "C", file: "" },
-                { id: "q_8_2", question: "Mean of 2, 4, 6, 8?", options: { A: "4", B: "5", C: "6", D: "20" }, answer: "B", file: "" },
-                { id: "q_8_3", question: "What is tan(45°)?", options: { A: "0", B: "0.5", C: "1", D: "√3" }, answer: "C", file: "" },
-                { id: "q_9_1", question: "HCF of 12 and 18?", options: { A: "2", B: "3", C: "4", D: "6" }, answer: "D", file: "" },
-                { id: "q_9_2", question: "Solve 3(x-2)=9", options: { A: "5", B: "3", C: "6", D: "1" }, answer: "A", file: "" },
-                { id: "q_9_3", question: "Volume of cube side 3?", options: { A: "9", B: "12", C: "27", D: "18" }, answer: "C", file: "" },
-                { id: "q_10_1", question: "Sum of angles in pentagon?", options: { A: "540°", B: "360°", C: "180°", D: "720°" }, answer: "A", file: "" },
-                { id: "q_10_2", question: "Which is a²+b²=c²?", options: { A: "Sine Rule", B: "Pythagoras", C: "Leibniz", D: "Cosine" }, answer: "B", file: "" },
-                { id: "q_10_3", question: "What is ∫x dx?", options: { A: "x²", B: "1", C: "x", D: "x²/2 + C" }, answer: "D", file: "" }
-            ];
-        
+            const QPP = 3; // questions per session
+            
+            // ── Merged Content Object ──
+            const questionContent = {
+                q_1_1: { q: "What is 3² + 4²?", a: "A", options: ["25", "12", "7", "49"], img: "" },
+                q_1_2: { q: "Simplify: 2x + 3x − x", a: "B", options: ["3x", "4x", "5x", "6x"], img: "" },
+                q_1_3: { q: "What is the slope of y = 3x + 7?", a: "C", options: ["7", "0", "3", "1"], img: "" },
+                q_2_1: { q: "Which value satisfies 2x − 4 = 0?", a: "B", options: ["1", "2", "3", "4"], img: "" },
+                q_2_2: { q: "What is sin(90°)?", a: "D", options: ["0", "0.5", "√3/2", "1"], img: "" },
+                q_2_3: { q: "Expand: (x + 2)²", a: "A", options: ["x² + 4x + 4", "x² + 4", "x² + 2x + 4", "2x + 4"], img: "" },
+                q_3_1: { q: "What is the area of a circle with radius 3?", a: "C", options: ["3π", "6π", "9π", "12π"], img: "" },
+                q_3_2: { q: "Solve: x² = 16", a: "B", options: ["2", "4", "8", "16"], img: "" },
+                q_3_3: { q: "What is log₁₀(1000)?", a: "D", options: ["1", "2", "10", "3"], img: "" },
+                q_4_1: { q: "What is the derivative of x³?", a: "A", options: ["3x²", "x²", "2x", "3x"], img: "" },
+                q_4_2: { q: "Which is a factor of x² − 9?", a: "C", options: ["x - 1", "x + 9", "x - 3", "x + 1"], img: "" },
+                q_4_3: { q: "What is 0!?", a: "B", options: ["0", "1", "undefined", "-1"], img: "" },
+                q_5_1: { q: "What is cos(0°)?", a: "D", options: ["0", "0.5", "√2/2", "1"], img: "" },
+                q_5_2: { q: "If f(x) = 2x + 1, what is f(3)?", a: "A", options: ["7", "6", "5", "8"], img: "" },
+                q_5_3: { q: "What is the perimeter of a square with side 5?", a: "C", options: ["10", "15", "20", "25"], img: "" },
+                q_6_1: { q: "How many degrees in a triangle?", a: "B", options: ["90", "180", "270", "360"], img: "" },
+                q_6_2: { q: "What is √144?", a: "B", options: ["10", "12", "14", "16"], img: "" },
+                q_6_3: { q: "Simplify: (x²)³", a: "D", options: ["x⁵", "2x³", "x²", "x⁶"], img: "" },
+                q_7_1: { q: "What is the y-intercept of y = 4x − 3?", a: "A", options: ["-3", "4", "0", "3"], img: "" },
+                q_7_2: { q: "What is 2³ × 2²?", a: "D", options: ["12", "16", "24", "32"], img: "" },
+                q_7_3: { q: "Which is the quadratic formula?", a: "A", options: ["x = [-b ± √(b²-4ac)]/2a", "a²+b²=c²", "y=mx+c", "A=πr²"], img: "" },
+                q_8_1: { q: "What is the reciprocal of ½?", a: "C", options: ["1", "0.5", "2", "4"], img: "" },
+                q_8_2: { q: "What is the mean of 2, 4, 6, 8?", a: "B", options: ["4", "5", "6", "7"], img: "" },
+                q_8_3: { q: "What is tan(45°)?", a: "C", options: ["0", "0.5", "1", "√3"], img: "" },
+                q_9_1: { q: "What is the HCF of 12 and 18?", a: "D", options: ["2", "3", "4", "6"], img: "" },
+                q_9_2: { q: "Solve: 3(x − 2) = 9", a: "A", options: ["5", "3", "2", "6"], img: "" },
+                q_9_3: { q: "What is the volume of a cube with side 3?", a: "B", options: ["9", "27", "81", "12"], img: "" },
+                q_10_1: { q: "What is the sum of interior angles of a pentagon?", a: "A", options: ["540", "360", "720", "180"], img: "" },
+                q_10_2: { q: "Which rule states a² + b² = c²?", a: "C", options: ["Sine Rule", "Cosine Rule", "Pythagoras", "Leibniz"], img: "" },
+                q_10_3: { q: "What is ∫x dx?", a: "D", options: ["x", "1", "x²", "½x² + C"], img: "" },
+            };
+            
             let userAnswers = JSON.parse(localStorage.getItem('quiz_answers_v2')) || {};
-            let submitted = JSON.parse(localStorage.getItem('quiz_submitted')) || false;
-        
-            function buildUI() {
-                const nav = document.getElementById('nav-wrapper');
-                const content = document.getElementById('content-area');
-        
-                for (let i = 1; i <= SESSIONS; i++) {
-                    // Navigation Button
-                    const btn = document.createElement('button');
-                    btn.className = 'nav-btn';
-                    btn.id = `btn-${i}`;
-                    btn.onclick = () => goToPage(i);
-                    btn.innerHTML = `${i}<div class="nav-dots">${Array(QPP).fill('<div class="nav-dot"></div>').join('')}</div>`;
-                    nav.appendChild(btn);
-        
-                    // Page Container
-                    const page = document.createElement('div');
-                    page.className = 'page';
-                    page.id = `page-${i}`;
-                    page.innerHTML = `<div style="margin-bottom:20px; font-weight:bold; color:#1e293b;">Session ${i}</div>`;
-        
-                    const sessionQs = quizData.filter(q => q.id.startsWith(`q_${i}_`));
-                    sessionQs.forEach((q, idx) => {
-                        const imgHtml = q.file ? `<img src="${q.file}" style="max-width:100%; margin:10px 0; border-radius:8px;" onerror="this.style.display='none'">` : '';
-                        
-                        page.innerHTML += `
-                            <div class="question-block" id="block-${q.id}">
-                                <div style="display:flex; justify-content:space-between; align-items:flex-start;">
-                                    <p style="font-weight:600; color:#1e293b;">Q${idx+1}. ${q.question}</p>
-                                    <div class="question-result" id="result-${q.id}"></div>
-                                </div>
-                                ${imgHtml}
-                                <div class="options-grid">
-                                    ${['A','B','C','D'].map(opt => `
-                                        <label class="option-wrap">
-                                            <input type="radio" name="${q.id}" value="${opt}" onchange="selectAnswer('${q.id}','${opt}')" ${userAnswers[q.id] === opt ? 'checked' : ''}>
-                                            <div class="option-label" id="label-${q.id}-${opt}">
-                                                <div class="option-letter">${opt}</div>
-                                                <span>${q.options[opt]}</span>
-                                            </div>
-                                        </label>
-                                    `).join('')}
-                                </div>
-                                <div class="hint-line" id="hint-${q.id}">Correct answer: ${q.answer}</div>
-                            </div>`;
-                    });
-                    content.appendChild(page);
+            let submitted   = JSON.parse(localStorage.getItem('quiz_submitted'))   || false;
+            
+            const nav     = document.getElementById('nav-wrapper');
+            const content = document.getElementById('content-area');
+            
+            // ── Build UI ──
+            for (let i = 1; i <= SESSIONS; i++) {
+                const btn = document.createElement('button');
+                btn.className = 'nav-btn';
+                btn.id = `btn-${i}`;
+                btn.onclick = () => goToPage(i);
+                let dotsHtml = '<div class="nav-dots">';
+                for (let j = 1; j <= QPP; j++) dotsHtml += `<div class="nav-dot" id="dot-${i}-${j}"></div>`;
+                dotsHtml += '</div>';
+                btn.innerHTML = `${i}${dotsHtml}`;
+                nav.appendChild(btn);
+            
+                const page = document.createElement('div');
+                page.className = 'page';
+                page.id = `page-${i}`;
+            
+                page.innerHTML = `
+                    <div class="session-header">
+                        <div class="session-title">Session ${i}</div>
+                        <div class="session-badge" id="badge-${i}">0 / ${QPP}</div>
+                    </div>`;
+            
+                for (let j = 1; j <= QPP; j++) {
+                    const qId = `q_${i}_${j}`;
+                    const data = questionContent[qId];
+                    const labels = ['A','B','C','D'];
+                    const opts = labels.map((opt, idx) => `
+                        <label class="option-wrap" id="wrap-${qId}-${opt}">
+                            <input type="radio" name="${qId}" value="${opt}"
+                                onchange="selectAnswer('${qId}','${opt}')">
+                            <div class="option-label" id="label-${qId}-${opt}">
+                                <div class="option-letter">${opt}</div>
+                                <span>${data.options[idx]}</span>
+                            </div>
+                        </label>`).join('');
+            
+                    let imgHtml = data.img ? `<img src="${data.img}" class="question-image" alt="Question Image">` : '';
+
+                    page.innerHTML += `
+                        <div class="question-block" id="block-${qId}">
+                            <div style="display:flex; align-items:flex-start; gap:10px; margin-bottom:16px;">
+                                <div class="question-text" style="flex:1">Q${j}. ${data.q}</div>
+                                <div class="question-result" id="result-${qId}"></div>
+                            </div>
+                            ${imgHtml}
+                            <div class="options-grid">${opts}</div>
+                            <div class="hint-line" id="hint-${qId}">
+                                ✓ Correct answer: <strong>${data.a}</strong>
+                            </div>
+                        </div>`;
                 }
+                content.appendChild(page);
             }
-        
+            
+            function restoreState() {
+                for (const qId in userAnswers) {
+                    if (submitted) {
+                        applyAnswerUI(qId, userAnswers[qId], true);
+                    } else {
+                        // Just highlight selection before submission
+                        const val = userAnswers[qId];
+                        const lbl = document.getElementById(`label-${qId}-${val}`);
+                        if(lbl) lbl.classList.add('selected');
+                        const radio = document.querySelector(`input[name="${qId}"][value="${val}"]`);
+                        if(radio) radio.checked = true;
+                    }
+                }
+                for (let i = 1; i <= SESSIONS; i++) updateSessionUI(i);
+                updateProgress();
+                if (submitted) enterSubmittedMode();
+            }
+            
             function selectAnswer(qId, val) {
                 if (submitted) return;
                 userAnswers[qId] = val;
                 localStorage.setItem('quiz_answers_v2', JSON.stringify(userAnswers));
+                
+                // Clear previous selections in UI
+                ['A','B','C','D'].forEach(opt => {
+                    document.getElementById(`label-${qId}-${opt}`).classList.remove('selected');
+                });
+                document.getElementById(`label-${qId}-${val}`).classList.add('selected');
+
+                const parts = qId.split('_');
+                updateSessionUI(parseInt(parts[1]));
                 updateProgress();
             }
-        
-            function applyAnswerUI(qId, val) {
-                const data = quizData.find(q => q.id === qId);
-                if(!data) return;
-                const isRight = val === data.answer;
-                
+            
+            function applyAnswerUI(qId, val, showResults) {
+                const data = questionContent[qId];
+                const correct = data.a;
+                const isRight = val === correct;
+                const block   = document.getElementById(`block-${qId}`);
+                const result  = document.getElementById(`result-${qId}`);
+                const hint    = document.getElementById(`hint-${qId}`);
+            
                 ['A','B','C','D'].forEach(opt => {
                     const lbl = document.getElementById(`label-${qId}-${opt}`);
-                    if(lbl) {
-                        lbl.className = 'option-label locked';
-                        if (opt === val) lbl.classList.add(isRight ? 'correct-ans' : 'wrong-ans');
-                        if (!isRight && opt === data.answer) lbl.classList.add('revealed-correct');
+                    if (!lbl) return;
+                    lbl.className = 'option-label locked';
+                    if (opt === val) {
+                        lbl.classList.add(isRight ? 'correct-ans' : 'wrong-ans');
+                    }
+                    if (!isRight && opt === correct) {
+                        lbl.classList.add('revealed-correct');
                     }
                 });
-        
-                const res = document.getElementById(`result-${qId}`);
-                if(res) {
-                    res.className = `question-result show ${isRight ? 'tick' : 'cross'}`;
-                    res.innerText = isRight ? '✓' : '✗';
+            
+                result.className = `question-result show ${isRight ? 'tick' : 'cross'}`;
+                result.textContent = isRight ? '✓' : '✗';
+                if (!isRight) hint.classList.add('show');
+                if (block) block.classList.add(isRight ? 'all-correct' : 'has-wrong');
+            }
+            
+            function updateSessionUI(i) {
+                let correct = 0, answered = 0;
+                for (let j = 1; j <= QPP; j++) {
+                    const qId = `q_${i}_${j}`;
+                    const dot = document.getElementById(`dot-${i}-${j}`);
+                    if (userAnswers[qId] !== undefined) {
+                        answered++;
+                        const isRight = userAnswers[qId] === questionContent[qId].a;
+                        if (isRight) correct++;
+                        
+                        if (submitted) {
+                            dot.className = `nav-dot ${isRight ? 'correct' : 'wrong'}`;
+                        } else {
+                            dot.className = 'nav-dot answered';
+                        }
+                    } else {
+                        dot.className = 'nav-dot';
+                    }
                 }
+            
+                const badge = document.getElementById(`badge-${i}`);
+                if (!badge) return;
                 
-                const hint = document.getElementById(`hint-${qId}`);
-                if(!isRight && hint) hint.classList.add('show');
-                
-                const [_, sNum, qNum] = qId.split('_');
-                const dots = document.getElementById(`btn-${sNum}`).querySelectorAll('.nav-dot');
-                if(dots[qNum-1]) dots[qNum-1].className = `nav-dot ${isRight ? 'correct' : 'wrong'}`;
+                if (!submitted) {
+                    badge.textContent = `${answered} / ${QPP} answered`;
+                    badge.className = 'session-badge';
+                } else {
+                    if (correct === QPP) {
+                        badge.textContent = `${correct} / ${QPP} ✓`;
+                        badge.className = 'session-badge perfect';
+                    } else if (correct > 0) {
+                        badge.textContent = `${correct} / ${QPP}`;
+                        badge.className = 'session-badge partial';
+                    } else {
+                        badge.textContent = `${correct} / ${QPP}`;
+                        badge.className = 'session-badge wrong';
+                    }
+                }
             }
-        
+            
             function updateProgress() {
-                const total = SESSIONS * QPP;
+                const total    = SESSIONS * QPP;
                 const answered = Object.keys(userAnswers).length;
-                document.getElementById('progress-bar').style.width = (answered / total * 100) + '%';
+                document.getElementById('progress-bar').style.width = `${(answered / total) * 100}%`;
             }
-        
+            
             function submitQuiz() {
                 submitted = true;
                 localStorage.setItem('quiz_submitted', 'true');
                 
-                // Trigger feedback for ALL questions
-                quizData.forEach(q => {
-                    applyAnswerUI(q.id, userAnswers[q.id] || "");
-                });
-
-                const score = quizData.reduce((acc, q) => acc + (userAnswers[q.id] === q.answer ? 1 : 0), 0);
-                document.getElementById('summary-score').innerText = score;
+                // Refresh all question UIs to show answers
+                for (const qId in questionContent) {
+                    applyAnswerUI(qId, userAnswers[qId], true);
+                }
+                for (let i = 1; i <= SESSIONS; i++) updateSessionUI(i);
+                
+                enterSubmittedMode();
+            }
+            
+            function enterSubmittedMode() {
                 document.getElementById('submit-bar').style.display = 'none';
                 document.getElementById('summary-section').classList.add('active');
+            
+                let correct = 0, wrong = 0, skipped = 0;
+                for (let i = 1; i <= SESSIONS; i++) {
+                    for (let j = 1; j <= QPP; j++) {
+                        const qId = `q_${i}_${j}`;
+                        if (!userAnswers[qId]) skipped++;
+                        else if (userAnswers[qId] === questionContent[qId].a) correct++;
+                        else wrong++;
+                    }
+                }
+            
+                const total = SESSIONS * QPP;
+                document.getElementById('summary-score').textContent = correct;
+                document.getElementById('summary-sub').textContent   = `out of ${total} questions correct`;
+                document.getElementById('stat-correct').textContent  = correct;
+                document.getElementById('stat-wrong').textContent    = wrong;
+                document.getElementById('stat-skipped').textContent  = skipped;
+            
+                const breakdown = document.getElementById('session-breakdown');
+                breakdown.innerHTML = '';
+                for (let i = 1; i <= SESSIONS; i++) {
+                    let sc = 0;
+                    let dotsHtml = '<div class="session-row-dots">';
+                    for (let j = 1; j <= QPP; j++) {
+                        const qId = `q_${i}_${j}`;
+                        const ans = userAnswers[qId];
+                        let cls = 'empty';
+                        if (ans) { 
+                            cls = ans === questionContent[qId].a ? 'correct' : 'wrong'; 
+                            if (cls === 'correct') sc++; 
+                        }
+                        dotsHtml += `<div class="session-row-dot ${cls}"></div>`;
+                    }
+                    dotsHtml += '</div>';
+                    breakdown.innerHTML += `
+                        <div class="session-row">
+                            <span style="color:#1e293b;font-weight:600;">Session ${i}</span>
+                            ${dotsHtml}
+                            <span style="color:${sc===QPP?'#10b981':sc===0?'#ef4444':'#f59e0b'};font-weight:700;">${sc}/${QPP}</span>
+                        </div>`;
+                }
+                goToSummary();
             }
-        
-            function goToPage(n) {
-                document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+            
+            function goToSummary() {
                 document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
-                const targetPage = document.getElementById('page-'+n);
-                const targetBtn = document.getElementById('btn-'+n);
-                if(targetPage) targetPage.classList.add('active');
-                if(targetBtn) targetBtn.classList.add('active');
+                document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+                document.getElementById('scroll-container').scrollTo({ top: 0, behavior: 'smooth' });
             }
-        
-            function scrollNav(x) { 
-                document.getElementById('nav-wrapper').scrollBy({left: x, behavior: 'smooth'}); 
+            
+            function reviewMode() {
+                document.getElementById('summary-section').classList.remove('active');
+                document.getElementById('submit-bar').style.display = 'none';
+                goToPage(1);
             }
-        
-            // Initialize
-            buildUI();
-            goToPage(1);
-        
-            // Restore State
-            updateProgress();
-            if (submitted) {
-                submitQuiz();
+            
+            function resetQuiz() {
+                localStorage.removeItem('quiz_answers_v2');
+                localStorage.removeItem('quiz_submitted');
+                location.reload();
             }
-        
+            
+            function goToPage(num) {
+                document.getElementById('summary-section').classList.remove('active');
+                document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+                document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+            
+                const activeBtn  = document.getElementById(`btn-${num}`);
+                const activePage = document.getElementById(`page-${num}`);
+                activeBtn.classList.add('active');
+                activePage.classList.add('active');
+            
+                nav.scrollTo({
+                    left: activeBtn.offsetLeft - (nav.offsetWidth/2) + (activeBtn.offsetWidth/2),
+                    behavior: 'smooth'
+                });
+                document.getElementById('scroll-container').scrollTo({ top: 0, behavior: 'smooth' });
+            }
+            
+            function scrollNav(val) {
+                nav.scrollBy({ left: val, behavior: 'smooth' });
+            }
+            
+            nav.addEventListener('wheel', e => { e.preventDefault(); nav.scrollLeft += e.deltaY; });
+            
+            restoreState();
+            if(!submitted) goToPage(1);
         </script>
     </body>
 </html>
