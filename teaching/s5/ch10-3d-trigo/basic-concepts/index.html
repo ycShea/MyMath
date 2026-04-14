@@ -216,7 +216,7 @@
     const nav = document.getElementById('nav-wrapper');
     const content = document.getElementById('content-area');
     const displayScore = document.getElementById('display-score');
-
+    
     // 3/ Session persistence logic
     // We store the user's answers and the last submitted score
     let userAnswers = JSON.parse(localStorage.getItem('quiz_answers')) || {};
@@ -226,6 +226,11 @@
         displayScore.innerText = lastScore;
     }
 
+    nav.addEventListener('wheel', (evt) => {
+        evt.preventDefault();
+        nav.scrollLeft += evt.deltaY;
+    });
+    
     // Creating the quiz structure
     for (let i = 1; i <= 10; i++) {
         const btn = document.createElement('button');
