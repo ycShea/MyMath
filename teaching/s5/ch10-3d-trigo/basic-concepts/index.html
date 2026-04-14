@@ -570,7 +570,20 @@
                 const qId = `q_${i}_${j}`;
                 const data = questionContent[qId] || { q: "Question "+i+"."+j, a: "A", options: ["A","B","C","D"], image: "" };
                 
-                const imgHtml = data.image ? `<img src="${data.image}" class="question-image" alt="Question diagram">` : "";
+                // 1. Check if the string exists in your data
+                // 2. Add onerror to hide it if the file itself is missing or 404
+                const imgHtml = data.image ? `<img src="${data.image}" onerror="this.remove()">` : "";
+                
+                // Then include it in your template
+                const questionHtml = `
+                    <div class="question-block">
+                        <h3>${data.q}</h3>
+                        ${imgHtml}
+                        <div class="options">
+                            ${data.options.map(opt => `<button>${opt}</button>`).join('')}
+                        </div>
+                    </div>
+                `;                
 
                 const opts = ['A','B','C','D'].map((opt, idx) => `
                     <label class="option-wrap" id="wrap-${qId}-${opt}">
