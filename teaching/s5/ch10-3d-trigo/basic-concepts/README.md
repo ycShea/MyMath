@@ -3,6 +3,9 @@
 This project features a split-screen layout with a progress-based navigation top bar (1/3 of the page) and a scrollable content area (2/3 of the page).
 https://ycshea.github.io/MyMath/teaching/s5/ch10-3d-trigo/basic-concepts/index.html
 
+Spreadsheet to extract question and answer text
+https://docs.google.com/spreadsheets/d/1yoW0LIFBhdnH1VwdWsf78p9D4YS0KqpHeDeCvOWLXfY/edit?gid=685154664#gid=685154664
+
 ## Features
 * **Progress Navigation:** 10 large buttons occupying the top 1/3 of the screen.
 * **Dynamic Content:** Each button toggles one of 10 pages in the bottom section.
