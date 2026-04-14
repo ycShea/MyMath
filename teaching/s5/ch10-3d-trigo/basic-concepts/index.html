@@ -180,14 +180,6 @@
                 margin-bottom: 16px;
                 line-height: 1.5;
             }
-
-            .question-image {
-                max-width: 100%;
-                height: auto;
-                margin-bottom: 16px;
-                border-radius: 8px;
-                display: block;
-            }
     
             .options-grid {
                 display: grid;
@@ -375,6 +367,7 @@
             }
             .session-row-dot.correct { background: #10b981; }
             .session-row-dot.wrong   { background: #ef4444; }
+            .session-row-dot.answered { background: #3b82f6; }
             .session-row-dot.empty   { background: #e2e8f0; }
     
             /* ── Submit / review buttons ── */
@@ -458,38 +451,56 @@
             const SESSIONS = 10;
             const QPP = 3; // questions per session
             
-            // ── Merged Content Object ──
-            const questionContent = {
-                q_1_1: { q: "What is 3² + 4²?", a: "A", options: ["25", "12", "7", "49"], img: "" },
-                q_1_2: { q: "Simplify: 2x + 3x − x", a: "B", options: ["3x", "4x", "5x", "6x"], img: "" },
-                q_1_3: { q: "What is the slope of y = 3x + 7?", a: "C", options: ["7", "0", "3", "1"], img: "" },
-                q_2_1: { q: "Which value satisfies 2x − 4 = 0?", a: "B", options: ["1", "2", "3", "4"], img: "" },
-                q_2_2: { q: "What is sin(90°)?", a: "D", options: ["0", "0.5", "√3/2", "1"], img: "" },
-                q_2_3: { q: "Expand: (x + 2)²", a: "A", options: ["x² + 4x + 4", "x² + 4", "x² + 2x + 4", "2x + 4"], img: "" },
-                q_3_1: { q: "What is the area of a circle with radius 3?", a: "C", options: ["3π", "6π", "9π", "12π"], img: "" },
-                q_3_2: { q: "Solve: x² = 16", a: "B", options: ["2", "4", "8", "16"], img: "" },
-                q_3_3: { q: "What is log₁₀(1000)?", a: "D", options: ["1", "2", "10", "3"], img: "" },
-                q_4_1: { q: "What is the derivative of x³?", a: "A", options: ["3x²", "x²", "2x", "3x"], img: "" },
-                q_4_2: { q: "Which is a factor of x² − 9?", a: "C", options: ["x - 1", "x + 9", "x - 3", "x + 1"], img: "" },
-                q_4_3: { q: "What is 0!?", a: "B", options: ["0", "1", "undefined", "-1"], img: "" },
-                q_5_1: { q: "What is cos(0°)?", a: "D", options: ["0", "0.5", "√2/2", "1"], img: "" },
-                q_5_2: { q: "If f(x) = 2x + 1, what is f(3)?", a: "A", options: ["7", "6", "5", "8"], img: "" },
-                q_5_3: { q: "What is the perimeter of a square with side 5?", a: "C", options: ["10", "15", "20", "25"], img: "" },
-                q_6_1: { q: "How many degrees in a triangle?", a: "B", options: ["90", "180", "270", "360"], img: "" },
-                q_6_2: { q: "What is √144?", a: "B", options: ["10", "12", "14", "16"], img: "" },
-                q_6_3: { q: "Simplify: (x²)³", a: "D", options: ["x⁵", "2x³", "x²", "x⁶"], img: "" },
-                q_7_1: { q: "What is the y-intercept of y = 4x − 3?", a: "A", options: ["-3", "4", "0", "3"], img: "" },
-                q_7_2: { q: "What is 2³ × 2²?", a: "D", options: ["12", "16", "24", "32"], img: "" },
-                q_7_3: { q: "Which is the quadratic formula?", a: "A", options: ["x = [-b ± √(b²-4ac)]/2a", "a²+b²=c²", "y=mx+c", "A=πr²"], img: "" },
-                q_8_1: { q: "What is the reciprocal of ½?", a: "C", options: ["1", "0.5", "2", "4"], img: "" },
-                q_8_2: { q: "What is the mean of 2, 4, 6, 8?", a: "B", options: ["4", "5", "6", "7"], img: "" },
-                q_8_3: { q: "What is tan(45°)?", a: "C", options: ["0", "0.5", "1", "√3"], img: "" },
-                q_9_1: { q: "What is the HCF of 12 and 18?", a: "D", options: ["2", "3", "4", "6"], img: "" },
-                q_9_2: { q: "Solve: 3(x − 2) = 9", a: "A", options: ["5", "3", "2", "6"], img: "" },
-                q_9_3: { q: "What is the volume of a cube with side 3?", a: "B", options: ["9", "27", "81", "12"], img: "" },
-                q_10_1: { q: "What is the sum of interior angles of a pentagon?", a: "A", options: ["540", "360", "720", "180"], img: "" },
-                q_10_2: { q: "Which rule states a² + b² = c²?", a: "C", options: ["Sine Rule", "Cosine Rule", "Pythagoras", "Leibniz"], img: "" },
-                q_10_3: { q: "What is ∫x dx?", a: "D", options: ["x", "1", "x²", "½x² + C"], img: "" },
+            // ── Answer key ──
+            const answerKey = {
+                q_1_1:"A", q_1_2:"B", q_1_3:"C",
+                q_2_1:"B", q_2_2:"D", q_2_3:"A",
+                q_3_1:"C", q_3_2:"B", q_3_3:"D",
+                q_4_1:"A", q_4_2:"C", q_4_3:"B",
+                q_5_1:"D", q_5_2:"A", q_5_3:"C",
+                q_6_1:"B", q_6_2:"B", q_6_3:"D",
+                q_7_1:"A", q_7_2:"D", q_7_3:"A",
+                q_8_1:"C", q_8_2:"B", q_8_3:"C",
+                q_9_1:"D", q_9_2:"A", q_9_3:"B",
+                q_10_1:"A", q_10_2:"C", q_10_3:"D",
+            };
+            
+            // Question texts
+            const questionTexts = {
+                q_1_1: "What is 3² + 4²?",
+                q_1_2: "Simplify: 2x + 3x − x",
+                q_1_3: "What is the slope of y = 3x + 7?",
+                q_2_1: "Which value satisfies 2x − 4 = 0?",
+                q_2_2: "What is sin(90°)?",
+                q_2_3: "Expand: (x + 2)²",
+                q_3_1: "What is the area of a circle with radius 3?",
+                q_3_2: "Solve: x² = 16",
+                q_3_3: "What is log₁₀(1000)?",
+                q_4_1: "What is the derivative of x³?",
+                q_4_2: "Which is a factor of x² − 9?",
+                q_4_3: "What is 0!?",
+                q_5_1: "What is cos(0°)?",
+                q_5_2: "If f(x) = 2x + 1, what is f(3)?",
+                q_5_3: "What is the perimeter of a square with side 5?",
+                q_6_1: "How many degrees in a triangle?",
+                q_6_2: "What is √144?",
+                q_6_3: "Simplify: (x²)³",
+                q_7_1: "What is the y-intercept of y = 4x − 3?",
+                q_7_2: "What is 2³ × 2²?",
+                q_7_3: "Which is the quadratic formula?",
+                q_8_1: "What is the reciprocal of ½?",
+                q_8_2: "What is the mean of 2, 4, 6, 8?",
+                q_8_3: "What is tan(45°)?",
+                q_9_1: "What is the HCF of 12 and 18?",
+                q_9_2: "Solve: 3(x − 2) = 9",
+                q_9_3: "What is the volume of a cube with side 3?",
+                q_10_1: "What is the sum of interior angles of a pentagon?",
+                q_10_2: "Which rule states a² + b² = c²?",
+                q_10_3: "What is ∫x dx?",
+            };
+            
+            const optionTexts = {
+                A: "Option A", B: "Option B", C: "Option C", D: "Option D"
             };
             
             let userAnswers = JSON.parse(localStorage.getItem('quiz_answers_v2')) || {};
@@ -500,6 +511,7 @@
             
             // ── Build UI ──
             for (let i = 1; i <= SESSIONS; i++) {
+                // Nav button
                 const btn = document.createElement('button');
                 btn.className = 'nav-btn';
                 btn.id = `btn-${i}`;
@@ -510,6 +522,7 @@
                 btn.innerHTML = `${i}${dotsHtml}`;
                 nav.appendChild(btn);
             
+                // Page
                 const page = document.createElement('div');
                 page.className = 'page';
                 page.id = `page-${i}`;
@@ -522,47 +535,38 @@
             
                 for (let j = 1; j <= QPP; j++) {
                     const qId = `q_${i}_${j}`;
-                    const data = questionContent[qId];
-                    const labels = ['A','B','C','D'];
-                    const opts = labels.map((opt, idx) => `
+                    const opts = ['A','B','C','D'].map(opt => `
                         <label class="option-wrap" id="wrap-${qId}-${opt}">
                             <input type="radio" name="${qId}" value="${opt}"
                                 onchange="selectAnswer('${qId}','${opt}')">
                             <div class="option-label" id="label-${qId}-${opt}">
                                 <div class="option-letter">${opt}</div>
-                                <span>${data.options[idx]}</span>
+                                <span>${opt}: ${optionTexts[opt]}</span>
                             </div>
                         </label>`).join('');
             
-                    let imgHtml = data.img ? `<img src="${data.img}" class="question-image" alt="Question Image">` : '';
-
                     page.innerHTML += `
                         <div class="question-block" id="block-${qId}">
                             <div style="display:flex; align-items:flex-start; gap:10px; margin-bottom:16px;">
-                                <div class="question-text" style="flex:1">Q${j}. ${data.q}</div>
+                                <div class="question-text" style="flex:1">Q${j}. ${questionTexts[qId] || 'Question ' + i + '.' + j}</div>
                                 <div class="question-result" id="result-${qId}"></div>
                             </div>
-                            ${imgHtml}
                             <div class="options-grid">${opts}</div>
                             <div class="hint-line" id="hint-${qId}">
-                                ✓ Correct answer: <strong>${data.a}</strong>
+                                ✓ Correct answer: <strong>${answerKey[qId]}</strong>
                             </div>
                         </div>`;
                 }
                 content.appendChild(page);
             }
             
+            // ── Restore state on load ──
             function restoreState() {
                 for (const qId in userAnswers) {
                     if (submitted) {
-                        applyAnswerUI(qId, userAnswers[qId], true);
+                        applyAnswerUI(qId, userAnswers[qId]);
                     } else {
-                        // Just highlight selection before submission
-                        const val = userAnswers[qId];
-                        const lbl = document.getElementById(`label-${qId}-${val}`);
-                        if(lbl) lbl.classList.add('selected');
-                        const radio = document.querySelector(`input[name="${qId}"][value="${val}"]`);
-                        if(radio) radio.checked = true;
+                        applySelectionUI(qId, userAnswers[qId]);
                     }
                 }
                 for (let i = 1; i <= SESSIONS; i++) updateSessionUI(i);
@@ -570,25 +574,32 @@
                 if (submitted) enterSubmittedMode();
             }
             
+            // ── Select answer ──
             function selectAnswer(qId, val) {
                 if (submitted) return;
                 userAnswers[qId] = val;
                 localStorage.setItem('quiz_answers_v2', JSON.stringify(userAnswers));
                 
-                // Clear previous selections in UI
-                ['A','B','C','D'].forEach(opt => {
-                    document.getElementById(`label-${qId}-${opt}`).classList.remove('selected');
-                });
-                document.getElementById(`label-${qId}-${val}`).classList.add('selected');
-
+                // Just highlight selection, don't show correct/wrong yet
+                applySelectionUI(qId, val);
+                
                 const parts = qId.split('_');
                 updateSessionUI(parseInt(parts[1]));
                 updateProgress();
             }
+
+            // Visual for just choosing an option
+            function applySelectionUI(qId, val) {
+                ['A','B','C','D'].forEach(opt => {
+                    const lbl = document.getElementById(`label-${qId}-${opt}`);
+                    if (!lbl) return;
+                    lbl.classList.toggle('selected', opt === val);
+                });
+            }
             
-            function applyAnswerUI(qId, val, showResults) {
-                const data = questionContent[qId];
-                const correct = data.a;
+            // Visual for checking correctness (After submit)
+            function applyAnswerUI(qId, val) {
+                const correct = answerKey[qId];
                 const isRight = val === correct;
                 const block   = document.getElementById(`block-${qId}`);
                 const result  = document.getElementById(`result-${qId}`);
@@ -597,7 +608,8 @@
                 ['A','B','C','D'].forEach(opt => {
                     const lbl = document.getElementById(`label-${qId}-${opt}`);
                     if (!lbl) return;
-                    lbl.className = 'option-label locked';
+                    lbl.className = 'option-label locked'; // Disable further clicking
+                    
                     if (opt === val) {
                         lbl.classList.add(isRight ? 'correct-ans' : 'wrong-ans');
                     }
@@ -606,9 +618,14 @@
                     }
                 });
             
+                // Result icon
                 result.className = `question-result show ${isRight ? 'tick' : 'cross'}`;
                 result.textContent = isRight ? '✓' : '✗';
+            
+                // Hint
                 if (!isRight) hint.classList.add('show');
+            
+                // Block border
                 if (block) block.classList.add(isRight ? 'all-correct' : 'has-wrong');
             }
             
@@ -619,22 +636,21 @@
                     const dot = document.getElementById(`dot-${i}-${j}`);
                     if (userAnswers[qId] !== undefined) {
                         answered++;
-                        const isRight = userAnswers[qId] === questionContent[qId].a;
-                        if (isRight) correct++;
-                        
                         if (submitted) {
-                            dot.className = `nav-dot ${isRight ? 'correct' : 'wrong'}`;
+                            const isRight = userAnswers[qId] === answerKey[qId];
+                            if (isRight) correct++;
+                            if (dot) dot.className = `nav-dot ${isRight ? 'correct' : 'wrong'}`;
                         } else {
-                            dot.className = 'nav-dot answered';
+                            if (dot) dot.className = 'nav-dot answered';
                         }
                     } else {
-                        dot.className = 'nav-dot';
+                        if (dot) dot.className = 'nav-dot';
                     }
                 }
             
                 const badge = document.getElementById(`badge-${i}`);
                 if (!badge) return;
-                
+
                 if (!submitted) {
                     badge.textContent = `${answered} / ${QPP} answered`;
                     badge.className = 'session-badge';
@@ -658,15 +674,19 @@
                 document.getElementById('progress-bar').style.width = `${(answered / total) * 100}%`;
             }
             
+            // ── Submit ──
             function submitQuiz() {
                 submitted = true;
                 localStorage.setItem('quiz_submitted', 'true');
                 
-                // Refresh all question UIs to show answers
-                for (const qId in questionContent) {
-                    applyAnswerUI(qId, userAnswers[qId], true);
+                // Reveal all answers
+                for (let i = 1; i <= SESSIONS; i++) {
+                    for (let j = 1; j <= QPP; j++) {
+                        const qId = `q_${i}_${j}`;
+                        applyAnswerUI(qId, userAnswers[qId]);
+                    }
+                    updateSessionUI(i);
                 }
-                for (let i = 1; i <= SESSIONS; i++) updateSessionUI(i);
                 
                 enterSubmittedMode();
             }
@@ -680,7 +700,7 @@
                     for (let j = 1; j <= QPP; j++) {
                         const qId = `q_${i}_${j}`;
                         if (!userAnswers[qId]) skipped++;
-                        else if (userAnswers[qId] === questionContent[qId].a) correct++;
+                        else if (userAnswers[qId] === answerKey[qId]) correct++;
                         else wrong++;
                     }
                 }
@@ -692,6 +712,7 @@
                 document.getElementById('stat-wrong').textContent    = wrong;
                 document.getElementById('stat-skipped').textContent  = skipped;
             
+                // Session breakdown
                 const breakdown = document.getElementById('session-breakdown');
                 breakdown.innerHTML = '';
                 for (let i = 1; i <= SESSIONS; i++) {
@@ -701,10 +722,7 @@
                         const qId = `q_${i}_${j}`;
                         const ans = userAnswers[qId];
                         let cls = 'empty';
-                        if (ans) { 
-                            cls = ans === questionContent[qId].a ? 'correct' : 'wrong'; 
-                            if (cls === 'correct') sc++; 
-                        }
+                        if (ans) { cls = ans === answerKey[qId] ? 'correct' : 'wrong'; if (cls === 'correct') sc++; }
                         dotsHtml += `<div class="session-row-dot ${cls}"></div>`;
                     }
                     dotsHtml += '</div>';
@@ -715,6 +733,7 @@
                             <span style="color:${sc===QPP?'#10b981':sc===0?'#ef4444':'#f59e0b'};font-weight:700;">${sc}/${QPP}</span>
                         </div>`;
                 }
+            
                 goToSummary();
             }
             
@@ -736,6 +755,7 @@
                 location.reload();
             }
             
+            // ── Navigation ──
             function goToPage(num) {
                 document.getElementById('summary-section').classList.remove('active');
                 document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
@@ -760,7 +780,7 @@
             nav.addEventListener('wheel', e => { e.preventDefault(); nav.scrollLeft += e.deltaY; });
             
             restoreState();
-            if(!submitted) goToPage(1);
+            goToPage(1);
         </script>
     </body>
 </html>
