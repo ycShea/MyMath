@@ -45,14 +45,11 @@
             -ms-overflow-style: none;
         }
 
-        .nav-wrapper::-webkit-scrollbar {
-            display: none;
-        }
+        .nav-wrapper::-webkit-scrollbar { display: none; }
 
         .nav-btn {
             flex: 0 0 20%;
             height: 100%;
-            margin: 0 5px;
             font-size: 3.5rem;
             font-weight: 900;
             cursor: pointer;
@@ -66,55 +63,32 @@
             transition: all 0.5s cubic-bezier(0.2, 1, 0.3, 1);
         }
 
-        .nav-btn:hover {
-            -webkit-text-stroke: 1px rgba(255, 255, 255, 1);
-            filter: drop-shadow(0 0 5px rgba(255, 255, 255, 0.2));
-        }
-
         .nav-btn.active {
             -webkit-text-stroke: 1.5px #60a5fa;
             transform: scale(1.15);
             filter: drop-shadow(0 0 8px rgba(96, 165, 250, 0.5));
         }
 
-        /* Bright Pale Arrows */
         .arrow {
             position: absolute;
             top: 50%;
             transform: translateY(-50%);
             width: 45px;
             height: 45px;
-            /* Pale, high-contrast background */
             background: #f1f5f9; 
-            /* Dark icon for visibility against pale background */
             color: #0f172a; 
             border: 2px solid #fff;
             border-radius: 50%;
             cursor: pointer;
             z-index: 10;
             font-size: 1.8rem;
-            font-weight: bold;
             display: flex;
             align-items: center;
             justify-content: center;
-            transition: all 0.3s ease;
             box-shadow: 0 0 15px rgba(255, 255, 255, 0.3);
         }
 
-        .arrow:hover { 
-            background: #fff;
-            transform: translateY(-50%) scale(1.1);
-            box-shadow: 0 0 20px rgba(255, 255, 255, 0.5);
-        }
-
-        .arrow:active {
-            transform: translateY(-50%) scale(0.95);
-        }
-
-        .arrow-left { left: 12px; }
-        .arrow-right { right: 12px; }
-
-        /* Bottom 90% Content Area */
+        /* Bottom 90% Content */
         .bottom-section {
             height: 90vh;
             overflow-y: auto;
@@ -130,14 +104,7 @@
             animation: slideUp 0.7s cubic-bezier(0.16, 1, 0.3, 1);
         }
 
-        @keyframes slideUp {
-            0% { opacity: 0; transform: translateY(15px); }
-            100% { opacity: 1; transform: translateY(0); }
-        }
-
-        .page.active {
-            display: block;
-        }
+        .page.active { display: block; }
 
         .question-block {
             background: #fff;
@@ -148,32 +115,64 @@
             border: 1px solid #e2e8f0;
         }
 
-        .img-placeholder {
-            width: 100%;
-            background-color: #f1f5f9;
-            margin-bottom: 25px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: #94a3b8;
-            border-radius: 12px;
-            font-weight: 500;
+        .score-display {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: #60a5fa;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 50px;
+            font-weight: bold;
+            box-shadow: 0 4px 15px rgba(96, 165, 250, 0.4);
+            z-index: 100;
         }
 
-        .text {
-            font-size: 1.1rem;
-            line-height: 1.7;
-            color: #334155;
+        /* Multiple Choice Styles */
+        .options-container {
+            margin-top: 15px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
         }
+
+        .option-label {
+            padding: 12px 15px;
+            border: 2px solid #e2e8f0;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: block;
+        }
+
+        .option-label:hover { background-color: #f1f5f9; }
+
+        input[type="radio"] { display: none; }
+
+        input[type="radio"]:checked + .option-label {
+            border-color: #60a5fa;
+            background-color: #eff6ff;
+            font-weight: 600;
+        }
+
+        @keyframes slideUp {
+            0% { opacity: 0; transform: translateY(15px); }
+            100% { opacity: 1; transform: translateY(0); }
+        }
+
+        .arrow-left { left: 12px; }
+        .arrow-right { right: 12px; }
     </style>
 </head>
 <body>
 
+<div class="score-display">Total Score: <span id="total-score">0</span></div>
+
 <div class="container">
     <div class="top-section">
-        <button class="arrow arrow-left" onclick="scrollNav(-400)" aria-label="Scroll Left">&#8249;</button>
+        <button class="arrow arrow-left" onclick="scrollNav(-400)">&#8249;</button>
         <div class="nav-wrapper" id="nav-wrapper"></div>
-        <button class="arrow arrow-right" onclick="scrollNav(400)" aria-label="Scroll Right">&#8250;</button>
+        <button class="arrow arrow-right" onclick="scrollNav(400)">&#8250;</button>
     </div>
     <main class="bottom-section" id="content-area"></main>
 </div>
@@ -181,6 +180,18 @@
 <script>
     const nav = document.getElementById('nav-wrapper');
     const content = document.getElementById('content-area');
+    const scoreText = document.getElementById('total-score');
+
+    // Load saved answers from localStorage
+    let userAnswers = JSON.parse(localStorage.getItem('quiz_answers')) || {};
+
+    function updateScore() {
+        let score = 0;
+        // Logic: 1 point for every question answered (adjust for correct/incorrect as needed)
+        score = Object.keys(userAnswers).length;
+        scoreText.innerText = score;
+        localStorage.setItem('quiz_answers', JSON.stringify(userAnswers));
+    }
 
     for (let i = 1; i <= 10; i++) {
         const btn = document.createElement('button');
@@ -194,24 +205,36 @@
         page.className = 'page';
         page.id = `page-${i}`;
         
-        for (let j = 1; j <= 8; j++) {
-            const h = Math.floor(Math.random() * 100) + 300;
+        for (let j = 1; j <= 3; j++) { // Fewer questions per page for clarity
+            const qId = `q_${i}_${j}`;
+            const savedVal = userAnswers[qId] || "";
+
             page.innerHTML += `
                 <div class="question-block">
-                    <div class="img-placeholder" style="height:${h}px">Asset ${i}.${j}</div>
-                    <div class="text">
-                        <strong>Enhanced Interface ${i}</strong><br>
-                        Navigation utilizes high-contrast pale arrows for visibility on dark backgrounds.
+                    <div style="font-size: 1.2rem; margin-bottom: 15px; font-weight: 600;">
+                        Question ${i}.${j}: Select the correct option?
+                    </div>
+                    <div class="options-container">
+                        ${['A', 'B', 'C'].map(opt => `
+                            <label>
+                                <input type="radio" name="${qId}" value="${opt}" 
+                                    ${savedVal === opt ? 'checked' : ''} 
+                                    onchange="saveAnswer('${qId}', '${opt}')">
+                                <span class="option-label">Option ${opt}</span>
+                            </label>
+                        `).join('')}
                     </div>
                 </div>`;
         }
         content.appendChild(page);
     }
 
-    function goToPage(num) {
-        const currentActiveBtn = document.querySelector('.nav-btn.active');
-        if (currentActiveBtn && currentActiveBtn.id === `btn-${num}`) return;
+    function saveAnswer(id, val) {
+        userAnswers[id] = val;
+        updateScore();
+    }
 
+    function goToPage(num) {
         document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
         document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
 
@@ -230,6 +253,7 @@
         nav.scrollBy({ left: val, behavior: 'smooth' });
     }
 
+    updateScore();
     goToPage(1);
 </script>
 
