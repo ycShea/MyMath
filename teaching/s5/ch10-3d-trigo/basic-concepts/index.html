@@ -212,6 +212,20 @@
     const nav = document.getElementById('nav-wrapper');
     const content = document.getElementById('content-area');
     const displayScore = document.getElementById('display-score');
+
+    // 1. FULL ANSWER KEY FOR ALL 30 QUESTIONS
+    const answerKey = {
+        "q_1_1": "A", "q_1_2": "B", "q_1_3": "C",
+        "q_2_1": "B", "q_2_2": "D", "q_2_3": "A",
+        "q_3_1": "C", "q_3_2": "B", "q_3_3": "D",
+        "q_4_1": "A", "q_4_2": "C", "q_4_3": "B",
+        "q_5_1": "D", "q_5_2": "A", "q_5_3": "C",
+        "q_6_1": "B", "q_6_2": "B", "q_6_3": "D",
+        "q_7_1": "A", "q_7_2": "D", "q_7_3": "A",
+        "q_8_1": "C", "q_8_2": "B", "q_8_3": "C",
+        "q_9_1": "D", "q_9_2": "A", "q_9_3": "B",
+        "q_10_1": "A", "q_10_2": "C", "q_10_3": "D",
+    };
     
     // Load state
     let userAnswers = JSON.parse(localStorage.getItem('quiz_answers')) || {};
@@ -272,10 +286,17 @@
     }
 
     function calculateFinalScore() {
+        const pointsPerQuestion = 1;
+        // Example scoring: 1 points per answer (In a real quiz, you'd check against a key)
         // Independent calculation: only counts what is currently in userAnswers
         // This is NOT cumulative with previous sessions
-        const totalAnswered = Object.keys(userAnswers).length;
-        const currentScore = totalAnswered * 10; 
+        let currentScore = 0;
+        // Loop through the answer key and compare with user selections
+        for (const questionId in answerKey) {
+            if (userAnswers[questionId] === answerKey[questionId]) {
+                currentScore += pointsPerQuestion;
+            }
+        }
         
         // Update UI and persistent storage
         displayScore.innerText = currentScore;
