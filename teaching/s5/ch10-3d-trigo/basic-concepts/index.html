@@ -37,7 +37,7 @@
         .nav-wrapper {
             display: flex;
             overflow-x: auto;
-            scroll-behavior: smooth; 
+            scroll-behavior: smooth;
             width: 100%;
             height: 100%;
             align-items: center;
@@ -77,8 +77,8 @@
             transform: translateY(-50%);
             width: 45px;
             height: 45px;
-            background: #f1f5f9; 
-            color: #0f172a; 
+            background: #f1f5f9;
+            color: #0f172a;
             border: 2px solid #fff;
             border-radius: 50%;
             cursor: pointer;
@@ -90,6 +90,10 @@
             box-shadow: 0 0 15px rgba(255, 255, 255, 0.3);
         }
 
+        .arrow-left  { left: 12px; }
+        .arrow-right { right: 12px; }
+
+        /* Bottom 90% Content Area */
         .bottom-section {
             height: 90vh;
             overflow-y: auto;
@@ -106,6 +110,23 @@
         }
 
         .page.active { display: block; }
+
+        /* Session score badge */
+        .session-score {
+            position: sticky;
+            top: 0;
+            z-index: 10;
+            background: #1e293b;
+            color: white;
+            padding: 8px 20px;
+            border-radius: 50px;
+            font-weight: bold;
+            display: inline-block;
+            margin-bottom: 20px;
+            font-size: 1rem;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+            transition: background 0.4s ease;
+        }
 
         .question-block {
             background: #fff;
@@ -178,16 +199,13 @@
             font-weight: bold;
             box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
             z-index: 100;
-            border: 1px solid rgba(255,255,255,0.1);
+            border: 1px solid rgba(255, 255, 255, 0.1);
         }
 
         @keyframes slideUp {
-            0% { opacity: 0; transform: translateY(15px); }
+            0%   { opacity: 0; transform: translateY(15px); }
             100% { opacity: 1; transform: translateY(0); }
         }
-
-        .arrow-left { left: 12px; }
-        .arrow-right { right: 12px; }
     </style>
 </head>
 <body>
@@ -209,11 +227,16 @@
 </div>
 
 <script>
-    const nav = document.getElementById('nav-wrapper');
-    const content = document.getElementById('content-area');
+    const nav          = document.getElementById('nav-wrapper');
+    const content      = document.getElementById('content-area');
     const displayScore = document.getElementById('display-score');
 
-    // 1. FULL ANSWER KEY FOR ALL 30 QUESTIONS
+    const QUESTIONS_PER_SESSION = 3;
+    const TOTAL_SESSIONS        = 10;
+
+    // ==========================================
+    // ANSWER KEY
+    // ==========================================
     const answerKey = {
         "q_1_1": "A", "q_1_2": "B", "q_1_3": "C",
         "q_2_1": "B", "q_2_2": "D", "q_2_3": "A",
@@ -226,49 +249,50 @@
         "q_9_1": "D", "q_9_2": "A", "q_9_3": "B",
         "q_10_1": "A", "q_10_2": "C", "q_10_3": "D",
     };
-    
-    // Load state
-    let userAnswers = JSON.parse(localStorage.getItem('quiz_answers')) || {};
+
+    // ==========================================
+    // LOAD SAVED STATE
+    // ==========================================
+    let userAnswers   = JSON.parse(localStorage.getItem('quiz_answers')) || {};
     let lastSavedScore = localStorage.getItem('quiz_last_submitted_score') || "0";
 
-    function initDisplay() {
-        // Show the persistent score from the last click of "Submit"
-        displayScore.innerText = lastSavedScore;
-    }
-
-    // Mouse wheel scrolling for top nav
-    nav.addEventListener('wheel', (evt) => {
-        evt.preventDefault();
-        nav.scrollLeft += evt.deltaY;
-    });
-    
-    // Generating the quiz
-    for (let i = 1; i <= 10; i++) {
+    // ==========================================
+    // BUILD QUIZ PAGES
+    // ==========================================
+    for (let i = 1; i <= TOTAL_SESSIONS; i++) {
+        // --- Nav button ---
         const btn = document.createElement('button');
         btn.className = 'nav-btn';
-        btn.id = `btn-${i}`;
+        btn.id        = `btn-${i}`;
         btn.innerText = i;
-        btn.onclick = () => goToPage(i);
+        btn.onclick   = () => goToPage(i);
         nav.appendChild(btn);
 
-        const page = document.createElement('div');
+        // --- Page ---
+        const page  = document.createElement('div');
         page.className = 'page';
-        page.id = `page-${i}`;
-        
-        for (let j = 1; j <= 3; j++) {
-            const qId = `q_${i}_${j}`;
+        page.id        = `page-${i}`;
+
+        // Session score badge (added first, above questions)
+        page.innerHTML += `<div class="session-score" id="score-${i}">
+            Session ${i}: 0 / ${QUESTIONS_PER_SESSION}
+        </div>`;
+
+        // Questions
+        for (let j = 1; j <= QUESTIONS_PER_SESSION; j++) {
+            const qId      = `q_${i}_${j}`;
             const savedVal = userAnswers[qId] || "";
 
             page.innerHTML += `
                 <div class="question-block">
-                    <div style="font-size: 1.2rem; margin-bottom: 20px; font-weight: 600; color: #1e293b;">
+                    <div style="font-size:1.2rem; margin-bottom:20px; font-weight:600; color:#1e293b;">
                         Question ${i}.${j}: What is the correct answer?
                     </div>
                     <div class="options-container">
                         ${['A', 'B', 'C', 'D'].map(opt => `
                             <label>
-                                <input type="radio" name="${qId}" value="${opt}" 
-                                    ${savedVal === opt ? 'checked' : ''} 
+                                <input type="radio" name="${qId}" value="${opt}"
+                                    ${savedVal === opt ? 'checked' : ''}
                                     onchange="saveAnswer('${qId}', '${opt}')">
                                 <span class="option-label">Option ${opt}</span>
                             </label>
@@ -276,40 +300,64 @@
                     </div>
                 </div>`;
         }
+
         content.appendChild(page);
     }
 
+    // ==========================================
+    // SAVE ANSWER + UPDATE SESSION SCORE LIVE
+    // ==========================================
     function saveAnswer(id, val) {
         userAnswers[id] = val;
-        // Save answers so choices persist on refresh, but this DOES NOT update the visible score
         localStorage.setItem('quiz_answers', JSON.stringify(userAnswers));
+
+        // Recalculate score for this session only
+        const sessionNum = id.split('_')[1];   // "q_3_2" → "3"
+        updateSessionBadge(sessionNum);
     }
 
-    function calculateFinalScore() {
-        const pointsPerQuestion = 1;
-        // Example scoring: 1 points per answer (In a real quiz, you'd check against a key)
-        // Independent calculation: only counts what is currently in userAnswers
-        // This is NOT cumulative with previous sessions
-        let currentScore = 0;
-        // Loop through the answer key and compare with user selections
-        for (const questionId in answerKey) {
-            if (userAnswers[questionId] === answerKey[questionId]) {
-                currentScore += pointsPerQuestion;
-            }
+    function updateSessionBadge(sessionNum) {
+        let sessionScore = 0;
+        for (let j = 1; j <= QUESTIONS_PER_SESSION; j++) {
+            const qId = `q_${sessionNum}_${j}`;
+            if (userAnswers[qId] === answerKey[qId]) sessionScore++;
         }
-        
-        // Update UI and persistent storage
-        displayScore.innerText = currentScore;
-        localStorage.setItem('quiz_last_submitted_score', currentScore);
-        
-        alert("Quiz Submitted! Your current score based on selections is: " + currentScore);
+
+        const badge = document.getElementById(`score-${sessionNum}`);
+        if (badge) {
+            badge.innerText = `Session ${sessionNum}: ${sessionScore} / ${QUESTIONS_PER_SESSION}`;
+            // Turn green on perfect score, dark otherwise
+            badge.style.background = sessionScore === QUESTIONS_PER_SESSION
+                ? '#059669'
+                : '#1e293b';
+        }
     }
 
+    // ==========================================
+    // SUBMIT — CALCULATE TOTAL SCORE
+    // ==========================================
+    function calculateFinalScore() {
+        let totalScore = 0;
+        for (const qId in answerKey) {
+            if (userAnswers[qId] === answerKey[qId]) totalScore++;
+        }
+
+        displayScore.innerText = totalScore;
+        localStorage.setItem('quiz_last_submitted_score', totalScore);
+        alert(`Quiz Submitted! Your score: ${totalScore} / ${TOTAL_SESSIONS * QUESTIONS_PER_SESSION}`);
+    }
+
+    // ==========================================
+    // NAVIGATION
+    // ==========================================
     function goToPage(num) {
+        const currentActiveBtn = document.querySelector('.nav-btn.active');
+        if (currentActiveBtn && currentActiveBtn.id === `btn-${num}`) return;
+
         document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
         document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
 
-        const activeBtn = document.getElementById(`btn-${num}`);
+        const activeBtn  = document.getElementById(`btn-${num}`);
         const activePage = document.getElementById(`page-${num}`);
 
         activeBtn.classList.add('active');
@@ -324,7 +372,23 @@
         nav.scrollBy({ left: val, behavior: 'smooth' });
     }
 
-    // Initialize UI on page load
+    // Mouse wheel scrolling on nav bar
+    nav.addEventListener('wheel', (evt) => {
+        evt.preventDefault();
+        nav.scrollLeft += evt.deltaY;
+    });
+
+    // ==========================================
+    // INIT — restore badges from saved answers
+    // ==========================================
+    function initDisplay() {
+        displayScore.innerText = lastSavedScore;
+
+        for (let i = 1; i <= TOTAL_SESSIONS; i++) {
+            updateSessionBadge(i);
+        }
+    }
+
     initDisplay();
     goToPage(1);
 </script>
