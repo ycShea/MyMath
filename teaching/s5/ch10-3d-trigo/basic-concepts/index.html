@@ -542,7 +542,7 @@
             btn.id = `btn-${i}`;
             btn.onclick = () => goToPage(i);
             let dotsHtml = '<div class="nav-dots">';
-            for (let j = 1; j <= QPP[i]; j++) dotsHtml += `<div class="nav-dot" id="dot-${i}-${j}"></div>`;
+            for (let j = 1; j <= QPP[i - 1]; j++) dotsHtml += `<div class="nav-dot" id="dot-${i}-${j}"></div>`;
             dotsHtml += '</div>';
             btn.innerHTML = `${i}${dotsHtml}`;
             nav.appendChild(btn);
@@ -555,10 +555,10 @@
             page.innerHTML = `
                 <div class="session-header">
                     <div class="session-title">Session ${i}</div>
-                    <div class="session-badge" id="badge-${i}">0 / ${QPP[i]}</div>
+                    <div class="session-badge" id="badge-${i}">0 / ${QPP[i - 1]}</div>
                 </div>`;
         
-            for (let j = 1; j <= QPP[i]; j++) {
+            for (let j = 1; j <= QPP[i - 1]; j++) {
                 const qId = `q_${i}_${j}`;
                 const data = questionContent[qId] || { q: "Question "+i+"."+j, a: "A", options: ["A","B","C","D"], image: "" };
                 
@@ -691,7 +691,7 @@
         }
         function updateSessionUI(i) {
             let correct = 0, answered = 0;
-            for (let j = 1; j <= QPP[i]; j++) {
+            for (let j = 1; j <= QPP[i - 1]; j++) {
                 const qId = `q_${i}_${j}`;
                 const dot = document.getElementById(`dot-${i}-${j}`);
                 const data = questionContent[qId];
@@ -710,16 +710,16 @@
             const badge = document.getElementById(`badge-${i}`);
             if (!badge) return;
             if (answered === 0) {
-                badge.textContent = `0 / ${QPP[i]}`;
+                badge.textContent = `0 / ${QPP[i - 1]}`;
                 badge.className = 'session-badge';
-            } else if (correct === QPP[i]) {
-                badge.textContent = `${correct} / ${QPP[i]} ✓`;
+            } else if (correct === QPP[i - 1]) {
+                badge.textContent = `${correct} / ${QPP[i - 1]} ✓`;
                 badge.className = 'session-badge perfect';
             } else if (correct > 0) {
-                badge.textContent = `${correct} / ${QPP[i]}`;
+                badge.textContent = `${correct} / ${QPP[i - 1]}`;
                 badge.className = 'session-badge partial';
             } else {
-                badge.textContent = `${correct} / ${QPP[i]}`;
+                badge.textContent = `${correct} / ${QPP[i - 1]}`;
                 badge.className = 'session-badge wrong';
             }
         }
@@ -734,7 +734,7 @@
         // ── Submit ──
         function submitSession(i) {
             setSessionSubmitted(i, true);
-            for (let j = 1; j <= QPP[i]; j++) {
+            for (let j = 1; j <= QPP[i - 1]; j++) {
                 const qId = 'q_' + i + '_' + j;
                 if (userAnswers[qId]) applyAnswerUI(qId, userAnswers[qId], true);
             }
@@ -751,7 +751,7 @@
             let correct = 0, wrong = 0, skipped = 0;
             for (let i = 1; i <= SESSIONS; i++) {
                 if (!getSessionSubmitted(i)) continue;
-                for (let j = 1; j <= QPP[i]; j++) {
+                for (let j = 1; j <= QPP[i - 1]; j++) {
                     const qId = 'q_' + i + '_' + j;
                     const ans = userAnswers[qId];
                     const data = questionContent[qId];
@@ -772,7 +772,7 @@
             for (let i = 1; i <= SESSIONS; i++) {
                 const submitted = getSessionSubmitted(i);
                 let sc = 0, dotsHtml = '<div class="session-row-dots">';
-                for (let j = 1; j <= QPP[i]; j++) {
+                for (let j = 1; j <= QPP[i - 1]; j++) {
                     const qId = 'q_' + i + '_' + j;
                     const ans = userAnswers[qId];
                     const data = questionContent[qId];
@@ -786,7 +786,7 @@
                 }
                 dotsHtml += '</div>';
                 const label = submitted
-                    ? '<span style="color:' + (sc===QPP[i]?'#10b981':sc===0?'#ef4444':'#f59e0b') + ';font-weight:700;">' + sc + '/' + QPP[i] + '</span>'
+                    ? '<span style="color:' + (sc===QPP[i - 1]?'#10b981':sc===0?'#ef4444':'#f59e0b') + ';font-weight:700;">' + sc + '/' + QPP[i - 1] + '</span>'
                     : '<span style="color:#94a3b8;font-size:0.8rem;">not submitted</span>';
                 breakdown.innerHTML += '<div class="session-row"><span style="color:#1e293b;font-weight:600;">Session ' + i + '</span>' + dotsHtml + label + '</div>';
             }
