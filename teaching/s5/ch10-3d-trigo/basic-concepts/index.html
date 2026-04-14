@@ -49,9 +49,8 @@
 
         .nav-btn {
             flex: 0 0 20%;
-            height: 80%;
-            margin: 0 5px;
-            font-size: 3rem;
+            height: 100%;
+            font-size: 3.5rem;
             font-weight: 900;
             cursor: pointer;
             border: none;
@@ -59,19 +58,18 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            border-radius: 15px;
             color: transparent;
             -webkit-text-stroke: 1px rgba(255, 255, 255, 0.6);
-            transition: all 0.4s cubic-bezier(0.2, 1, 0.3, 1);
+            transition: all 0.5s cubic-bezier(0.2, 1, 0.3, 1);
         }
 
-        /* 1/ Highlighted with Background when active */
         .nav-btn.active {
-            color: #fff; /* Fill the number with white */
-            background-color: #3b82f6; /* Blue background */
-            -webkit-text-stroke: 0px; /* Remove outline */
-            transform: scale(1.05);
-            box-shadow: 0 0 20px rgba(59, 130, 246, 0.5);
+            -webkit-text-stroke: 1.5px #60a5fa;
+            transform: scale(1.15);
+            filter: drop-shadow(0 0 8px rgba(96, 165, 250, 0.5));
+            /* Background highlight only */
+            background-color: rgba(96, 165, 250, 0.2); /* Light blue tint */
+            border-radius: 12px; /* Smooth corners for the highlight */
         }
 
         .arrow {
@@ -93,9 +91,6 @@
             box-shadow: 0 0 15px rgba(255, 255, 255, 0.3);
         }
 
-        .arrow-left { left: 12px; }
-        .arrow-right { right: 12px; }
-
         /* Bottom 90% Content */
         .bottom-section {
             height: 90vh;
@@ -109,7 +104,7 @@
             display: none;
             max-width: 800px;
             margin: 0 auto;
-            animation: slideUp 0.6s ease-out;
+            animation: slideUp 0.7s cubic-bezier(0.16, 1, 0.3, 1);
         }
 
         .page.active { display: block; }
@@ -123,24 +118,34 @@
             border: 1px solid #e2e8f0;
         }
 
-        /* 2/ Grid Layout for MC Options (A B / C D) */
+        .score-display {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: #60a5fa;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 50px;
+            font-weight: bold;
+            box-shadow: 0 4px 15px rgba(96, 165, 250, 0.4);
+            z-index: 100;
+        }
+
+        /* Multiple Choice Styles */
         .options-container {
-            margin-top: 20px;
-            display: grid;
-            grid-template-columns: 1fr 1fr; /* Two columns */
-            gap: 15px;
+            margin-top: 15px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
         }
 
         .option-label {
-            padding: 15px;
+            padding: 12px 15px;
             border: 2px solid #e2e8f0;
-            border-radius: 12px;
+            border-radius: 10px;
             cursor: pointer;
             transition: all 0.2s;
             display: block;
-            text-align: center;
-            font-weight: 500;
-            color: #475569;
         }
 
         .option-label:hover { background-color: #f1f5f9; }
@@ -148,59 +153,23 @@
         input[type="radio"] { display: none; }
 
         input[type="radio"]:checked + .option-label {
-            border-color: #3b82f6;
+            border-color: #60a5fa;
             background-color: #eff6ff;
-            color: #1d4ed8;
-        }
-
-        /* 3/ Submit Button Styles */
-        .submit-container {
-            text-align: center;
-            padding: 40px 0;
-        }
-
-        .submit-btn {
-            background-color: #10b981;
-            color: white;
-            padding: 15px 40px;
-            font-size: 1.2rem;
-            font-weight: bold;
-            border: none;
-            border-radius: 50px;
-            cursor: pointer;
-            transition: all 0.3s;
-            box-shadow: 0 4px 15px rgba(16, 185, 129, 0.3);
-        }
-
-        .submit-btn:hover {
-            background-color: #059669;
-            transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(16, 185, 129, 0.4);
-        }
-
-        .score-display {
-            position: fixed;
-            bottom: 20px;
-            right: 20px;
-            background: #1e293b;
-            color: white;
-            padding: 12px 25px;
-            border-radius: 50px;
-            font-weight: bold;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
-            z-index: 100;
-            display: none; /* Hidden until first submit */
+            font-weight: 600;
         }
 
         @keyframes slideUp {
             0% { opacity: 0; transform: translateY(15px); }
             100% { opacity: 1; transform: translateY(0); }
         }
+
+        .arrow-left { left: 12px; }
+        .arrow-right { right: 12px; }
     </style>
 </head>
 <body>
 
-<div id="final-score-box" class="score-display">Your Score: <span id="score-val">0</span></div>
+<div class="score-display">Total Score: <span id="total-score">0</span></div>
 
 <div class="container">
     <div class="top-section">
@@ -208,31 +177,26 @@
         <div class="nav-wrapper" id="nav-wrapper"></div>
         <button class="arrow arrow-right" onclick="scrollNav(400)">&#8250;</button>
     </div>
-    
-    <main class="bottom-section" id="content-area">
-        <div id="questions-container"></div>
-        
-        <div class="submit-container">
-            <button class="submit-btn" onclick="calculateFinalScore()">Submit All Answers</button>
-        </div>
-    </main>
+    <main class="bottom-section" id="content-area"></main>
 </div>
 
 <script>
     const nav = document.getElementById('nav-wrapper');
-    const content = document.getElementById('questions-container');
-    const scoreBox = document.getElementById('final-score-box');
-    const scoreVal = document.getElementById('score-val');
+    const content = document.getElementById('content-area');
+    const scoreText = document.getElementById('total-score');
 
-    // Define correct answers for demo (Page_Question)
-    const answersKey = {
-        "q_1_1": "A", "q_1_2": "B", "q_2_1": "C", // etc...
-    };
+    // Load saved answers from localStorage
+    let userAnswers = JSON.parse(localStorage.getItem('quiz_answers')) || {};
 
-    let userAnswers = JSON.parse(localStorage.getItem('quiz_persistent_data')) || {};
+    function updateScore() {
+        let score = 0;
+        // Logic: 1 point for every question answered (adjust for correct/incorrect as needed)
+        score = Object.keys(userAnswers).length;
+        scoreText.innerText = score;
+        localStorage.setItem('quiz_answers', JSON.stringify(userAnswers));
+    }
 
     for (let i = 1; i <= 10; i++) {
-        // Create Navigation Buttons
         const btn = document.createElement('button');
         btn.className = 'nav-btn';
         btn.id = `btn-${i}`;
@@ -240,27 +204,26 @@
         btn.onclick = () => goToPage(i);
         nav.appendChild(btn);
 
-        // Create Pages
         const page = document.createElement('div');
         page.className = 'page';
         page.id = `page-${i}`;
         
-        for (let j = 1; j <= 4; j++) {
+        for (let j = 1; j <= 3; j++) { // Fewer questions per page for clarity
             const qId = `q_${i}_${j}`;
             const savedVal = userAnswers[qId] || "";
 
             page.innerHTML += `
                 <div class="question-block">
-                    <div style="font-size: 1.2rem; margin-bottom: 15px; font-weight: 600; color: #1e293b;">
-                        Question ${i}.${j}
+                    <div style="font-size: 1.2rem; margin-bottom: 15px; font-weight: 600;">
+                        Question ${i}.${j}: Select the correct option?
                     </div>
                     <div class="options-container">
-                        ${['A', 'B', 'C', 'D'].map(opt => `
+                        ${['A', 'B', 'C'].map(opt => `
                             <label>
                                 <input type="radio" name="${qId}" value="${opt}" 
                                     ${savedVal === opt ? 'checked' : ''} 
-                                    onchange="saveToStorage('${qId}', '${opt}')">
-                                <span class="option-label">${opt}</span>
+                                    onchange="saveAnswer('${qId}', '${opt}')">
+                                <span class="option-label">Option ${opt}</span>
                             </label>
                         `).join('')}
                     </div>
@@ -269,21 +232,9 @@
         content.appendChild(page);
     }
 
-    function saveToStorage(id, val) {
+    function saveAnswer(id, val) {
         userAnswers[id] = val;
-        localStorage.setItem('quiz_persistent_data', JSON.stringify(userAnswers));
-    }
-
-    function calculateFinalScore() {
-        let score = 0;
-        // Example: logic matches userAnswers against answersKey
-        // For this demo, let's just count total answered
-        score = Object.keys(userAnswers).length;
-        
-        scoreVal.innerText = score;
-        scoreBox.style.display = 'block';
-        
-        alert("Your progress has been submitted and saved! Total answered: " + score);
+        updateScore();
     }
 
     function goToPage(num) {
@@ -298,15 +249,14 @@
 
         const offset = activeBtn.offsetLeft - (nav.offsetWidth / 2) + (activeBtn.offsetWidth / 2);
         nav.scrollTo({ left: offset, behavior: 'smooth' });
-        
-        document.getElementById('content-area').scrollTo({ top: 0, behavior: 'smooth' });
+        content.scrollTo({ top: 0, behavior: 'smooth' });
     }
 
     function scrollNav(val) {
         nav.scrollBy({ left: val, behavior: 'smooth' });
     }
 
-    // Initialize first page view
+    updateScore();
     goToPage(1);
 </script>
 
