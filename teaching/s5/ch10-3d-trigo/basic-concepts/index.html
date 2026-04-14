@@ -511,11 +511,15 @@
             q_5_2: { q: "If f(x) = 2x + 1, what is f(3)?", a: "B", options: ["7", "6", "5", "8"], image: "q5_2.png" },
         };
         // const QPP = [3, 3, 3, 3, 3];
-        const QPP = Object.keys(questionContent).reduce((acc, key) => {
-            const s = parseInt(key.split('_')[1]) - 1; // Get session index (0-based)
-            acc[s] = (acc[s] || 0) + 1;
-            return acc;
-        }, []);
+        // 1. Find the maximum session number first
+        const maxSession = Math.max(...Object.keys(questionContent).map(k => k.split('_')[1]));
+        
+        // 2. Create the array with 0s and then count
+        const QPP = Array(maxSession).fill(0);
+        Object.keys(questionContent).forEach(key => {
+            const s = parseInt(key.split('_')[1]) - 1;
+            QPP[s]++;
+        });
         // const SESSIONS = 5;
         const SESSIONS = QPP.length;
         
