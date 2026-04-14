@@ -67,7 +67,7 @@
         .nav-btn.active {
             -webkit-text-stroke: 1.5px #60a5fa;
             transform: scale(1.1);
-            filter: drop-shadow(0 0 8px rgba(96, 165, 250, 0.9));
+            filter: drop-shadow(0 0 8px rgba(96, 165, 250, 0.5));
             background-color: rgba(96, 165, 250, 0.2);
         }
 
@@ -90,7 +90,6 @@
             box-shadow: 0 0 15px rgba(255, 255, 255, 0.3);
         }
 
-        /* Bottom 90% Content */
         .bottom-section {
             height: 90vh;
             overflow-y: auto;
@@ -117,7 +116,6 @@
             border: 1px solid #e2e8f0;
         }
 
-        /* 1/ Options arranged as A B / C D */
         .options-container {
             margin-top: 15px;
             display: grid;
@@ -146,10 +144,9 @@
             font-weight: 600;
         }
 
-        /* Submit Button Area */
         .submit-container {
             text-align: center;
-            padding: 40px 0 100px; /* Space for bottom score badge */
+            padding: 40px 0 100px;
         }
 
         .btn-submit {
@@ -170,7 +167,6 @@
             transform: scale(1.05);
         }
 
-        /* Persistent Score Display */
         .score-display {
             position: fixed;
             bottom: 20px;
@@ -196,7 +192,7 @@
 </head>
 <body>
 
-<div class="score-display">Total Score: <span id="display-score">0</span></div>
+<div class="score-display">Last Submitted Score: <span id="display-score">0</span></div>
 
 <div class="container">
     <div class="top-section">
@@ -217,21 +213,22 @@
     const content = document.getElementById('content-area');
     const displayScore = document.getElementById('display-score');
     
-    // 3/ Session persistence logic
-    // We store the user's answers and the last submitted score
+    // Load state
     let userAnswers = JSON.parse(localStorage.getItem('quiz_answers')) || {};
-    let lastScore = localStorage.getItem('quiz_score') || 0;
+    let lastSavedScore = localStorage.getItem('quiz_last_submitted_score') || "0";
 
     function initDisplay() {
-        displayScore.innerText = lastScore;
+        // Show the persistent score from the last click of "Submit"
+        displayScore.innerText = lastSavedScore;
     }
 
+    // Mouse wheel scrolling for top nav
     nav.addEventListener('wheel', (evt) => {
         evt.preventDefault();
         nav.scrollLeft += evt.deltaY;
     });
     
-    // Creating the quiz structure
+    // Generating the quiz
     for (let i = 1; i <= 10; i++) {
         const btn = document.createElement('button');
         btn.className = 'nav-btn';
@@ -270,20 +267,21 @@
 
     function saveAnswer(id, val) {
         userAnswers[id] = val;
+        // Save answers so choices persist on refresh, but this DOES NOT update the visible score
         localStorage.setItem('quiz_answers', JSON.stringify(userAnswers));
     }
 
-    // 2/ Submit button logic
     function calculateFinalScore() {
-        // Example scoring: 10 points per answer (In a real quiz, you'd check against a key)
+        // Independent calculation: only counts what is currently in userAnswers
+        // This is NOT cumulative with previous sessions
         const totalAnswered = Object.keys(userAnswers).length;
-        const score = totalAnswered * 10; 
+        const currentScore = totalAnswered * 10; 
         
-        lastScore = score;
-        displayScore.innerText = lastScore;
-        localStorage.setItem('quiz_score', lastScore);
+        // Update UI and persistent storage
+        displayScore.innerText = currentScore;
+        localStorage.setItem('quiz_last_submitted_score', currentScore);
         
-        alert("Answers submitted! Your score is: " + score);
+        alert("Quiz Submitted! Your current score based on selections is: " + currentScore);
     }
 
     function goToPage(num) {
@@ -305,7 +303,7 @@
         nav.scrollBy({ left: val, behavior: 'smooth' });
     }
 
-    // Run on refresh
+    // Initialize UI on page load
     initDisplay();
     goToPage(1);
 </script>
