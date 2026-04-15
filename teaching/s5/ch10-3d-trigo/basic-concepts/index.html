@@ -502,6 +502,12 @@
     </div>
 
     <script>
+        const sessionHeaders = [
+            'Projection of Points',
+            'Angle Between Two Planes',
+            'Trigonometry Fundamentals',
+            '3D Geometry'
+        ];
         // ── Merged Content Object ──
         const questionContent = {
             q_1_1: { q: "What is 3² + 4²?", a: "A", options: ["25", "7", "12", "14"], image: "q1_1.png" },
@@ -545,7 +551,7 @@
             const s = parseInt(key.split('_')[1]) - 1;
             QPP[s]++;
         });
-        // const SESSIONS = 5;
+        
         const SESSIONS = QPP.length;
         
         let userAnswers = JSON.parse(localStorage.getItem('quiz_answers_v2')) || {};
@@ -571,7 +577,11 @@
             dotsHtml += '</div>';
             btn.innerHTML = `${i}${dotsHtml}`;
             nav.appendChild(btn);
-        
+            
+            // Check if header exists for this session index (i-1)
+            // If not, default to an empty string
+            const headerText = sessionHeaders[i - 1] || "";
+
             // Page
             const page = document.createElement('div');
             page.className = 'page';
@@ -580,6 +590,9 @@
             page.innerHTML = `
                 <div class="session-header">
                     <div class="session-title">Session ${i}</div>
+                    <div class="session-subtitle" style="font-size: 0.9rem; color: #64748b; margin-top: 4px;">
+                        ${headerText}
+                    </div>
                     <div class="session-badge" id="badge-${i}">0 / ${QPP[i - 1]}</div>
                 </div>`;
         
