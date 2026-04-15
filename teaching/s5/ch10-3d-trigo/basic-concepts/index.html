@@ -705,7 +705,15 @@
                     Submit Session ${i}
                 </button>`;
             
-            // 3. Add the Restart Button (Only on the very last session)
+            // 3. Add and the Next Arrow (Goes to session i+1) the Restart Button (Only on the very last session)
+            if (i < SESSIONS) {
+                submitBarHtml += `
+                    <button class="btn-arrow" onclick="goToPage(${i + 1})" title="Next Session">
+                        →
+                    </button>`;
+            }
+            
+            // 4. Add the Restart Button (Only on the very last session)
             if (i === SESSIONS) {
                 submitBarHtml += `
                     <button class="btn-restart" onclick="resetQuiz()">
