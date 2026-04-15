@@ -502,12 +502,12 @@
     </div>
 
     <script>
-        const sessionHeaders = [
-            'Projection of Points',
-            'Angle Between Two Planes',
-            'Trigonometry Fundamentals',
-            '3D Geometry'
-        ];
+        const sessionContents = {
+            s1: {title: 'Projection of Points', content: "This is about the explanation of projection of points on a plane, bla bla bla", image: "s1.png"},
+            s2: {title: 'Angle Between Two Planes', content: "", image:""},
+            s3: {title: 'Trigonometry Fundamentals', content: "", image:""},
+            s4: {title: '3D Geometry', content: "", image:""},
+        };
         // ── Merged Content Object ──
         const questionContent = {
             q_1_1: { q: "What is 3² + 4²?", a: "A", options: ["25", "7", "12", "14"], image: "q1_1.png" },
@@ -580,21 +580,30 @@
             
             // Check if header exists for this session index (i-1)
             // If not, default to an empty string
-            const headerText = sessionHeaders[i - 1] || "";
+            // Get session data using the 's' + number key
+            const sKey = `s${i}`;
+            const sData = sessionContents[sKey] || { title: "", content: "", image: "" };
 
             // Page
             const page = document.createElement('div');
             page.className = 'page';
             page.id = `page-${i}`;
-        
+
+            // Handle session image (if it exists)
+            const sessionImgHtml = sData.image ? `<img src="${sData.image}" class="session-main-img" onerror="this.remove()" style="width:100%; border-radius:12px; margin-bottom:15px;">` : "";
+            
             page.innerHTML = `
-                <div class="session-header">
-                    <div class="session-title">Session ${i}</div>
-                    <div class="session-subtitle" style="font-size: 0.9rem; color: #64748b; margin-top: 4px;">
-                        ${headerText}
-                    </div>
-                    <div class="session-badge" id="badge-${i}">0 / ${QPP[i - 1]}</div>
-                </div>`;
+            <div class="session-header">
+                <div class="session-title">Session ${i}: ${sData.title}</div>
+                <div class="session-badge" id="badge-${i}">0 / ${QPP[i - 1]}</div>
+            </div>
+            
+            <div class="session-explanation" style="margin-bottom: 25px; background: #f8fafc; padding: 15px; border-radius: 12px; border-left: 4px solid #3b82f6;">
+                ${sessionImgHtml}
+                <div class="session-text" style="color: #475569; line-height: 1.6;">
+                    ${sData.content || "<i>No explanation provided for this session.</i>"}
+                </div>
+            </div>`;
         
             for (let j = 1; j <= QPP[i - 1]; j++) {
                 const qId = `q_${i}_${j}`;
@@ -639,10 +648,10 @@
                     </div>`;
             }
             page.innerHTML += `
-            <div class="session-submitted-banner" id="banner-${i}">Session ${i} submitted! Answers are now locked.</div>
-            <div class="session-submit-bar" id="sbar-${i}">
-                <button class="btn btn-success" onclick="submitSession(${i})">Submit session ${i}</button>
-            </div>`;
+                <div class="session-submitted-banner" id="banner-${i}">Session ${i} submitted! Answers are now locked.</div>
+                <div class="session-submit-bar" id="sbar-${i}">
+                    <button class="btn btn-success" onclick="submitSession(${i})">Submit session ${i}</button>
+                </div>`;
             content.appendChild(page);
         }
         
