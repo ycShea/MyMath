@@ -503,10 +503,20 @@
     </div>
 
     <script>
+        <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+        <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+        <script>
+          window.MathJax = {
+            tex: {
+              inlineMath: [['$', '$'], ['\\(', '\\)']],
+              displayMath: [['$$', '$$'], ['\\[', '\\]']]
+            }
+          };
+        </script>
         // NEW_CONTENT
         const sessionContents = {
             s1: {title: 'Projection of a Line on a Plane', content: "", image: "s1.png"},
-            s2: {title: 'Angle between a line and a plane', content: "", image: "s2.png"},
+            s2: {title: 'Angle between a line and a plane', content: "In the figure, $P'$ is the projection of $P$ on the plane $\pi$.<br>", image: "s2.png"},
             s3: {title: 'Angle between two planes', content: "", image: "s3.png"},
             s4: {title: 'Theorem of Three Perpendiculars', content: "", image: "s4.png"},
         };
@@ -787,6 +797,7 @@
             document.getElementById('banner-' + i).classList.add('show');
             updateSessionUI(i);
         }
+                
         function showSummary() {
             document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
             document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
@@ -854,6 +865,9 @@
             }
             document.getElementById('summary-section').classList.add('active');
             document.getElementById('scroll-container').scrollTo({ top: 0, behavior: 'smooth' });
+            if (window.MathJax) {
+                MathJax.typesetPromise();
+            }
         }
         
         function backToQuiz() {
@@ -890,6 +904,9 @@
                 });
             }
             document.getElementById('scroll-container').scrollTo({ top: 0, behavior: 'smooth' });
+            if (window.MathJax) {
+                MathJax.typesetPromise();
+            }
         }
 
         function scrollNav(val) {
