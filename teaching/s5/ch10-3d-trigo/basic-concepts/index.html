@@ -578,6 +578,14 @@
         tex: {
           inlineMath: [['$', '$'], ['\\(', '\\)']],
           displayMath: [['$$', '$$'], ['\\[', '\\]']]
+        },
+        startup: {
+          ready() {
+            MathJax.startup.defaultReady();
+            MathJax.startup.promise.then(() => {
+              window.mathJaxReady = true;
+            });
+          }
         }
       };
     </script>
@@ -620,7 +628,7 @@
             q_1_3: { q: "What is the slope of y = 3x + 7?", a: "C", options: ["7", "0", "3", "1"], image: "q1_3.png" },
             
             q_2_1: { q: "The figure shows a right prism $ABCDEF$ with a right-angled triangle as the cross-section. The angle between $BE$ and the plane $ABCD$ is", a: "C",
-                     options: ["$\angle ABE$", "$\angle CBE$", "$\angle DBE$", "$\angle EBF$"], image: "q2_1.png" },                                            // 2011 CE-MATH-II Q24
+                     options: ["$\\angle ABE$", "$\\angle CBE$", "$\\angle DBE$", "$\\angle EBF$"], image: "q2_1.png" },                                            // 2011 CE-MATH-II Q24
             q_2_2: { q: "What is sin(90°)?", a: "B", options: ["0", "0.5", "-1", "1"], image: "q2_2.png" },
             q_2_3: { q: "Expand: (x + 2)²", a: "C", options: ["x² + 4x + 4", "x² + 4", "x² + 2x + 4", "x² + 4x + 2"], image: "q2_3.png" },
             q_3_1: { q: "What is the area of a circle with radius 3?", a: "A", options: ["3π", "6π", "9π", "12π"], image: "q3_1.png" },
@@ -653,6 +661,15 @@
         
         const nav     = document.getElementById('nav-wrapper');
         const content = document.getElementById('content-area');
+        
+        function typesetPage() {
+            if (window.MathJax && window.mathJaxReady) {
+                MathJax.typesetPromise();
+            } else {
+                // MathJax not ready yet, retry after a short delay
+                setTimeout(typesetPage, 100);
+            }
+        }
         
         // ── Build UI ──
         for (let i = 1; i <= SESSIONS; i++) {
@@ -1003,9 +1020,7 @@
             }
             document.getElementById('summary-section').classList.add('active');
             document.getElementById('scroll-container').scrollTo({ top: 0, behavior: 'smooth' });
-            if (window.MathJax) {
-                MathJax.typesetPromise();
-            }
+            typesetPage();
         }
         
         function backToQuiz() {
@@ -1046,9 +1061,7 @@
                 });
             }
             document.getElementById('scroll-container').scrollTo({ top: 0, behavior: 'smooth' });
-            if (window.MathJax) {
-                MathJax.typesetPromise();
-            }
+            typesetPage();
         }
 
         function scrollNav(val) {
@@ -1059,7 +1072,7 @@
         
         restoreState();
         goToPage(1);
-        if (window.MathJax) MathJax.typesetPromise();
+        typesetPage();
     </script>
 </body>
 </html>
