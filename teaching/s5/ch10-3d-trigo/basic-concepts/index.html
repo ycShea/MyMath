@@ -1007,14 +1007,20 @@
                         ${dotsHtml}
                         ${labelHtml}
                     </div>`;
+/*                const label = submitted
+                    ? '<span style="color:' + (sc===QPP[i - 1]?'#10b981':sc===0?'#ef4444':'#f59e0b') + ';font-weight:700;">' + sc + '/' + QPP[i - 1] + '</span>'
+                    : '<span style="color:#94a3b8;font-size:0.8rem;">not submitted</span>';
+                // The wrapper div uses flexbox to align elements
+                breakdown.innerHTML += `
+                    <div class="session-row" style="display:flex; align-items:center; margin-bottom:10px;">
+                        <span style="color:#1e293b; font-weight:600; width:100px;">Session ${i}</span>
+                        ${dotsHtml}
+                        ${label}
+                    </div>`;*/
             }
             document.getElementById('summary-section').classList.add('active');
             document.getElementById('scroll-container').scrollTo({ top: 0, behavior: 'smooth' });
-            const summaryEl = document.getElementById('summary-section');
-            if (window.MathJax && window.mathJaxReady) {
-                MathJax.typesetClear([summaryEl]);
-                MathJax.typesetPromise([summaryEl]);
-            }
+            typesetPage();
         }
         
         function backToQuiz() {
@@ -1055,19 +1061,7 @@
                 });
             }
             document.getElementById('scroll-container').scrollTo({ top: 0, behavior: 'smooth' });
-            const activePage = document.getElementById(`page-${num}`);
-            if (window.MathJax && window.mathJaxReady) {
-                MathJax.typesetClear([activePage]);
-                MathJax.typesetPromise([activePage]);
-            }  else {
-                setTimeout(() => {
-                    const p = document.getElementById(`page-${num}`);
-                    if (p && window.MathJax) {
-                        MathJax.typesetClear([p]);
-                        MathJax.typesetPromise([p]);
-                    }
-                }, 200);
-            }
+            typesetPage();
         }
 
         function scrollNav(val) {
