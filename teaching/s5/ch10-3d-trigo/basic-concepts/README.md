@@ -1,198 +1,171 @@
-# Web Design Prototype: 10-Page Progress Navigation
+# Quiz Page Documentation
 
-This project features a split-screen layout with a progress-based navigation top bar (1/3 of the page) and a scrollable content area (2/3 of the page).
-https://ycshea.github.io/MyMath/teaching/s5/ch10-3d-trigo/basic-concepts/index.html
+## Overview
 
-Spreadsheet to extract question and answer text
-https://docs.google.com/spreadsheets/d/1yoW0LIFBhdnH1VwdWsf78p9D4YS0KqpHeDeCvOWLXfY/edit?gid=685154664#gid=685154664
-
-## Features
-* **Progress Navigation:** 10 large buttons occupying the top 1/3 of the screen.
-* **Dynamic Content:** Each button toggles one of 10 pages in the bottom section.
-* **Scrollable Questions:** Each page contains 8 questions with variable-height images.
-* **Responsive Layout:** Buttons are sized at 1/5 of the container width across two rows.
-
-## Live URL
-To view this code live, copy the content below into a web editor such as [CodePen](https://codepen.io/pen/) or [JSFiddle](https://jsfiddle.net/).
+A single-page HTML quiz app with multiple sessions, per-session submission, MathJax support, and a summary page. Designed for math topics with LaTeX content and optional images.
 
 ---
 
-## Source Code (index.html)
+## How to Update Content (`NEW_CONTENT`)
+
+Search for `// NEW_CONTENT` in the HTML to find the two data objects you need to edit.
+
+### 1. Session Headers — `sessionContents`
+
+Controls the title, explanation text, and image shown at the top of each session.
+
+```js
+const sessionContents = {
+    s1: { title: `...`, content: `...`, image: "s1.png" },
+    s2: { title: `...`, content: `...`, image: "s2.png" },
+};
+```
+
+| Field | Type | Description |
+|-------|------|-------------|
+| `title` | string | Shown as "Session N: title" in the header |
+| `content` | string | HTML + LaTeX text shown in the blue explanation box |
+| `image` | string | Filename inside the `images/` folder. Leave `""` to hide. |
+
+If both `image` and `content` are empty, the blue explanation box is hidden automatically.
+
+---
+
+### 2. Questions — `questionContent`
+
+Each question is keyed as `q_SESSION_QUESTION`, e.g. `q_2_3` = Session 2, Question 3.
+
+```js
+const questionContent = {
+    q_1_1: { q: "Question text", a: "A", options: ["Opt A", "Opt B", "Opt C", "Opt D"], image: "q1_1.png" },
+};
+```
+
+| Field | Type | Description |
+|-------|------|-------------|
+| `q` | string | Question text. Supports LaTeX with `$...$`. |
+| `a` | string | Correct answer: `"A"`, `"B"`, `"C"`, or `"D"` |
+| `options` | array | Four option strings in order A, B, C, D. Supports LaTeX. |
+| `image` | string | Filename inside `images/`. Leave `""` to hide. |
+
+The number of sessions and questions per session are **auto-detected** from the keys — no manual count needed.
+
+---
+
+## LaTeX Usage
+
+MathJax is loaded with `$...$` for inline math and `$$...$$` for display math.
+
+### Rules for writing LaTeX in JavaScript strings
+
+Every backslash in LaTeX must be **doubled** inside a JS string:
+
+| LaTeX | In JS string |
+|-------|-------------|
+| `\pi` | `\\pi` |
+| `\frac{a}{b}` | `\\frac{a}{b}` |
+| `\angle` | `\\angle` |
+| `\perp` | `\\perp` |
+
+### Highlighting in LaTeX
+
+A `\hl{}` macro is defined globally for blue highlighting. Add this hidden div once in the `<body>`:
 
 ```html
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <style>
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-        }
+<div style="display:none">$\def\hl#1{\color{#3b82f6}{#1}}$</div>
+```
 
-        body, html {
-            height: 100%;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            overflow: hidden;
-        }
+Then use it in content strings:
 
-        .container {
-            display: flex;
-            flex-direction: column;
-            height: 100vh;
-        }
+```js
+content: `$\\hl{P'}$ is the projection of $\\hl{P}$ on $\\hl{\\pi}$.`
+```
 
-        /* Top 1/3: Navigation Section */
-        .top-section {
-            height: 33.33vh;
-            background-color: #f8f9fa;
-            border-bottom: 2px solid #dee2e6;
-            display: flex;
-            flex-wrap: wrap;
-            padding: 10px;
-            gap: 0;
-        }
+### Mixing HTML highlights with LaTeX
 
-        .nav-btn {
-            width: 20%; /* 1/5 of width */
-            height: 50%; /* 2 rows for 10 buttons */
-            font-size: 1.2rem;
-            font-weight: bold;
-            cursor: pointer;
-            border: 1px solid #dee2e6;
-            background-color: #ffffff;
-            transition: all 0.2s ease-in-out;
-        }
+Use a `<span class="hl">` for surrounding text and `\\hl{}` for the math symbols inside:
 
-        .nav-btn:hover {
-            background-color: #f1f1f1;
-        }
+```js
+content: `<span class="hl">$\\hl{P'}$ is the projection of $\\hl{P}$ on the plane $\\hl{\\pi}$</span>.`
+```
 
-        .nav-btn.active {
-            background-color: #007bff;
-            color: white;
-            border-color: #0056b3;
-            z-index: 1;
-        }
+Add this CSS once:
 
-        /* Bottom 2/3: Content Section */
-        .bottom-section {
-            height: 66.67vh;
-            overflow-y: auto;
-            padding: 30px;
-            background-color: #ffffff;
-        }
+```css
+.hl { color: #3b82f6; font-weight: 600; }
+```
 
-        .page-content {
-            display: none;
-            max-width: 800px;
-            margin: 0 auto;
-        }
+---
 
-        .page-content.active {
-            display: block;
-        }
+## Images
 
-        .question {
-            margin-bottom: 50px;
-            padding: 20px;
-            border-bottom: 1px solid #eee;
-        }
+Place all images in the `images/` subfolder next to `index.html`.
 
-        .question-image {
-            width: 100%;
-            background-color: #f0f0f0;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin-bottom: 20px;
-            color: #aaa;
-            border-radius: 4px;
-        }
+```
+index.html
+images/
+  s1.png       ← session explanation images
+  s2.png
+  q1_1.png     ← question images
+  q2_3.png
+```
 
-        .question-text {
-            font-size: 1.2rem;
-            margin-bottom: 15px;
-            color: #333;
-        }
+Images use `onerror="this.remove()"` — missing images are silently hidden. If a session image fails to load **and** there is no text content, the entire blue explanation box is removed.
 
-        textarea {
-            width: 100%;
-            padding: 12px;
-            border: 1px solid #ccc;
-            border-radius: 4px;
-            resize: vertical;
-        }
-    </style>
-</head>
-<body>
+---
 
-<div class="container">
-    <nav class="top-section" id="navbar"></nav>
-    <main class="bottom-section" id="content-area"></main>
-</div>
+## Per-Session Submission
 
-<script>
-    const navbar = document.getElementById('navbar');
-    const contentArea = document.getElementById('content-area');
-    const totalPages = 10;
-    const questionsPerPage = 8;
+Each session has its own **Submit Session N** button. Submitting a session:
+- Locks all answers in that session
+- Shows correct/wrong feedback and the green banner
+- Updates the nav dots to green/red
+- Does **not** affect other sessions
 
-    for (let i = 1; i <= totalPages; i++) {
-        // Create Navigation Button
-        const btn = document.createElement('button');
-        btn.className = 'nav-btn';
-        btn.id = `btn-${i}`;
-        btn.innerText = i;
-        btn.onclick = () => showPage(i);
-        navbar.appendChild(btn);
+Submission state is saved in `localStorage` as `quiz_submitted_session_N`.
 
-        // Create Page Container
-        const page = document.createElement('div');
-        page.className = 'page-content';
-        page.id = `page-${i}`;
-        
-        const title = document.createElement('h1');
-        title.innerText = `Step ${i} of 10`;
-        title.style.marginBottom = '30px';
-        page.appendChild(title);
+To clear all progress: click **Restart Quiz** (requires confirmation) or call `resetQuiz()` in the console.
 
-        // Create Questions
-        for (let j = 1; j <= questionsPerPage; j++) {
-            const qBox = document.createElement('div');
-            qBox.className = 'question';
-            
-            // Simulating different image heights
-            const randomHeight = Math.floor(Math.random() * (450 - 200 + 1)) + 200;
-            
-            qBox.innerHTML = `
-                <div class="question-image" style="height: ${randomHeight}px;">
-                    Placeholder Image (Height: ${randomHeight}px)
-                </div>
-                <div class="question-text">
-                    <strong>Question ${i}.${j}:</strong> Please describe your observations based on the image above.
-                </div>
-                <textarea rows="3" placeholder="Type your answer here..."></textarea>
-            `;
-            page.appendChild(qBox);
-        }
-        contentArea.appendChild(page);
-    }
+---
 
-    function showPage(pageNum) {
-        document.querySelectorAll('.nav-btn').forEach(btn => btn.classList.remove('active'));
-        document.querySelectorAll('.page-content').forEach(p => p.classList.remove('active'));
+## Summary Page
 
-        document.getElementById(`btn-${pageNum}`).classList.add('active');
-        document.getElementById(`page-${pageNum}`).classList.add('active');
+Click the **Summary** floating button (bottom-right) to see:
+- Total correct / wrong / skipped (submitted sessions only)
+- Per-session dot breakdown
+- **Back to quiz** button
 
-        contentArea.scrollTop = 0;
-    }
+Unsubmitted sessions show "not submitted" in the breakdown.
 
-    showPage(1);
-</script>
+---
 
-</body>
-</html>
+## localStorage Keys
+
+| Key | Value |
+|-----|-------|
+| `quiz_answers_v2` | JSON object of all user answers |
+| `quiz_submitted_session_N` | `true` if session N has been submitted |
+
+---
+
+## File Structure
+
+```
+index.html          ← the quiz page
+images/
+  s1.png            ← session images
+  s2.png
+  s3.png
+  s4.png
+  q1_1.png          ← question images
+  q1_2.png
+  ...
+```
+
+---
+
+## Dependencies (CDN, no install needed)
+
+| Library | Purpose |
+|---------|---------|
+| [MathJax 3](https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js) | Render LaTeX math |
