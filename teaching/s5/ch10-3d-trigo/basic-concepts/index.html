@@ -612,13 +612,6 @@
                         <div class="session-badge" id="badge-${i}">0 / ${QPP[i - 1]}</div>
                     </div>
                     ${explanationHtml}`;
-            
-            <div class="session-explanation" style="margin-bottom: 25px; background: #f8fafc; padding: 15px; border-radius: 12px; border-left: 4px solid #3b82f6;">
-                ${sessionImgHtml}
-                <div class="session-text" style="color: #475569; line-height: 1.6;">
-                    ${sData.content || "<i>No explanation provided for this session.</i>"}
-                </div>
-            </div>`;
         
             for (let j = 1; j <= QPP[i - 1]; j++) {
                 const qId = `q_${i}_${j}`;
