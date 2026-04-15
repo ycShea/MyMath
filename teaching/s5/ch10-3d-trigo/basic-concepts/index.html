@@ -541,6 +541,10 @@
     <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <script>
         // NEW_CONTENT
+        // The rule is: in a JavaScript string, any LaTeX command with a backslash needs a double backslash \\
+        // so that the string actually contains one real backslash when passed to MathJax.
+        // For example \frac becomes \\frac, \theta becomes \\theta, and so on. This applies everywhere in your
+        // sessionContents and questionContent objects.
         const sessionContents = {
             s1: {title: 'Projection of a Line on a Plane', content: "", image: "s1.png"},
             s2: {title: 'Angle between a line and a plane', content: "In the figure, $P'$ is the projection of $P$ on the plane $\\pi$.<br>", image: "s2.png"},    // $\pi$ is not enough
