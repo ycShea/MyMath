@@ -546,10 +546,13 @@
         // For example \frac becomes \\frac, \theta becomes \\theta, and so on. This applies everywhere in your
         // sessionContents and questionContent objects.
         const sessionContents = {
-            s1: {title: 'Projection of a Line on a Plane', content: "", image: "s1.png"},
-            s2: {title: 'Angle between a line and a plane', content: "In the figure, $P'$ is the projection of $P$ on the plane $\\pi$.<br>", image: "s2.png"},    // $\pi$ is not enough
-            s3: {title: 'Angle between two planes', content: "", image: "s3.png"},
-            s4: {title: 'Theorem of Three Perpendiculars', content: "", image: "s4.png"},
+            s1: {title: 'Projection of a Line on a Plane', content: ``, image: "s1.png"},
+            s2: {title: 'Angle between a line and a plane',
+                 content: `In the figure, $P'$ is the projection of $P$ on the plane $\\pi$.<br>
+                          $\\angle POP'$ is the angle between $PO$ and the plane $\\pi$.`,            // $\pi$ is not enough
+                 image: "s2.png"},    
+            s3: {title: 'Angle between two planes', content: ``, image: "s3.png"},
+            s4: {title: 'Theorem of Three Perpendiculars', content: ``, image: "s4.png"},
         };
         // ── Merged Content Object ──
         const questionContent = {
@@ -617,8 +620,12 @@
             // 1. Build Title: Show "Session i" + title if title exists
             const fullTitle = sData.title ? `Session ${i}: ${sData.title}` : `Session ${i}`;
             // 2. Build Image: Only create HTML if string is not empty
+            // Change width:100% to max-width:100% and width:auto
             const sessionImgHtml = sData.image ? 
-                `<img src="images/${sData.image}" onerror="this.remove()" style="width:100%; border-radius:12px; margin-bottom:10px;">` : "";
+                `<img src="images/${sData.image}" onerror="this.remove()" 
+                 style="display: block; width: auto; max-width: 100%; border-radius: 12px; margin-bottom: 10px;">` : "";
+            // Enlarge the figure to fit the width of the screen
+            // const sessionImgHtml = sData.image ? `<img src="images/${sData.image}" onerror="this.remove()" style="width:100%; border-radius:12px; margin-bottom:10px;">` : "";
             // 3. Build Explanation Box: Only show if there is an image OR content
             let explanationHtml = "";
             const hasContent = sData.content && sData.content.trim() !== "";
