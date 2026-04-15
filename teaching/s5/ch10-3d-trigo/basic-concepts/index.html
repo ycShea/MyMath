@@ -675,7 +675,7 @@
             if (sData.image || hasContent) {
                 explanationHtml = `
                     <div class="session-explanation" id="explanation-${i}" style="margin-bottom: 25px; background: #f8fafc; padding: 15px; border-radius: 12px; border-left: 4px solid #3b82f6;">
-                        ${sData.image ? `<img src="images/${sData.image}" id="expimg-${i}" style="width:100%; border-radius:12px; margin-bottom:10px;"
+                        ${sData.image ? `<img src="images/${sData.image}" id="expimg-${i}" style="width:auto; max-width:100%; border-radius:12px; margin-bottom:10px;"
                             onerror="
                                 this.remove();
                                 var box = document.getElementById('explanation-${i}');
