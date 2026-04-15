@@ -680,11 +680,13 @@
                         </div>
                     </div>`;
             }
+            /*
             page.innerHTML += `
                 <div class="session-submitted-banner" id="banner-${i}">Session ${i} submitted! Answers are now locked.</div>
                 <div class="session-submit-bar" id="sbar-${i}">
                     <button class="btn btn-success" onclick="submitSession(${i})">Submit session ${i}</button>
                 </div>`;
+            */
             content.appendChild(page);
             // Build the Submit Bar
             let submitBarHtml = `<div class="session-submit-bar" id="sbar-${i}">`;
@@ -852,20 +854,14 @@
                 const qId = 'q_' + i + '_' + j;
                 if (userAnswers[qId]) applyAnswerUI(qId, userAnswers[qId], true);
             }
-            document.getElementById('sbar-' + i).style.display = 'none';
-            document.getElementById('banner-' + i).classList.add('show');
-           
-            // Find the submit button inside the bar and hide ONLY that button
             const bar = document.getElementById('sbar-' + i);
             if (bar) {
                 const submitBtn = bar.querySelector('.btn-success');
                 if (submitBtn) submitBtn.style.display = 'none';
             }
-        
-            const banner = document.getElementById('banner-' + i);
-            if (banner) banner.classList.add('show');
-            
+            document.getElementById('banner-' + i).classList.add('show');
             updateSessionUI(i);
+
         }
                 
         function showSummary() {
