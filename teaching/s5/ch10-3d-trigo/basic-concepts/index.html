@@ -471,11 +471,54 @@
             color: #475569;
         }
         .btn-ghost:hover { background: #e2e8f0; }
+        /* Tablet and Mobile Adjustments */
+        /* For iPads and Phones */
+        /* Tablet and Mobile Adjustments (Everything under 768px) */
+        @media (max-width: 768px) {
+            body {
+                flex-direction: column; /* Stacks sidebar on top of content */
+            }
+        
+            #nav-wrapper {
+                width: 100%;
+                height: auto;
+                flex-direction: row; /* Buttons sit horizontally */
+                overflow-x: auto;    /* Swipe left/right if many sessions */
+                padding: 10px;
+                border-right: none;
+                border-bottom: 1px solid #e2e8f0;
+            }
+        
+            #content-area {
+                padding: 15px;
+            }
+        
+            /* Larger buttons for easier finger tapping */
+            .nav-btn {
+                min-width: 60px;
+                height: 60px;
+                padding: 10px;
+            }
+        
+            /* Stack title and badge vertically */
+            .session-header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 8px;
+            }
+        
+            .session-badge {
+                align-self: flex-end;
+            }
+        }
+        
+        /* Extra small tweaks for Phones (Everything under 600px) */
         @media (max-width: 600px) {
             #summary-nav-btn {
                 bottom: 15px;
                 right: 15px;
                 padding: 10px 15px;
+                font-size: 14px; /* Slightly smaller text for small screens */
             }
         }
     </style>
