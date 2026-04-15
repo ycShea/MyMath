@@ -577,25 +577,25 @@
             const fullTitle = sData.title ? `Session ${i}: ${sData.title}` : `Session ${i}`;
             // 2. Build Image: Only create HTML if string is not empty
             const sessionImgHtml = sData.image ? 
-                `<img src="images/${sData.image}" onerror="this.remove()" style="width:100%; border-radius:12px; margin-bottom:15px;">` : "";
+                `<img src="images/${sData.image}" onerror="this.remove()" style="width:100%; border-radius:12px; margin-bottom:10px;">` : "";
             // 3. Build Explanation Box: Only show if there is an image OR content
             let explanationHtml = "";
-            if (sData.image || sData.content) {
+            // Check if there is a valid image string OR a non-empty content string
+            if (sData.image || (sData.content && sData.content.trim() !== "")) {
                 explanationHtml = `
                     <div class="session-explanation" style="margin-bottom: 25px; background: #f8fafc; padding: 15px; border-radius: 12px; border-left: 4px solid #3b82f6;">
                         ${sessionImgHtml}
                         ${sData.content ? `<div class="session-text" style="color: #475569; line-height: 1.6;">${sData.content}</div>` : ""}
                     </div>`;
             }
-            // Handle session image (if it exists)
-//            const sessionImgHtml = sData.image ? `<img src="${sData.image}" class="session-main-img" onerror="this.remove()" style="width:100%; border-radius:12px; margin-bottom:15px;">` : "";
-            
+            // 4. Update Page InnerHTML
             page.innerHTML = `
-                    <div class="session-header">
-                        <div class="session-title">${fullTitle}</div>
-                        <div class="session-badge" id="badge-${i}">0 / ${QPP[i - 1]}</div>
-                    </div>
-                    ${explanationHtml}`;
+                <div class="session-header">
+                    <div class="session-title">${fullTitle}</div>
+                    <div class="session-badge" id="badge-${i}">0 / ${QPP[i - 1]}</div>
+                </div>
+                ${explanationHtml}`;
+
         
             for (let j = 1; j <= QPP[i - 1]; j++) {
                 const qId = `q_${i}_${j}`;
