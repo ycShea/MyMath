@@ -518,7 +518,7 @@
                     <div id="session-breakdown"></div>
                 </div>
                 <div class="bottom-bar">
-                    <button class="btn btn-ghost" onclick="resetQuiz()">Restart quiz</button>
+                    <button class="btn btn-ghost" onclick="confirmRestart()">Restart quiz</button>
                     <button class="btn btn-primary" onclick="backToQuiz()">Back to quiz</button>
                 </div>
             </div>
@@ -689,39 +689,31 @@
             */
             content.appendChild(page);
             // Build the Submit Bar
-            let submitBarHtml = `<div class="session-submit-bar" id="sbar-${i}">`;
-            // 1. Add the Back Arrow (Goes to session i-1)
-            // Only show if it's not the first session
+            let submitBarHtml = `<div class="session-submit-bar" id="sbar-${i}" style="display:flex; justify-content:space-between; align-items:center;">`;
+
+            // Left side: back arrow
+            let leftHtml = '<div style="display:flex; gap:8px;">';
             if (i > 1) {
-                submitBarHtml += `
-                    <button class="btn-arrow" onclick="goToPage(${i - 1})" title="Previous Session">
-                        ←
-                    </button>`;
+                leftHtml += `<button class="btn-arrow" onclick="goToPage(${i - 1})" title="Previous Session">←</button>`;
             }
+            leftHtml += '</div>';
             
-            // 2. Add the Submit Button
-            submitBarHtml += `
-                <button class="btn btn-success" onclick="submitSession(${i})">
-                    Submit Session ${i}
-                </button>`;
-            
-            // 3. Add and the Next Arrow (Goes to session i+1) the Restart Button (Only on the very last session)
-            if (i < SESSIONS) {
-                submitBarHtml += `
-                    <button class="btn-arrow" onclick="goToPage(${i + 1})" title="Next Session">
-                        →
-                    </button>`;
-            }
-            
-            // 4. Add the Restart Button (Only on the very last session)
+            // Middle/right side: submit + restart + next arrow
+            let rightHtml = '<div style="display:flex; gap:8px; align-items:center;">';
+            rightHtml += `<button class="btn btn-success" onclick="submitSession(${i})">Submit Session ${i}</button>`;
             if (i === SESSIONS) {
-                submitBarHtml += `
-                    <button class="btn-restart" onclick="resetQuiz()">
-                        Restart Quiz
-                    </button>`;
+                rightHtml += `<button class="btn-restart" onclick="confirmRestart()">Restart Quiz</button>`;
             }
+            rightHtml += '</div>';
             
-            submitBarHtml += `</div>`;
+            // Far right: next arrow
+            let nextHtml = '<div style="display:flex; gap:8px;">';
+            if (i < SESSIONS) {
+                nextHtml += `<button class="btn-arrow" onclick="goToPage(${i + 1})" title="Next Session">→</button>`;
+            }
+            nextHtml += '</div>';
+            
+            submitBarHtml += leftHtml + rightHtml + nextHtml + '</div>';
             
             // Add the banner and the bar to the page
             page.innerHTML += `
@@ -957,7 +949,11 @@
             }
             location.reload();
         }
-        
+        function confirmRestart() {
+            if (confirm('Are you sure you want to restart? All your answers will be cleared.')) {
+                resetQuiz();
+            }
+        }
         // ── Navigation ──
         function goToPage(num) {
             document.getElementById('summary-section').classList.remove('active');
