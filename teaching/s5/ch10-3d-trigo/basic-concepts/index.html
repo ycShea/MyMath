@@ -397,11 +397,36 @@
         .session-row-dot.wrong   { background: #ef4444; }
         .session-row-dot.empty   { background: #e2e8f0; }
         .session-submit-bar {
-            max-width: 760px;
-            margin: 0 auto 20px;
             display: flex;
-            justify-content: flex-end;
+            gap: 12px;
+            align-items: center;
+            margin-top: 20px;
         }
+        .btn-arrow {
+            background: #f1f5f9;
+            color: #475569;
+            border: 1px solid #cbd5e1;
+            padding: 10px 15px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1.2rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .btn-arrow:hover {
+            background: #e2e8f0;
+        }
+        .btn-restart {
+            background: #ef4444; /* Red for reset */
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+        }
+        
         .session-score-label {
             text-align: right;
             font-weight: 700;
@@ -661,6 +686,37 @@
                     <button class="btn btn-success" onclick="submitSession(${i})">Submit session ${i}</button>
                 </div>`;
             content.appendChild(page);
+            // Build the Submit Bar
+            let submitBarHtml = `<div class="session-submit-bar" id="sbar-${i}">`;
+            // 1. Add the Back Arrow (Goes to session i-1)
+            // Only show if it's not the first session
+            if (i > 1) {
+                submitBarHtml += `
+                    <button class="btn-arrow" onclick="goToPage(${i - 1})" title="Previous Session">
+                        ←
+                    </button>`;
+            }
+            
+            // 2. Add the Submit Button
+            submitBarHtml += `
+                <button class="btn btn-success" onclick="submitSession(${i})">
+                    Submit Session ${i}
+                </button>`;
+            
+            // 3. Add the Restart Button (Only on the very last session)
+            if (i === SESSIONS) {
+                submitBarHtml += `
+                    <button class="btn-restart" onclick="resetQuiz()">
+                        Restart Quiz
+                    </button>`;
+            }
+            
+            submitBarHtml += `</div>`;
+            
+            // Add the banner and the bar to the page
+            page.innerHTML += `
+                <div class="session-submitted-banner" id="banner-${i}">Session ${i} submitted! Answers are now locked.</div>
+                ${submitBarHtml}`;
         }
         
         // ── Restore state on load ──
@@ -674,7 +730,10 @@
                 updateSessionUI(i);
                 if (getSessionSubmitted(i)) {
                     const bar = document.getElementById('sbar-' + i);
-                    if (bar) bar.style.display = 'none';
+                    if (bar) {
+                        const submitBtn = bar.querySelector('.btn-success');
+                        if (submitBtn) submitBtn.style.display = 'none';
+                    }
                     const banner = document.getElementById('banner-' + i);
                     if (banner) banner.classList.add('show');
                 }
@@ -795,6 +854,17 @@
             }
             document.getElementById('sbar-' + i).style.display = 'none';
             document.getElementById('banner-' + i).classList.add('show');
+           
+            // Find the submit button inside the bar and hide ONLY that button
+            const bar = document.getElementById('sbar-' + i);
+            if (bar) {
+                const submitBtn = bar.querySelector('.btn-success');
+                if (submitBtn) submitBtn.style.display = 'none';
+            }
+        
+            const banner = document.getElementById('banner-' + i);
+            if (banner) banner.classList.add('show');
+            
             updateSessionUI(i);
         }
                 
