@@ -527,8 +527,7 @@
         </main>
     </div>
 
-    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
-    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <!-- STEP 1: config first -->
     <script>
       window.MathJax = {
         tex: {
@@ -537,6 +536,9 @@
         }
       };
     </script>
+    
+    <!-- STEP 2: then load MathJax -->
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <script>
         // NEW_CONTENT
         const sessionContents = {
@@ -987,6 +989,7 @@
         
         restoreState();
         goToPage(1);
+        if (window.MathJax) MathJax.typesetPromise();
     </script>
 </body>
 </html>
