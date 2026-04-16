@@ -733,7 +733,9 @@
                 
                 // 1. Check if the string exists in your data
                 // 2. Add onerror to hide it if the file itself is missing or 404
-                const imgHtml = data.image ? `<img src="images/${data.image}" onerror="this.remove()">` : "";
+                // const imgHtml = data.image ? `<img src="images/${data.image}" onerror="this.remove()">` : "";
+                const imgHtml = data.image ? `<img src="images/${data.image}" onerror="this.remove()" style="max-width: 280px;
+                                                width: 100%; height: auto; border-radius: 8px; margin-bottom: 12px; display: block;">` : "";
                 
                 // Then include it in your template
                 const questionHtml = `
