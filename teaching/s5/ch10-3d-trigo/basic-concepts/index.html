@@ -866,6 +866,28 @@
                     }
                     const banner = document.getElementById('banner-' + i);
                     if (banner) banner.classList.add('show');
+        
+                    // Restore blank questions for submitted sessions
+                    for (let j = 1; j <= QPP[i - 1]; j++) {
+                        const qId = 'q_' + i + '_' + j;
+                        if (!userAnswers[qId]) {
+                            const data = questionContent[qId];
+                            if (data) {
+                                const correctOpt = data.a;
+                                const lbl = document.getElementById(`label-${qId}-${correctOpt}`);
+                                if (lbl) lbl.classList.add('revealed-correct', 'locked');
+                                const result = document.getElementById(`result-${qId}`);
+                                if (result) {
+                                    result.className = 'question-result show cross';
+                                    result.innerHTML = '✕';
+                                }
+                                const block = document.getElementById(`block-${qId}`);
+                                if (block) block.classList.add('has-wrong');
+                                const hint = document.getElementById(`hint-${qId}`);
+                                if (hint) hint.classList.add('show');
+                            }
+                        }
+                    }
                 }
             }
             updateProgress();
