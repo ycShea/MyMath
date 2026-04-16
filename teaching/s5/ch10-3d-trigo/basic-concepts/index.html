@@ -642,7 +642,8 @@
                      a: "D", options: ["$AD$", "$CD$", "$ED$", "$FD$"], image: "q2_1.png" },
             q_2_2: { q: `Refer to the figure in Q1. What is the angle between $BD$ on the plane $ADE$?`,
                      a: "A", options: ["$AD$", "$CD$", "$ED$", "$FD$"], image: "" },
-            q_2_3: { q: `The figure shows a right prism $ABCDEF$ with a right-angled triangle as the cross-section. The angle between $BE$ and the plane $ABCD$ is`,
+            q_2_3: { q: `The figure shows a right prism $ABCDEF$ with a right-angled triangle as the cross-section.`,
+                     q2: `The angle between $BE$ and the plane $ABCD$ is`,
                      a: "C", options: ["$\\angle BED$.", "$\\angle CBE$.", "$\\angle DBE$.", "$\\angle ABE$."], image: "q2_3.png" },                // 2011 CE-MATH-II Q24
             q_2_4: { q: `Refer to the figure in Q3. The angle between $BE$ and the plane $CDE$ is`, 
                      a: "B", options: ["$\\angle BEC$.", "$\\angle BED$.", "$\\angle CED$.", "$\\angle DBE$."], image: "" },                        // 2006 CE-MATH-II Q24
@@ -785,18 +786,17 @@
                         </div>
                     </label>`).join('');
         
+                const q2Html = data.q2 ? `${imgHtml}<div class="question-text" style="flex:1; margin-bottom:16px;">${data.q2}</div>`
+                                       : imgHtml;
+                
                 page.innerHTML += `
                     <div class="question-block" id="block-${qId}">
                         <div style="display:flex; align-items:flex-start; gap:10px; margin-bottom:16px;">
                             <div class="question-text" style="flex:1">Q${j}. ${data.q}</div>
                             <div class="question-result" id="result-${qId}"></div>
                         </div>
-                        ${imgHtml}
+                        ${q2Html}
                         <div class="options-grid">${opts}</div>
-                        <div class="hint-line" id="hint-${qId}">
-                            ✓ Correct answer: <strong>${data.a}</strong>
-                        </div>
-                    </div>`;
             }
             /*
             page.innerHTML += `
