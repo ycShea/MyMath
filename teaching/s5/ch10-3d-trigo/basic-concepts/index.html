@@ -856,7 +856,17 @@
                         if (submitBtn) submitBtn.style.display = 'none';
                     }
                     const banner = document.getElementById('banner-' + i);
-                    if (banner) banner.classList.add('show');
+                    if (banner) {
+                        let correct = 0;
+                        for (let j = 1; j <= QPP[i - 1]; j++) {
+                            const qId = 'q_' + i + '_' + j;
+                            const data = questionContent[qId];
+                            if (data && userAnswers[qId] === data.a) correct++;
+                        }
+                        const stars = correct === QPP[i-1] ? '★★★' : correct >= QPP[i-1]/2 ? '★★☆' : '★☆☆';
+                        banner.innerHTML = `${stars} Session ${i} submitted! ${correct} / ${QPP[i-1]} correct.`;
+                        banner.classList.add('show');
+                    }
         
                     // Restore blank questions for submitted sessions
                     for (let j = 1; j <= QPP[i - 1]; j++) {
@@ -1065,7 +1075,16 @@
                 const submitBtn = bar.querySelector('.btn-success');
                 if (submitBtn) submitBtn.style.display = 'none';
             }
-            document.getElementById('banner-' + i).classList.add('show');
+            let correct = 0;
+            for (let j = 1; j <= QPP[i - 1]; j++) {
+                const qId = 'q_' + i + '_' + j;
+                const data = questionContent[qId];
+                if (data && userAnswers[qId] === data.a) correct++;
+            }
+            const banner = document.getElementById('banner-' + i);
+            banner.textContent = `Session ${i} submitted! ${correct} / ${QPP[i - 1]} correct. Answers are now locked.`;
+            banner.classList.add('show');
+            
             updateSessionUI(i);
         }
                 
