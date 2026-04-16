@@ -789,8 +789,7 @@
 
                 const opts = ['A','B','C','D'].map((opt, idx) => `
                     <label class="option-wrap" id="wrap-${qId}-${opt}">
-                        <input type="radio" name="${qId}" value="${opt}"
-                            onchange="selectAnswer('${qId}','${opt}')">
+                        <input type="radio" name="${qId}" value="${opt}">
                         <div class="option-label" id="label-${qId}-${opt}"
                             onclick="toggleAnswer('${qId}','${opt}')">
                             <div class="option-letter">${opt}</div>
@@ -885,22 +884,29 @@
             if (getSessionSubmitted(si)) return;
         
             if (userAnswers[qId] === opt) {
-                // Clicking the already-selected option → unselect
+                // Already selected → unselect
                 delete userAnswers[qId];
                 localStorage.setItem('quiz_answers_v2', JSON.stringify(userAnswers));
         
-                // Reset all option labels for this question
                 ['A','B','C','D'].forEach(o => {
                     const lbl = document.getElementById(`label-${qId}-${o}`);
                     const radio = document.querySelector(`input[name="${qId}"][value="${o}"]`);
                     if (lbl) lbl.className = 'option-label';
                     if (radio) radio.checked = false;
                 });
+            } else {
+                // New selection
+                userAnswers[qId] = opt;
+                localStorage.setItem('quiz_answers_v2', JSON.stringify(userAnswers));
         
-                updateSessionUI(si);
-                updateProgress();
+                const radio = document.querySelector(`input[name="${qId}"][value="${opt}"]`);
+                if (radio) radio.checked = true;
+        
+                applyAnswerUI(qId, opt, false);
             }
-            // If clicking a different option, onchange on the radio handles it normally
+        
+            updateSessionUI(si);
+            updateProgress();
         }
         // ── Apply Answer UI ──
         function applyAnswerUI(qId, val, showCorrect) {
