@@ -804,7 +804,9 @@
                             <div class="question-result" id="result-${qId}"></div>
                         </div>
                         ${q2Html}
-                        <div class="options-grid">${opts}</div>`
+                        <div class="options-grid">${opts}</div>
+                        <div class="hint-line" id="hint-${qId}">Correct answer: ${data.a}</div>
+                    </div>`;
             }
             content.appendChild(page);
             // Build the Submit Bar
