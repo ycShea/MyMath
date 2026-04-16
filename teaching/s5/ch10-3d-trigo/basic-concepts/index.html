@@ -973,6 +973,20 @@
         
         // ── Submit ──
         function submitSession(i) {
+            // Check for unanswered questions
+            let blanks = 0;
+            for (let j = 1; j <= QPP[i - 1]; j++) {
+                const qId = 'q_' + i + '_' + j;
+                if (!userAnswers[qId]) blanks++;
+            }
+        
+            if (blanks > 0) {
+                const msg = blanks === 1
+                    ? `You have 1 unanswered question in Session ${i}. Submit anyway?`
+                    : `You have ${blanks} unanswered questions in Session ${i}. Submit anyway?`;
+                if (!confirm(msg)) return;
+            }
+        
             setSessionSubmitted(i, true);
             for (let j = 1; j <= QPP[i - 1]; j++) {
                 const qId = 'q_' + i + '_' + j;
@@ -985,7 +999,6 @@
             }
             document.getElementById('banner-' + i).classList.add('show');
             updateSessionUI(i);
-
         }
                 
         function showSummary() {
