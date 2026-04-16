@@ -791,7 +791,8 @@
                     <label class="option-wrap" id="wrap-${qId}-${opt}">
                         <input type="radio" name="${qId}" value="${opt}"
                             onchange="selectAnswer('${qId}','${opt}')">
-                        <div class="option-label" id="label-${qId}-${opt}">
+                        <div class="option-label" id="label-${qId}-${opt}"
+                            onclick="toggleAnswer('${qId}','${opt}')">
                             <div class="option-letter">${opt}</div>
                             <span>${data.options[idx]}</span>
                         </div>
@@ -877,6 +878,29 @@
             applyAnswerUI(qId, val, false);
             updateSessionUI(parseInt(parts[1]));
             updateProgress();
+        }
+        function toggleAnswer(qId, opt) {
+            const parts = qId.split('_');
+            const si = parseInt(parts[1]);
+            if (getSessionSubmitted(si)) return;
+        
+            if (userAnswers[qId] === opt) {
+                // Clicking the already-selected option → unselect
+                delete userAnswers[qId];
+                localStorage.setItem('quiz_answers_v2', JSON.stringify(userAnswers));
+        
+                // Reset all option labels for this question
+                ['A','B','C','D'].forEach(o => {
+                    const lbl = document.getElementById(`label-${qId}-${o}`);
+                    const radio = document.querySelector(`input[name="${qId}"][value="${o}"]`);
+                    if (lbl) lbl.className = 'option-label';
+                    if (radio) radio.checked = false;
+                });
+        
+                updateSessionUI(si);
+                updateProgress();
+            }
+            // If clicking a different option, onchange on the radio handles it normally
         }
         // ── Apply Answer UI ──
         function applyAnswerUI(qId, val, showCorrect) {
