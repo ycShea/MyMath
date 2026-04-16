@@ -706,6 +706,7 @@
             let explanationHtml = "";
             const hasContent = sData.content && sData.content.trim() !== "";
             if (sData.image || hasContent) {
+                // image_size: min-width: 450px, max-width: 100%
                 explanationHtml = `
                     <div class="session-explanation" id="explanation-${i}" style="margin-bottom: 25px; background: #f8fafc; padding: 15px; border-radius: 12px; border-left: 4px solid #3b82f6;">
                         ${sData.image ? `<img src="images/${sData.image}" id="expimg-${i}" style="width:auto; min-width:450px; max-width:100%; border-radius:12px; margin-bottom:10px;"
@@ -734,7 +735,8 @@
                 // 1. Check if the string exists in your data
                 // 2. Add onerror to hide it if the file itself is missing or 404
                 // const imgHtml = data.image ? `<img src="images/${data.image}" onerror="this.remove()">` : "";
-                const imgHtml = data.image ? `<img src="images/${data.image}" onerror="this.remove()" style="max-width: 280px;
+                // image_size: max-width: 350px
+                const imgHtml = data.image ? `<img src="images/${data.image}" onerror="this.remove()" style="max-width: 400px;
                                                 width: 100%; height: auto; border-radius: 8px; margin-bottom: 12px; display: block;">` : "";
                 
                 // Then include it in your template
