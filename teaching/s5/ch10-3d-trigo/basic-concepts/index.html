@@ -863,8 +863,11 @@
                             const data = questionContent[qId];
                             if (data && userAnswers[qId] === data.a) correct++;
                         }
-                        const stars = correct === QPP[i-1] ? '★★★' : correct >= QPP[i-1]/2 ? '★★☆' : '★☆☆';
-                        banner.innerHTML = `${stars} Session ${i} submitted! ${correct} / ${QPP[i-1]} correct.`;
+                        const emoji = correct === QPP[i - 1] ? '🎉' : correct === 0 ? '😔' : '💪';
+                        const msg   = correct === QPP[i - 1] ? `Perfect score! All ${QPP[i-1]} correct.`
+                                    : correct === 0           ? `Don't give up! 0 / ${QPP[i-1]} correct this time.`
+                                    : `Keep it up! ${correct} / ${QPP[i-1]} correct.`;
+                        banner.innerHTML = `${emoji} Session ${i} submitted! ${msg}`;
                         banner.classList.add('show');
                     }
         
@@ -895,6 +898,8 @@
         }
         
         // ── Select answer ──
+        // selectAnswer() can be deleted later
+        /*
         function selectAnswer(qId, val) {
             const parts = qId.split('_');
             const si = parseInt(parts[1]);
@@ -905,6 +910,7 @@
             updateSessionUI(parseInt(parts[1]));
             updateProgress();
         }
+        */
         function toggleAnswer(qId, opt) {
             const parts = qId.split('_');
             const si = parseInt(parts[1]);
@@ -999,8 +1005,12 @@
                     const isRight = userAnswers[qId] === correctLetter;
                     if (isRight) correct++;
                     if (dot) dot.className = getSessionSubmitted(i) ? `nav-dot ${isRight ? 'correct' : 'wrong'}` : 'nav-dot';
+
                 } else {
-                    if (dot) dot.className = 'nav-dot';
+                    // Skipped questions show as wrong dots after submission.
+                    if (dot) dot.className = getSessionSubmitted(i) ? 'nav-dot wrong' : 'nav-dot';
+                    // Skipped questions DO NOT show as wrong dots after submission.
+                    // if (dot) dot.className = 'nav-dot';
                 }
             }
         
@@ -1082,9 +1092,12 @@
                 if (data && userAnswers[qId] === data.a) correct++;
             }
             const banner = document.getElementById('banner-' + i);
-            banner.textContent = `Session ${i} submitted! ${correct} / ${QPP[i - 1]} correct. Answers are now locked.`;
+            const emoji = correct === QPP[i - 1] ? '🎉' : correct === 0 ? '😔' : '💪';
+            const msg   = correct === QPP[i - 1] ? `Perfect score! All ${QPP[i-1]} correct.`
+                        : correct === 0           ? `Don't give up! 0 / ${QPP[i-1]} correct this time.`
+                        : `Keep it up! ${correct} / ${QPP[i-1]} correct.`;
+            banner.innerHTML = `${emoji} Session ${i} submitted! ${msg}`;
             banner.classList.add('show');
-            
             updateSessionUI(i);
         }
                 
