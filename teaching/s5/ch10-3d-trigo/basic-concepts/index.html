@@ -990,7 +990,28 @@
             setSessionSubmitted(i, true);
             for (let j = 1; j <= QPP[i - 1]; j++) {
                 const qId = 'q_' + i + '_' + j;
-                if (userAnswers[qId]) applyAnswerUI(qId, userAnswers[qId], true);
+                if (userAnswers[qId]) {
+                    applyAnswerUI(qId, userAnswers[qId], true);
+                } else {
+                    // No answer given — reveal the correct answer
+                    const data = questionContent[qId];
+                    if (data) {
+                        const correctOpt = data.a;
+                        const lbl = document.getElementById(`label-${qId}-${correctOpt}`);
+                        if (lbl) {
+                            lbl.classList.add('revealed-correct', 'locked');
+                        }
+                        const result = document.getElementById(`result-${qId}`);
+                        if (result) {
+                            result.className = 'question-result show cross';
+                            result.innerHTML = '✕';
+                        }
+                        const block = document.getElementById(`block-${qId}`);
+                        if (block) block.classList.add('has-wrong');
+                        const hint = document.getElementById(`hint-${qId}`);
+                        if (hint) hint.classList.add('show');
+                    }
+                }
             }
             const bar = document.getElementById('sbar-' + i);
             if (bar) {
