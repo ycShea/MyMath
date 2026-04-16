@@ -1016,8 +1016,8 @@
         
             const badge = document.getElementById(`badge-${i}`);
             if (!badge) return;
-            if (answered === 0) {
-                badge.textContent = `0 / ${QPP[i - 1]}`;
+            if (!getSessionSubmitted(i)) {
+                badge.textContent = `${answered} / ${QPP[i - 1]} answered`;
                 badge.className = 'session-badge';
             } else if (correct === QPP[i - 1]) {
                 badge.textContent = `${correct} / ${QPP[i - 1]} ✓`;
