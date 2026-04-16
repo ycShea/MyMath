@@ -646,14 +646,17 @@
             q_2_1: { q: `The figure shows a right prism $ABCDEF$ with a right-angled triangle as the cross-section.`,
                      q2: `What is the projection of $BD$ on the plane $CDEF$?`,
                      a: "D", options: ["$AD$", "$CD$", "$ED$", "$FD$"], image: "q2_1.png" },
-            q_2_2: { q: `Refer to the figure in Q1. What is the angle between $BD$ on the plane $ADE$?`,
+            q_2_2: { q: `Refer to the figure in Q1. `What is the projection of $BD$ on the plane $ADE$?`,
                      a: "A", options: ["$AD$", "$CD$", "$ED$", "$FD$"], image: "" },
             q_2_3: { q: `$ABCDE$ is a right square pyramid. The projection of $A$ on the plane $BCDE$ is $P$. $M$ is the midpoint of $BC$.`,
                      q2: `What is the projection of $AC$ on the plane $BCDE$.`,
                      a: "D", options: ["$BC$", "$EC$", "$MC$", "$PC$"], image: "q2_5.png" },                                                        // 2010-11 S3 UT5 
-            q_2_4: { q: `Refer to the figure in Q5.`,
-                     q2: `What is the projection of the $AP$ on the plane $ABC$?`,
-                     a: "D", options: ["$AB$", "$AC$", "$AD$", "$AM$"], image: "" },
+            //q_2_4: { q: `Refer to the figure in Q3.`,
+            //         q2: `What is the projection of the $AP$ on the plane $ABC$?`,
+            //         a: "D", options: ["$AB$", "$AC$", "$AD$", "$AM$"], image: "" },
+            q_2_4: { q: `Refer to the figure in Q3.`,
+                     q2: `What is the angle between $AP$ and the plane $ABC$?`,
+                     a: "B", options: ["$\\angle PAC$", "$\\angle ACP$", "$\\angle ACM$", "$\\angle MAC$"], image: "" },
             q_2_5: { q: `The figure below is a prism $AEFBCDHG$ with right-angled trapezium base $AEFB$.`,
                      q2: `Find the projection of $EC$ on the plane $EFGH$.`,
                      a: "C", options: ["$EB$", "$ES$", "$ET$", "$HC$"], image: "q2_7.png" },                                                        // 2014-15 S3 UT5 
@@ -743,12 +746,12 @@
                 // image_size: min-width: 450px, max-width: 100%
                 explanationHtml = `
                     <div class="session-explanation" id="explanation-${i}" style="margin-bottom: 25px; background: #f8fafc; padding: 15px; border-radius: 12px; border-left: 4px solid #3b82f6;">
-                        ${sData.image ? `<img src="images/${sData.image}" id="expimg-${i}" style="width:auto; min-width:450px; max-width:100%; border-radius:12px; margin-bottom:10px;"
+                            ${sData.image ? `<div id="imgwrap-s${i}"><img src="images/${sData.image}" id="expimg-${i}" style="width:auto; min-width:450px; max-width:100%; border-radius:12px; margin-bottom:10px;"
                             onerror="
-                                this.remove();
+                                this.parentElement.remove();
                                 var box = document.getElementById('explanation-${i}');
                                 if (box && !box.querySelector('.session-text')) box.remove();
-                            ">` : ""}
+                            "></div>` : ""}
                         ${hasContent ? `<div class="session-text" style="color: #475569; line-height: 1.6;">${sData.content}</div>` : ""}
                     </div>`;
             }
@@ -768,10 +771,10 @@
                 
                 // 1. Check if the string exists in your data
                 // 2. Add onerror to hide it if the file itself is missing or 404
-                // const imgHtml = data.image ? `<img src="images/${data.image}" onerror="this.remove()">` : "";
                 // image_size: max-width: 350px
-                const imgHtml = data.image ? `<img src="images/${data.image}" onerror="this.remove()" style="max-width: 400px;
-                                                width: 100%; height: auto; border-radius: 8px; margin-bottom: 12px; display: block;">` : "";
+                const imgHtml = data.image 
+                    ? `<div id="imgwrap-${qId}"><img src="images/${data.image}" onerror="this.parentElement.remove()" style="max-width:350px; width:100%; height:auto; border-radius:8px; margin-bottom:12px; display:block;"></div>` 
+                    : "";
                 
                 // Then include it in your template
                 const questionHtml = `
