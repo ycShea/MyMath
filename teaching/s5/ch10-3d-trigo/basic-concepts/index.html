@@ -651,12 +651,12 @@
             q_1_2: { q: `Refer to the figure in Q1. What is the projection of point $B$ on the plane $ADE$?`,
                      a: "A", options: ["$A$", "$D$", "$E$", "$F$"], image: "",
                      c: ``,
-                     w: `$BA \perp ADE$. So $A$ is the projection of $B$ on the plane $ADE$.`},
+                     w: `$BA \\perp ADE$. So $A$ is the projection of $B$ on the plane $ADE$.`},
             q_1_3: { q: `In the figure, $ABCDEFGH$ is a cuboid.`,                                                                                   // 2011-12 S3 UT4
                      q2: `Find the projection of $E$ on plane $ABGF$.`,
                      a: "B", options: ["$A$", "$F$", "$G$", "$H$"], image: "q1_3.png",
-                     c: `$EF \perp ABGF$. So $F$ is the projection of $E$ on the plane $ABGF$.`,
-                     w: `$EF \perp ABGF$. So $F$ is the projection of $E$ on the plane $ABGF$.`},
+                     c: `$EF \\perp ABGF$. So $F$ is the projection of $E$ on the plane $ABGF$.`,
+                     w: `$EF \\perp ABGF$. So $F$ is the projection of $E$ on the plane $ABGF$.`},
             q_1_4: { q: `In the figure, $ABCDEFGH$ is a cube. $P, Q, R, S$ and $T$ are the mid-points of $EF, FG, FH, EH$ and $GH$ respectively.`,  // 2015-16 S3 UT4
                      q2: `Find the projection of $G$ on the plane $ACHF$.`,
                      a: "A", options: ["$R$", "$P$", "$H$", "$F$"], image: "q1_4.png" },
@@ -924,6 +924,8 @@
                                 const correctOpt = data.a;
                                 const lbl = document.getElementById(`label-${qId}-${correctOpt}`);
                                 if (lbl) lbl.classList.add('revealed-correct', 'locked');
+                                const explainW = document.getElementById(`explain-w-${qId}`);
+                                if (explainW) explainW.style.display = 'block';
                                 const result = document.getElementById(`result-${qId}`);
                                 if (result) {
                                     result.className = 'question-result show cross';
@@ -1038,6 +1040,10 @@
                 result.className = 'question-result';
                 hint.classList.remove('show');
                 if (block) block.classList.remove('all-correct', 'has-wrong');
+                const explainC = document.getElementById(`explain-c-${qId}`);
+                const explainW = document.getElementById(`explain-w-${qId}`);
+                if (explainC) explainC.style.display = 'none';
+                if (explainW) explainW.style.display = 'none';
             }
         }
         function updateSessionUI(i) {
@@ -1115,6 +1121,8 @@
                         const lbl = document.getElementById(`label-${qId}-${correctOpt}`);
                         if (lbl) {
                             lbl.classList.add('revealed-correct', 'locked');
+                            const explainW = document.getElementById(`explain-w-${qId}`);
+                            if (explainW) explainW.style.display = 'block';
                         }
                         const result = document.getElementById(`result-${qId}`);
                         if (result) {
@@ -1185,9 +1193,13 @@
                     const data = questionContent[qId];
                     const correctLetter = data ? data.a : "A";
                     let cls = 'empty';
-                    if (submitted && ans) { 
-                         cls = ans === correctLetter ? 'correct' : 'wrong'; 
-                         if (cls === 'correct') sc++; 
+                    if (submitted) {
+                        if (ans) {
+                            cls = ans === correctLetter ? 'correct' : 'wrong';
+                            if (cls === 'correct') sc++;
+                        } else {
+                            cls = 'wrong'; // skipped = wrong
+                        }
                     }
                     dotsHtml += '<div class="session-row-dot ' + cls + '"></div>';
                 }
