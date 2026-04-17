@@ -638,9 +638,8 @@
                               the angle between $PQ$ and $PR$ = $\\boldsymbol{\\color{blue}{\\angle QPR}}$.`,
                  image: "s3.png"},
             s4: {title: `Theorem of Three Perpendiculars`,
-                 content: `Let $A$ be a point not lying on the plane $\\pi$, and let $P$ be the projection of $A$ on $\\pi$.<br>
-                              Suppose $\\ell$ is a line on $\\pi$ and $Q$ is a point on $\\ell$.<br>
-                              The <strong>Theorem of Three Perpendiculars</strong> states:<br>`,
+                 content: `Let $P$ be the projection of point $A$ onto plane $\pi$, where $P$ does not lie on line $\ell$ in $\pi$. Let $Q$ be a point on $\ell$.<br>
+                             The <strong>Theorem of Three Perpendiculars</strong> states:<br>`,
                  image: "s4.png"},
         };
         // ── Merged Content Object ──
@@ -737,7 +736,7 @@
                      w: ``,
                    },
             q_4_3: { q: `In the figure, $V$ is a point not lying on the plane $\\alpha$, and $P$, $A$ and $B$ are points on $\\alpha$.`,
-                     q2: `Find \\theta.`,
+                     q2: `Find $\\theta$.`,
                      a: "A", options: ["$26^\\circ$",
                                        "$64^\\circ$",
                                        "$90^\\circ$",
@@ -747,7 +746,7 @@
                      w: ``,
                    },
             q_4_4: { q: `In the figure, $V$ is a point not lying on the plane $\\beta$, and $P$, $A$, $B$ and $C$ are points on $\\beta$. It is given that $ABC$ is a straight line.`,
-                     q2: `Find \\theta.`,
+                     q2: `Find $\\theta$.`,
                      a: "D", options: ["$35^\\circ$",
                                        "$65^\\circ$",
                                        "$90^\\circ$",
@@ -1281,7 +1280,7 @@
             location.reload();
         }
         function confirmRestart() {
-            if (confirm('Are you sure you want to restart? All your answers will be cleared.')) {
+            if (confirm('Are you sure you want to restart? This will clear all your answers across all sessions.')) {
                 resetQuiz();
             }
         }
