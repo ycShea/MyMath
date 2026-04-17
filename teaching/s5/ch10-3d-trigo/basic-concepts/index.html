@@ -477,6 +477,23 @@
             color: #475569;
         }
         .btn-ghost:hover { background: #e2e8f0; }
+        .explain-line {
+            margin-top: 8px;
+            font-size: 0.85rem;
+            padding: 8px 12px;
+            border-radius: 0 8px 8px 0;
+            line-height: 1.5;
+        }
+        .explain-correct {
+            color: #065f46;
+            background: #f0fdf4;
+            border-left: 3px solid #10b981;
+        }
+        .explain-wrong {
+            color: #7c2d12;
+            background: #fff7ed;
+            border-left: 3px solid #f97316;
+        }
         /* Tablet and Mobile Adjustments */
         /* For iPads and Phones */
         /* Tablet and Mobile Adjustments (Everything under 768px) */
@@ -628,7 +645,9 @@
         const questionContent = {
             q_1_1: { q: `The figure shows a right prism $ABCDEF$ with a right-angled triangle as the cross-section.`,
                      q2: `What is the projection of point $B$ on the plane $CDEF$?`,
-                     a: "D", options: ["$A$", "$C$", "$E$", "$F$"], image: "q2_1.png" },                                                            // 2011 CE
+                     a: "D", options: ["$A$", "$C$", "$E$", "$F$"], image: "q2_1.png",
+                     c: ``,
+                     w: `Remember: $BF \perp CDEF$. So $F$ is the projection of $B$ on the plane $CDEF$.`},                                                            // 2011 CE
             q_1_2: { q: `Refer to the figure in Q1. What is the projection of point $B$ on the plane $ADE$?`,
                      a: "A", options: ["$A$", "$D$", "$E$", "$F$"], image: "" },
             q_1_3: { q: `In the figure, $ABCDEFGH$ is a cuboid.`,
@@ -823,6 +842,8 @@
                         ${q2Html}
                         <div class="options-grid">${opts}</div>
                         <div class="hint-line" id="hint-${qId}">Correct answer: ${data.a}</div>
+                        ${data.c ? `<div class="explain-line explain-correct" id="explain-c-${qId}" style="display:none;">${data.c}</div>` : ''}
+                        ${data.w ? `<div class="explain-line explain-wrong" id="explain-w-${qId}" style="display:none;">${data.w}</div>` : ''}
                     </div>`;
             }
             content.appendChild(page);
@@ -1000,6 +1021,10 @@
                 result.className = `question-result show ${isRight ? 'tick' : 'cross'}`;
                 result.innerHTML = isRight ? '✓' : '✕';
                 if (!isRight) hint.classList.add('show');
+                const explainC = document.getElementById(`explain-c-${qId}`);
+                const explainW = document.getElementById(`explain-w-${qId}`);
+                if (isRight && explainC) explainC.style.display = 'block';
+                if (!isRight && explainW) explainW.style.display = 'block';
                 if (block) {
                     block.classList.remove('all-correct', 'has-wrong');
                     block.classList.add(isRight ? 'all-correct' : 'has-wrong');
