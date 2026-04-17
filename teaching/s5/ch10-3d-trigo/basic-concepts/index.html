@@ -619,14 +619,14 @@
         // sessionContents and questionContent objects.
         const sessionContents = {
             s1: {title: `Projection of a point on a plane`,
-                 content: `$P$ is a point above $\\pi$. Let $P'$ be the point on the plane $\\pi$ such that $PP'$ is perpendicular 
+                 content2: `$P$ is a point above $\\pi$. Let $P'$ be the point on the plane $\\pi$ such that $PP'$ is perpendicular 
                               to every line on $\\pi$ passing through $P'$. Then<br>
                               (1) $P'$ is called $\\boldsymbol{\\color{blue}{\\text{the projection of } P \\text{ on } \\pi}}$,<br>
                               (2) $PP'$ is said to be perpendicular to the plane $\\pi$,<br>
                               (3) the length of $PP'$ is called $\\boldsymbol{\\color{blue}{\\text{the distance between } P \\text{ and } \\pi}}$.`,
                  image: "s1.png"},
             s2: {title: 'Projection of a line on a plane',
-                 content: `In the figure, $\\boldsymbol{\\color{blue}{P' \\text{ is the projection of } P \\text{ on the plane } \\pi}}$ and $O$ is a point on $\\pi$. Then<br>
+                 content2: `In the figure, $\\boldsymbol{\\color{blue}{P' \\text{ is the projection of } P \\text{ on the plane } \\pi}}$ and $O$ is a point on $\\pi$. Then<br>
                               (1) $OP'$ is said to be the projection of $OP$ on the plane $\\pi$,<br>
                               (2) $\\boldsymbol{\\color{blue}{\\text{the angle between } PO \\text{ and the plane } \\pi = \\angle POP' }}$.`,                                    // $\pi$ is not enough
                  image: "s2.png"},
@@ -822,18 +822,19 @@
                  style="display: block; width: auto; max-width: 100%; border-radius: 12px; margin-bottom: 10px;">` : "";
             // 3. Build Explanation Box: Only show if there is an image OR content
             let explanationHtml = "";
-            const hasContent = sData.content && sData.content.trim() !== "";
-            if (sData.image || hasContent) {
-                // image_size: min-width: 450px, max-width: 100%
+            const hasContent  = sData.content  && sData.content.trim()  !== "";
+            const hasContent2 = sData.content2 && sData.content2.trim() !== "";
+            if (sData.image || hasContent || hasContent2) {
                 explanationHtml = `
                     <div class="session-explanation" id="explanation-${i}" style="margin-bottom: 25px; background: #f8fafc; padding: 15px; border-radius: 12px; border-left: 4px solid #3b82f6;">
-                            ${sData.image ? `<div id="imgwrap-s${i}"><img src="images/${sData.image}" id="expimg-${i}" style="width:auto; min-width:450px; max-width:100%; border-radius:12px; margin-bottom:10px;"
+                        ${hasContent  ? `<div class="session-text" style="color: #475569; line-height: 1.6; margin-bottom: 10px;">${sData.content}</div>` : ""}
+                        ${sData.image ? `<div id="imgwrap-s${i}"><img src="images/${sData.image}" id="expimg-${i}" style="width:auto; min-width:450px; max-width:100%; border-radius:12px; margin-bottom:10px;"
                             onerror="
                                 this.parentElement.remove();
                                 var box = document.getElementById('explanation-${i}');
                                 if (box && !box.querySelector('.session-text')) box.remove();
                             "></div>` : ""}
-                        ${hasContent ? `<div class="session-text" style="color: #475569; line-height: 1.6;">${sData.content}</div>` : ""}
+                        ${hasContent2 ? `<div class="session-text2" style="color: #475569; line-height: 1.6; margin-top: 10px;">${sData.content2}</div>` : ""}
                     </div>`;
             }
 
