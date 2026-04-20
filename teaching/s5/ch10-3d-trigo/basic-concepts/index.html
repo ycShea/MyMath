@@ -1513,6 +1513,10 @@
                 // If already showing, hide it
                 if (preview.style.display === 'block') {
                     preview.style.display = 'none';
+                    if (thumb._dismissHandler) {
+                        document.removeEventListener('click', thumb._dismissHandler);
+                        thumb._dismissHandler = null;
+                    }
                     return;
                 }
             
@@ -1544,12 +1548,21 @@
             
                 // Tap anywhere else to dismiss
                 const dismiss = (ev) => {
-                    if (!thumb.contains(ev.target)) {
+                    if (!thumb.contains(ev.target) && ev.target !== preview) {
                         preview.style.display = 'none';
                         document.removeEventListener('click', dismiss);
                     }
                 };
-                setTimeout(() => document.addEventListener('click', dismiss), 0);
+                // Use a timestamp guard instead of setTimeout
+                const openTime = Date.now();
+                const guardedDismiss = (ev) => {
+                    if (Date.now() - openTime < 300) return; // ignore events within 300ms of opening
+                    dismiss(ev);
+                };
+                document.addEventListener('click', guardedDismiss);
+                
+                // Store reference so we can clean up if needed
+                thumb._dismissHandler = guardedDismiss;
             });
         }
         nav.addEventListener('wheel', e => { e.preventDefault(); nav.scrollLeft += e.deltaY; });
