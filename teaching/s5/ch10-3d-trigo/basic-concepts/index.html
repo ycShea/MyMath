@@ -1535,14 +1535,26 @@
                     preview.style.top = 'auto';
                     preview.style.bottom = (window.innerHeight - rect.top + 8) + 'px';
                 }
-                preview.style.display = preview.style.display === 'block' ? 'none' : 'block';
+//                preview.style.display = preview.style.display === 'block' ? 'none' : 'block';
+                // Dismiss when tapping outside
+                if (preview.style.display === 'block') {
+                    const openTime = Date.now();
+                    const dismiss = (ev) => {
+                        if (Date.now() - openTime < 300) return;
+                        if (!thumb.contains(ev.target)) {
+                            preview.style.display = 'none';
+                            document.removeEventListener('click', dismiss);
+                        }
+                    };
+                    document.addEventListener('click', dismiss);
+                }
             });
             /*************** new codes *************************/
         }
         nav.addEventListener('wheel', e => { e.preventDefault(); nav.scrollLeft += e.deltaY; });
         
         restoreState();
-        goToPage(2);
+        goToPage(3);
         typesetPage();
     </script>
     <div id="modal-overlay" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.5); z-index:2000; align-items:center; justify-content:center;">
