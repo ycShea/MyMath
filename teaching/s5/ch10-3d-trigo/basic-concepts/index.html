@@ -1515,7 +1515,7 @@
             });*/
             /*************** new codes *************************/
             thumb.addEventListener('click', (e) => {
-                if (!window.matchMedia('(hover: none)').matches) return;
+                if (!window.matchMedia('(hover: none)').matches) openLightbox(thumb.src);
             
                 const rect = thumb.getBoundingClientRect();
                 const spaceBelow = window.innerHeight - rect.bottom;
