@@ -1478,6 +1478,7 @@
             if (thumb.dataset.initialized) return;
             // Desktop: hover shows floating preview at correct position
             thumb.addEventListener('mouseenter', () => {
+                // return; // ← temporarily disables hover preview
                 const rect = thumb.getBoundingClientRect();
                 const spaceBelow = window.innerHeight - rect.bottom;
                 const spaceAbove = rect.top;
@@ -1506,6 +1507,7 @@
         
             // Touch: tap opens lightbox
             thumb.addEventListener('click', (e) => {
+                return; // ← temporarily disables tap to lightbox
                 if (window.matchMedia('(hover: none)').matches) {
                     openLightbox(thumb.src);
                 }
