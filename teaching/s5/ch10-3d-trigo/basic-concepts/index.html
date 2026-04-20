@@ -489,11 +489,13 @@
             color: #065f46;
             background: #f0fdf4;
             border-left: 3px solid #10b981;
+            overflow: visible;
         }
         .explain-wrong {
             color: #7c2d12;
             background: #fff7ed;
             border-left: 3px solid #f97316;
+            overflow: visible;
         }
         .explain-img {
             max-width: 160px;
@@ -526,15 +528,32 @@
         }
         .explain-img-preview {
             display: none;
-            position: absolute;
-            bottom: calc(100% + 8px);
-            right: 0;
-            width: 360px;
-            max-width: 80vw;
+            position: fixed;
             border-radius: 10px;
-            box-shadow: 0 8px 32px rgba(0,0,0,0.25);
-            z-index: 100;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.35);
+            z-index: 500;
             pointer-events: none;
+            max-width: 360px;
+            width: 360px;
+        }
+        .explain-img-lightbox {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,0.75);
+            z-index: 3000;
+            align-items: center;
+            justify-content: center;
+            cursor: zoom-out;
+        }
+        .explain-img-lightbox.show {
+            display: flex;
+        }
+        .explain-img-lightbox img {
+            max-width: 90vw;
+            max-height: 85vh;
+            border-radius: 12px;
+            box-shadow: 0 12px 48px rgba(0,0,0,0.5);
         }
         .explain-img-wrap:hover .explain-img-preview {
             display: block;
@@ -1015,8 +1034,8 @@
                                 <div style="flex:1;">${data.c}</div>
                                 ${data.cimage ? `
                                     <div class="explain-img-wrap">
-                                        <img src="images/${data.cimage}" class="explain-img-thumb" onerror="this.parentElement.remove()">
-                                        <img src="images/${data.cimage}" class="explain-img-preview" onerror="this.remove()">
+                                        <img src="images/${data.cimage}" class="explain-img-thumb" id="thumb-c-${qId}" onerror="this.parentElement.remove()">
+                                        <img src="images/${data.cimage}" class="explain-img-preview" id="preview-c-${qId}" onerror="this.remove()">
                                     </div>` : ''}
                             </div>
                         </div>` : ''}
@@ -1025,8 +1044,8 @@
                                 <div style="flex:1;">${data.w}</div>
                                 ${data.wimage ? `
                                     <div class="explain-img-wrap">
-                                        <img src="images/${data.wimage}" class="explain-img-thumb" onerror="this.parentElement.remove()">
-                                        <img src="images/${data.wimage}" class="explain-img-preview" onerror="this.remove()">
+                                        <img src="images/${data.wimage}" class="explain-img-thumb" id="thumb-w-${qId}" onerror="this.parentElement.remove()">
+                                        <img src="images/${data.wimage}" class="explain-img-preview" id="preview-w-${qId}" onerror="this.remove()">
                                     </div>` : ''}
                             </div>
                         </div>` : ''}
@@ -1211,8 +1230,19 @@
                 if (!isRight) hint.classList.add('show');
                 const explainC = document.getElementById(`explain-c-${qId}`);
                 const explainW = document.getElementById(`explain-w-${qId}`);
-                if (isRight && explainC) explainC.style.display = 'block';
-                if (!isRight && explainW) explainW.style.display = 'block';
+                if (isRight && explainC) {
+                    explainC.style.display = 'block';
+                    const t = document.getElementById('thumb-c-' + qId);
+                    const p = document.getElementById('preview-c-' + qId);
+                    if (t && p) initExplainImg(t, p);
+                }
+                if (!isRight && explainW) {
+                    explainW.style.display = 'block';
+                    const t = document.getElementById('thumb-w-' + qId);
+                    const p = document.getElementById('preview-w-' + qId);
+                    if (t && p) initExplainImg(t, p);
+                }
+
                 if (block) {
                     block.classList.remove('all-correct', 'has-wrong');
                     block.classList.add(isRight ? 'all-correct' : 'has-wrong');
@@ -1305,7 +1335,12 @@
                         if (lbl) {
                             lbl.classList.add('revealed-correct', 'locked');
                             const explainW = document.getElementById(`explain-w-${qId}`);
-                            if (explainW) explainW.style.display = 'block';
+                            if (explainW) {
+                                explainW.style.display = 'block';
+                                const tw = document.getElementById('thumb-w-' + qId);
+                                const pw = document.getElementById('preview-w-' + qId);
+                                if (tw && pw) initExplainImg(tw, pw);
+                            }
                         }
                         const result = document.getElementById(`result-${qId}`);
                         if (result) {
@@ -1447,7 +1482,44 @@
         function scrollNav(val) {
             nav.scrollBy({ left: val, behavior: 'smooth' });
         }
+        function openLightbox(src) {
+            document.getElementById('img-lightbox-src').src = src;
+            document.getElementById('img-lightbox').classList.add('show');
+        }
+        function closeLightbox() {
+            document.getElementById('img-lightbox').classList.remove('show');
+        }
         
+        function initExplainImg(thumb, preview) {
+            // Desktop: hover shows floating preview at correct position
+            thumb.addEventListener('mouseenter', () => {
+                const rect = thumb.getBoundingClientRect();
+                const spaceBelow = window.innerHeight - rect.bottom;
+                const spaceAbove = rect.top;
+                const previewH = 260; // approx preview height
+        
+                preview.style.display = 'block';
+                preview.style.left = (rect.left - 360 - 8) + 'px'; // show to the left
+        
+                if (spaceBelow >= previewH) {
+                    preview.style.top = rect.top + 'px';
+                    preview.style.bottom = 'auto';
+                } else {
+                    preview.style.top = 'auto';
+                    preview.style.bottom = (window.innerHeight - rect.bottom) + 'px';
+                }
+            });
+            thumb.addEventListener('mouseleave', () => {
+                preview.style.display = 'none';
+            });
+        
+            // Touch: tap opens lightbox
+            thumb.addEventListener('click', (e) => {
+                if (window.matchMedia('(hover: none)').matches) {
+                    openLightbox(thumb.src);
+                }
+            });
+        }
         nav.addEventListener('wheel', e => { e.preventDefault(); nav.scrollLeft += e.deltaY; });
         
         restoreState();
@@ -1461,6 +1533,9 @@
             <button id="modal-cancel" class="btn btn-ghost" style="display:none;" onclick="modalResolve(false)">Cancel</button>
             <button id="modal-ok" class="btn btn-primary" onclick="modalResolve(true)">OK</button>
         </div>
+    </div>
+    <div class="explain-img-lightbox" id="img-lightbox" onclick="closeLightbox()">
+        <img id="img-lightbox-src" src="" alt="">
     </div>
 </div>
 </body>
