@@ -497,23 +497,7 @@
             border-left: 3px solid #f97316;
             overflow: visible;
         }
-        .explain-img {
-            max-width: 160px;
-            width: 100%;
-            height: auto;
-            border-radius: 6px;
-            flex-shrink: 0;
-            cursor: zoom-in;
-            transition: transform 0.2s, box-shadow 0.2s;
-            position: relative;
-            z-index: 1;
-        }
-        .explain-img:hover {
-            transform: scale(3);
-            transform-origin: right center;
-            box-shadow: 0 8px 32px rgba(0,0,0,0.25);
-            z-index: 100;
-        }
+
         .explain-img-wrap {
             position: relative;
             flex-shrink: 0;
@@ -1491,6 +1475,7 @@
         }
         
         function initExplainImg(thumb, preview) {
+            if (thumb.dataset.initialized) return;
             // Desktop: hover shows floating preview at correct position
             thumb.addEventListener('mouseenter', () => {
                 const rect = thumb.getBoundingClientRect();
