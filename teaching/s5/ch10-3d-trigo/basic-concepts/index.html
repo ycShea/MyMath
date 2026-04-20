@@ -1520,6 +1520,11 @@
                 const previewH = 260;
                 const spaceBelow = window.innerHeight - rect.bottom;
             
+                // Move preview to body so fixed positioning is relative to viewport
+                if (preview.parentElement !== document.body) {
+                    document.body.appendChild(preview);
+                }
+                
                 preview.style.position = 'fixed';
                 preview.style.maxWidth = '90vw';
                 preview.style.width = 'auto';
@@ -1527,13 +1532,11 @@
                 preview.style.transform = 'translateX(-50%)';
                 preview.style.pointerEvents = 'none';
                 preview.style.zIndex = '500';
-            
+                
                 if (spaceBelow >= previewH) {
-                    // Enough space below → show below
                     preview.style.top = (rect.bottom + 8) + 'px';
                     preview.style.bottom = 'auto';
                 } else {
-                    // Not enough space below → show above
                     preview.style.top = 'auto';
                     preview.style.bottom = (window.innerHeight - rect.top + 8) + 'px';
                 }
