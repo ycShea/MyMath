@@ -668,7 +668,7 @@
         // so that the string actually contains one real backslash when passed to MathJax.
         // For example \frac becomes \\frac, \theta becomes \\theta, and so on. This applies everywhere in your
         // sessionContents and questionContent objects.
-        const sessionContents = {
+        const sessionContents = {
             s1: {title: `Projection of a point on a plane`,
                  content2: `$P$ is a point above $\\pi$. Let $P'$ be the point on the plane $\\pi$ such that $PP'$ is perpendicular 
                               to every line on $\\pi$ passing through $P'$. Then<br>
@@ -688,11 +688,11 @@
                               Then $\\boldsymbol{\\color{blue}{\\text{the angle between } \\alpha \\text{ and } \\beta}}$ =
                               the angle between $PQ$ and $PR$ = $\\boldsymbol{\\color{blue}{\\angle QPR}}$.`,
                  image: "s3.png"},
-            s4: {title: `Theorem of Three Perpendiculars`,
+            s4: {title: `Theorem of Three Perpendiculars`,
                  content: `Let $P$ be the projection of point $A$ onto plane $\\pi$, where $P$ does not lie on line $\\ell$ in $\\pi$. Let $Q$ be a point on $\\ell$.
                              The <strong>Theorem of Three Perpendiculars</strong> states:<br>`,
                  image: "s4.png"},
-        };
+        };
         // ── Merged Content Object ──
         const questionContent = {
             q_1_1: { q: `The figure shows a right prism $ABCDEF$ with a right-angled triangle as the cross-section.`,                               // 2011 CE
@@ -1478,7 +1478,7 @@
             if (thumb.dataset.initialized) return;
             // Desktop: hover shows floating preview at correct position
             thumb.addEventListener('mouseenter', () => {
-                // return; // ← temporarily disables hover preview
+                // return; // ← temporarily disables hover preview if neccessary
                 const rect = thumb.getBoundingClientRect();
                 const spaceBelow = window.innerHeight - rect.bottom;
                 const spaceAbove = rect.top;
@@ -1506,63 +1506,11 @@
             });
         
             // Touch: tap opens lightbox
-            // Touch: tap shows preview above or below the thumbnail
             thumb.addEventListener('click', (e) => {
-                if (!window.matchMedia('(hover: none)').matches) return;
-            
-                // If already showing, hide it
-                if (preview.style.display === 'block') {
-                    preview.style.display = 'none';
-                    if (thumb._dismissHandler) {
-                        document.removeEventListener('click', thumb._dismissHandler);
-                        thumb._dismissHandler = null;
-                    }
-                    return;
+                return; // ← temporarily disables tap to lightbox
+                if (window.matchMedia('(hover: none)').matches) {
+                    openLightbox(thumb.src);
                 }
-            
-                const rect = thumb.getBoundingClientRect();
-                const previewH = 260;
-                const spaceBelow = window.innerHeight - rect.bottom;
-            
-                // Move preview to body so fixed positioning is relative to viewport
-                if (preview.parentElement !== document.body) {
-                    document.body.appendChild(preview);
-                }
-                
-                preview.style.position = 'fixed';
-                preview.style.maxWidth = '90vw';
-                preview.style.width = 'auto';
-                preview.style.left = '50%';
-                preview.style.transform = 'translateX(-50%)';
-                preview.style.pointerEvents = 'none';
-                preview.style.zIndex = '500';
-                
-                if (spaceBelow >= previewH) {
-                    preview.style.top = (rect.bottom + 8) + 'px';
-                    preview.style.bottom = 'auto';
-                } else {
-                    preview.style.top = 'auto';
-                    preview.style.bottom = (window.innerHeight - rect.top + 8) + 'px';
-                }
-                preview.style.display = 'block';
-            
-                // Tap anywhere else to dismiss
-                const dismiss = (ev) => {
-                    if (!thumb.contains(ev.target) && ev.target !== preview) {
-                        preview.style.display = 'none';
-                        document.removeEventListener('click', dismiss);
-                    }
-                };
-                // Use a timestamp guard instead of setTimeout
-                const openTime = Date.now();
-                const guardedDismiss = (ev) => {
-                    if (Date.now() - openTime < 300) return; // ignore events within 300ms of opening
-                    dismiss(ev);
-                };
-                document.addEventListener('click', guardedDismiss);
-                
-                // Store reference so we can clean up if needed
-                thumb._dismissHandler = guardedDismiss;
             });
         }
         nav.addEventListener('wheel', e => { e.preventDefault(); nav.scrollLeft += e.deltaY; });
