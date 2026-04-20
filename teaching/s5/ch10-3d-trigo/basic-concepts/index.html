@@ -512,6 +512,33 @@
             box-shadow: 0 8px 32px rgba(0,0,0,0.25);
             z-index: 100;
         }
+        .explain-img-wrap {
+            position: relative;
+            flex-shrink: 0;
+        }
+        .explain-img-thumb {
+            max-width: 160px;
+            width: 100%;
+            height: auto;
+            border-radius: 6px;
+            cursor: zoom-in;
+            display: block;
+        }
+        .explain-img-preview {
+            display: none;
+            position: absolute;
+            bottom: calc(100% + 8px);
+            right: 0;
+            width: 360px;
+            max-width: 80vw;
+            border-radius: 10px;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.25);
+            z-index: 100;
+            pointer-events: none;
+        }
+        .explain-img-wrap:hover .explain-img-preview {
+            display: block;
+        }
         /* Tablet and Mobile Adjustments */
         /* For iPads and Phones */
         /* Tablet and Mobile Adjustments (Everything under 768px) */
@@ -986,13 +1013,21 @@
                         ${data.c ? `<div class="explain-line explain-correct" id="explain-c-${qId}" style="display:none;">
                             <div style="display:flex; gap:12px; align-items:flex-start;">
                                 <div style="flex:1;">${data.c}</div>
-                                ${data.cimage ? `<img src="images/${data.cimage}" onerror="this.remove()" class="explain-img" style="max-width:; width:100%; height:auto; border-radius:6px; flex-shrink:0;">` : ''}
+                                ${data.cimage ? `
+                                    <div class="explain-img-wrap">
+                                        <img src="images/${data.cimage}" class="explain-img-thumb" onerror="this.parentElement.remove()">
+                                        <img src="images/${data.cimage}" class="explain-img-preview" onerror="this.remove()">
+                                    </div>` : ''}
                             </div>
                         </div>` : ''}
                         ${data.w ? `<div class="explain-line explain-wrong" id="explain-w-${qId}" style="display:none;">
                             <div style="display:flex; gap:12px; align-items:flex-start;">
                                 <div style="flex:1;">${data.w}</div>
-                                ${data.wimage ? `<img src="images/${data.wimage}" onerror="this.remove()" class="explain-img" style="max-width:160px; width:100%; height:auto; border-radius:6px; flex-shrink:0;">` : ''}
+                                ${data.wimage ? `
+                                    <div class="explain-img-wrap">
+                                        <img src="images/${data.wimage}" class="explain-img-thumb" onerror="this.parentElement.remove()">
+                                        <img src="images/${data.wimage}" class="explain-img-preview" onerror="this.remove()">
+                                    </div>` : ''}
                             </div>
                         </div>` : ''}
                     </div>`;
