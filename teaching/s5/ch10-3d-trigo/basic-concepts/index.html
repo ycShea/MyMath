@@ -750,8 +750,10 @@
                      a: "C", options: ["$\\angle DAC$", "$\\angle ANM$", "$\\angle MAN$", "$\\angle NAP$"], image: "",
                      c: `$\\ell$ is a line parallel to the line $BC$ and passing through $A$. Then $\\ell$ is the line of intersection of planes $ABC$ and $ADE$.
                              Since $AM \\perp \\ell$ and $AN \\perp \\ell$, the angle between planes $ABC$ and $ADE$ is $\\angle MAN$.`,
+                     cimage: "q3_6.png",
                      w: `$\\ell$ is a line parallel to the line $BC$ and passing through $A$. Then $\\ell$ is the line of intersection of planes $ABC$ and $ADE$.
                              Since $AM \\perp \\ell$ and $AN \\perp \\ell$, the angle between planes $ABC$ and $ADE$ is $\\angle MAN$.`,
+                     wimage: "q3_6.png",
                    },
             q_3_6: { q: `The figure shows a cuboid $ABCDHEFG$. $P, Q, R$ and $S$ are the mid-points of $AE, BF, CG$ and $DH$ respectively.`,
                      q2: `What is the angle between the plane $CDPQ$ and the plane $GHPQ$?`,                                                        // 2016-17 S3 UT4
@@ -964,8 +966,18 @@
                         ${q2Html}
                         <div class="options-grid">${opts}</div>
                         <div class="hint-line" id="hint-${qId}">Correct answer: ${data.a}</div>
-                        ${data.c ? `<div class="explain-line explain-correct" id="explain-c-${qId}" style="display:none;">${data.c}</div>` : ''}
-                        ${data.w ? `<div class="explain-line explain-wrong" id="explain-w-${qId}" style="display:none;">${data.w}</div>` : ''}
+                        ${data.c ? `<div class="explain-line explain-correct" id="explain-c-${qId}" style="display:none;">
+                            <div style="display:flex; gap:12px; align-items:flex-start;">
+                                <div style="flex:1;">${data.c}</div>
+                                ${data.cimage ? `<img src="images/${data.cimage}" onerror="this.remove()" style="max-width:160px; width:100%; height:auto; border-radius:6px; flex-shrink:0;">` : ''}
+                            </div>
+                        </div>` : ''}
+                        ${data.w ? `<div class="explain-line explain-wrong" id="explain-w-${qId}" style="display:none;">
+                            <div style="display:flex; gap:12px; align-items:flex-start;">
+                                <div style="flex:1;">${data.w}</div>
+                                ${data.wimage ? `<img src="images/${data.wimage}" onerror="this.remove()" style="max-width:160px; width:100%; height:auto; border-radius:6px; flex-shrink:0;">` : ''}
+                            </div>
+                        </div>` : ''}
                     </div>`;
             }
             content.appendChild(page);
