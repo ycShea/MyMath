@@ -1484,7 +1484,13 @@
                 const previewH = 260; // approx preview height
         
                 preview.style.display = 'block';
-                preview.style.left = (rect.left - 360 - 8) + 'px'; // show to the left
+                // preview.style.left = (rect.left - 360 - 8) + 'px'; // show to the left
+                const spaceRight = window.innerWidth - rect.right;
+                if (spaceRight >= 360 + 8) {
+                    preview.style.left = (rect.right + 8) + 'px';
+                } else {
+                    preview.style.left = (rect.left - 360 - 8) + 'px'; // fall back to left
+                }
         
                 if (spaceBelow >= previewH) {
                     preview.style.top = rect.top + 'px';
