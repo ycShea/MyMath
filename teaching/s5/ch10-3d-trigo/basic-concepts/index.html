@@ -1518,7 +1518,6 @@
                 const rect = thumb.getBoundingClientRect();
                 const spaceBelow = window.innerHeight - rect.bottom;
             
-                if (preview.parentElement !== document.body) document.body.appendChild(preview);
                 preview.style.position = 'fixed';
                 preview.style.left = '50%';
                 preview.style.transform = 'translateX(-50%)';
@@ -1535,6 +1534,7 @@
                     preview.style.bottom = (window.innerHeight - rect.top + 8) + 'px';
                 }
                 // preview.style.display = preview.style.display === 'block' ? 'none' : 'block';
+                if (preview.parentElement !== document.body) document.body.appendChild(preview);
             });
             /*************** new codes *************************/
         }
