@@ -1506,12 +1506,39 @@
             });
         
             // Touch: tap opens lightbox
+            /*
             thumb.addEventListener('click', (e) => {
                 return; // ← temporarily disables tap to lightbox
                 if (window.matchMedia('(hover: none)').matches) {
                     openLightbox(thumb.src);
                 }
+            });*/
+            /*************** new codes *************************/
+            thumb.addEventListener('click', (e) => {
+                if (!window.matchMedia('(hover: none)').matches) return;
+            
+                const rect = thumb.getBoundingClientRect();
+                const spaceBelow = window.innerHeight - rect.bottom;
+            
+                if (preview.parentElement !== document.body) document.body.appendChild(preview);
+                preview.style.position = 'fixed';
+                preview.style.left = '50%';
+                preview.style.transform = 'translateX(-50%)';
+                preview.style.maxWidth = '90vw';
+                preview.style.width = 'auto';
+                preview.style.zIndex = '500';
+                preview.style.pointerEvents = 'none';
+            
+                if (spaceBelow >= 260) {
+                    preview.style.top = (rect.bottom + 8) + 'px';
+                    preview.style.bottom = 'auto';
+                } else {
+                    preview.style.top = 'auto';
+                    preview.style.bottom = (window.innerHeight - rect.top + 8) + 'px';
+                }
+                preview.style.display = preview.style.display === 'block' ? 'none' : 'block';
             });
+            /*************** new codes *************************/
         }
         nav.addEventListener('wheel', e => { e.preventDefault(); nav.scrollLeft += e.deltaY; });
         
